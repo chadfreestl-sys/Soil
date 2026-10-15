@@ -1,0 +1,56 @@
+name: Upgrade Living Soil Lab v19.4 Evidence Layer
+
+on:
+  push:
+    paths:
+      - '.github/workflows/upgrade-v19-4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  upgrade-v19-4:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Apply tested v19.4 patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64, zlib, hashlib, sys
+          expected_before='e4af9d65fea650ef3c94459d2cbddd6958dd2057d938ae45c0e58c62e90ab8eb'
+          expected_after='c5e696dcf062748b3360a0733e004dcb2587d487aabe0c5b9a3c5716214242bb'
+          p=Path('index.html')
+          got=hashlib.sha256(p.read_bytes()).hexdigest()
+          if got==expected_after:
+              print('v19.4 already applied')
+              sys.exit(0)
+          if got!=expected_before:
+              print('Unexpected index.html baseline:',got,file=sys.stderr)
+              sys.exit(1)
+          payload='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'
+          code=zlib.decompress(base64.b64decode(payload)).decode('utf-8')
+          exec(compile(code,'v19_4_patch.py','exec'))
+          got=hashlib.sha256(p.read_bytes()).hexdigest()
+          print('patched index sha256:',got)
+          if got!=expected_after:
+              print('Patched file did not match tested build',file=sys.stderr)
+              sys.exit(1)
+          PY
+
+      - name: Commit v19.4
+        shell: bash
+        run: |
+          if [ -z "$(git status --porcelain -- index.html)" ]; then
+            echo 'No index.html change to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Add v19.4 evidence and confidence layer'
+          git push
