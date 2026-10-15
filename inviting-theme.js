@@ -1,12 +1,13 @@
 (()=>{
   'use strict';
 
+  document.body.classList.add('nature-studio');
   const mode=(document.documentElement.dataset.audience||'professional').toLowerCase();
   const copy={
-    homeowner:{title:'Explore what your lawn may be telling you.',desc:'Start simple. Change one thing, move time forward, and watch how the turf and root zone respond.'},
-    technician:{title:'Work the lawn like a field problem.',desc:'Build the site picture, test a treatment path, and use the model to sharpen what you inspect next.'},
-    professional:{title:'See the whole turf system work together.',desc:'Run management decisions across time and watch soil, roots, water, nutrients and biology interact.'},
-    research:{title:'Explore the model, challenge it, and learn from it.',desc:'Use matched scenarios, saved states and deeper controls to test assumptions and inspect system behavior.'}
+    homeowner:{title:'Explore your lawn without feeling buried in data.',desc:'Start with the lawn you recognize, change one thing, move time forward, and watch the story unfold above and below the surface.'},
+    technician:{title:'Turn a lawn visit into a clear field story.',desc:'Build the site picture, test a management path, and use the model to focus the next thing worth inspecting.'},
+    professional:{title:'Manage the turf system without losing the big picture.',desc:'Follow soil, roots, water, nutrients and biology together while keeping the key decisions easy to reach.'},
+    research:{title:'A serious model can still feel inviting to explore.',desc:'Keep the deeper controls, experimental tools and evidence information visible without making the workspace feel cold or crowded.'}
   };
 
   const shell=document.querySelector('.mode-shell');
@@ -16,55 +17,55 @@
     if(strong) strong.textContent=copy[mode]?.title||copy.professional.title;
     if(p) p.textContent=copy[mode]?.desc||copy.professional.desc;
     const note=shell.querySelector('.audience-mode-note');
-    if(note) note.innerHTML='<strong>Same ecosystem engine underneath.</strong> This mode simply keeps the most useful information for your goal close at hand.';
+    if(note) note.innerHTML='<strong>Same ecosystem engine underneath.</strong> The workspace is arranged to help you notice the lawn first and the complexity second.';
   }
 
   const visual=document.querySelector('.visual-intro');
   if(visual){
     const h=visual.querySelector('h2');
     const p=visual.querySelector('p');
-    if(h) h.textContent='See what’s happening above and below the surface.';
-    if(p) p.textContent='Two lawns. Shared weather. Different choices. Watch the system respond over time.';
+    if(h) h.textContent='Watch the lawn above. Follow the story below.';
+    if(p) p.textContent='Two lawns share the weather, then respond to different choices across time.';
   }
 
   const onboarding=document.getElementById('scenario-onboarding');
   if(onboarding){
     const h=onboarding.querySelector('h2');
     const p=onboarding.querySelector('.scenario-head p');
-    if(h) h.textContent='Jump in with a lawn that already has a story.';
-    if(p) p.textContent='Choose a realistic starting point, then make it your own. Every value stays editable.';
+    if(h) h.textContent='Start with a lawn situation that already feels familiar.';
+    if(p) p.textContent='Pick a realistic starting point, then make it your own. Nothing is locked in.';
   }
 
   const memory=document.getElementById('scenario-memory');
   if(memory){
     const h=memory.querySelector('h2');
     const p=memory.querySelector('.scenario-head p');
-    if(h) h.textContent='Save a moment. Come back and compare.';
-    if(p) p.textContent='Keep a snapshot of the lawn today, try another management path, and see how the two states differ later.';
+    if(h) h.textContent='Save this moment and see where the lawn goes next.';
+    if(p) p.textContent='Keep today as a reference, try another path, and compare how the system changes later.';
   }
 
   const diagnostic=document.getElementById('diagnostic-lens');
   if(diagnostic){
     const h=diagnostic.querySelector('h2');
     const p=diagnostic.querySelector('.scenario-head p');
-    if(h) h.textContent='What may be holding the lawn back right now?';
-    if(p) p.textContent='The model ranks likely constraints so you can focus your inspection instead of automatically reaching for another product.';
+    if(h) h.textContent='What may be holding this lawn back?';
+    if(p) p.textContent='Use the ranked constraints to guide your attention before assuming the answer is another product.';
   }
 
-  const profile=document.getElementById('profile-workflow-shell');
+  const profile=document.querySelector('.profile-control-deck');
   if(profile){
-    const intro=profile.querySelector('.profile-workflow-intro');
-    if(intro) intro.textContent='Pick a profile, move time forward, and watch Lawn A and Lawn B change together.';
+    const strong=profile.querySelector('.profile-deck-label strong');
+    if(strong) strong.textContent='Choose what you want to see, then move the season forward.';
   }
 
   const visit=document.getElementById('visit');
-  if(visit && /After each advance/i.test(visit.textContent||'')){
+  if(visit && /After each advance|Move time forward/i.test(visit.textContent||'')){
     visit.textContent='Move time forward, look at both lawns, then decide whether the next best move is treatment, observation, or simply more time.';
   }
 
   const badge=document.querySelector('.build-badge');
-  if(badge) badge.textContent='v19.7 · WARMER EXPERIENCE';
+  if(badge) badge.textContent='v19.8 · NATURE STUDIO';
   const topBadge=document.querySelector('header .badge');
-  if(topBadge) topBadge.textContent=`v19.7 · ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)}`;
-  document.title=`Living Soil Lab v19.7 | ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)} Mode`;
+  if(topBadge) topBadge.textContent=`v19.8 · ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+  document.title=`Living Soil Lab v19.8 | ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)} Mode`;
 })();
