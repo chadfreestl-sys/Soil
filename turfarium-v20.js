@@ -13,6 +13,14 @@
       document.head.appendChild(icon);
     }
 
+    if(!document.querySelector('link[data-turfarium-v207]')){
+      const theme=document.createElement('link');
+      theme.rel='stylesheet';
+      theme.href='turfarium-v20-7.css?v=20.7';
+      theme.dataset.turfariumV207='true';
+      document.head.appendChild(theme);
+    }
+
     const rawMode=(document.documentElement.dataset.audience||new URLSearchParams(location.search).get('mode')||'').toLowerCase();
     const modeLabel=rawMode==='research'?'Research / Lab':rawMode?rawMode.charAt(0).toUpperCase()+rawMode.slice(1):'';
     document.title=modeLabel?`Turfarium | ${modeLabel}`:'Turfarium | Interactive Turf Ecosystem Simulator';
@@ -31,7 +39,7 @@
     if(landingName) landingName.textContent='Turfarium';
     const landingVersion=document.querySelector('.brand p');
     if(landingVersion && /simulator|v19|v20/i.test(landingVersion.textContent||'')){
-      landingVersion.textContent='Interactive turf ecosystem simulator · v20.6';
+      landingVersion.textContent='Interactive turf ecosystem simulator · v20.7';
     }
 
     const h1=document.querySelector('header h1');
@@ -67,9 +75,9 @@
     }
 
     const buildBadge=document.querySelector('.build-badge');
-    if(buildBadge) buildBadge.textContent='v20.6 · LIVING PROFILES';
+    if(buildBadge) buildBadge.textContent='v20.7 · TURFARIUM';
     const topBadge=document.querySelector('header .badge');
-    if(topBadge) topBadge.textContent=`v20.6${modeLabel?` · ${modeLabel}`:''}`;
+    if(topBadge) topBadge.textContent=`v20.7${modeLabel?` · ${modeLabel}`:''}`;
 
     const scenarios=document.getElementById('scenario-onboarding');
     const scenarioKicker=scenarios?.querySelector('.scenario-kicker');
