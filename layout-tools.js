@@ -58,10 +58,9 @@
     timeSlot.appendChild(visit);
   }
 
-  // Keep the controls directly above the paired lawn images.
+  // Main experiment sequence: controls -> save/compare -> living profiles -> report.
   grid.insertBefore(deck,lawnA);
 
-  // Put save/restore/compare immediately beside the live workflow instead of elsewhere on the page.
   if(memory){
     memory.classList.add('profile-save-memory');
     const kicker=memory.querySelector('.scenario-kicker');
@@ -75,57 +74,71 @@
     deck.insertAdjacentElement('afterend',memory);
   }
 
-  // Keep the detailed before/after report below the paired lawns so it follows visual inspection.
   lawnB.insertAdjacentElement('afterend',timeline);
   timeline.classList.add('timeline-report-only');
 
-  // Move the complete live workspace directly below the selected audience view.
-  // Quick starts and deeper setup remain available immediately below it.
   const topAnchor=modeShell||header;
   if(topAnchor) topAnchor.insertAdjacentElement('afterend',grid);
 
-  // Its controls now live in the primary workspace, so the old intro block is redundant.
   if(intro) intro.classList.add('visual-intro-workspace-moved','visual-intro-without-controls');
 
-  // Turfarium v20.5: keep the Seaweed Response Lab out of the core lawn workflow.
-  // Group it lower with the advanced biology/input tools, preferably after Worm Tea Brewing Lab.
-  const moduleForHeading=(pattern)=>{
-    const heading=[...document.querySelectorAll('h1,h2,h3,h4')]
-      .find(el=>pattern.test((el.textContent||'').trim()));
-    if(!heading)return null;
-    return heading.closest('section,article,.card,.panel,.wide')||heading.parentElement;
+  // v20.6: move Seaweed Response Lab definitively into the lower advanced-lab zone.
+  // Use the nearest card rather than a broad section/wide ancestor so the actual module moves.
+  const cardsForHeading=pattern=>{
+    const seen=new Set();
+    return [...document.querySelectorAll('h1,h2,h3,h4')]
+      .filter(el=>pattern.test((el.textContent||'').trim()))
+      .map(el=>el.closest('.card')||el.closest('section,article,.panel')||el.parentElement)
+      .filter(el=>el&&!seen.has(el)&&seen.add(el));
   };
 
   const moveSeaweedLab=()=>{
-    const seaweed=moduleForHeading(/Seaweed\s+Response\s+Lab/i);
-    if(!seaweed||seaweed.dataset.tfSeaweedMoved==='true')return Boolean(seaweed);
+    const seaweeds=cardsForHeading(/Seaweed\s+Response\s+Lab/i);
+    if(!seaweeds.length)return false;
+    const worm=cardsForHeading(/Worm\s+Tea\s+Brewing\s+Lab/i).pop();
+    const microscope=cardsForHeading(/Brew\s+Microscope|Microscope\s+Observation/i).pop();
+    let anchor=worm||microscope;
 
-    const wormTea=moduleForHeading(/Worm\s+Tea\s+Brewing\s+Lab/i);
-    const microscope=moduleForHeading(/Brew\s+Microscope|Microscope\s+Observation/i);
-
-    if(wormTea && wormTea!==seaweed){
-      wormTea.insertAdjacentElement('afterend',seaweed);
-    }else if(microscope && microscope!==seaweed){
-      microscope.insertAdjacentElement('beforebegin',seaweed);
-    }else{
-      // Fallback: place the lab near the bottom of the main simulator instead of above the live workspace.
-      const main=document.querySelector('main')||document.body;
-      main.appendChild(seaweed);
-    }
-
-    seaweed.dataset.tfSeaweedMoved='true';
-    seaweed.classList.add('tf-advanced-input-lab');
+    seaweeds.forEach(seaweed=>{
+      if(anchor&&anchor!==seaweed&&anchor.parentElement){
+        anchor.insertAdjacentElement('afterend',seaweed);
+      }else{
+        (document.querySelector('main')||document.body).appendChild(seaweed);
+      }
+      seaweed.dataset.tfSeaweedMoved='true';
+      seaweed.classList.add('tf-advanced-input-lab');
+      seaweed.style.order='900';
+      anchor=seaweed;
+    });
     return true;
   };
 
-  // Most builds render the lab synchronously; the delayed pass also catches modules added by later scripts.
-  if(!moveSeaweedLab()) setTimeout(moveSeaweedLab,250);
+  // Re-run after all enhancement scripts have had time to finish rendering modules.
+  moveSeaweedLab();
+  setTimeout(moveSeaweedLab,300);
+  setTimeout(moveSeaweedLab,1200);
+
+  // Living Profiles: state-driven motion + in-session before/after replay.
+  if(!document.querySelector('link[data-living-profiles]')){
+    const css=document.createElement('link');
+    css.rel='stylesheet';
+    css.href='living-profiles.css?v=20.6';
+    css.dataset.livingProfiles='true';
+    document.head.appendChild(css);
+  }
+  if(!document.querySelector('script[data-living-profiles]')){
+    const script=document.createElement('script');
+    script.src='living-profiles.js?v=20.6';
+    script.defer=true;
+    script.dataset.livingProfiles='true';
+    document.body.appendChild(script);
+  }
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.5 · WORKSPACE';
+  if(badge)badge.textContent='v20.6 · LIVING PROFILES';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.5 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.6 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
