@@ -1,4 +1,4 @@
-name: Restore v19.5 Lab from v19.4 Evidence Build
+name: Restore Living Soil Lab v19.6
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore evidence build and add audience layer
+      - name: Restore evidence build and add v19.6 layers
         shell: bash
         run: |
           git show ad0b7b53a32c383d9113ac282da0571cc4b3afac:index.html > lab.html
@@ -26,23 +26,27 @@ jobs:
           from pathlib import Path
           p=Path('lab.html')
           s=p.read_text(encoding='utf-8')
-          s=s.replace('<title>Living Soil Lab v19.4 | Evidence & Confidence Layer</title>','<title>Living Soil Lab v19.5 | Audience Modes</title>',1)
+          s=s.replace('<title>Living Soil Lab v19.4 | Evidence & Confidence Layer</title>','<title>Living Soil Lab v19.6 | Audience Modes + Scenario Tools</title>',1)
           if 'audience-modes.css' not in s:
               s=s.replace('</head>','<link rel="stylesheet" href="audience-modes.css"></head>',1)
+          if 'scenario-tools.css' not in s:
+              s=s.replace('</head>','<link rel="stylesheet" href="scenario-tools.css"></head>',1)
           if 'audience-modes.js' not in s:
               s=s.replace('</body>','<script src="audience-modes.js"></script></body>',1)
+          if 'scenario-tools.js' not in s:
+              s=s.replace('</body>','<script src="scenario-tools.js"></script></body>',1)
           p.write_text(s,encoding='utf-8')
           PY
 
-      - name: Commit restored v19.5 lab
+      - name: Commit restored v19.6 lab
         shell: bash
         run: |
           if [ -z "$(git status --porcelain -- lab.html)" ]; then
-            echo 'lab.html already matches v19.5 evidence build'
+            echo 'lab.html already matches v19.6 layered build'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add lab.html
-          git commit -m 'Restore v19.5 audience modes on evidence build'
+          git commit -m 'Upgrade Living Soil Lab to v19.6 scenario tools'
           git push
