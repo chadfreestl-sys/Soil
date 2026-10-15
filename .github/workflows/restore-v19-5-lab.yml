@@ -1,4 +1,4 @@
-name: Restore Turfarium v20.3
+name: Restore Turfarium v20.4
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore simulation core and apply Turfarium v20.3 layers
+      - name: Restore simulation core and apply Turfarium v20.4 layers
         shell: bash
         run: |
           git show ad0b7b53a32c383d9113ac282da0571cc4b3afac:index.html > lab.html
@@ -30,24 +30,24 @@ jobs:
           s=s.replace('Living Soil Lab','Turfarium')
 
           styles=[
-            ('audience-modes.css','audience-modes.css?v=20.3'),
-            ('scenario-tools.css','scenario-tools.css?v=20.3'),
-            ('layout-tools.css','layout-tools.css?v=20.3'),
-            ('inviting-theme.css','inviting-theme.css?v=20.3'),
-            ('turfarium-v20.css','turfarium-v20.css?v=20.3'),
+            ('audience-modes.css','audience-modes.css?v=20.4'),
+            ('scenario-tools.css','scenario-tools.css?v=20.4'),
+            ('layout-tools.css','layout-tools.css?v=20.4'),
+            ('inviting-theme.css','inviting-theme.css?v=20.4'),
+            ('turfarium-v20.css','turfarium-v20.css?v=20.4'),
           ]
           for key,src in styles:
               if key not in s:
                   s=s.replace('</head>',f'<link rel="stylesheet" href="{src}"></head>',1)
           if 'turfarium-mark.svg' not in s:
-              s=s.replace('</head>','<link rel="icon" type="image/svg+xml" href="turfarium-mark.svg?v=20.3"></head>',1)
+              s=s.replace('</head>','<link rel="icon" type="image/svg+xml" href="turfarium-mark.svg?v=20.4"></head>',1)
 
           scripts=[
-            ('audience-modes.js','audience-modes.js?v=20.3'),
-            ('scenario-tools.js','scenario-tools.js?v=20.3'),
-            ('layout-tools.js','layout-tools.js?v=20.3'),
-            ('inviting-theme.js','inviting-theme.js?v=20.3'),
-            ('turfarium-v20.js','turfarium-v20.js?v=20.3'),
+            ('audience-modes.js','audience-modes.js?v=20.4'),
+            ('scenario-tools.js','scenario-tools.js?v=20.4'),
+            ('layout-tools.js','layout-tools.js?v=20.4'),
+            ('inviting-theme.js','inviting-theme.js?v=20.4'),
+            ('turfarium-v20.js','turfarium-v20.js?v=20.4'),
           ]
           for key,src in scripts:
               if key not in s:
@@ -56,15 +56,15 @@ jobs:
           p.write_text(s,encoding='utf-8')
           PY
 
-      - name: Commit Turfarium v20.3 simulator
+      - name: Commit Turfarium v20.4 simulator
         shell: bash
         run: |
           if [ -z "$(git status --porcelain -- lab.html)" ]; then
-            echo 'lab.html already matches Turfarium v20.3 build'
+            echo 'lab.html already matches Turfarium v20.4 build'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add lab.html
-          git commit -m 'Build Turfarium v20.3 simplified friendly interface'
+          git commit -m 'Build Turfarium v20.4 top workspace and save controls'
           git push
