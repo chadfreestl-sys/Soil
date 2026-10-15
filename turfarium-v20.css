@@ -1,0 +1,15 @@
+/* Turfarium v20 — living ecosystem visual identity */
+:root{--tf-forest:#18583a;--tf-sage:#8dae7b;--tf-soil:#8b6f47;--tf-cream:#f8f4ea;--tf-water:#5b8db9;--tf-ink:#24382e}
+html{scroll-behavior:smooth}
+body{background-color:#f5f2e9!important;background-image:radial-gradient(circle at 12% 0%,rgba(154,194,142,.2),transparent 34%),linear-gradient(180deg,#f7f5ec,#edf2e8 55%,#f6f0e7)!important;color:#263a30}
+button,input,select,textarea{font:inherit}
+button,a,[role="button"]{transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #6c9fc4;outline-offset:2px}
+button:hover:not(:disabled){filter:brightness(1.04)}
+.mode-shell{background:linear-gradient(115deg,#f7fbf2,#e8f1e6)!important;border:1px solid #c6d7c2!important;border-radius:20px!important;box-shadow:0 10px 26px rgba(31,72,44,.09)}
+.mode-kicker{color:#43775a!important}.mode-copy strong{color:#244c36!important}.mode-copy p,.audience-mode-note{color:#587363!important}.audience-mode-note strong{color:#244c36!important}
+.mode-pill{background:#e2f0e0!important;border-color:#afc9ae!important;color:#2d6748!important}.mode-change{background:#fffdf6!important;border-color:#c6d8c7!important;color:#25563d!important}
+.evidence-tier{opacity:.3!important}
+header,main,section{scroll-margin-top:12px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button,a,[role="button"]{transition:none!important}}
+@media(max-width:720px){.mode-shell{padding:13px!important;border-radius:15px!important}}
