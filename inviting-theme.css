@@ -1,0 +1,170 @@
+/* Living Soil Lab v19.7 — warmer, more inviting presentation layer */
+:root{
+  --warm-bg:#081412;
+  --warm-panel:#10211d;
+  --warm-panel-2:#132923;
+  --warm-border:#31584c;
+  --warm-border-soft:#28483f;
+  --warm-text:#f1f7f2;
+  --warm-muted:#b3c9c0;
+  --warm-green:#7fd0a4;
+  --warm-green-strong:#9be2b9;
+  --warm-earth:#d0ae7d;
+  --warm-cream:#f2e9d8;
+}
+
+body{
+  background:
+    radial-gradient(circle at 14% -8%,rgba(91,143,111,.20),transparent 30%),
+    radial-gradient(circle at 92% 6%,rgba(152,120,72,.10),transparent 24%),
+    linear-gradient(180deg,#091714 0%,#07110f 72%,#050d0c 100%)!important;
+  color:var(--warm-text)!important;
+}
+
+header{
+  border-color:var(--warm-border-soft)!important;
+  background:linear-gradient(135deg,rgba(18,43,36,.96),rgba(10,27,25,.96))!important;
+  box-shadow:0 16px 44px rgba(0,0,0,.22)!important;
+}
+
+.card{
+  background:linear-gradient(145deg,rgba(18,38,33,.96),rgba(10,25,23,.98))!important;
+  border-color:var(--warm-border-soft)!important;
+  border-radius:18px!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.18)!important;
+}
+
+.card:hover{border-color:#3f6659!important}
+
+h1,h2,h3,h4{color:var(--warm-text)!important}
+p,.note,.subtle,.studio-note,.module-copy{color:var(--warm-muted)!important}
+.eyebrow,.scenario-kicker,.mode-kicker{color:var(--warm-green)!important}
+.badge,.mode-pill,.scenario-local{
+  background:#173128!important;
+  border-color:#426957!important;
+  color:#cce7d8!important;
+}
+
+button,.mode-change{
+  border-radius:11px!important;
+  border-color:#416555!important;
+  background:linear-gradient(180deg,#1a3a30,#142f28)!important;
+  color:#eff9f3!important;
+  box-shadow:0 5px 14px rgba(0,0,0,.14);
+  transition:transform .15s ease,border-color .15s ease,background .15s ease,box-shadow .15s ease!important;
+}
+button:hover,.mode-change:hover{
+  transform:translateY(-1px);
+  border-color:#72a28a!important;
+  background:linear-gradient(180deg,#214b3d,#19382f)!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.18);
+}
+button.primary,.primary{
+  background:linear-gradient(180deg,#34795f,#285f4c)!important;
+  border-color:#6baa8d!important;
+  color:#fff!important;
+}
+button.primary:hover,.primary:hover{background:linear-gradient(180deg,#3f8a6d,#2e6c55)!important}
+
+input,select,textarea{
+  border-radius:10px!important;
+  border-color:#38584d!important;
+  background:#0e1e1a!important;
+  color:#edf7f1!important;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none!important;
+  border-color:#70a88f!important;
+  box-shadow:0 0 0 3px rgba(112,168,143,.12)!important;
+}
+
+.quick-nav{
+  background:rgba(13,31,27,.82)!important;
+  border:1px solid var(--warm-border-soft)!important;
+  border-radius:14px!important;
+  padding:8px!important;
+}
+.quick-nav a{
+  border-radius:9px!important;
+  color:#cbe0d7!important;
+}
+.quick-nav a:hover{background:#19352d!important;color:#f4fbf7!important}
+
+.mode-shell{
+  background:linear-gradient(125deg,#173a30,#102a28)!important;
+  border-color:#487162!important;
+  border-radius:18px!important;
+  box-shadow:0 12px 32px rgba(0,0,0,.16)!important;
+}
+.mode-copy p{color:#bed2ca!important}
+.audience-mode-note{color:#9fbab0!important}
+
+.scenario-onboarding,.scenario-memory,.diagnostic-lens{
+  background:linear-gradient(145deg,#122b25,#0d211e)!important;
+  border-color:#365c50!important;
+}
+.scenario-card{
+  background:linear-gradient(145deg,#163129,#10241f)!important;
+  border-color:#33574b!important;
+  border-radius:15px!important;
+}
+.scenario-card:hover{
+  background:linear-gradient(145deg,#1a3a30,#132a24)!important;
+  border-color:#5d8a75!important;
+  transform:translateY(-2px);
+}
+.scenario-card p{color:#b7cbc3!important}
+.scenario-status{background:#10231f!important;border-color:#2d4a41!important;color:#b8cec5!important}
+
+.profile-workflow-shell{
+  background:linear-gradient(145deg,#17332b,#10241f)!important;
+  border-color:#466d5e!important;
+  box-shadow:0 14px 38px rgba(0,0,0,.20)!important;
+}
+.profile-workflow-label{color:#8fd4ae!important}
+.profile-workflow-intro{color:#bdd0c7!important}
+.profile-time-bar{background:#0d211d!important;border-color:#335248!important}
+.profile-time-day{color:var(--warm-cream)!important}
+
+.photo-stage{
+  border-radius:16px!important;
+  overflow:hidden!important;
+  box-shadow:0 16px 36px rgba(0,0,0,.24)!important;
+  border:1px solid #36584c!important;
+}
+.soil-photo{border-radius:15px!important}
+
+.kpi,.metric,.physics-tile,.seaweed-card,.change-lawn,.scenario-compare-lawn,.diag-item{
+  background:linear-gradient(145deg,#132a24,#0f211e)!important;
+  border-color:#304e45!important;
+  border-radius:12px!important;
+}
+.kpi b,.metric b,.physics-tile b{color:#f0f8f3!important}
+
+.change-report{
+  background:linear-gradient(145deg,#122a24,#0d1f1c)!important;
+  border-color:#36574d!important;
+  border-radius:15px!important;
+}
+.next-actions{background:#173027!important;border-color:#3a5e50!important;color:#d8e9e1!important}
+
+.diag-item.primary{
+  border-color:#628b77!important;
+  background:linear-gradient(145deg,#19372d,#13291f)!important;
+}
+.diag-score{background:#183128!important;border-color:#527664!important;color:#d7eadf!important}
+
+.evidence-layer{background:#0e1c19!important;border-color:#28463d!important}
+.evidence-tier{opacity:.28!important}
+.evidence-tier:hover{opacity:.72!important}
+
+/* Gentle visual hierarchy: content first, chrome second. */
+section.card>.head{padding-bottom:4px}
+section.card>.head h2{letter-spacing:-.015em}
+.row{gap:8px!important}
+
+@media(max-width:700px){
+  .card{border-radius:15px!important}
+  .profile-workflow-shell{border-radius:15px!important}
+  .quick-nav{border-radius:12px!important}
+}
