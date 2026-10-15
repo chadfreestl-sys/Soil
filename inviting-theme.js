@@ -10,6 +10,9 @@
     research:{title:'A serious model can still feel inviting to explore.',desc:'Keep the deeper controls, experimental tools and evidence information visible without making the workspace feel cold or crowded.'}
   };
 
+  const brandTitle=document.querySelector('header h1');
+  if(brandTitle) brandTitle.textContent='Living Turf Lab';
+
   const shell=document.querySelector('.mode-shell');
   if(shell){
     const strong=shell.querySelector('.mode-copy strong');
@@ -67,5 +70,5 @@
   if(badge) badge.textContent='v19.8 · NATURE STUDIO';
   const topBadge=document.querySelector('header .badge');
   if(topBadge) topBadge.textContent=`v19.8 · ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)}`;
-  document.title=`Living Soil Lab v19.8 | ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)} Mode`;
+  document.title=`Living Turf Lab | ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)} Mode`;
 })();
