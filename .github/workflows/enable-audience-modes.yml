@@ -1,0 +1,49 @@
+name: Enable Living Soil Lab v19.5 Audience Modes
+
+on:
+  push:
+    paths:
+      - '.github/workflows/enable-audience-modes.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-audience-modes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Preserve simulator and enable audience layer
+        shell: bash
+        run: |
+          if [ ! -f lab.html ]; then
+            cp index.html lab.html
+          fi
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('lab.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('<title>Living Soil Lab v19.4 | Evidence & Confidence Layer</title>','<title>Living Soil Lab v19.5 | Audience Modes</title>',1)
+          if 'audience-modes.css' not in s:
+              s=s.replace('</head>','<link rel="stylesheet" href="audience-modes.css"></head>',1)
+          if 'audience-modes.js' not in s:
+              s=s.replace('</body>','<script src="audience-modes.js"></script></body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          cp audience-selector.html index.html
+
+      - name: Commit v19.5 audience modes
+        shell: bash
+        run: |
+          if [ -z "$(git status --porcelain -- index.html lab.html)" ]; then
+            echo 'v19.5 audience structure already present'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html lab.html
+          git commit -m 'Add v19.5 dedicated audience selection and modes'
+          git push
