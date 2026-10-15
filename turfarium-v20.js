@@ -16,7 +16,7 @@
     if(!document.querySelector('link[data-turfarium-v207]')){
       const theme=document.createElement('link');
       theme.rel='stylesheet';
-      theme.href='turfarium-v20-7.css?v=20.7';
+      theme.href='turfarium-v20-7.css?v=20.11';
       theme.dataset.turfariumV207='true';
       document.head.appendChild(theme);
     }
@@ -24,7 +24,7 @@
     if(!document.querySelector('link[data-turfarium-contrast]')){
       const contrast=document.createElement('link');
       contrast.rel='stylesheet';
-      contrast.href='turfarium-contrast.css?v=20.9';
+      contrast.href='turfarium-contrast.css?v=20.11';
       contrast.dataset.turfariumContrast='true';
       document.head.appendChild(contrast);
     }
@@ -47,7 +47,7 @@
     if(landingName) landingName.textContent='Turfarium';
     const landingVersion=document.querySelector('.brand p');
     if(landingVersion && /simulator|v19|v20/i.test(landingVersion.textContent||'')){
-      landingVersion.textContent='Interactive turf ecosystem simulator · v20.9';
+      landingVersion.textContent='Interactive turf ecosystem simulator · v20.11';
     }
 
     const h1=document.querySelector('header h1');
@@ -83,9 +83,9 @@
     }
 
     const buildBadge=document.querySelector('.build-badge');
-    if(buildBadge) buildBadge.textContent='v20.9 · HIGH CONTRAST';
+    if(buildBadge) buildBadge.textContent='v20.11 · HIGH CONTRAST';
     const topBadge=document.querySelector('header .badge');
-    if(topBadge) topBadge.textContent=`v20.9${modeLabel?` · ${modeLabel}`:''}`;
+    if(topBadge) topBadge.textContent=`v20.11${modeLabel?` · ${modeLabel}`:''}`;
 
     const scenarios=document.getElementById('scenario-onboarding');
     const scenarioKicker=scenarios?.querySelector('.scenario-kicker');
