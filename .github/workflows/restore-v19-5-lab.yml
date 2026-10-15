@@ -1,4 +1,4 @@
-name: Restore Turfarium v19.8
+name: Restore Turfarium v20.2
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore evidence build and add v19.8 layers
+      - name: Restore simulation core and apply Turfarium v20.2 layers
         shell: bash
         run: |
           git show ad0b7b53a32c383d9113ac282da0571cc4b3afac:index.html > lab.html
@@ -28,28 +28,43 @@ jobs:
           s=p.read_text(encoding='utf-8')
           s=s.replace('<title>Living Soil Lab v19.4 | Evidence & Confidence Layer</title>','<title>Turfarium | Interactive Turf Ecosystem Simulator</title>',1)
           s=s.replace('Living Soil Lab','Turfarium')
-          for css in ['audience-modes.css','scenario-tools.css','layout-tools.css']:
-              if css not in s:
-                  s=s.replace('</head>',f'<link rel="stylesheet" href="{css}"></head>',1)
-          if 'inviting-theme.css' not in s:
-              s=s.replace('</head>','<link rel="stylesheet" href="inviting-theme.css?v=19.8"></head>',1)
-          for js in ['audience-modes.js','scenario-tools.js','layout-tools.js']:
-              if js not in s:
-                  s=s.replace('</body>',f'<script src="{js}"></script></body>',1)
-          if 'inviting-theme.js' not in s:
-              s=s.replace('</body>','<script src="inviting-theme.js?v=19.8"></script></body>',1)
+
+          styles=[
+            ('audience-modes.css','audience-modes.css?v=20.2'),
+            ('scenario-tools.css','scenario-tools.css?v=20.2'),
+            ('layout-tools.css','layout-tools.css?v=20.2'),
+            ('inviting-theme.css','inviting-theme.css?v=20.2'),
+            ('turfarium-v20.css','turfarium-v20.css?v=20.2'),
+          ]
+          for key,src in styles:
+              if key not in s:
+                  s=s.replace('</head>',f'<link rel="stylesheet" href="{src}"></head>',1)
+          if 'turfarium-mark.svg' not in s:
+              s=s.replace('</head>','<link rel="icon" type="image/svg+xml" href="turfarium-mark.svg?v=20.2"></head>',1)
+
+          scripts=[
+            ('audience-modes.js','audience-modes.js?v=20.2'),
+            ('scenario-tools.js','scenario-tools.js?v=20.2'),
+            ('layout-tools.js','layout-tools.js?v=20.2'),
+            ('inviting-theme.js','inviting-theme.js?v=20.2'),
+            ('turfarium-v20.js','turfarium-v20.js?v=20.2'),
+          ]
+          for key,src in scripts:
+              if key not in s:
+                  s=s.replace('</body>',f'<script src="{src}"></script></body>',1)
+
           p.write_text(s,encoding='utf-8')
           PY
 
-      - name: Commit restored v19.8 lab
+      - name: Commit Turfarium v20.2 simulator
         shell: bash
         run: |
           if [ -z "$(git status --porcelain -- lab.html)" ]; then
-            echo 'lab.html already matches Turfarium v19.8 layered build'
+            echo 'lab.html already matches Turfarium v20.2 build'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add lab.html
-          git commit -m 'Upgrade Turfarium v19.8 nature studio experience'
+          git commit -m 'Build Turfarium v20.2 unified friendly interface'
           git push
