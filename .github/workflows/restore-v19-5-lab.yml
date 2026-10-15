@@ -1,4 +1,4 @@
-name: Restore Living Soil Lab v19.6.1
+name: Restore Living Soil Lab v19.7
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore evidence build and add v19.6.1 layers
+      - name: Restore evidence build and add v19.7 layers
         shell: bash
         run: |
           git show ad0b7b53a32c383d9113ac282da0571cc4b3afac:index.html > lab.html
@@ -26,31 +26,25 @@ jobs:
           from pathlib import Path
           p=Path('lab.html')
           s=p.read_text(encoding='utf-8')
-          s=s.replace('<title>Living Soil Lab v19.4 | Evidence & Confidence Layer</title>','<title>Living Soil Lab v19.6.1 | Audience Modes + Scenario Tools</title>',1)
-          if 'audience-modes.css' not in s:
-              s=s.replace('</head>','<link rel="stylesheet" href="audience-modes.css"></head>',1)
-          if 'scenario-tools.css' not in s:
-              s=s.replace('</head>','<link rel="stylesheet" href="scenario-tools.css"></head>',1)
-          if 'layout-tools.css' not in s:
-              s=s.replace('</head>','<link rel="stylesheet" href="layout-tools.css"></head>',1)
-          if 'audience-modes.js' not in s:
-              s=s.replace('</body>','<script src="audience-modes.js"></script></body>',1)
-          if 'scenario-tools.js' not in s:
-              s=s.replace('</body>','<script src="scenario-tools.js"></script></body>',1)
-          if 'layout-tools.js' not in s:
-              s=s.replace('</body>','<script src="layout-tools.js"></script></body>',1)
+          s=s.replace('<title>Living Soil Lab v19.4 | Evidence & Confidence Layer</title>','<title>Living Soil Lab v19.7 | Inviting Audience Experience</title>',1)
+          for css in ['audience-modes.css','scenario-tools.css','layout-tools.css','inviting-theme.css']:
+              if css not in s:
+                  s=s.replace('</head>',f'<link rel="stylesheet" href="{css}"></head>',1)
+          for js in ['audience-modes.js','scenario-tools.js','layout-tools.js','inviting-theme.js']:
+              if js not in s:
+                  s=s.replace('</body>',f'<script src="{js}"></script></body>',1)
           p.write_text(s,encoding='utf-8')
           PY
 
-      - name: Commit restored v19.6.1 lab
+      - name: Commit restored v19.7 lab
         shell: bash
         run: |
           if [ -z "$(git status --porcelain -- lab.html)" ]; then
-            echo 'lab.html already matches v19.6.1 layered build'
+            echo 'lab.html already matches v19.7 layered build'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add lab.html
-          git commit -m 'Upgrade Living Soil Lab to v19.6.1 profile workflow'
+          git commit -m 'Upgrade Living Soil Lab to v19.7 inviting experience'
           git push
