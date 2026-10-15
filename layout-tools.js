@@ -8,7 +8,6 @@
   const intro=document.querySelector('.visual-intro');
   const viewOptions=intro?.querySelector('.view-options');
   const memory=byId('scenario-memory');
-  const scenarios=byId('scenario-onboarding');
   const modeShell=document.querySelector('.mode-shell');
   const header=document.querySelector('header');
 
@@ -59,7 +58,6 @@
     timeSlot.appendChild(visit);
   }
 
-  // Core experiment order inside the workspace remains controls -> save -> lawns -> report.
   grid.insertBefore(deck,lawnA);
 
   if(memory){
@@ -78,18 +76,35 @@
   lawnB.insertAdjacentElement('afterend',timeline);
   timeline.classList.add('timeline-report-only');
 
-  // v20.12: scenarios are the first working element below the selected audience mode,
-  // then the live lawn workspace follows immediately beneath them.
-  const topAnchor=modeShell||header;
-  if(topAnchor){
+  // Scenarios must always be the first working block, with the live lawn workspace directly after.
+  // scenario-tools.js can render asynchronously relative to this file, so enforce the order repeatedly.
+  const placePrimaryFlow=()=>{
+    const topAnchor=document.querySelector('.mode-shell')||document.querySelector('header');
+    const scenarios=byId('scenario-onboarding');
+    if(!topAnchor)return false;
     if(scenarios){
       scenarios.classList.add('tf-scenarios-first');
       topAnchor.insertAdjacentElement('afterend',scenarios);
       scenarios.insertAdjacentElement('afterend',grid);
-    }else{
-      topAnchor.insertAdjacentElement('afterend',grid);
+      return true;
     }
-  }
+    topAnchor.insertAdjacentElement('afterend',grid);
+    return false;
+  };
+
+  placePrimaryFlow();
+  setTimeout(placePrimaryFlow,0);
+  setTimeout(placePrimaryFlow,120);
+  setTimeout(placePrimaryFlow,500);
+  setTimeout(placePrimaryFlow,1400);
+  const observer=new MutationObserver(()=>{
+    if(byId('scenario-onboarding')){
+      placePrimaryFlow();
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+  setTimeout(()=>observer.disconnect(),4000);
 
   if(intro) intro.classList.add('visual-intro-workspace-moved','visual-intro-without-controls');
 
@@ -142,10 +157,10 @@
   }
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.12 · SCENARIOS FIRST';
+  if(badge)badge.textContent='v20.13 · SCENARIOS FIRST';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.12 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.13 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
