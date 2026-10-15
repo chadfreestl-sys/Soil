@@ -3,7 +3,6 @@ name: Import Living Soil Lab baseline into lab.html
 on:
   push:
     paths:
-      - '.github/workflows/import-v19.yml'
       - 'living_soil_lab_v19_3_interaction_fix_netlify (1).zip'
   workflow_dispatch:
 
