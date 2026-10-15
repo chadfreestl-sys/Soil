@@ -1,0 +1,57 @@
+name: Apply Turfarium v20
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-turfarium-v20.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-v20:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply Turfarium v20 brand and experience layer
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def inject_assets(text):
+              if 'turfarium-v20.css' not in text:
+                  text=text.replace('</head>','<link rel="stylesheet" href="turfarium-v20.css?v=20"></head>',1)
+              if 'turfarium-v20.js' not in text:
+                  text=text.replace('</body>','<script src="turfarium-v20.js?v=20"></script></body>',1)
+              return text
+
+          for name in ['index.html','audience-selector.html','lab.html']:
+              p=Path(name)
+              if not p.exists():
+                  continue
+              s=p.read_text(encoding='utf-8')
+              s=s.replace('Living Soil Lab','Turfarium').replace('Living Turf Lab','Turfarium')
+              s=s.replace('v19.8','v20')
+              s=inject_assets(s)
+              if name=='index.html':
+                  s=s.replace('<title>Turfarium | Turf Ecosystem Simulator</title>','<title>Turfarium | Interactive Turf Ecosystem Simulator</title>')
+                  s=s.replace('<title>Turfarium | Interactive Turf Ecosystem Simulator</title>','<title>Turfarium | Interactive Turf Ecosystem Simulator</title>')
+                  s=s.replace('<div class="mark">🌱</div>','<div class="mark"><img src="turfarium-mark.svg" alt="" aria-hidden="true"></div>')
+                  s=s.replace('Interactive turf ecosystem simulator · v20','Interactive turf ecosystem simulator · v20')
+              p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Commit Turfarium v20
+        shell: bash
+        run: |
+          if [ -z "$(git status --porcelain -- index.html audience-selector.html lab.html)" ]; then
+            echo 'Turfarium v20 already applied'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html audience-selector.html lab.html
+          git commit -m 'Apply Turfarium v20 brand and experience system'
+          git push
