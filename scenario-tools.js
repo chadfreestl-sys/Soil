@@ -139,5 +139,5 @@
 
   const badge=document.querySelector('.build-badge');if(badge)badge.textContent='v19.6 · SCENARIOS + DIAGNOSTICS';
   const topBadge=document.querySelector('header .badge');if(topBadge)topBadge.textContent=`v19.6 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
-  document.title=`Living Soil Lab v19.6 | ${mode.charAt(0).toUpperCase()+mode.slice(1)} Mode`;
+  document.title=`Turfarium v19.6 | ${mode.charAt(0).toUpperCase()+mode.slice(1)} Mode`;
 })();

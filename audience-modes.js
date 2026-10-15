@@ -69,7 +69,7 @@
   if(badge) badge.textContent='v19.5.1 · AUDIENCE MODES';
   const topBadge=document.querySelector('header .badge');
   if(topBadge) topBadge.textContent=`v19.5.1 · ${info.label}`;
-  document.title=`Living Soil Lab v19.5.1 | ${info.label} Mode`;
+  document.title=`Turfarium v19.5.1 | ${info.label} Mode`;
 
   const hints={
     homeowner:{'Shared starting conditions':'Start with what you know about the lawn. You can leave advanced values alone and compare management choices visually.','⏱ Simulation time':'Try one change at a time, advance the clock, then inspect the lawn and root-zone response.'},

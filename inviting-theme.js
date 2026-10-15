@@ -11,7 +11,7 @@
   };
 
   const brandTitle=document.querySelector('header h1');
-  if(brandTitle) brandTitle.textContent='Living Turf Lab';
+  if(brandTitle) brandTitle.textContent='Turfarium';
 
   const shell=document.querySelector('.mode-shell');
   if(shell){
@@ -70,5 +70,5 @@
   if(badge) badge.textContent='v19.8 · NATURE STUDIO';
   const topBadge=document.querySelector('header .badge');
   if(topBadge) topBadge.textContent=`v19.8 · ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)}`;
-  document.title=`Living Turf Lab | ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)} Mode`;
+  document.title=`Turfarium | ${mode==='research'?'Research / Lab':mode.charAt(0).toUpperCase()+mode.slice(1)} Mode`;
 })();
