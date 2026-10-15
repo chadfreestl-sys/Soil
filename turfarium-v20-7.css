@@ -1,0 +1,42 @@
+/* Turfarium v20.7 — high-contrast turf-first refinement */
+:root{
+  --tf-bg:#f7f4e9!important;
+  --tf-surface:#fffdf7!important;
+  --tf-soft:#edf5e9!important;
+  --tf-soft-2:#e1ecdd!important;
+  --tf-warm:#f8f0e4!important;
+  --tf-forest:#0f5132!important;
+  --tf-leaf:#2f6f4d!important;
+  --tf-sage:#82a878!important;
+  --tf-soil:#815d39!important;
+  --tf-water:#397fae!important;
+  --tf-ink:#173b2b!important;
+  --tf-muted:#4d6257!important;
+  --tf-line:#bfd0c0!important;
+  --tf-line-strong:#88a98d!important;
+}
+html,body{color:#173b2b!important}
+body{background:radial-gradient(circle at 4% 0%,rgba(125,172,120,.18),transparent 25%),radial-gradient(circle at 96% 3%,rgba(224,194,139,.16),transparent 24%),linear-gradient(180deg,#faf8f0 0%,#f2f6ed 55%,#f8f2e7 100%)!important}
+h1,h2,h3,h4,h5,strong,b{color:#173b2b!important}
+p,small,.note,.sub,.subtle,.module-copy,.studio-note,.zoom-help,.micro-legend,.scenario-status,.audience-mode-note{color:#4d6257!important;opacity:1!important}
+label{color:#365445!important;font-weight:700!important}
+.eyebrow,.scenario-kicker,.mode-kicker,.profile-deck-kicker{color:#2f6f4d!important;font-weight:850!important;letter-spacing:.14em!important}
+header{background:linear-gradient(120deg,#fffdf7,#edf5e9)!important;border-color:#bfd0c0!important;box-shadow:0 12px 28px rgba(42,67,49,.10)!important}
+header .tf-brand-name{color:#0f5132!important;font-weight:850!important}.tf-brand-sub{color:#365e49!important;font-weight:650!important;font-size:.8rem!important}
+header .badge,.build-badge{background:#e5efe0!important;border-color:#afc6b0!important;color:#245d40!important;font-weight:800!important}
+.mode-shell{background:#fffdf7!important;border-color:#bfd0c0!important}.mode-kicker{font-size:.68rem!important}.mode-copy strong{font-size:1.08rem!important;color:#0f5132!important}.mode-change,.mode-pill{font-weight:800!important}
+.card,.scenario-card,.scenario-compare-lawn,.diag-item,.diag-clear,.physics-tile,.seaweed-card,.seaweed-metric,.micro-entry,.evidence-box,.readout div,.brew-results>div{background:#fffdf7!important;border-color:#bfd0c0!important;color:#173b2b!important;box-shadow:0 8px 20px rgba(42,67,49,.07)!important}
+.card h2,.card h3,.card h4,.head h2,.head h3{color:#123f2b!important;font-weight:800!important}
+.profile-control-deck{background:linear-gradient(120deg,#f8f0e4,#edf5e9)!important;border-color:#cdbf9f!important}.profile-deck-label strong,.profile-time-head h2{color:#173f2d!important;font-weight:850!important}.profile-view-slot,.profile-time-slot{background:#fff!important;border-color:#bfd0c0!important}.profile-view-embedded .note,.profile-visit-note{color:#51685c!important}
+button,.mode-change{color:#234b37!important;border-color:#9fb7a2!important;font-weight:750!important;background:linear-gradient(180deg,#fffefb,#edf3e9)!important}button.primary,.primary,.apply-btn.confirmed{background:linear-gradient(180deg,#2f7a50,#1f633f)!important;border-color:#1d5d3b!important;color:#fff!important;font-weight:850!important}
+input,select,textarea,input[type=number]{color:#173b2b!important;border-color:#9fb4a2!important;font-weight:650!important;background:#fff!important}select option{color:#173b2b!important;background:#fff!important}
+.timeline,.simulation-grid>.timeline{background:linear-gradient(120deg,#f1f6ec,#fff8ed)!important;border-color:#afc9b2!important}.timeline [data-step]{color:#234b37!important;font-weight:800!important;border-color:#b4c9b5!important}
+#lawn-a-panel,#lawn-b-panel,.simulation-grid>.card:nth-child(-n+2){background:#fffdf8!important;border:1px solid #a9c1ad!important;box-shadow:0 14px 30px rgba(42,67,49,.11)!important}.photo-stage{border-color:#efe4cf!important;outline-color:#99b29c!important}
+.kpi,.metric,.physics-tile,.seaweed-metric,.scenario-compare-lawn,.brew-results>div{background:#edf4e9!important;border-color:#c3d4c4!important;color:#365044!important}.kpi strong,.metric strong,.metric b,.physics-tile strong,.readout b,.brew-results b{color:#173f2d!important;font-weight:850!important}
+.scenario-onboarding,.scenario-memory,.diagnostic-lens{background:linear-gradient(145deg,#f1f7ed,#fff8ee)!important}.scenario-card:hover{border-color:#78a083!important}.scenario-card p,.diag-item p,.diag-item small{color:#4d6257!important}.scenario-status{color:#385544!important}.diag-score{color:#244e38!important;font-weight:850!important}
+.rate-studio,.treatment-feedback,.recent-applications,.product-info,.climate-readout{background:#f3f7ef!important;color:#425d4f!important;border-color:#bfd0c0!important}.product-info strong,.climate-readout strong,.recent-applications h3{color:#173f2d!important}
+.change-report{background:linear-gradient(145deg,#fff8ee,#edf5e9)!important;border-color:#b9cdbb!important}.change-report h3,.change-lawn h4{color:#153f2c!important}.change-report .subtle,.change-lawn .why{color:#4d6257!important}.next-actions{color:#365345!important;background:#e6f0e2!important}
+.seaweed-module{background:linear-gradient(135deg,#edf5e9,#fff7eb)!important;border-color:#b6ccb8!important}.seaweed-narrative,.seaweed-card h3 span,.seaweed-metric small{color:#4d6257!important}.seaweed-phase{color:#285d40!important;font-weight:800!important}
+.quick-nav a{color:#28553e!important;font-weight:750!important}.inspector{color:#3c5a4b!important}.inspector strong{color:#215c3c!important}
+.tf-living-toolbar,.tf-replay-card{background:#fffdf7!important;border-color:#bfd0c0!important;color:#173b2b!important}.tf-living-toolbar strong,.tf-replay-card strong{color:#0f5132!important}
+@media(max-width:720px){body{font-size:16px!important}.card{padding:15px!important}.card h2{font-size:1.16rem!important}.card h3{font-size:1.02rem!important}.mode-shell{border-radius:15px!important}.tf-brand-name{font-size:1.55rem!important}.tf-brand-sub{font-size:.78rem!important}.profile-deck-label strong{font-size:1.03rem!important}button,select,input,textarea{font-size:16px!important}p,.note,.subtle,.module-copy{line-height:1.52!important}}
