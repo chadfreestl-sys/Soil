@@ -1,4 +1,4 @@
-name: Import Living Soil Lab v19.3
+name: Import Living Soil Lab baseline into lab.html
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Extract v19.3
+      - name: Extract simulator into lab page
         shell: bash
         run: |
           rm -rf .import-v19
@@ -25,21 +25,33 @@ jobs:
           unzip -o 'living_soil_lab_v19_3_interaction_fix_netlify (1).zip' -d .import-v19
           INDEX_PATH="$(find .import-v19 -type f -name index.html | head -n 1)"
           if [ -z "$INDEX_PATH" ]; then
-            echo 'No index.html found in uploaded v19.3 ZIP' >&2
+            echo 'No index.html found in uploaded simulator ZIP' >&2
             exit 1
           fi
-          cp "$INDEX_PATH" ./index.html
+          cp "$INDEX_PATH" ./lab.html
           rm -rf .import-v19
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('lab.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('<title>Living Soil Lab v19.3 | Seaweed Response Lab</title>','<title>Living Soil Lab v19.5 | Audience Modes</title>',1)
+          s=s.replace('<title>Living Soil Lab v19.4 | Evidence & Confidence Layer</title>','<title>Living Soil Lab v19.5 | Audience Modes</title>',1)
+          if 'audience-modes.css' not in s:
+              s=s.replace('</head>','<link rel="stylesheet" href="audience-modes.css"></head>',1)
+          if 'audience-modes.js' not in s:
+              s=s.replace('</body>','<script src="audience-modes.js"></script></body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
 
       - name: Commit imported simulator
         shell: bash
         run: |
-          if [ -z "$(git status --porcelain -- index.html)" ]; then
-            echo 'index.html already matches extracted v19.3'
+          if [ -z "$(git status --porcelain -- lab.html)" ]; then
+            echo 'lab.html already matches imported simulator'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html
-          git commit -m 'Import Living Soil Lab v19.3 baseline'
+          git add lab.html
+          git commit -m 'Refresh Living Soil Lab simulator baseline'
           git push
