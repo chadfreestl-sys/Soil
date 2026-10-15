@@ -1,0 +1,17 @@
+/* Turfarium v20.6 — Living Profiles + Replay */
+.tf-living-stage{position:relative;overflow:hidden;border-radius:inherit;isolation:isolate}
+.tf-living-stage>canvas.profile{position:relative;z-index:1}
+.tf-living-overlay{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;border-radius:inherit}
+.tf-living-stage.tf-replaying>canvas.profile{opacity:.12;transition:opacity .25s ease}
+.tf-living-stage:not(.tf-replaying)>canvas.profile{transition:opacity .25s ease}
+.tf-replay-bar{grid-column:1/-1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 13px;margin:0;border:1px solid #c9d8c6;border-radius:14px;background:linear-gradient(135deg,#fffdf7,#edf5e9);box-shadow:0 5px 14px rgba(34,73,47,.06)}
+.tf-replay-title{display:flex;flex-direction:column;gap:1px;min-width:150px}.tf-replay-title strong{font-size:.9rem;color:#244b36}.tf-replay-title small{font-size:.72rem;color:#698071}
+.tf-replay-controls{display:flex;align-items:center;gap:8px;flex:1;min-width:230px}
+.tf-replay-controls button,.tf-motion-select{min-height:38px;border-radius:10px}
+.tf-replay-controls input[type=range]{flex:1;min-width:110px;accent-color:#2f7651}
+.tf-replay-status{min-width:82px;font-size:.78rem;color:#56705f;text-align:right}
+.tf-motion-wrap{display:flex;align-items:center;gap:6px;font-size:.76rem;color:#617667}.tf-motion-select{padding:7px 9px;background:#fffef8!important;color:#2c4c39!important;border:1px solid #c3d2c1!important}
+.tf-living-pulse{animation:tfLivingPulse .75s ease-out}
+@keyframes tfLivingPulse{0%{box-shadow:0 0 0 0 rgba(53,132,88,.22)}100%{box-shadow:0 0 0 12px rgba(53,132,88,0)}}
+@media(max-width:650px){.tf-replay-bar{align-items:stretch}.tf-replay-title{width:100%}.tf-replay-controls{width:100%;min-width:0}.tf-motion-wrap{width:100%;justify-content:flex-end}.tf-replay-status{min-width:68px}}
+@media(prefers-reduced-motion:reduce){.tf-living-overlay{display:none!important}.tf-living-pulse{animation:none!important}}
