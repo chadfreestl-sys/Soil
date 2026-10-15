@@ -31,7 +31,7 @@
     if(landingName) landingName.textContent='Turfarium';
     const landingVersion=document.querySelector('.brand p');
     if(landingVersion && /simulator|v19|v20/i.test(landingVersion.textContent||'')){
-      landingVersion.textContent='Interactive turf ecosystem simulator · v20.3';
+      landingVersion.textContent='Interactive turf ecosystem simulator · v20.4';
     }
 
     const h1=document.querySelector('header h1');
@@ -56,7 +56,6 @@
       h1.textContent='Turfarium';
     }
 
-    // Remove the extra promotional block from the working simulator.
     document.querySelectorAll('.tf-v20-intro,.tf-v20-chip').forEach(el=>el.remove());
 
     const shell=document.querySelector('.mode-shell');
@@ -68,9 +67,9 @@
     }
 
     const buildBadge=document.querySelector('.build-badge');
-    if(buildBadge) buildBadge.textContent='v20.3 · TURFARIUM';
+    if(buildBadge) buildBadge.textContent='v20.4 · TURFARIUM';
     const topBadge=document.querySelector('header .badge');
-    if(topBadge) topBadge.textContent=`v20.3${modeLabel?` · ${modeLabel}`:''}`;
+    if(topBadge) topBadge.textContent=`v20.4${modeLabel?` · ${modeLabel}`:''}`;
 
     const scenarios=document.getElementById('scenario-onboarding');
     const scenarioKicker=scenarios?.querySelector('.scenario-kicker');
