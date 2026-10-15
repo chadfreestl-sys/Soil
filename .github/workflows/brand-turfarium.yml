@@ -19,7 +19,6 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-
           for name in ['index.html','audience-selector.html','inviting-theme.js','audience-modes.js','scenario-tools.js','lab.html']:
               p=Path(name)
               if not p.exists():
@@ -31,15 +30,6 @@ jobs:
                   s=s.replace('Interactive turf + soil ecosystem simulator','Interactive turf ecosystem simulator')
                   s=s.replace('Turfarium is built to make a complicated turf-and-soil system feel understandable.','Turfarium is an interactive turf ecosystem simulator built to make a complicated turf-and-soil system feel understandable.')
               p.write_text(s,encoding='utf-8')
-
-          p=Path('.github/workflows/restore-v19-5-lab.yml')
-          if p.exists():
-              s=p.read_text(encoding='utf-8')
-              s=s.replace('name: Restore Living Soil Lab v19.8','name: Restore Turfarium v19.8')
-              s=s.replace("'<title>Living Soil Lab v19.8 | Nature Studio Experience</title>'","'<title>Turfarium | Interactive Turf Ecosystem Simulator</title>'")
-              s=s.replace("p.write_text(s,encoding='utf-8')","s=s.replace('Living Soil Lab','Turfarium')\n          p.write_text(s,encoding='utf-8')")
-              s=s.replace('Upgrade Living Soil Lab to v19.8 nature studio experience','Upgrade Turfarium v19.8 nature studio experience')
-              p.write_text(s,encoding='utf-8')
           PY
       - name: Commit Turfarium branding
         shell: bash
@@ -50,6 +40,6 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html audience-selector.html inviting-theme.js audience-modes.js scenario-tools.js lab.html .github/workflows/restore-v19-5-lab.yml
+          git add index.html audience-selector.html inviting-theme.js audience-modes.js scenario-tools.js lab.html
           git commit -m 'Rename product to Turfarium'
           git push
