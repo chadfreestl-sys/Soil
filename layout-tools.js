@@ -15,14 +15,14 @@
   if(!document.querySelector('link[data-context-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='context-layout-v20-18.css?v=20.23';
+    css.href='context-layout-v20-18.css?v=20.24';
     css.dataset.contextLayout='true';
     document.head.appendChild(css);
   }
   if(!document.querySelector('link[data-collapse-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='collapsible-panels-v20-21.css?v=20.23';
+    css.href='collapsible-panels-v20-21.css?v=20.24';
     css.dataset.collapseLayout='true';
     document.head.appendChild(css);
   }
@@ -129,6 +129,10 @@
     return {site,weather};
   };
 
+  const findManagementPanel=()=>byId('experiment-controls')?.closest('.card.wide')
+    ||byId('experiment-controls')?.closest('section.card')
+    ||majorForHeading(/Management|Treatment Controls|Treatments|Applications/i);
+
   const titleForPanel=panel=>{
     if(panel===lawnA)return 'Lawn A';
     if(panel===lawnB)return 'Lawn B';
@@ -193,9 +197,8 @@
   const decorateCollapsibles=()=>{
     const {site,weather}=findContextPanels();
     const panels=[
-      byId('scenario-onboarding'),site,weather,deck,byId('scenario-memory'),lawnA,lawnB,
+      byId('scenario-onboarding'),site,weather,findManagementPanel(),deck,byId('scenario-memory'),lawnA,lawnB,
       document.querySelector('.tf-replay-bar'),byId('diagnostic-lens'),timeline,
-      byId('experiment-controls')?.closest('.card.wide')||byId('experiment-controls')?.closest('section.card')||majorForHeading(/Management|Treatment Controls|Treatments|Applications/i),
       majorForHeading(/Soil Physics|Soil Lab|Nutrient Cycling|Soil & Nutrient|Nutrient Detail/i),
       majorForHeading(/Soil Food Web|Biology|Microbial|Microbiology/i),
       majorForHeading(/Seaweed\s+Response\s+Lab/i),
@@ -222,6 +225,9 @@
     const {site,weather}=findContextPanels();
     if(site)anchor=appendAfter(anchor,site);
     if(weather)anchor=appendAfter(anchor,weather);
+
+    const management=findManagementPanel();
+    if(management)anchor=appendAfter(anchor,management);
 
     anchor=appendAfter(anchor,deck);
     if(memory)anchor=appendAfter(anchor,memory);
@@ -271,11 +277,6 @@
     const diagnostic=byId('diagnostic-lens');
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
 
-    const management=byId('experiment-controls')?.closest('.card.wide')
-      ||byId('experiment-controls')?.closest('section.card')
-      ||majorForHeading(/Management|Treatment Controls|Treatments|Applications/i);
-    if(management&&!grid.contains(management))anchor=appendAfter(anchor,management);
-
     const soil=majorForHeading(/Soil Physics|Soil Lab|Nutrient Cycling|Soil & Nutrient|Nutrient Detail/i);
     if(soil&&!grid.contains(soil))anchor=appendAfter(anchor,soil);
 
@@ -324,13 +325,13 @@
     if(!document.querySelector('link[data-living-profiles]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='living-profiles.css?v=20.23';
+      css.href='living-profiles.css?v=20.24';
       css.dataset.livingProfiles='true';
       document.head.appendChild(css);
     }
     if(!document.querySelector('script[data-living-profiles]')){
       const script=document.createElement('script');
-      script.src='living-profiles.js?v=20.23';
+      script.src='living-profiles.js?v=20.24';
       script.defer=true;
       script.dataset.livingProfiles='true';
       script.addEventListener('load',()=>requestAnimationFrame(()=>{arrangePrimaryPanels();decorateCollapsibles();}),{once:true});
@@ -340,10 +341,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.23 · ALL CLOSED';
+  if(badge)badge.textContent='v20.24 · ALL CLOSED';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.23 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.24 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
