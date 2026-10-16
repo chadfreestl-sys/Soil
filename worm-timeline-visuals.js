@@ -14,11 +14,11 @@ const scenes=['A','B'].map((key,i)=>{
  const canvas=document.createElement('canvas');
  canvas.className='tf-worm-scene';
  canvas.setAttribute('aria-hidden','true');
- canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3';
+ canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:20';
  stage.appendChild(canvas);
  const note=document.createElement('div');
  note.className='tf-worm-status';
- note.style.cssText='position:absolute;right:7px;bottom:7px;z-index:4;padding:4px 7px;border-radius:8px;background:rgba(10,35,25,.83);color:#fff;font:700 11px system-ui,sans-serif;pointer-events:none';
+ note.style.cssText='position:absolute;right:7px;bottom:7px;z-index:21;padding:4px 7px;border-radius:8px;background:rgba(10,35,25,.83);color:#fff;font:700 11px system-ui,sans-serif;pointer-events:none';
  stage.appendChild(note);
  return {key,i,panel,stage,canvas,note,ctx:canvas.getContext('2d'),day:-1,activity:33,vigor:71,phase:i*1.9,step:0};
 }).filter(Boolean);
@@ -51,14 +51,15 @@ const draw=(s,t)=>{
  ctx.clearRect(0,0,w,h);
  const moving=!reduced&&localStorage.getItem('turfariumMotion')!=='off';
  const speed=localStorage.getItem('turfariumMotion')==='low'?.4:1;
- const time=moving?t*.00033*speed:0;
+ const time=moving?t*.0015*speed:0;
  const count=s.activity<12?0:s.activity<35?1:s.activity<65?2:3;
  // Separate organisms per lawn; visibility and travel depend on each lawn's own model activity.
  for(let j=0;j<count;j++){
   const seed=s.i*3.1+j*2.2;
   const activity=s.activity/100;
-  const x=w*(.18+((seed*.19+.27+time*(.055+.08*activity)*(j%2?1:-1))% .65+.65)% .65);
-  const y=h*(.70+.09*Math.sin(seed*1.8+time*.65)+.045*j);
+  const travel=((seed*.19+.27+time*(.24+.22*activity)*(j%2?1:-1))% .65+.65)% .65;
+  const x=w*(.18+travel);
+  const y=h*(.69+.07*Math.sin(seed*1.8+time*.65)+.055*j);
   const length=w*(.067+.025*activity),segments=22;
   ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
   ctx.shadowColor='rgba(0,0,0,.65)';ctx.shadowBlur=3*dpr;
@@ -71,7 +72,7 @@ const draw=(s,t)=>{
   }
   ctx.strokeStyle='rgba(22,13,11,.83)';ctx.lineWidth=7*dpr;ctx.stroke();
   ctx.shadowBlur=0;
-  ctx.strokeStyle='rgba(174,105,91,.93)';ctx.lineWidth=4.3*dpr;ctx.stroke();
+  ctx.strokeStyle='rgba(218,143,119,.98)';ctx.lineWidth=5*dpr;ctx.stroke();
   ctx.setLineDash([1.2*dpr,3.5*dpr]);ctx.strokeStyle='rgba(84,43,39,.75)';ctx.lineWidth=1.4*dpr;ctx.stroke();
   ctx.restore();
  }
