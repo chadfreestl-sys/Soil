@@ -1,6 +1,7 @@
-/* Turfarium 21.4: final layout precedence */
+/* Turfarium 21.5: profile, weather, lawns, treatments, results */
 .simulation-grid.tf-primary-workspace > *{order:100!important}
 .simulation-grid.tf-primary-workspace > #profile-control-deck{order:-30!important;grid-column:1/-1!important}
+.simulation-grid.tf-primary-workspace > .tf-weather-context{order:-25!important;grid-column:1/-1!important}
 .simulation-grid.tf-primary-workspace > #lawn-a-panel{order:-20!important}
 .simulation-grid.tf-primary-workspace > #lawn-b-panel{order:-19!important}
 .simulation-grid.tf-primary-workspace > .tf-treatment-priority{order:-10!important;grid-column:1/-1!important}
