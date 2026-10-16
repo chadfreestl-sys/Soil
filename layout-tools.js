@@ -257,11 +257,17 @@
       const label=toggle.querySelector('.tf-collapse-title');
       if(label)label.textContent='🌎 Site, Season & Weather Lab';
       const body=panel.querySelector(':scope > .tf-collapse-body');
-      panel.classList.remove('tf-panel-collapsed');
-      toggle.setAttribute('aria-expanded','true');
-      if(body)body.hidden=false;
-      const chevron=toggle.querySelector('.tf-collapse-chevron');
-      if(chevron)chevron.textContent='▾';
+      // The collapse controller owns open/close state. Never force Weather open
+      // during a reorder; that previously fought the weather-first controller.
+      // On first initialization the weather laboratory starts closed.
+      if(!panel.dataset.tfV25WeatherDefault){
+        panel.dataset.tfV25WeatherDefault='1';
+        panel.classList.add('tf-panel-collapsed');
+        toggle.setAttribute('aria-expanded','false');
+        if(body)body.hidden=true;
+        const chevron=toggle.querySelector('.tf-collapse-chevron');
+        if(chevron)chevron.textContent='▸';
+      }
     }
   };
 
