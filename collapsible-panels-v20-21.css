@@ -1,0 +1,48 @@
+/* Turfarium v20.21 — progressive disclosure for dense simulator panels */
+.tf-collapsible-panel{position:relative!important;overflow:hidden!important}
+.tf-collapse-toggle{
+  width:100%!important;
+  min-height:44px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  margin:0 0 10px!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(34,87,60,.18)!important;
+  border-radius:11px!important;
+  background:rgba(247,244,233,.84)!important;
+  color:#173b2b!important;
+  font:inherit!important;
+  font-weight:800!important;
+  text-align:left!important;
+  cursor:pointer!important;
+  box-shadow:none!important
+}
+.tf-collapse-toggle:hover{background:#fffdf7!important}
+.tf-collapse-toggle:focus-visible{outline:3px solid rgba(54,117,81,.28)!important;outline-offset:2px!important}
+.tf-collapse-title{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.tf-collapse-chevron{flex:0 0 auto!important;font-size:1rem!important;line-height:1!important;color:#365f48!important}
+.tf-collapse-body{min-width:0!important}
+.tf-panel-collapsed>.tf-collapse-toggle{margin-bottom:0!important;background:rgba(247,244,233,.94)!important}
+.tf-panel-collapsed{padding-top:10px!important;padding-bottom:10px!important;min-height:0!important}
+.tf-panel-collapsed>.tf-collapse-body[hidden]{display:none!important}
+
+/* The primary experiment remains visually strong when open. */
+#scenario-onboarding.tf-collapsible-panel>.tf-collapse-toggle,
+.tf-site-context.tf-collapsible-panel>.tf-collapse-toggle,
+.tf-weather-context.tf-collapsible-panel>.tf-collapse-toggle,
+#profile-control-deck.tf-collapsible-panel>.tf-collapse-toggle,
+#lawn-a-panel.tf-collapsible-panel>.tf-collapse-toggle,
+#lawn-b-panel.tf-collapsible-panel>.tf-collapse-toggle{
+  border-color:rgba(54,117,81,.28)!important;
+  background:rgba(236,243,233,.94)!important
+}
+
+/* Keep the open body from inheriting accidental clipping from legacy cards. */
+.tf-collapsible-panel:not(.tf-panel-collapsed)>.tf-collapse-body{overflow:visible!important}
+
+@media(max-width:760px){
+  .tf-collapse-toggle{min-height:42px!important;padding:9px 10px!important;margin-bottom:8px!important;font-size:.86rem!important}
+  .tf-panel-collapsed{padding:8px!important}
+}
