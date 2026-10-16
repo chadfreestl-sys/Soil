@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='22.2';
+  const VERSION='22.3';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -240,22 +240,28 @@
     return panel && panel!==deck && !panel.contains(deck) && !panel.contains(lawnA) && !panel.contains(lawnB)?panel:null;
   };
   const putWeatherFirst=()=>{
-    const panel=locateSiteSeasonWeatherLab();
-    if(!panel)return;
+    // Verified against the source HTML: this ID belongs to the entire
+    // <section class="card climate-card" id="experiment-controls">.
+    const panel=byId('experiment-controls');
+    if(!panel || panel===deck || panel.contains(deck))return;
     panel.classList.add('tf-weather-context','tf-context-panel','tf-weather-first');
     panel.style.setProperty('order','-1100','important');
     panel.style.setProperty('grid-column','1 / -1','important');
-    if(deck.parentElement===grid && panel.parentElement===grid){
-      grid.insertBefore(panel,deck);
-    }else if(deck.parentElement===grid){
+    if(deck.parentElement===grid && (panel.parentElement!==grid || panel.nextElementSibling!==deck)){
       grid.insertBefore(panel,deck);
     }
+    const h=panel.querySelector('.tf-collapse-body .head h2,.head h2');
+    if(h)h.textContent='🌎 Site, Season & Weather Lab';
     const toggle=panel.querySelector(':scope > .tf-collapse-toggle');
-    const body=panel.querySelector(':scope > .tf-collapse-body');
-    if(toggle && body && panel.classList.contains('tf-panel-collapsed')){
+    if(toggle){
+      const label=toggle.querySelector('.tf-collapse-title');
+      if(label)label.textContent='🌎 Site, Season & Weather Lab';
+      const body=panel.querySelector(':scope > .tf-collapse-body');
       panel.classList.remove('tf-panel-collapsed');
       toggle.setAttribute('aria-expanded','true');
-      body.hidden=false;
+      if(body)body.hidden=false;
+      const chevron=toggle.querySelector('.tf-collapse-chevron');
+      if(chevron)chevron.textContent='▾';
     }
   };
 
