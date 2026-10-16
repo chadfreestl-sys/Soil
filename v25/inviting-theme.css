@@ -1,0 +1,218 @@
+/* Turfarium v20 — friendly living ecosystem interface */
+:root{
+  color-scheme:light!important;
+  --paper:#f7f3e9;
+  --paper-2:#eef4ea;
+  --panel:#fffdf7;
+  --panel-soft:#f7faf4;
+  --panel-green:#edf5eb;
+  --panel-sage:#e5efe4;
+  --ink:#26392f;
+  --muted:#63766b;
+  --forest:#1b5e3d;
+  --forest-2:#2f7653;
+  --leaf:#5f966a;
+  --sage:#9cb78b;
+  --earth:#987348;
+  --sand:#eadfc9;
+  --water:#5f8fb6;
+  --gold:#d89a35;
+  --danger:#a85f46;
+  --line:#d4dfd1;
+  --line-strong:#aec4ad;
+  --shadow:0 10px 28px rgba(46,73,52,.09);
+}
+
+html,body{background:var(--paper-2)!important;color:var(--ink)!important}
+body{
+  background:
+    radial-gradient(circle at 7% 0%,rgba(139,177,128,.18),transparent 28%),
+    radial-gradient(circle at 96% 3%,rgba(213,177,118,.14),transparent 25%),
+    linear-gradient(180deg,#f6f8f1 0%,#edf3e9 52%,#f7f1e7 100%)!important;
+  min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.18;
+  background-image:radial-gradient(circle at 1px 1px,rgba(57,93,67,.1) 1px,transparent 0);
+  background-size:30px 30px;
+}
+main{position:relative}
+
+/* Friendly top brand area: light, warm, and consistent with the landing page. */
+header{
+  background:linear-gradient(120deg,rgba(255,253,247,.97),rgba(239,247,234,.98))!important;
+  border:1px solid #cbdac8!important;border-radius:22px!important;padding:18px 22px!important;margin-bottom:16px!important;
+  box-shadow:0 13px 34px rgba(42,74,49,.11)!important;
+}
+header h1{display:flex!important;align-items:center!important;gap:11px!important;color:#1e5638!important;text-shadow:none!important;letter-spacing:-.035em!important}
+header h2,header h3{color:#244835!important;text-shadow:none!important}
+header .sub,header p,header small{color:#64786d!important}
+header .badge{background:#e7f1e5!important;border:1px solid #bed1bc!important;color:#315f44!important}
+.turfarium-brand-icon{width:43px;height:43px;flex:0 0 43px;border-radius:50%;box-shadow:0 4px 12px rgba(45,76,52,.14);vertical-align:middle}
+
+.card{
+  background:rgba(255,253,248,.97)!important;
+  border:1px solid var(--line)!important;
+  border-radius:20px!important;
+  box-shadow:var(--shadow)!important;
+  color:var(--ink)!important;
+}
+.card:hover{border-color:var(--line-strong)!important}
+.card h1,.card h2,.card h3,.card h4{color:var(--ink)!important}
+p,small,.note,.subtle,.studio-note,.module-copy,.audience-mode-note{color:var(--muted)!important}
+label{color:#465d50!important}
+.eyebrow,.scenario-kicker,.mode-kicker,.profile-deck-kicker{color:var(--forest-2)!important}
+
+.badge,.mode-pill,.scenario-local{
+  background:#e8f2e6!important;border:1px solid #bfd1bd!important;color:#315f44!important;
+}
+
+button,.mode-change{
+  border-radius:13px!important;border:1px solid #bfd0bd!important;
+  background:#fffdf8!important;color:#315544!important;
+  box-shadow:0 2px 7px rgba(42,73,49,.07)!important;
+  transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease,background .14s ease!important;
+}
+button:hover,.mode-change:hover{
+  transform:translateY(-1px);border-color:#8cac8d!important;background:#f4f8f0!important;
+  box-shadow:0 6px 13px rgba(42,73,49,.11)!important;
+}
+button.primary,.primary{
+  background:linear-gradient(180deg,#377e58,#276745)!important;border-color:#276745!important;color:#fff!important;
+  box-shadow:0 6px 15px rgba(40,101,69,.18)!important;
+}
+button.primary:hover,.primary:hover{background:linear-gradient(180deg,#418d64,#2d7350)!important}
+button:focus-visible,.mode-change:focus-visible{outline:3px solid rgba(95,143,182,.35)!important;outline-offset:2px!important}
+
+input,select,textarea,input[type=number]{
+  background:#fffefb!important;color:#283b31!important;border:1px solid #bdcdbd!important;border-radius:12px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75)!important;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none!important;border-color:#6e9d78!important;box-shadow:0 0 0 3px rgba(84,143,104,.14)!important;
+}
+
+.quick-nav{
+  background:rgba(255,253,248,.94)!important;border:1px solid var(--line)!important;border-radius:16px!important;
+  padding:8px!important;box-shadow:0 7px 18px rgba(50,74,56,.07)!important;
+}
+.quick-nav a{color:#3d5f4f!important;border-radius:10px!important}
+.quick-nav a:hover{background:#eaf3e8!important;color:#1f5136!important}
+
+.mode-shell{
+  background:linear-gradient(120deg,#edf6e9 0%,#f7f7ed 54%,#fbf3e6 100%)!important;
+  border:1px solid #c8d8c5!important;border-radius:20px!important;
+  box-shadow:0 8px 22px rgba(54,78,61,.08)!important;color:var(--ink)!important;
+}
+.mode-copy strong{color:#28533d!important}
+.mode-copy p,.mode-shell .audience-mode-note{color:#61766a!important}
+.mode-change{background:#fffdf8!important}
+
+.visual-intro{
+  background:linear-gradient(120deg,#fbf7ed,#eef6ec)!important;
+  border:1px solid #d0dccd!important;border-radius:20px!important;
+  box-shadow:0 8px 22px rgba(54,78,61,.07)!important;
+}
+.visual-intro h2{color:#28513c!important}
+.visual-intro p{color:#687a70!important}
+
+/* Scenario, memory, and diagnostic areas all share one calm visual language. */
+.scenario-onboarding,.scenario-memory,.diagnostic-lens{
+  background:linear-gradient(145deg,#f8faf4,#fffaf1)!important;
+  border:1px solid #d0dccd!important;
+}
+.scenario-card{
+  background:#fffefb!important;border:1px solid #d3dfd1!important;border-radius:17px!important;
+  box-shadow:0 4px 13px rgba(53,76,58,.055)!important;color:#2c4135!important;
+}
+.scenario-card:hover{
+  background:#fbfff8!important;border-color:#9fba9f!important;transform:translateY(-2px);
+  box-shadow:0 10px 20px rgba(53,76,58,.09)!important;
+}
+.scenario-card h3{color:#2b4938!important}.scenario-card p,.scenario-status{color:#687a70!important}
+.scenario-card button{background:#eef5eb!important;border-color:#c3d5c0!important;color:#315b43!important}
+.scenario-status{background:#f1f6ee!important;border-color:#d1ddcf!important}
+.scenario-status strong{color:#335e45!important}
+.scenario-local{background:#edf4e9!important}
+.compare-title{color:#405e4d!important}
+.scenario-compare-lawn{background:#f7faf4!important;border-color:#d2ddd0!important;color:#40594c!important}
+.scenario-compare-lawn>div{border-bottom-color:#dfe7dd!important}.scenario-compare-lawn b{color:#294b38!important}
+.delta-up{color:#347849!important}.delta-down{color:#a76045!important}.delta-flat{color:#74847c!important}
+
+/* Profile viewer + time controls: one warm tray, no dark leftovers. */
+.profile-control-deck{
+  background:linear-gradient(120deg,#f8f1e4 0%,#eef6ea 100%)!important;
+  border:1px solid #d3c7b1!important;border-radius:20px!important;
+  box-shadow:0 9px 24px rgba(85,76,54,.08)!important;
+}
+.profile-deck-kicker{color:#6d8063!important}
+.profile-deck-label strong{color:#304d3e!important;font-size:1rem!important}
+.profile-view-slot,.profile-time-slot{
+  background:rgba(255,255,252,.88)!important;border:1px solid #d3ded0!important;border-radius:15px!important;
+}
+.profile-view-embedded label{color:#526c5e!important}
+.profile-view-embedded .note,.profile-visit-note,.profile-missing{color:#76887e!important}
+.profile-time-head h2{color:#304d3e!important}
+.profile-time-head #time{color:#2f7453!important;font-weight:800!important}
+.profile-step-row button{background:#fffef9!important}
+.profile-step-row button:hover{background:#edf4e9!important}
+
+/* Lawn images remain the visual hero. */
+#lawn-a-panel,#lawn-b-panel{
+  background:#fffef9!important;border:1px solid #c2d2c0!important;
+  box-shadow:0 14px 30px rgba(48,78,57,.11)!important;
+}
+.photo-stage{
+  border-radius:18px!important;overflow:hidden!important;border:3px solid #f3ecdf!important;
+  outline:1px solid #b6c8b5!important;box-shadow:0 12px 27px rgba(56,75,59,.13)!important;
+}
+.soil-photo{border-radius:14px!important}
+
+/* Metrics: quiet neutrals with semantic accents, eliminating mixed teal/dark cards. */
+.kpi,.metric,.physics-tile,.seaweed-card,.change-lawn,.scenario-compare-lawn,.diag-item,.readout div,.brew-results>div{
+  background:#f5f8f2!important;border:1px solid #d6e0d4!important;border-radius:14px!important;color:#40564a!important;
+}
+.kpi strong,.kpi b,.metric strong,.metric b,.physics-tile b,.readout b,.brew-results b{color:#294938!important}
+.good{color:#2f7748!important}.bad{color:var(--danger)!important}.worm{color:#8b6a36!important}
+.bar{background:#dfe9dd!important}
+
+.explain,.inspector,.micro-comparison,.next-actions,.brew-evidence,.seaweed-evidence{
+  background:#f0f6ed!important;border-color:#cfddcd!important;color:#566d60!important;
+}
+.explain strong,.inspector strong,.next-actions strong{color:#315941!important}
+
+.change-report{
+  background:linear-gradient(145deg,#fffaf2,#f0f7ee)!important;border:1px solid #d1ddcf!important;border-radius:17px!important;
+}
+.next-actions{background:#edf5ea!important;color:#4c6558!important}
+.timeline-report-only{background:#fffdf8!important}
+
+.diag-item.primary{border-color:#a9c0a8!important;background:#edf6e9!important}
+.diag-score{background:#fffefb!important;border-color:#bdcdbb!important;color:#3d604a!important}
+.diag-rank{color:#537963!important}
+.diag-item strong{color:#294b38!important}
+.diag-item p,.diag-item small{color:#65786c!important}
+.diag-clear{background:#f5f8f2!important;border-color:#d4dfd1!important;color:#607469!important}
+.diag-clear strong{color:#2f5841!important}
+
+.evidence-layer{background:#f5f6f2!important;border-color:#dde2d9!important}
+.evidence-tier{opacity:.18!important}.evidence-tier:hover{opacity:.55!important}
+.evidence-toggle{background:#f1f3ef!important;color:#596c62!important;border-color:#d3d9d1!important}
+
+/* Labs and notebooks: clean paper workbench. */
+.studio-layout label,.micro-log label,.brew-chart,.log,.micro-comparison,.zoom-workbench .card{
+  background:#fffef9!important;color:#465d51!important;border-color:#d2ddd0!important;
+}
+.micro-legend,.zoom-help{color:#74877c!important}
+
+section.card>.head{padding-bottom:5px}
+section.card>.head h2{letter-spacing:-.018em}
+.row{gap:8px!important}
+
+@media(max-width:700px){
+  header{border-radius:17px!important;padding:15px 16px!important}
+  .turfarium-brand-icon{width:36px;height:36px;flex-basis:36px}
+  .card,.visual-intro,.mode-shell,.profile-control-deck{border-radius:16px!important}
+  .quick-nav{border-radius:13px!important}
+  button,.mode-change{min-height:42px}
+}

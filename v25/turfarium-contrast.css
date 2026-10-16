@@ -1,0 +1,13 @@
+/* Turfarium v20.11 — hard contrast for readability */
+:root{--tf-ink:#151c18!important;--tf-muted:#243129!important;--tf-forest:#063b23!important;--tf-leaf:#174f35!important}
+body,main,.card,.mode-shell,.profile-control-deck,.scenario-onboarding,.scenario-memory,.diagnostic-lens{color:#151c18!important}
+h1,h2,h3,h4,h5,h6,strong,b,.tf-brand-name,.profile-deck-label strong,.profile-time-head h2{color:#101713!important;font-weight:800!important}
+p,small,.note,.sub,.subtle,.module-copy,.studio-note,.zoom-help,.micro-legend,.scenario-status,.audience-mode-note,.mode-copy p,.visual-intro p,.scenario-card p,.diag-item p,.diag-item small,.change-report .subtle,.change-lawn .why,.seaweed-narrative,.seaweed-metric small,.studio-note,.micro-entry small,.brew-results small,.brew-checkpoints span,.evidence-copy,.evidence-box small,.evidence-caution{color:#243129!important;opacity:1!important;font-weight:560!important}
+label,.profile-view-embedded label,.rate-grid label,.studio-layout label,.micro-log label{color:#1d2a23!important;font-weight:750!important}
+header p,header small,header .sub,header .tf-brand-sub{color:#203028!important}.tf-brand-sub{font-weight:750!important}
+.eyebrow,.scenario-kicker,.mode-kicker,.profile-deck-kicker{color:#174f35!important;font-weight:900!important}
+.profile-view-embedded .note,.profile-visit-note{color:#29372f!important}.scenario-status strong,.recent-applications h3,.product-info strong,.climate-readout strong,.seaweed-narrative strong,.seaweed-metric strong,.inspector strong{color:#123b28!important}
+.kpi,.metric,.physics-tile,.seaweed-metric,.scenario-compare-lawn,.brew-results>div,.rate-studio,.treatment-feedback,.recent-applications,.product-info,.climate-readout,.inspector,.micro-entry,.micro-comparison{color:#1f2d25!important}
+.evidence-tier,.tier-a,.tier-b,.tier-c{color:#26352d!important;opacity:.7!important}
+button,.mode-change,input,select,textarea{color:#142219!important;font-weight:700!important}
+@media(max-width:720px){body{font-size:16px!important}p,.note,.sub,.subtle,.module-copy,.studio-note,.zoom-help,.scenario-card p,.diag-item p,.diag-item small{font-weight:600!important}.tf-brand-sub{font-size:.8rem!important}.profile-view-embedded .note,.profile-visit-note,.scenario-status,.micro-legend{font-size:.76rem!important}.mode-copy p{font-size:.84rem!important}}

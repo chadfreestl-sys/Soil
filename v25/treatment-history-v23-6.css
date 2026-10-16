@@ -1,0 +1,8 @@
+/* Treatment History — compact, normally closed */
+.tf-history-panel{margin:10px 0 0;border:1px solid #b9cdbb;border-radius:12px;background:#f5faf4;overflow:hidden;min-width:0}
+.tf-history-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:44px;padding:10px 13px;border:0;background:#e7f2e6;color:#214832;font-size:.84rem;font-weight:850;text-align:left;cursor:pointer;touch-action:manipulation}
+.tf-history-toggle:focus-visible{outline:3px solid #428a5c;outline-offset:-3px}
+.tf-history-body{padding:10px;min-width:0;overflow-wrap:anywhere}
+.tf-history-body[hidden]{display:none!important}
+.tf-history-chevron{font-size:1rem}
+@media(max-width:760px){.tf-history-panel{margin-top:7px}.tf-history-toggle{min-height:46px;padding:9px 11px}.tf-history-body{padding:8px}}

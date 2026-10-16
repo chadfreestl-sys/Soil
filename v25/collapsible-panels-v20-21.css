@@ -1,0 +1,71 @@
+/* Turfarium collapsible workspace — progressive disclosure + enforced primary order */
+.tf-collapsible-panel{position:relative!important;overflow:hidden!important}
+.tf-collapse-toggle{
+  width:100%!important;
+  min-height:44px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  margin:0 0 10px!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(34,87,60,.18)!important;
+  border-radius:11px!important;
+  background:rgba(247,244,233,.84)!important;
+  color:#173b2b!important;
+  font:inherit!important;
+  font-weight:800!important;
+  text-align:left!important;
+  cursor:pointer!important;
+  box-shadow:none!important
+}
+.tf-collapse-toggle:hover{background:#fffdf7!important}
+.tf-collapse-toggle:focus-visible{outline:3px solid rgba(54,117,81,.28)!important;outline-offset:2px!important}
+.tf-collapse-title{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.tf-collapse-chevron{flex:0 0 auto!important;font-size:1rem!important;line-height:1!important;color:#365f48!important}
+.tf-collapse-body{min-width:0!important}
+.tf-panel-collapsed>.tf-collapse-toggle{margin-bottom:0!important;background:rgba(247,244,233,.94)!important}
+.tf-panel-collapsed{padding-top:10px!important;padding-bottom:10px!important;min-height:0!important}
+.tf-panel-collapsed>.tf-collapse-body[hidden]{display:none!important}
+
+#scenario-onboarding.tf-collapsible-panel>.tf-collapse-toggle,
+.tf-site-context.tf-collapsible-panel>.tf-collapse-toggle,
+.tf-weather-context.tf-collapsible-panel>.tf-collapse-toggle,
+#profile-control-deck.tf-collapsible-panel>.tf-collapse-toggle,
+#lawn-a-panel.tf-collapsible-panel>.tf-collapse-toggle,
+#lawn-b-panel.tf-collapsible-panel>.tf-collapse-toggle{
+  border-color:rgba(54,117,81,.28)!important;
+  background:rgba(236,243,233,.94)!important
+}
+
+.tf-collapsible-panel:not(.tf-panel-collapsed)>.tf-collapse-body{overflow:visible!important}
+
+/* Visual-first ordering: unclassified scientific panels must follow the lawns.
+   Their implicit order:0 previously placed Seaweed, Earthworms and Physics first. */
+.tf-primary-workspace > *{order:200!important}
+.tf-primary-workspace > #lawn-a-panel{order:11!important}
+.tf-primary-workspace > #lawn-b-panel{order:12!important}
+
+.tf-primary-workspace>#profile-control-deck{order:10!important;grid-column:1/-1!important}
+.tf-primary-workspace>#lawn-a-panel{order:11!important}
+.tf-primary-workspace>#lawn-b-panel{order:12!important}
+.tf-primary-workspace>.tf-treatment-priority,
+.tf-primary-workspace>.card:has(#experiment-controls),
+.tf-primary-workspace>section:has(#experiment-controls){order:30!important;grid-column:1/-1!important}
+.tf-primary-workspace>#timeline-workflow{order:40!important;grid-column:1/-1!important}
+.tf-primary-workspace>#scenario-onboarding{order:50!important;grid-column:1/-1!important}
+.tf-primary-workspace>.tf-weather-context{order:60!important;grid-column:1/-1!important}
+.tf-primary-workspace>.tf-site-context{order:70!important;grid-column:1/-1!important}
+.tf-primary-workspace>.tf-replay-bar{order:80!important;grid-column:1/-1!important}
+.tf-primary-workspace>#scenario-memory{order:90!important;grid-column:1/-1!important}
+.tf-primary-workspace>#diagnostic-lens{order:100!important;grid-column:1/-1!important}
+
+@media(max-width:760px){
+  .tf-collapse-toggle{min-height:42px!important;padding:9px 10px!important;margin-bottom:8px!important;font-size:.86rem!important}
+  .tf-panel-collapsed{padding:8px!important}
+  .tf-primary-workspace>#profile-control-deck,
+  .tf-primary-workspace>#lawn-a-panel,
+  .tf-primary-workspace>#lawn-b-panel,
+  .tf-primary-workspace>.tf-treatment-priority,
+  .tf-primary-workspace>#timeline-workflow{grid-column:1!important}
+}

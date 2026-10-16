@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Turfarium ecosystem mark</title>
+  <desc id="desc">A circular turf cross-section showing grass, soil, roots, water and soil life.</desc>
+  <defs>
+    <clipPath id="disc"><circle cx="128" cy="128" r="118"/></clipPath>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fc7df"/>
+      <stop offset="1" stop-color="#f8e3aa"/>
+    </linearGradient>
+    <linearGradient id="soil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6d4a2d"/>
+      <stop offset="1" stop-color="#2f241d"/>
+    </linearGradient>
+    <linearGradient id="blade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#89b95d"/>
+      <stop offset="1" stop-color="#1b5e3a"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="70%" cy="28%" r="28%">
+      <stop offset="0" stop-color="#fff6cf" stop-opacity=".98"/>
+      <stop offset="1" stop-color="#fff6cf" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#173729" flood-opacity=".22"/></filter>
+  </defs>
+  <circle cx="128" cy="128" r="121" fill="#f8f4ea" stroke="#d7c9aa" stroke-width="4" filter="url(#shadow)"/>
+  <g clip-path="url(#disc)">
+    <rect x="10" y="10" width="236" height="102" fill="url(#sky)"/>
+    <rect x="10" y="10" width="236" height="102" fill="url(#sun)"/>
+    <path d="M10 108 C52 100 87 106 128 102 C171 98 207 104 246 99 L246 246 L10 246Z" fill="url(#soil)"/>
+    <path d="M10 111 C53 105 87 111 128 107 C169 103 210 109 246 104" fill="none" stroke="#a97945" stroke-width="6" opacity=".85"/>
+    <g fill="url(#blade)">
+      <path d="M24 109 Q20 79 32 53 Q35 82 33 109Z"/><path d="M35 109 Q37 72 51 45 Q48 80 45 109Z"/><path d="M49 109 Q50 77 66 58 Q61 84 59 109Z"/>
+      <path d="M62 109 Q59 67 74 42 Q76 78 72 109Z"/><path d="M76 109 Q79 74 91 51 Q89 82 86 109Z"/><path d="M90 109 Q89 62 103 36 Q106 77 101 109Z"/>
+      <path d="M104 109 Q111 70 121 42 Q120 78 116 109Z"/><path d="M119 109 Q117 58 130 32 Q134 78 129 109Z"/><path d="M133 109 Q139 69 151 40 Q149 79 144 109Z"/>
+      <path d="M147 109 Q150 63 164 37 Q164 79 158 109Z"/><path d="M161 109 Q168 73 180 51 Q177 82 173 109Z"/><path d="M176 109 Q177 63 191 41 Q190 78 186 109Z"/>
+      <path d="M190 109 Q198 76 207 55 Q205 84 201 109Z"/><path d="M204 109 Q208 69 219 50 Q217 83 214 109Z"/><path d="M217 109 Q224 78 232 61 Q231 86 228 109Z"/>
+    </g>
+    <g fill="none" stroke="#f1d6a0" stroke-linecap="round">
+      <path d="M126 106 C127 131 123 147 116 164 C110 180 101 194 91 211" stroke-width="5"/>
+      <path d="M128 108 C136 132 140 151 142 173 C144 191 149 208 157 224" stroke-width="4"/>
+      <path d="M123 132 C109 140 100 149 92 161 C82 176 74 185 63 196" stroke-width="3"/>
+      <path d="M132 136 C147 144 158 154 166 167 C176 183 187 191 199 201" stroke-width="3"/>
+      <path d="M115 157 C104 159 94 166 85 177" stroke-width="2.5"/>
+      <path d="M140 161 C154 165 165 174 176 186" stroke-width="2.5"/>
+      <path d="M99 183 C89 189 81 199 76 211" stroke-width="2"/>
+      <path d="M151 187 C162 194 170 203 176 215" stroke-width="2"/>
+    </g>
+    <g fill="#5b8db9" opacity=".9">
+      <path d="M52 147 C46 155 44 158 44 163 A8 8 0 0 0 60 163 C60 158 58 155 52 147Z"/>
+      <circle cx="204" cy="142" r="5"/>
+    </g>
+    <g fill="#c6ab7e" opacity=".55"><circle cx="34" cy="181" r="5"/><circle cx="214" cy="189" r="7"/><circle cx="187" cy="226" r="4"/><circle cx="71" cy="228" r="6"/></g>
+    <path d="M179 181 C189 173 203 175 207 184 C210 192 199 198 191 193 C184 190 181 185 179 181Z" fill="none" stroke="#d78b62" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <circle cx="128" cy="128" r="118" fill="none" stroke="#1b5e3a" stroke-width="4"/>
+</svg>

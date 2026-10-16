@@ -1,0 +1,21 @@
+/* Turfarium v20.18 — context-first setup panels */
+.tf-context-panel{
+  grid-column:1/-1!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+  content-visibility:visible!important;
+  contain-intrinsic-size:none!important;
+  border-radius:16px!important;
+}
+.tf-site-context{border-color:#7aa06f!important;background:linear-gradient(180deg,#f7fbf3,#eef6e9)!important}
+.tf-weather-context{border-color:#7c9fb2!important;background:linear-gradient(180deg,#f5fafc,#eaf3f7)!important}
+.tf-context-panel h1,.tf-context-panel h2,.tf-context-panel h3,.tf-context-panel h4{color:#173329!important}
+.tf-context-panel label,.tf-context-panel legend,.tf-context-panel .label,.tf-context-panel .control-label{color:#243b31!important;font-weight:750!important}
+.tf-context-panel .note,.tf-context-panel p,.tf-context-panel small{color:#33483e!important}
+
+@media(max-width:760px){
+  .tf-context-panel{grid-column:1!important;padding:12px!important;overflow:hidden!important}
+  .tf-context-panel .row,.tf-context-panel .controls,.tf-context-panel .grid{min-width:0!important;max-width:100%!important}
+  .tf-context-panel select,.tf-context-panel input,.tf-context-panel button{max-width:100%!important}
+}
