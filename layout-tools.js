@@ -70,16 +70,21 @@
     if(local)local.textContent='Stored on this device';
   };
 
-  const cardsForHeading=pattern=>{
-    const seen=new Set();
-    return [...document.querySelectorAll('h1,h2,h3,h4')]
-      .filter(el=>pattern.test((el.textContent||'').trim()))
-      .map(el=>el.closest('.card')||el.closest('section,article,.panel')||el.parentElement)
-      .filter(el=>el&&!seen.has(el)&&seen.add(el));
+  const majorForHeading=pattern=>{
+    const heading=[...document.querySelectorAll('h1,h2,h3,h4')]
+      .find(el=>pattern.test((el.textContent||'').trim()));
+    if(!heading)return null;
+    return heading.closest('.card.wide')||heading.closest('section.card')||heading.closest('section,article,.panel')||null;
   };
 
-  // v20.15 exact primary order requested by user:
-  // scenarios -> profile/time -> save/compare -> Lawn A -> Lawn B -> What Changed.
+  const appendAfter=(anchor,panel)=>{
+    if(!anchor||!panel||anchor===panel||anchor.contains(panel))return anchor;
+    anchor.insertAdjacentElement('afterend',panel);
+    return panel;
+  };
+
+  // Approved primary experiment flow:
+  // Scenario -> Profile/Time -> Save -> Lawn A/B -> Replay -> What Changed.
   const arrangePrimaryPanels=()=>{
     const scenarios=byId('scenario-onboarding');
     const memory=byId('scenario-memory');
@@ -89,24 +94,71 @@
     styleMemory(memory);
 
     grid.prepend(scenarios);
-    scenarios.insertAdjacentElement('afterend',deck);
-    if(memory){
-      deck.insertAdjacentElement('afterend',memory);
-      memory.insertAdjacentElement('afterend',lawnA);
-    }else{
-      deck.insertAdjacentElement('afterend',lawnA);
+    let anchor=scenarios;
+    anchor=appendAfter(anchor,deck);
+    if(memory)anchor=appendAfter(anchor,memory);
+    anchor=appendAfter(anchor,lawnA);
+    anchor=appendAfter(anchor,lawnB);
+
+    // living-profiles.js creates this later; keep enforcing until it exists.
+    const replay=document.querySelector('.tf-replay-bar');
+    if(replay){
+      replay.classList.add('tf-replay-primary');
+      anchor=appendAfter(anchor,replay);
     }
-    lawnA.insertAdjacentElement('afterend',lawnB);
-    lawnB.insertAdjacentElement('afterend',timeline);
+    appendAfter(anchor,timeline);
 
     const topAnchor=document.querySelector('.mode-shell')||document.querySelector('header');
     if(topAnchor)topAnchor.insertAdjacentElement('afterend',grid);
     return true;
   };
 
-  // Scientific transparency belongs at the very end of the simulator, not in the working flow.
+  // Approved deeper flow after the main experiment. Only move major/wide panels so
+  // nested controls stay intact.
+  const arrangeDeepPanels=()=>{
+    let anchor=grid;
+
+    const diagnostic=byId('diagnostic-lens');
+    if(diagnostic)anchor=appendAfter(anchor,diagnostic);
+
+    const management=byId('experiment-controls')?.closest('.card.wide')
+      ||byId('experiment-controls')?.closest('section.card')
+      ||majorForHeading(/Management|Treatment Controls|Treatments|Applications/i);
+    if(management&&!grid.contains(management))anchor=appendAfter(anchor,management);
+
+    const soil=majorForHeading(/Soil Physics|Soil Lab|Nutrient Cycling|Soil & Nutrient|Nutrient Detail/i);
+    if(soil&&!grid.contains(soil))anchor=appendAfter(anchor,soil);
+
+    const biology=majorForHeading(/Soil Food Web|Biology|Microbial|Microbiology/i);
+    if(biology&&!grid.contains(biology))anchor=appendAfter(anchor,biology);
+
+    // Specialized labs: keep together and below core soil/biology panels.
+    const labPatterns=[
+      /Seaweed\s+Response\s+Lab/i,
+      /Worm\s+Tea\s+Brewing\s+Lab/i,
+      /Brew\s+Microscope|Microscope\s+Observation/i,
+      /Custom\s+Product|Formulation\s+Studio/i
+    ];
+    const seen=new Set();
+    for(const pattern of labPatterns){
+      const panel=majorForHeading(pattern);
+      if(panel&&!grid.contains(panel)&&!seen.has(panel)){
+        seen.add(panel);
+        panel.classList.add('tf-specialized-lab');
+        anchor=appendAfter(anchor,panel);
+      }
+    }
+
+    const evidence=document.querySelector('.evidence-layer')?.closest('.card.wide')
+      ||majorForHeading(/Evidence Layer|Experiment Activity|Evidence & Confidence/i);
+    if(evidence&&!grid.contains(evidence))anchor=appendAfter(anchor,evidence);
+
+    return anchor;
+  };
+
+  // Scientific transparency is always the final simulator panel.
   const moveTransparencyToEnd=()=>{
-    const panel=cardsForHeading(/^Scientific transparency$/i).pop();
+    const panel=majorForHeading(/^Scientific transparency$/i);
     if(!panel)return false;
     panel.classList.add('tf-transparency-last');
     const main=document.querySelector('main');
@@ -115,63 +167,40 @@
     return true;
   };
 
-  arrangePrimaryPanels();
-  moveTransparencyToEnd();
-  [0,80,250,700,1600].forEach(ms=>setTimeout(()=>{
+  const enforceAll=()=>{
     arrangePrimaryPanels();
+    arrangeDeepPanels();
     moveTransparencyToEnd();
-  },ms));
-
-  const observer=new MutationObserver(()=>{
-    arrangePrimaryPanels();
-    moveTransparencyToEnd();
-  });
-  observer.observe(document.body,{childList:true,subtree:true});
-  setTimeout(()=>observer.disconnect(),5000);
-
-  if(intro) intro.classList.add('visual-intro-workspace-moved','visual-intro-without-controls');
-
-  const moveSeaweedLab=()=>{
-    const seaweeds=cardsForHeading(/Seaweed\s+Response\s+Lab/i);
-    if(!seaweeds.length)return false;
-    const worm=cardsForHeading(/Worm\s+Tea\s+Brewing\s+Lab/i).pop();
-    const microscope=cardsForHeading(/Brew\s+Microscope|Microscope\s+Observation/i).pop();
-    let anchor=worm||microscope;
-    seaweeds.forEach(seaweed=>{
-      if(anchor&&anchor!==seaweed&&anchor.parentElement)anchor.insertAdjacentElement('afterend',seaweed);
-      else (document.querySelector('main')||document.body).appendChild(seaweed);
-      seaweed.dataset.tfSeaweedMoved='true';
-      seaweed.classList.add('tf-advanced-input-lab');
-      seaweed.style.order='900';
-      anchor=seaweed;
-    });
-    return true;
   };
 
-  moveSeaweedLab();
-  setTimeout(moveSeaweedLab,300);
-  setTimeout(moveSeaweedLab,1200);
+  enforceAll();
+  [0,80,250,700,1600,3000].forEach(ms=>setTimeout(enforceAll,ms));
+  const observer=new MutationObserver(enforceAll);
+  observer.observe(document.body,{childList:true,subtree:true});
+  setTimeout(()=>observer.disconnect(),6500);
+
+  if(intro)intro.classList.add('visual-intro-workspace-moved','visual-intro-without-controls');
 
   if(!document.querySelector('link[data-living-profiles]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='living-profiles.css?v=20.6';
+    css.href='living-profiles.css?v=20.16';
     css.dataset.livingProfiles='true';
     document.head.appendChild(css);
   }
   if(!document.querySelector('script[data-living-profiles]')){
     const script=document.createElement('script');
-    script.src='living-profiles.js?v=20.6';
+    script.src='living-profiles.js?v=20.16';
     script.defer=true;
     script.dataset.livingProfiles='true';
     document.body.appendChild(script);
   }
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.15 · WORKFLOW ORDER';
+  if(badge)badge.textContent='v20.16 · PANEL HIERARCHY';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.15 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.16 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
