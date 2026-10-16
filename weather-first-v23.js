@@ -21,12 +21,13 @@ const find=()=>{
  if(toggle){
    const title=toggle.querySelector('.tf-collapse-title');
    if(title && title.textContent!==LABEL)title.textContent=LABEL;
-   if(panel.classList.contains('tf-panel-collapsed')){
-     panel.classList.remove('tf-panel-collapsed');
-     toggle.setAttribute('aria-expanded','true');
-     if(body)body.hidden=false;
+   if(!panel.dataset.tfWeatherInitialized){
+     panel.dataset.tfWeatherInitialized='1';
+     panel.classList.add('tf-panel-collapsed');
+     toggle.setAttribute('aria-expanded','false');
+     if(body)body.hidden=true;
      const chevron=toggle.querySelector('.tf-collapse-chevron');
-     if(chevron)chevron.textContent='▾';
+     if(chevron)chevron.textContent='▸';
    }
  }
  const innerTitle=panel.querySelector('.tf-collapse-body .head h2,.head h2');
