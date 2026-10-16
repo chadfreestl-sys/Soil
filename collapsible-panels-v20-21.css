@@ -40,7 +40,12 @@
 
 .tf-collapsible-panel:not(.tf-panel-collapsed)>.tf-collapse-body{overflow:visible!important}
 
-/* Hard visual order so older DOM placement rules cannot put What Changed above the lawns. */
+/* Visual-first ordering: unclassified scientific panels must follow the lawns.
+   Their implicit order:0 previously placed Seaweed, Earthworms and Physics first. */
+.tf-primary-workspace > *{order:200!important}
+.tf-primary-workspace > #lawn-a-panel{order:10!important}
+.tf-primary-workspace > #lawn-b-panel{order:11!important}
+
 .tf-primary-workspace>#profile-control-deck{order:20!important;grid-column:1/-1!important}
 .tf-primary-workspace>#lawn-a-panel,
 .tf-primary-workspace>#lawn-b-panel{order:10!important}
