@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='20.30';
+  const VERSION='20.32';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
