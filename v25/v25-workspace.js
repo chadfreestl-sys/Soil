@@ -121,10 +121,43 @@ function overview(){
  }
  deck.insertAdjacentElement('afterend',bar);
 }
+/* Consistent, lightweight section iconography. No simulation hooks modified. */
+function sectionIcons(){
+ const paths={
+   weather:'<path d="M5 16a5 5 0 0 1 1-9 7 7 0 0 1 13 3 4 4 0 0 1-1 8H7"/><path d="M9 20l-1 2M15 20l-1 2"/>',
+   time:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/>',
+   soil:'<path d="M3 8h18M3 13h18M3 18h18"/><path d="M7 5v3M12 10v3M17 15v3"/>',
+   treatments:'<path d="M9 3h6M10 3v6l-5 8a3 3 0 0 0 3 4h8a3 3 0 0 0 3-4l-5-8V3"/><path d="M8 15h8"/>',
+   history:'<path d="M3 12a9 9 0 1 0 3-7"/><path d="M3 4v5h5M12 7v5l3 2"/>',
+   lawn:'<path d="M3 20h18M5 20l3-9 3 9M11 20l3-13 4 13M17 20l2-8 2 8"/>'
+ };
+ const items=[
+   ['#experiment-controls > .tf-collapse-toggle','weather'],
+   ['#profile-control-deck > .tf-collapse-toggle','time'],
+   ['#lawn-a-panel > .tf-collapse-toggle','lawn'],
+   ['#lawn-b-panel > .tf-collapse-toggle','lawn'],
+   ['#v25-metrics-A > .v25-fold-toggle','soil'],
+   ['#v25-metrics-B > .v25-fold-toggle','soil'],
+   ['#v25-rates-A > .v25-fold-toggle','treatments'],
+   ['#v25-rates-B > .v25-fold-toggle','treatments'],
+   ['#v25-history-A > .v25-fold-toggle','history'],
+   ['#v25-history-B > .v25-fold-toggle','history']
+ ];
+ for(const [selector,type] of items){
+   const button=document.querySelector(selector);
+   if(!button||button.querySelector('.v25-section-icon'))continue;
+   const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');
+   icon.setAttribute('viewBox','0 0 24 24');
+   icon.setAttribute('aria-hidden','true');
+   icon.classList.add('v25-section-icon');
+   icon.innerHTML=paths[type];
+   button.prepend(icon);
+ }
+}
 function arrange(){
  if(busy)return;
  busy=true;
- try{weather();details();histories();overview();}
+ try{weather();details();histories();overview();sectionIcons();}
  finally{busy=false;}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrange,{once:true});
