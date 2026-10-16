@@ -846,14 +846,14 @@ microscope();
 <script defer src="treatment-history-v23-6.js?v=23.9"></script>
 <script defer src="turfarium-details-v24.js?v=24.0"></script>
 <script>
-/* Turfarium v1.4 — independent live model-driven earthworm visuals */
+/* Turfarium v1.5 — independent live model-driven earthworm visuals */
 (function(){
 'use strict';
 function start(){
- if(window.__tfWormModelV14)return;
+ if(window.__tfWormModelV15)return;
  window.__tfWormModelV14=true;
  const style=document.createElement('style');
- style.textContent='.tf-live-worm{position:absolute!important;z-index:999!important;pointer-events:none!important;width:12%;height:8%;mix-blend-mode:multiply;filter:drop-shadow(0 2px 2px #120d0b9c) saturate(.75);transition:opacity .5s ease}.tf-live-worm svg{display:block;width:100%;height:100%;overflow:visible}.tf-worm-body{animation:tf-worm-pulse 2.6s ease-in-out infinite alternate}@keyframes tf-worm-pulse{from{stroke-width:12px}to{stroke-width:15px}}.tf-worm-status-live{position:absolute;right:6px;bottom:6px;z-index:1000;color:#143726;background:#fff4d6;border-radius:6px;padding:4px 6px;font:bold 11px Arial,sans-serif;box-shadow:0 1px 4px #0004}@media(prefers-reduced-motion:reduce){.tf-live-worm{transition:none!important}}';
+ style.textContent='.tf-live-worm{position:absolute!important;z-index:999!important;pointer-events:none!important;width:12%;height:8%;mix-blend-mode:multiply;filter:drop-shadow(0 2px 2px #120d0b9c) saturate(.75);transition:opacity .7s ease;overflow:hidden;clip-path:inset(0 0 0 0 round 45%)}.tf-live-worm svg{display:block;width:100%;height:100%;overflow:visible}.tf-worm-body{animation:tf-worm-pulse 2.6s ease-in-out infinite alternate}@keyframes tf-worm-pulse{from{stroke-width:12px}to{stroke-width:15px}}.tf-worm-status-live{position:absolute;right:6px;bottom:6px;z-index:1000;color:#143726;background:#fff4d6;border-radius:6px;padding:4px 6px;font:bold 11px Arial,sans-serif;box-shadow:0 1px 4px #0004}@media(prefers-reduced-motion:reduce){.tf-live-worm{transition:none!important}}';
  document.head.appendChild(style);
  const wormSVG='<svg viewBox="0 0 160 50" aria-hidden="true"><defs><linearGradient id="tf-worm-skin" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4a211d"/><stop offset=".22" stop-color="#98604f"/><stop offset=".48" stop-color="#c18a74"/><stop offset=".75" stop-color="#6d3d35"/><stop offset="1" stop-color="#301c18"/></linearGradient><filter id="tf-worm-grain"><feTurbulence type="fractalNoise" baseFrequency=".11" numOctaves="2" seed="4" result="n"/><feBlend in="SourceGraphic" in2="n" mode="multiply"/></filter></defs><path class="tf-worm-body" d="M4 27 C31 8 51 41 83 23 S135 10 157 27" fill="none" stroke="#21130f" stroke-width="17" stroke-linecap="round"/><path class="tf-worm-body" d="M4 27 C31 8 51 41 83 23 S135 10 157 27" fill="none" stroke="url(#tf-worm-skin)" stroke-width="13" stroke-linecap="round"/><path class="tf-worm-body" d="M4 27 C31 8 51 41 83 23 S135 10 157 27" fill="none" stroke="#341e1a" stroke-width="1.8" stroke-dasharray="1 5" opacity=".8"/><path d="M85 23 Q91 20 98 18" stroke="#cf9a80" stroke-width="14" opacity=".35" fill="none"/></svg>';
  const scenes=['A','B'].map((key,index)=>{
@@ -887,7 +887,7 @@ function start(){
   if(vigor)s.vigor=clamp(+vigor[1],0,100);
   s.day=Number((document.getElementById('day'+s.key)?.textContent||'').match(/Day\s*(\d+)/i)?.[1]||0);
   const count=s.activity<10?0:s.activity<35?1:s.activity<65?2:3;
-  s.worms.forEach((w,i)=>{w.node.style.opacity=i<count?'1':'0';});
+  s.worms.forEach((w,i)=>{w.targetOpacity=i<count?1:0;});
   s.label.textContent='Earthworm activity '+s.activity.toFixed(0)+'/100 · Day '+s.day;
  };
  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -899,14 +899,14 @@ function start(){
     const moving=!reduced&&localStorage.getItem('turfariumMotion')!=='off';
     const slow=localStorage.getItem('turfariumMotion')==='low'?.4:1;
     s.worms.forEach((w,i)=>{
-     const rate=(.000045+s.activity*.0000012)*slow;
+     const rate=(.000025+s.activity*.0000008)*slow;
      const time=moving?t*rate:0;
      const direction=(i%2===0?1:-1);
      const x=.17+(((w.phase*.13+time*direction)% .58)+.58)% .58;
      const y=.67+i*.064+Math.sin(time*5+w.phase+s.day*.008)*.027;
-     w.node.style.left=(x*100).toFixed(2)+'%';
+     const burrow=(Math.sin(time*4+w.phase+s.day*.01)+1)/2;\n     const visibility=(w.targetOpacity||0)*(burrow<.23?burrow/.23:burrow>.82?(1-burrow)/.18:1);\n     w.node.style.opacity=String(Math.max(0,Math.min(1,visibility*.88)));\n     w.node.style.clipPath='inset(0 '+(burrow>.65?((burrow-.65)/.35*82):0).toFixed(0)+'% 0 '+(burrow<.25?((.25-burrow)/.25*80):0).toFixed(0)+'% round 45%)';\n     w.node.style.left=(x*100).toFixed(2)+'%';
      w.node.style.top=(y*100).toFixed(2)+'%';
-     w.node.style.transform='rotate('+(moving?Math.sin(time*7+w.phase)*12:0).toFixed(1)+'deg)';
+     w.node.style.transform='rotate('+(moving?Math.sin(time*7+w.phase)*8:0).toFixed(1)+'deg) scaleX('+(moving?(1+Math.sin(time*8+w.phase)*.09):1).toFixed(3)+')';
     });
    });
    last=t;
