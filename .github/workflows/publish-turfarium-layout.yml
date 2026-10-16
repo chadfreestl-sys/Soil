@@ -43,6 +43,12 @@ jobs:
           audience_css='<link rel="stylesheet" href="turfarium-audience-compact-v23-5.css?v=23.5">'
           html=re.sub(r'<link[^>]*turfarium-audience-compact-v23-5[.]css[^>]*>','',html)
           html=html.replace('</head>',audience_css+'\\n</head>',1)
+          history_css='<link rel="stylesheet" href="treatment-history-v23-6.css?v=23.6">'
+          history_js='<script defer src="treatment-history-v23-6.js?v=23.6"></script>'
+          html=re.sub(r'<link[^>]*treatment-history-v23-6[.]css[^>]*>','',html)
+          html=re.sub(r'<script[^>]*treatment-history-v23-6[.]js[^>]*></script>','',html)
+          html=html.replace('</head>',history_css+'\\n</head>',1)
+          html=html.replace('</body>',history_js+'\\n</body>',1)
           p.write_text(html,encoding='utf-8')
       - name: Commit only the HTML reference update
         run: |
