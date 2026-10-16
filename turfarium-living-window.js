@@ -1,26 +1,18 @@
-/* Turfarium observation window v2: understated visual response, model-driven, no painted roots. */
+/* Turfarium observation window v3: model-driven color plus motion sampled from the actual soil photograph. */
 (()=>{'use strict';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const spots=[{x:18.5,y:51.5,rx:6.4,ry:5,dx:18,dy:-10},{x:48,y:47.5,rx:6,ry:5,dx:-18,dy:10},{x:44.8,y:74.5,rx:6,ry:4.6,dx:18,dy:8},{x:87.3,y:62.5,rx:5.8,ry:4.5,dx:-18,dy:-9}];
+if(!document.getElementById('tf-photo-motion-style')){const st=document.createElement('style');st.id='tf-photo-motion-style';st.textContent=`
+.tf-photo-motion{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;z-index:3}.tf-photo-motion .tf-grass-life,.tf-photo-motion .tf-worm-cover,.tf-photo-motion .tf-worm-live{position:absolute;inset:0;background-repeat:no-repeat;background-size:cover;background-position:center;pointer-events:none;will-change:transform,opacity}.tf-photo-motion .tf-grass-life{z-index:1;transform-origin:50% 34%;animation:tfGrassLife var(--tf-grass-duration,9s) ease-in-out infinite alternate;opacity:var(--tf-grass-opacity,.22);-webkit-mask-image:linear-gradient(to bottom,#000 0 27%,rgba(0,0,0,.7) 34%,transparent 43%);mask-image:linear-gradient(to bottom,#000 0 27%,rgba(0,0,0,.7) 34%,transparent 43%)}.tf-photo-motion .tf-worm-cover{z-index:2;opacity:.96;filter:blur(.35px)}.tf-photo-motion .tf-worm-live{z-index:3;animation:tfWormLife var(--tf-worm-duration,8s) ease-in-out infinite;transform-origin:var(--tf-origin-x) var(--tf-origin-y)}@keyframes tfGrassLife{0%{transform:translate3d(-.35px,0,0) skewX(-.08deg)}50%{transform:translate3d(.45px,-.12px,0) skewX(.10deg)}100%{transform:translate3d(-.2px,.1px,0) skewX(-.05deg)}}@keyframes tfWormLife{0%,100%{transform:translate3d(0,0,0) rotate(0deg)}24%{transform:translate3d(var(--tf-worm-x1),var(--tf-worm-y1),0) rotate(var(--tf-worm-r1))}52%{transform:translate3d(var(--tf-worm-x2),var(--tf-worm-y2),0) rotate(var(--tf-worm-r2))}77%{transform:translate3d(var(--tf-worm-x3),var(--tf-worm-y3),0) rotate(var(--tf-worm-r3))}}@media(prefers-reduced-motion:reduce){.tf-photo-motion .tf-grass-life,.tf-photo-motion .tf-worm-live{animation:none!important}}`;document.head.append(st)}
 for(const key of ['A','B']){
- const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
- const stage=panel?.querySelector('.photo-stage');
- const photo=stage?.querySelector('img.soil-photo');
- if(!stage||!photo)continue;
- const mask=document.createElement('div');mask.className='tf-soil-lens';
- mask.setAttribute('aria-hidden','true');
- Object.assign(mask.style,{position:'absolute',inset:'0',zIndex:'2',pointerEvents:'none',transition:'background 1.2s ease'});
- stage.append(mask);
- const read=(name,fallback)=>{const t=document.getElementById('kpi'+key)?.textContent||'';const re=new RegExp(name+'[^0-9]{0,75}([0-9]+(?:[.][0-9]+)?)','i');return +(t.match(re)?.[1]??fallback)};
- const refresh=()=>{
-  const vigor=clamp(read('Turf vigor',65),0,100),biology=clamp(read('Beneficial guilds',35),0,100);
-  const health=vigor/100,soil=biology/100;
-  // Small, bounded color/contrast responses. A and B follow their own model values.
-  photo.style.setProperty('filter',`saturate(${(.79+health*.37).toFixed(3)}) brightness(${(.89+health*.15).toFixed(3)}) contrast(${(.98+soil*.07).toFixed(3)})`,'important');
-  mask.style.background=`linear-gradient(to bottom, rgba(116,101,45,${((1-health)*.085).toFixed(3)}) 0%, transparent 34%, rgba(33,21,13,${((1-soil)*.08).toFixed(3)}) 100%)`;
-  stage.dataset.tfVisualVigor=String(Math.round(vigor));
- };
- const target=document.getElementById('kpi'+key);
- if(target)new MutationObserver(()=>requestAnimationFrame(refresh)).observe(target,{subtree:true,childList:true,characterData:true});
- refresh();
+ const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel'),stage=panel?.querySelector('.photo-stage'),photo=stage?.querySelector('img.soil-photo');if(!stage||!photo)continue;
+ const tint=document.createElement('div');tint.className='tf-soil-lens';tint.setAttribute('aria-hidden','true');Object.assign(tint.style,{position:'absolute',inset:'0',zIndex:'2',pointerEvents:'none',transition:'background 1.2s ease'});stage.append(tint);
+ const motion=document.createElement('div');motion.className='tf-photo-motion';motion.setAttribute('aria-hidden','true');const grass=document.createElement('div');grass.className='tf-grass-life';motion.append(grass);
+ const worms=spots.map((p,i)=>{const cover=document.createElement('div'),live=document.createElement('div');cover.className='tf-worm-cover';live.className='tf-worm-live';const m=`radial-gradient(ellipse ${p.rx}% ${p.ry}% at ${p.x}% ${p.y}%,#000 0 58%,rgba(0,0,0,.82) 72%,transparent 100%)`;cover.style.webkitMaskImage=cover.style.maskImage=m;live.style.webkitMaskImage=live.style.maskImage=m;cover.style.backgroundPosition=`calc(50% + ${p.dx}px) calc(50% + ${p.dy}px)`;live.style.setProperty('--tf-origin-x',p.x+'%');live.style.setProperty('--tf-origin-y',p.y+'%');const q=(i%2?-1:1)*(key==='A'?1:1.15);live.style.setProperty('--tf-worm-x1',1.8*q+'px');live.style.setProperty('--tf-worm-y1',-.7*q+'px');live.style.setProperty('--tf-worm-x2',-1.2*q+'px');live.style.setProperty('--tf-worm-y2',.8*q+'px');live.style.setProperty('--tf-worm-x3',2.6*q+'px');live.style.setProperty('--tf-worm-y3',.25*q+'px');live.style.setProperty('--tf-worm-r1',.30*q+'deg');live.style.setProperty('--tf-worm-r2',-.24*q+'deg');live.style.setProperty('--tf-worm-r3',.18*q+'deg');live.style.animationDelay=(-(i*1.17+(key==='B'?.73:0)))+'s';motion.append(cover,live);return{cover,live}});stage.append(motion);
+ const sync=()=>{const src=photo.currentSrc||photo.src;if(!src)return;const bg=`url("${src.replace(/"/g,'\\"')}")`;grass.style.backgroundImage=bg;worms.forEach(w=>w.cover.style.backgroundImage=w.live.style.backgroundImage=bg)};sync();photo.addEventListener('load',sync,{passive:true});
+ const read=(name,fallback)=>{const t=document.getElementById('kpi'+key)?.textContent||'',re=new RegExp(name+'[^0-9]{0,75}([0-9]+(?:[.][0-9]+)?)','i');return +(t.match(re)?.[1]??fallback)};
+ const refresh=()=>{const vigor=clamp(read('Turf vigor',65),0,100),biology=clamp(read('Beneficial guilds',35),0,100),earthworms=clamp(read('Earthworm activity',33),0,100),health=vigor/100,soil=biology/100,activity=earthworms/100;photo.style.setProperty('filter',`saturate(${(.79+health*.37).toFixed(3)}) brightness(${(.89+health*.15).toFixed(3)}) contrast(${(.98+soil*.07).toFixed(3)})`,'important');tint.style.background=`linear-gradient(to bottom,rgba(116,101,45,${((1-health)*.085).toFixed(3)}) 0%,transparent 34%,rgba(33,21,13,${((1-soil)*.08).toFixed(3)}) 100%)`;grass.style.setProperty('--tf-grass-duration',(11.5-health*4).toFixed(2)+'s');grass.style.setProperty('--tf-grass-opacity',(0.10+health*.18).toFixed(2));worms.forEach((w,i)=>{w.live.style.setProperty('--tf-worm-duration',(13.5-activity*7.5+i*.63).toFixed(2)+'s');const visible=reduced?0:clamp((earthworms-8)/34,0,1);w.cover.style.opacity=(visible*.96).toFixed(2);w.live.style.opacity=visible.toFixed(2);w.live.style.animationPlayState=earthworms<9?'paused':'running'});stage.dataset.tfVisualVigor=Math.round(vigor);stage.dataset.tfWormActivity=Math.round(earthworms)};
+ const target=document.getElementById('kpi'+key);if(target)new MutationObserver(()=>requestAnimationFrame(refresh)).observe(target,{subtree:true,childList:true,characterData:true});refresh();
 }
 })();
