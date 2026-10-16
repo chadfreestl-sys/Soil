@@ -1,4 +1,4 @@
-/* Turfarium Weather-first layout v23.0. No simulation engine changes. */
+/* Turfarium Weather-first layout v23.2. No simulation engine changes. */
 (()=>{
 'use strict';
 const LABEL='Site, Season & Weather Lab';
@@ -25,10 +25,24 @@ const find=()=>{
      panel.dataset.tfWeatherInitialized='1';
      panel.classList.add('tf-panel-collapsed');
      toggle.setAttribute('aria-expanded','false');
-     if(body)body.hidden=true;
+     if(body){body.hidden=true;body.style.setProperty('display','none','important');}
      const chevron=toggle.querySelector('.tf-collapse-chevron');
      if(chevron)chevron.textContent='▸';
    }
+ }
+ if(toggle && body && !panel.dataset.tfWeatherClickHook){
+   panel.dataset.tfWeatherClickHook='1';
+   toggle.addEventListener('click',()=>{
+     requestAnimationFrame(()=>{
+       if(panel.classList.contains('tf-panel-collapsed')){
+         body.hidden=true;
+         body.style.setProperty('display','none','important');
+       }else{
+         body.hidden=false;
+         body.style.removeProperty('display');
+       }
+     });
+   });
  }
  const innerTitle=panel.querySelector('.tf-collapse-body .head h2,.head h2');
  if(innerTitle && innerTitle.textContent.trim()!==LABEL)innerTitle.textContent=LABEL;
