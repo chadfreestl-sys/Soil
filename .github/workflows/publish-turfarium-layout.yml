@@ -1,6 +1,7 @@
 name: Publish Turfarium profile-first layout
 on:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/publish-turfarium-layout.yml'
   workflow_dispatch:
