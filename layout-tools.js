@@ -15,14 +15,14 @@
   if(!document.querySelector('link[data-context-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='context-layout-v20-18.css?v=20.24';
+    css.href='context-layout-v20-18.css?v=20.25';
     css.dataset.contextLayout='true';
     document.head.appendChild(css);
   }
   if(!document.querySelector('link[data-collapse-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='collapsible-panels-v20-21.css?v=20.24';
+    css.href='collapsible-panels-v20-21.css?v=20.25';
     css.dataset.collapseLayout='true';
     document.head.appendChild(css);
   }
@@ -69,7 +69,7 @@
     visit.classList.add('profile-visit-note');
     timeSlot.appendChild(visit);
   }
-  timeline.classList.add('timeline-report-only','tf-change-lower');
+  timeline.classList.add('timeline-report-only','tf-change-priority');
 
   const styleMemory=memory=>{
     if(!memory)return;
@@ -153,6 +153,9 @@
     return panel.id;
   };
 
+  const collapseStorageKey=panel=>`turfarium-collapse-v20.25:${keyForPanel(panel)}`;
+  const defaultOpenPanel=panel=>panel===timeline||panel===lawnA||panel===lawnB;
+
   const setCollapsed=(panel,collapsed,save=true)=>{
     const button=panel.querySelector(':scope > .tf-collapse-toggle');
     const body=panel.querySelector(':scope > .tf-collapse-body');
@@ -162,7 +165,7 @@
     button.querySelector('.tf-collapse-chevron').textContent=collapsed?'▸':'▾';
     body.hidden=collapsed;
     if(save){
-      try{sessionStorage.setItem(`turfarium-collapse:${keyForPanel(panel)}`,collapsed?'1':'0');}catch(_){ }
+      try{sessionStorage.setItem(collapseStorageKey(panel),collapsed?'1':'0');}catch(_){ }
     }
   };
 
@@ -185,9 +188,9 @@
     body.id=`${id}-body`;
     panel.append(button,body);
 
-    let collapsed=true;
+    let collapsed=!defaultOpenPanel(panel);
     try{
-      const saved=sessionStorage.getItem(`turfarium-collapse:${id}`);
+      const saved=sessionStorage.getItem(collapseStorageKey(panel));
       if(saved==='1'||saved==='0')collapsed=saved==='1';
     }catch(_){ }
     setCollapsed(panel,collapsed,false);
@@ -197,8 +200,9 @@
   const decorateCollapsibles=()=>{
     const {site,weather}=findContextPanels();
     const panels=[
-      byId('scenario-onboarding'),site,weather,findManagementPanel(),deck,byId('scenario-memory'),lawnA,lawnB,
-      document.querySelector('.tf-replay-bar'),byId('diagnostic-lens'),timeline,
+      findManagementPanel(),timeline,lawnA,lawnB,
+      byId('scenario-onboarding'),site,weather,deck,byId('scenario-memory'),
+      document.querySelector('.tf-replay-bar'),byId('diagnostic-lens'),
       majorForHeading(/Soil Physics|Soil Lab|Nutrient Cycling|Soil & Nutrient|Nutrient Detail/i),
       majorForHeading(/Soil Food Web|Biology|Microbial|Microbiology/i),
       majorForHeading(/Seaweed\s+Response\s+Lab/i),
@@ -211,23 +215,34 @@
     [...new Set(panels)].forEach(makeCollapsible);
   };
 
+  // Priority workspace:
+  // Lawn Treatments at the top, What Changed open directly beneath it,
+  // then setup/context and the normally-open Lawn A/B visual panels.
   const arrangePrimaryPanels=()=>{
     const scenarios=byId('scenario-onboarding');
     const memory=byId('scenario-memory');
+    const management=findManagementPanel();
     if(!scenarios)return false;
 
     scenarios.classList.add('tf-scenarios-first');
     styleMemory(memory);
+    if(management)management.classList.add('tf-treatment-priority');
 
-    if(grid.firstElementChild!==scenarios)grid.prepend(scenarios);
-    let anchor=scenarios;
+    let anchor=null;
+    if(management){
+      if(grid.firstElementChild!==management)grid.prepend(management);
+      anchor=management;
+      anchor=appendAfter(anchor,timeline);
+    }else{
+      if(grid.firstElementChild!==timeline)grid.prepend(timeline);
+      anchor=timeline;
+    }
+
+    anchor=appendAfter(anchor,scenarios);
 
     const {site,weather}=findContextPanels();
     if(site)anchor=appendAfter(anchor,site);
     if(weather)anchor=appendAfter(anchor,weather);
-
-    const management=findManagementPanel();
-    if(management)anchor=appendAfter(anchor,management);
 
     anchor=appendAfter(anchor,deck);
     if(memory)anchor=appendAfter(anchor,memory);
@@ -283,9 +298,6 @@
     const biology=majorForHeading(/Soil Food Web|Biology|Microbial|Microbiology/i);
     if(biology&&!grid.contains(biology))anchor=appendAfter(anchor,biology);
 
-    // Keep the response summary lower in the workflow, after interpretation and core system layers.
-    anchor=appendAfter(anchor,timeline);
-
     const labPatterns=[
       /Seaweed\s+Response\s+Lab/i,
       /Worm\s+Tea\s+Brewing\s+Lab/i,
@@ -325,13 +337,13 @@
     if(!document.querySelector('link[data-living-profiles]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='living-profiles.css?v=20.24';
+      css.href='living-profiles.css?v=20.25';
       css.dataset.livingProfiles='true';
       document.head.appendChild(css);
     }
     if(!document.querySelector('script[data-living-profiles]')){
       const script=document.createElement('script');
-      script.src='living-profiles.js?v=20.24';
+      script.src='living-profiles.js?v=20.25';
       script.defer=true;
       script.dataset.livingProfiles='true';
       script.addEventListener('load',()=>requestAnimationFrame(()=>{arrangePrimaryPanels();decorateCollapsibles();}),{once:true});
@@ -341,10 +353,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.24 · ALL CLOSED';
+  if(badge)badge.textContent='v20.25 · PRIORITY RESULTS';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.24 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.25 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
