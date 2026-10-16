@@ -15,14 +15,14 @@
   if(!document.querySelector('link[data-context-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='context-layout-v20-18.css?v=20.22';
+    css.href='context-layout-v20-18.css?v=20.23';
     css.dataset.contextLayout='true';
     document.head.appendChild(css);
   }
   if(!document.querySelector('link[data-collapse-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='collapsible-panels-v20-21.css?v=20.22';
+    css.href='collapsible-panels-v20-21.css?v=20.23';
     css.dataset.collapseLayout='true';
     document.head.appendChild(css);
   }
@@ -181,8 +181,6 @@
     body.id=`${id}-body`;
     panel.append(button,body);
 
-    // v20.22: every collapsible section starts closed on a fresh load.
-    // Session state still remembers what the user explicitly opened/closed during this session.
     let collapsed=true;
     try{
       const saved=sessionStorage.getItem(`turfarium-collapse:${id}`);
@@ -272,7 +270,6 @@
     let anchor=grid;
     const diagnostic=byId('diagnostic-lens');
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
-    anchor=appendAfter(anchor,timeline);
 
     const management=byId('experiment-controls')?.closest('.card.wide')
       ||byId('experiment-controls')?.closest('section.card')
@@ -284,6 +281,9 @@
 
     const biology=majorForHeading(/Soil Food Web|Biology|Microbial|Microbiology/i);
     if(biology&&!grid.contains(biology))anchor=appendAfter(anchor,biology);
+
+    // Keep the response summary lower in the workflow, after interpretation and core system layers.
+    anchor=appendAfter(anchor,timeline);
 
     const labPatterns=[
       /Seaweed\s+Response\s+Lab/i,
@@ -324,13 +324,13 @@
     if(!document.querySelector('link[data-living-profiles]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='living-profiles.css?v=20.22';
+      css.href='living-profiles.css?v=20.23';
       css.dataset.livingProfiles='true';
       document.head.appendChild(css);
     }
     if(!document.querySelector('script[data-living-profiles]')){
       const script=document.createElement('script');
-      script.src='living-profiles.js?v=20.22';
+      script.src='living-profiles.js?v=20.23';
       script.defer=true;
       script.dataset.livingProfiles='true';
       script.addEventListener('load',()=>requestAnimationFrame(()=>{arrangePrimaryPanels();decorateCollapsibles();}),{once:true});
@@ -340,10 +340,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.22 · ALL CLOSED';
+  if(badge)badge.textContent='v20.23 · ALL CLOSED';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.22 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.23 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
