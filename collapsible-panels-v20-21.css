@@ -1,4 +1,4 @@
-/* Turfarium v20.21 — progressive disclosure for dense simulator panels */
+/* Turfarium collapsible workspace — progressive disclosure + enforced primary order */
 .tf-collapsible-panel{position:relative!important;overflow:hidden!important}
 .tf-collapse-toggle{
   width:100%!important;
@@ -28,7 +28,6 @@
 .tf-panel-collapsed{padding-top:10px!important;padding-bottom:10px!important;min-height:0!important}
 .tf-panel-collapsed>.tf-collapse-body[hidden]{display:none!important}
 
-/* The primary experiment remains visually strong when open. */
 #scenario-onboarding.tf-collapsible-panel>.tf-collapse-toggle,
 .tf-site-context.tf-collapsible-panel>.tf-collapse-toggle,
 .tf-weather-context.tf-collapsible-panel>.tf-collapse-toggle,
@@ -39,10 +38,29 @@
   background:rgba(236,243,233,.94)!important
 }
 
-/* Keep the open body from inheriting accidental clipping from legacy cards. */
 .tf-collapsible-panel:not(.tf-panel-collapsed)>.tf-collapse-body{overflow:visible!important}
+
+/* Hard visual order so older DOM placement rules cannot put What Changed above the lawns. */
+.tf-primary-workspace>#profile-control-deck{order:10!important;grid-column:1/-1!important}
+.tf-primary-workspace>#lawn-a-panel,
+.tf-primary-workspace>#lawn-b-panel{order:20!important}
+.tf-primary-workspace>.tf-treatment-priority,
+.tf-primary-workspace>.card:has(#experiment-controls),
+.tf-primary-workspace>section:has(#experiment-controls){order:30!important;grid-column:1/-1!important}
+.tf-primary-workspace>#timeline-workflow{order:40!important;grid-column:1/-1!important}
+.tf-primary-workspace>#scenario-onboarding{order:50!important;grid-column:1/-1!important}
+.tf-primary-workspace>.tf-weather-context{order:60!important;grid-column:1/-1!important}
+.tf-primary-workspace>.tf-site-context{order:70!important;grid-column:1/-1!important}
+.tf-primary-workspace>.tf-replay-bar{order:80!important;grid-column:1/-1!important}
+.tf-primary-workspace>#scenario-memory{order:90!important;grid-column:1/-1!important}
+.tf-primary-workspace>#diagnostic-lens{order:100!important;grid-column:1/-1!important}
 
 @media(max-width:760px){
   .tf-collapse-toggle{min-height:42px!important;padding:9px 10px!important;margin-bottom:8px!important;font-size:.86rem!important}
   .tf-panel-collapsed{padding:8px!important}
+  .tf-primary-workspace>#profile-control-deck,
+  .tf-primary-workspace>#lawn-a-panel,
+  .tf-primary-workspace>#lawn-b-panel,
+  .tf-primary-workspace>.tf-treatment-priority,
+  .tf-primary-workspace>#timeline-workflow{grid-column:1!important}
 }
