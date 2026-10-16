@@ -6,6 +6,7 @@ on:
     paths:
       - 'v25-workspace.js'
       - 'v25-workspace.css'
+      - 'v25-dashboard.css'
       - '.github/workflows/v25-assemble.yml'
   workflow_dispatch:
 permissions:
@@ -41,8 +42,10 @@ jobs:
               print('Removed',name,n)
           html=re.sub(r'<script\b[^>]*\bsrc\s*=\s*["\'][^"\']*v25-workspace[.]js[^"\']*["\'][^>]*>\s*</script>','',html,flags=re.I)
           html=re.sub(r'<link\b[^>]*\bhref\s*=\s*["\'][^"\']*v25-workspace[.]css[^"\']*["\'][^>]*>','',html,flags=re.I)
+          html=re.sub(r'<link\b[^>]*\bhref\s*=\s*["\'][^"\']*v25-dashboard[.]css[^"\']*["\'][^>]*>','',html,flags=re.I)
           assert '</head>' in html and '</body>' in html
           html=html.replace('</head>','<link rel="stylesheet" href="v25-workspace.css?v=25.1">\n</head>',1)
+          html=html.replace('</head>','<link rel="stylesheet" href="v25-dashboard.css?v=25.2">\n</head>',1)
           html=html.replace('</body>','<script defer src="v25-workspace.js?v=25.1"></script>\n</body>',1)
           assert html.count('v25-workspace.js?v=25.1')==1
           assert html.count('v25-workspace.css?v=25.1')==1
