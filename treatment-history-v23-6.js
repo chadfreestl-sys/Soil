@@ -1,43 +1,34 @@
-/* Turfarium 23.6 — treatment history as independent, default-closed panels.
-   Preserve original history DOM nodes and IDs so the simulation can update them. */
+/* Turfarium v23.7 — actual treatment history blocks, default closed */
 (()=>{
 'use strict';
-const mark='tf-history-panel';
-const titleMatches=s=>/^treatment\s+history(?:\s*[:—-].*)?$/i.test((s||'').trim());
-const attach=()=>{
- const lawns=[document.getElementById('lawn-a-panel'),document.getElementById('lawn-b-panel')].filter(Boolean);
- for(const lawn of lawns){
-  const headings=[...lawn.querySelectorAll('h2,h3,h4,h5,strong,.section-title,.panel-title')];
-  for(const heading of headings){
-   if(!titleMatches(heading.textContent) || heading.closest('.'+mark))continue;
-   // The heading's nearest immediate content block is the existing history area.
-   // Do not move or duplicate the history records.
-   let target=heading.parentElement;
-   if(!target||target===lawn)continue;
-   // Prefer the whole history block if heading is its first heading.
-   if(target.classList.contains('head') && target.parentElement!==lawn)target=target.parentElement;
-   if(target===lawn||target.closest('.'+mark))continue;
-   if(target.contains(lawn.querySelector('.tf-collapse-toggle')))continue;
-   const wrapper=document.createElement('section');
-   wrapper.className=mark;
-   const toggle=document.createElement('button');
-   toggle.type='button';toggle.className='tf-history-toggle';
-   toggle.setAttribute('aria-expanded','false');
-   const body=document.createElement('div');
-   body.className='tf-history-body';body.hidden=true;
-   toggle.innerHTML='<span>Treatment History</span><span aria-hidden="true" class="tf-history-chevron">▸</span>';
-   target.before(wrapper);wrapper.append(toggle,body);body.appendChild(target);
-   toggle.addEventListener('click',()=>{
-     const expanded=toggle.getAttribute('aria-expanded')!=='true';
-     toggle.setAttribute('aria-expanded',String(expanded));
-     body.hidden=!expanded;
-     toggle.querySelector('.tf-history-chevron').textContent=expanded?'▾':'▸';
-   });
-  }
+function install(){
+ for(const key of ['A','B']){
+  const lawn=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
+  const history=lawn?.querySelector('.recent-applications');
+  if(!history||history.dataset.tfHistoryWrapped==='1')continue;
+  history.dataset.tfHistoryWrapped='1';
+  const panel=document.createElement('section');
+  panel.className='tf-history-panel';
+  panel.setAttribute('aria-label','Lawn '+key+' treatment history');
+  const toggle=document.createElement('button');
+  toggle.type='button';toggle.className='tf-history-toggle';
+  toggle.setAttribute('aria-expanded','false');
+  const content=document.createElement('div');
+  content.className='tf-history-body';content.hidden=true;
+  content.id='tf-history-'+key.toLowerCase()+'-content';
+  toggle.setAttribute('aria-controls',content.id);
+  toggle.innerHTML='<span>📋 Treatment History · Lawn '+key+'</span><span class="tf-history-chevron" aria-hidden="true">▸</span>';
+  history.before(panel);panel.append(toggle,content);content.appendChild(history);
+  toggle.addEventListener('click',()=>{
+   const open=toggle.getAttribute('aria-expanded')!=='true';
+   toggle.setAttribute('aria-expanded',String(open));
+   content.hidden=!open;
+   toggle.querySelector('.tf-history-chevron').textContent=open?'▾':'▸';
+  });
  }
-};
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',attach,{once:true});else attach();
-window.addEventListener('load',attach,{once:true});
-setTimeout(attach,1000);
-setTimeout(attach,2500);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+window.addEventListener('load',install,{once:true});
+setTimeout(install,900);
+setTimeout(install,2500);
 })();
