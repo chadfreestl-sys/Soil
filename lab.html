@@ -163,6 +163,13 @@ button.primary{background:#176b54;border-color:#38b48c}
 #lawn-a-panel .photo-stage>img.soil-photo,#lawn-b-panel .photo-stage>img.soil-photo{display:block!important;visibility:visible!important;opacity:1!important;position:absolute!important;inset:0!important;width:100%!important;max-width:100%!important;height:100%!important;object-fit:cover!important;z-index:0!important}
 #lawn-a-panel .photo-stage>canvas.profile-overlay,#lawn-b-panel .photo-stage>canvas.profile-overlay{opacity:0!important;pointer-events:none!important}
 #lawn-a-panel .photo-stage>canvas.tf-ecosystem-motion,#lawn-b-panel .photo-stage>canvas.tf-ecosystem-motion{z-index:7!important}
+
+/* Hide baked-in photo labels by cropping the image rather than adding fake metrics. */
+#lawn-a-panel .photo-stage>img.soil-photo,#lawn-b-panel .photo-stage>img.soil-photo{
+ width:112%!important;max-width:none!important;height:116%!important;
+ inset:-7% auto auto -6%!important;object-fit:fill!important;
+}
+#lawn-a-panel .photo-stage>canvas.tf-living-window,#lawn-b-panel .photo-stage>canvas.tf-living-window{display:none!important}
 </style>
 </head><body><main>
 <header><div class="build-badge" aria-label="Build version">v19.4 · EVIDENCE LAYER</div><div><h1>🌱 Turfarium</h1><p class="sub">Ecosystem Studio · Interactive turfgrass and soil ecology</p></div><span class="badge">v19.4 · Evidence Confidence</span></header>
@@ -853,4 +860,4 @@ microscope();
 <script defer src="profile-compact-v23-3.js?v=23.3"></script>
 <script defer src="treatment-history-v23-6.js?v=23.9"></script>
 <script defer src="turfarium-details-v24.js?v=24.0"></script>
-<!-- Disabled procedural worm overlay: photographic worms are embedded in the background and cannot be independently animated. --><script defer src="turfarium-living-window.js?v=1"></script></body></html>
+<!-- Disabled procedural worm overlay: photographic worms are embedded in the background and cannot be independently animated. --><script defer src="turfarium-living-window.js?v=2"></script></body></html>
