@@ -30,7 +30,7 @@ function inject(){
   const s=document.createElement('script');s.dataset.tfDefaultMonthLoader='1';s.src='turfarium-default-month-v1.js?v=1.0.0';document.body.appendChild(s);
  }
  if(!document.querySelector('script[src*="turfarium-shared-start-layout-v1.js"]')){
-  const s=document.createElement('script');s.dataset.tfSharedStartLayoutLoader='1';s.src='turfarium-shared-start-layout-v1.js?v=1.0.0';document.body.appendChild(s);
+  const s=document.createElement('script');s.dataset.tfSharedStartLayoutLoader='1';s.src='turfarium-shared-start-layout-v1.js?v=2.0.0';document.body.appendChild(s);
  }
 }
 apply();
