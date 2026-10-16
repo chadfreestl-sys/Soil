@@ -254,7 +254,7 @@
     // Locate the exact laboratory by its visible title, including inside
     // collapsible panels; do not depend on generic Weather/Climate labels.
     const labHeading=[...document.querySelectorAll('h1,h2,h3,h4,.tf-collapse-title')].find(el=>
-      /site\\s*,?\\s*season\\s*(?:&|and)\\s*weather\\s*laboratory/i.test((el.textContent||'').trim())
+      /site\s*,?\s*season\s*(?:&|and)\s*weather\s*laboratory/i.test((el.textContent||'').trim())
     );
     const labPanel=labHeading?.closest('section.card,article.card,.card.wide,.card')||null;
     if(labPanel && labPanel!==deck && !labPanel.contains(deck) && !labPanel.contains(lawnA) && !labPanel.contains(lawnB)){
