@@ -1,58 +1,109 @@
-/* Turfarium Weather Lab v23.8 — safe compact weather access beside mowing; native weather panel remains in place and collapsed by default. */
+/* Turfarium Weather Lab v24 — stable weather tab beside mowing. No outer-grid reordering and no duplicated weather controls. */
 (()=>{
 'use strict';
 const LABEL='Site, Season & Weather Lab';
+let placeholder=null,activePanel=null;
+const by=id=>document.getElementById(id);
+
 function nativeWeather(){
- const lab=document.getElementById('experiment-controls');
+ const lab=by('experiment-controls');
  if(!lab)return null;
  return lab.closest('.card.wide,section.card,article.card,.card')||lab;
 }
-function collapseWeather(){
- const panel=nativeWeather();if(!panel)return;
- panel.classList.remove('tf-weather-first','tf-weather-context');
- for(const p of ['order','grid-column','width','max-width','position','z-index','margin-top','margin-bottom'])panel.style.removeProperty(p);
- document.querySelectorAll('.tf-weather-peer-spacer').forEach(el=>el.remove());
- const toggle=panel.querySelector(':scope > .tf-collapse-toggle');
- const body=panel.querySelector(':scope > .tf-collapse-body');
+function parts(panel){return{
+ toggle:panel?.querySelector(':scope > .tf-collapse-toggle'),
+ body:panel?.querySelector(':scope > .tf-collapse-body')
+}}
+function setExpanded(panel,open){
+ if(!panel)return;
+ const {toggle,body}=parts(panel);
+ panel.classList.toggle('tf-panel-collapsed',!open);
  if(toggle){
   const title=toggle.querySelector('.tf-collapse-title');if(title)title.textContent=LABEL;
-  panel.classList.add('tf-panel-collapsed');toggle.setAttribute('aria-expanded','false');
-  if(body){body.hidden=true;body.style.setProperty('display','none','important');}
-  const c=toggle.querySelector('.tf-collapse-chevron');if(c)c.textContent='▸';
+  toggle.setAttribute('aria-expanded',open?'true':'false');
+  const c=toggle.querySelector('.tf-collapse-chevron');if(c)c.textContent=open?'▾':'▸';
  }
+ if(body){body.hidden=!open;if(open)body.style.removeProperty('display');else body.style.setProperty('display','none','important');}
 }
-function toggleWeather(){
+function cleanOldArtifacts(){
+ document.querySelectorAll('.tf-weather-near-mow,.tf-weather-peer-spacer').forEach(el=>el.remove());
+ const old=document.getElementById('tf-weather-near-mow-style');if(old)old.remove();
+}
+function hideNative(){
+ const panel=nativeWeather();if(!panel||panel.closest('#tf-weather-drawer'))return;
+ panel.classList.remove('tf-weather-first','tf-weather-context');
+ for(const p of ['order','grid-column','width','max-width','position','z-index','margin-top','margin-bottom'])panel.style.removeProperty(p);
+ setExpanded(panel,false);
+ panel.dataset.tfWeatherDocked='1';
+ panel.style.setProperty('display','none','important');
+}
+function ensureDrawer(){
+ let overlay=by('tf-weather-overlay');if(overlay)return overlay;
+ overlay=document.createElement('div');overlay.id='tf-weather-overlay';overlay.innerHTML=`<section id="tf-weather-drawer" role="dialog" aria-modal="true" aria-label="${LABEL}"><div class="tf-weather-drawer-head"><strong>🌦️ ${LABEL}</strong><button type="button" id="tf-weather-close" aria-label="Close weather lab">✕</button></div><div id="tf-weather-drawer-body"></div></section>`;
+ document.body.appendChild(overlay);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)closeDrawer()});
+ by('tf-weather-close').addEventListener('click',closeDrawer);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))closeDrawer()});
+ return overlay;
+}
+function openDrawer(){
  const panel=nativeWeather();if(!panel)return;
- const toggle=panel.querySelector(':scope > .tf-collapse-toggle');
- const body=panel.querySelector(':scope > .tf-collapse-body');
- const closed=panel.classList.contains('tf-panel-collapsed');
- panel.classList.toggle('tf-panel-collapsed',!closed);
- if(toggle)toggle.setAttribute('aria-expanded',closed?'true':'false');
- if(body){body.hidden=!closed;if(closed)body.style.removeProperty('display');else body.style.setProperty('display','none','important');}
- const c=toggle?.querySelector('.tf-collapse-chevron');if(c)c.textContent=closed?'▾':'▸';
- if(closed)setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),30);
+ const overlay=ensureDrawer(),body=by('tf-weather-drawer-body');
+ if(!placeholder){placeholder=document.createComment('tf-weather-home');panel.parentNode?.insertBefore(placeholder,panel);}
+ activePanel=panel;
+ panel.style.removeProperty('display');
+ panel.style.width='100%';panel.style.maxWidth='none';panel.style.margin='0';
+ body.appendChild(panel);
+ setExpanded(panel,true);
+ overlay.classList.add('open');document.body.classList.add('tf-weather-lock');
+ requestAnimationFrame(()=>overlay.querySelector('#tf-weather-close')?.focus());
 }
-function installButtons(){
- collapseWeather();
+function closeDrawer(){
+ const overlay=by('tf-weather-overlay');
+ if(activePanel&&placeholder?.parentNode){
+  setExpanded(activePanel,false);
+  for(const p of ['width','max-width','margin'])activePanel.style.removeProperty(p);
+  placeholder.parentNode.insertBefore(activePanel,placeholder.nextSibling);
+  activePanel.style.setProperty('display','none','important');
+ }
+ activePanel=null;
+ overlay?.classList.remove('open');document.body.classList.remove('tf-weather-lock');
+}
+function installBesideMowing(){
+ cleanOldArtifacts();hideNative();
  for(const key of ['A','B']){
-  const env=document.getElementById('tf-env-'+key);if(!env)continue;
-  const sum=env.querySelector(':scope > summary');if(!sum||sum.querySelector('.tf-weather-near-mow'))continue;
-  sum.classList.add('tf-env-summary-row');
-  const b=document.createElement('button');b.type='button';b.className='tf-weather-near-mow';b.textContent='🌦️ Weather';b.setAttribute('aria-label','Open Site, Season & Weather Lab');
-  b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggleWeather();});
-  sum.appendChild(b);
+  const env=by('tf-env-'+key);if(!env)continue;
+  const summary=env.querySelector(':scope > summary');
+  if(summary){const first=summary.querySelector('span:first-child');if(first)first.textContent='✂️ Mowing + environmental drift';}
+  let shell=env.parentElement?.classList.contains('tf-management-tabs')?env.parentElement:null;
+  if(!shell){
+   shell=document.createElement('div');shell.className='tf-management-tabs';shell.dataset.lawn=key;
+   env.parentNode?.insertBefore(shell,env);shell.appendChild(env);
+  }
+  let weather=shell.querySelector(':scope > .tf-weather-tab');
+  if(!weather){
+   weather=document.createElement('button');weather.type='button';weather.className='tf-weather-tab';weather.innerHTML='<span>🌦️ Weather</span><small>closed by default</small>';
+   weather.addEventListener('click',openDrawer);
+   shell.insertBefore(weather,env);
+  }
  }
 }
-const style=document.createElement('style');style.id='tf-weather-near-mow-style';style.textContent=`
-.tf-env>summary.tf-env-summary-row{display:flex;align-items:center;gap:9px;justify-content:flex-start!important;flex-wrap:wrap}
-.tf-env>summary.tf-env-summary-row>span:first-child{margin-right:auto}
-.tf-weather-near-mow{border:1px solid #9fb7a4;background:rgba(255,255,255,.72);color:#173f2a;border-radius:999px;padding:6px 10px;font:inherit;font-size:.75rem;font-weight:800;line-height:1;cursor:pointer}
-.tf-weather-near-mow:hover{background:#fff}
-@media(max-width:520px){.tf-weather-near-mow{padding:6px 9px;font-size:.72rem}}
+const style=document.createElement('style');style.id='tf-weather-v24-style';style.textContent=`
+.tf-management-tabs{display:grid;grid-template-columns:minmax(145px,.42fr) minmax(0,1fr);gap:8px;align-items:start;margin:10px 0 2px}
+.tf-management-tabs>.tf-env{margin:0!important;min-width:0}
+.tf-weather-tab{min-height:46px;border:1px solid #b9d0bd!important;border-radius:13px!important;background:rgba(240,248,238,.72)!important;color:#183f2b!important;padding:9px 12px!important;text-align:left!important;display:flex!important;flex-direction:column;justify-content:center;gap:1px;font:inherit!important;font-weight:800!important;box-shadow:none!important}
+.tf-weather-tab span{font-size:.86rem;line-height:1.15}.tf-weather-tab small{font-size:.65rem;color:#587060;line-height:1.1}.tf-weather-tab:hover{background:#fff!important}
+#tf-weather-overlay{position:fixed;inset:0;z-index:999999;background:rgba(5,15,18,.58);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:clamp(12px,4vh,42px) 12px;overflow:auto}
+#tf-weather-overlay.open{display:flex}body.tf-weather-lock{overflow:hidden}
+#tf-weather-drawer{width:min(1120px,96vw);max-height:90vh;overflow:auto;background:#eef4ee;border:1px solid #9fb7a4;border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.35);padding:12px;color:#183f2b}
+.tf-weather-drawer-head{position:sticky;top:-12px;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 8px 12px;background:#eef4ee;border-bottom:1px solid #c5d5c8;margin:-1px -1px 10px}.tf-weather-drawer-head strong{font-size:1rem}.tf-weather-drawer-head button{width:38px;height:38px;border-radius:10px!important;padding:0!important;font-weight:900!important;background:#fff!important;color:#173f2a!important;border:1px solid #aec3b2!important}
+#tf-weather-drawer .tf-collapse-toggle{display:none!important}#tf-weather-drawer .tf-collapse-body{display:block!important}#tf-weather-drawer .tf-panel-collapsed>.tf-collapse-body{display:block!important}
+@media(max-width:620px){.tf-management-tabs{grid-template-columns:1fr 1.5fr;gap:6px}.tf-weather-tab{padding:8px!important;min-height:44px}.tf-weather-tab span{font-size:.78rem}.tf-weather-tab small{font-size:.6rem}#tf-weather-overlay{padding:8px}#tf-weather-drawer{width:100%;max-height:94vh;border-radius:13px}}
 `;
-if(!document.getElementById(style.id))document.head.appendChild(style);
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installButtons,{once:true});else installButtons();
-window.addEventListener('load',installButtons,{once:true});
-const mo=new MutationObserver(()=>installButtons());mo.observe(document.documentElement,{childList:true,subtree:true});
-setTimeout(installButtons,500);setTimeout(installButtons,1500);setTimeout(installButtons,3000);setTimeout(()=>mo.disconnect(),12000);
+if(!by(style.id))document.head.appendChild(style);
+function boot(){installBesideMowing();ensureDrawer()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+window.addEventListener('load',boot,{once:true});
+let queued=false;const mo=new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;installBesideMowing()})});mo.observe(document.documentElement,{childList:true,subtree:true});
+setTimeout(boot,400);setTimeout(boot,1200);setTimeout(boot,2800);setTimeout(()=>mo.disconnect(),15000);
 })();
