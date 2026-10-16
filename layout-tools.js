@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='22.1';
+  const VERSION='22.2';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -17,7 +17,7 @@
     const style=document.createElement('style');
     style.id='tf-profile-first-rule';
     style.textContent=`
-      .simulation-grid.tf-primary-workspace > .tf-weather-context {order:-999.5!important;grid-column:1/-1!important}
+      .simulation-grid.tf-primary-workspace > .tf-weather-first {order:-1100!important;grid-column:1/-1!important}
       .simulation-grid.tf-primary-workspace > #profile-control-deck {order:-1000!important;grid-column:1/-1!important}
       .simulation-grid.tf-primary-workspace > #lawn-a-panel {order:-999!important}
       .simulation-grid.tf-primary-workspace > #lawn-b-panel {order:-998!important}
@@ -233,6 +233,32 @@
     [...new Set(panels)].forEach(makeCollapsible);
   };
 
+  const locateSiteSeasonWeatherLab=()=>{
+    const headings=[...document.querySelectorAll('h1,h2,h3,h4,.tf-collapse-title')];
+    const heading=headings.find(el=>/site\\s*,?\\s*season\\s*(?:&|and)\\s*weather\\s*(?:laboratory|lab)/i.test(el.textContent||''));
+    const panel=heading?.closest('.card.wide,section.card,article.card,.card')||null;
+    return panel && panel!==deck && !panel.contains(deck) && !panel.contains(lawnA) && !panel.contains(lawnB)?panel:null;
+  };
+  const putWeatherFirst=()=>{
+    const panel=locateSiteSeasonWeatherLab();
+    if(!panel)return;
+    panel.classList.add('tf-weather-context','tf-context-panel','tf-weather-first');
+    panel.style.setProperty('order','-1100','important');
+    panel.style.setProperty('grid-column','1 / -1','important');
+    if(deck.parentElement===grid && panel.parentElement===grid){
+      grid.insertBefore(panel,deck);
+    }else if(deck.parentElement===grid){
+      grid.insertBefore(panel,deck);
+    }
+    const toggle=panel.querySelector(':scope > .tf-collapse-toggle');
+    const body=panel.querySelector(':scope > .tf-collapse-body');
+    if(toggle && body && panel.classList.contains('tf-panel-collapsed')){
+      panel.classList.remove('tf-panel-collapsed');
+      toggle.setAttribute('aria-expanded','true');
+      body.hidden=false;
+    }
+  };
+
   const arrangePrimaryPanels=()=>{
     const scenarios=byId('scenario-onboarding');
     const memory=byId('scenario-memory');
@@ -249,16 +275,11 @@
     if(replay)replay.classList.add('tf-replay-primary');
 
     // Keep profile controls directly above the two lawn images.
-    if(grid.firstElementChild!==deck)grid.prepend(deck);
+    if(deck.parentElement!==grid)grid.prepend(deck);
     let anchor=deck;
     const context=findContextPanels();
-    const weatherLab=byId('experiment-controls');
-    if(weatherLab){
-      weatherLab.classList.add('tf-weather-context','tf-context-panel');
-      anchor=appendAfter(anchor,weatherLab);
-      weatherLab.style.setProperty('order','-999.5','important');
-      weatherLab.style.setProperty('grid-column','1 / -1','important');
-    }
+    const weatherLab=locateSiteSeasonWeatherLab();
+    if(weatherLab)weatherLab.classList.add('tf-weather-context','tf-context-panel');
     if(context.weather && context.weather!==weatherLab && context.weather!==deck && context.weather!==lawnA && context.weather!==lawnB){
       anchor=appendAfter(anchor,context.weather);
     }
@@ -270,7 +291,7 @@
     const labPanel=labHeading?.closest('section.card,article.card,.card.wide,.card')||null;
     if(labPanel && labPanel!==deck && !labPanel.contains(deck) && !labPanel.contains(lawnA) && !labPanel.contains(lawnB)){
       labPanel.classList.add('tf-weather-context','tf-context-panel');
-      anchor=appendAfter(deck,labPanel);
+      // Placement is finalized above the profile deck by putWeatherFirst().
       labPanel.style.setProperty('order','-999.5','important');
       labPanel.style.setProperty('grid-column','1 / -1','important');
     }
@@ -298,6 +319,7 @@
     const topAnchor=document.querySelector('.mode-shell')||document.querySelector('header');
     if(topAnchor&&grid.previousElementSibling!==topAnchor)topAnchor.insertAdjacentElement('afterend',grid);
     decorateCollapsibles();
+    putWeatherFirst();
     return true;
   };
 
