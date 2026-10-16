@@ -846,28 +846,65 @@ microscope();
 <script defer src="treatment-history-v23-6.js?v=23.9"></script>
 <script defer src="turfarium-details-v24.js?v=24.0"></script>
 <script>
-/* Diagnostic-first, self-contained animation to avoid missing auxiliary asset. */
+/* Turfarium v1.4 — independent live model-driven earthworm visuals */
 (function(){
+'use strict';
 function start(){
- if(document.getElementById('tf-worm-inline-ready'))return;
- const badge=document.createElement('div');badge.id='tf-worm-inline-ready';badge.textContent='🪱 Worm animation v1.3 active';
- badge.style.cssText='position:fixed;bottom:8px;left:8px;z-index:9999;background:#fff5d6;color:#173b29;padding:6px 9px;border:2px solid #246b4a;border-radius:8px;font:700 12px Arial,sans-serif;pointer-events:none';
- document.body.appendChild(badge);
- const css=document.createElement('style');
- css.textContent='.tf-live-worm{position:absolute!important;z-index:999!important;pointer-events:none!important;left:20%;top:67%;width:15%;height:13%;animation:tf-live-crawl 3.5s ease-in-out infinite alternate!important;filter:drop-shadow(1px 2px 2px #000)}.tf-live-worm.second{left:53%;top:77%;animation-duration:5.3s!important;animation-delay:-1.5s!important}@keyframes tf-live-crawl{0%{transform:translate(-12px,-7px) rotate(-9deg)}100%{transform:translate(55px,12px) rotate(12deg)}}@media(prefers-reduced-motion:reduce){.tf-live-worm{animation:none!important}}';
- document.head.appendChild(css);
- ['A','B'].forEach(function(key){
+ if(window.__tfWormModelV14)return;
+ window.__tfWormModelV14=true;
+ const style=document.createElement('style');
+ style.textContent='.tf-live-worm{position:absolute!important;z-index:999!important;pointer-events:none!important;width:15%;height:12%;filter:drop-shadow(1px 2px 2px #0008);transition:opacity .5s ease}.tf-live-worm svg{display:block;width:100%;height:100%}.tf-worm-status-live{position:absolute;right:6px;bottom:6px;z-index:1000;color:#143726;background:#fff4d6;border-radius:6px;padding:4px 6px;font:bold 11px Arial,sans-serif;box-shadow:0 1px 4px #0004}@media(prefers-reduced-motion:reduce){.tf-live-worm{transition:none!important}}';
+ document.head.appendChild(style);
+ const wormSVG='<svg viewBox="0 0 100 45" aria-hidden="true"><path d="M5 23 Q24 2 43 22 T95 22" fill="none" stroke="#27150e" stroke-width="16" stroke-linecap="round"/><path d="M5 23 Q24 2 43 22 T95 22" fill="none" stroke="#dca088" stroke-width="11" stroke-linecap="round"/><path d="M5 23 Q24 2 43 22 T95 22" fill="none" stroke="#7d4a41" stroke-width="2" stroke-dasharray="3 5"/></svg>';
+ const scenes=['A','B'].map((key,index)=>{
   const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel'),stage=panel&&panel.querySelector('.photo-stage');
-  if(!stage)return;
+  if(!stage)return null;
   stage.style.position='relative';
-  for(let i=0;i<2;i++){
-   const wrap=document.createElement('div');wrap.className='tf-live-worm'+(i?' second':'');
-   wrap.innerHTML='<svg viewBox="0 0 100 45" width="100%" height="100%" aria-hidden="true"><path d="M5 23 Q24 2 43 22 T95 22" fill="none" stroke="#27150e" stroke-width="16" stroke-linecap="round"/><path d="M5 23 Q24 2 43 22 T95 22" fill="none" stroke="#dca088" stroke-width="11" stroke-linecap="round"/><path d="M5 23 Q24 2 43 22 T95 22" fill="none" stroke="#7d4a41" stroke-width="2" stroke-dasharray="3 5"/></svg>';
-   stage.appendChild(wrap);
+  stage.querySelectorAll('.tf-live-worm,.tf-worm-layer,.tf-worm-status-live').forEach(el=>el.remove());
+  const worms=Array.from({length:3},(_,i)=>{
+   const node=document.createElement('div');node.className='tf-live-worm';node.innerHTML=wormSVG;
+   stage.appendChild(node);return {node,x:.18+i*.20,y:.64+i*.065,phase:index*2.1+i*1.9};
+  });
+  const label=document.createElement('span');label.className='tf-worm-status-live';stage.appendChild(label);
+  return {key,index,panel,stage,worms,label,activity:33,day:0,vigor:71};
+ }).filter(Boolean);
+ if(!scenes.length)return;
+ const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+ const read=s=>{
+  const txt=(document.getElementById('kpi'+s.key)?.textContent||'').replace(/\s+/g,' ');
+  const worm=txt.match(/Earthworm activity[^0-9]{0,70}(\d+(?:\.\d+)?)\s*\/\s*100/i);
+  const vigor=txt.match(/Turf vigor[^0-9]{0,70}(\d+(?:\.\d+)?)\s*\/\s*100/i);
+  if(worm)s.activity=clamp(+worm[1],0,100);
+  if(vigor)s.vigor=clamp(+vigor[1],0,100);
+  s.day=Number((document.getElementById('day'+s.key)?.textContent||'').match(/Day\s*(\d+)/i)?.[1]||0);
+  const count=s.activity<10?0:s.activity<35?1:s.activity<65?2:3;
+  s.worms.forEach((w,i)=>{w.node.style.opacity=i<count?'1':'0';});
+  s.label.textContent='🪱 '+s.activity.toFixed(0)+'/100 · Day '+s.day;
+ };
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ let last=0;
+ const tick=t=>{
+  if(t-last>45){
+   scenes.forEach(s=>{
+    read(s);
+    const moving=!reduced&&localStorage.getItem('turfariumMotion')!=='off';
+    const slow=localStorage.getItem('turfariumMotion')==='low'?.4:1;
+    s.worms.forEach((w,i)=>{
+     const rate=(.000045+s.activity*.0000012)*slow;
+     const time=moving?t*rate:0;
+     const direction=(i%2===0?1:-1);
+     const x=.17+(((w.phase*.13+time*direction)% .58)+.58)% .58;
+     const y=.67+i*.064+Math.sin(time*5+w.phase+s.day*.008)*.027;
+     w.node.style.left=(x*100).toFixed(2)+'%';
+     w.node.style.top=(y*100).toFixed(2)+'%';
+     w.node.style.transform='rotate('+(moving?Math.sin(time*7+w.phase)*12:0).toFixed(1)+'deg)';
+    });
+   });
+   last=t;
   }
-  const tag=document.createElement('span');tag.textContent='LIVE WORMS · Lawn '+key;tag.style.cssText='position:absolute;bottom:5px;right:5px;z-index:1000;color:#143726;background:#fff4d6;border-radius:5px;padding:3px 5px;font:bold 10px Arial';stage.appendChild(tag);
- });
- setTimeout(()=>badge.remove(),12000);
+  requestAnimationFrame(tick);
+ };
+ requestAnimationFrame(tick);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
