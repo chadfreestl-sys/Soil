@@ -1,0 +1,38 @@
+/* Turfarium Environmental Drift System v1 — mowing-only management, clipping nutrient recycling, and slow visual drift. */
+(()=>{'use strict';
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const speciesRange={
+ 'Tall fescue':[3,4], 'Fine fescue':[2.5,4], 'Kentucky bluegrass':[2.5,3.5], 'Perennial ryegrass':[2.5,3.5],
+ 'Creeping bentgrass':[0.3,1], 'Zoysia':[1,2.5], 'Bermudagrass':[0.5,2], 'St. Augustine':[2.5,4]
+};
+const style=document.createElement('style');style.textContent=`
+.tf-env{margin:10px 0 2px;border:1px solid #b9d0bd;border-radius:13px;background:rgba(240,248,238,.72);overflow:hidden;color:#183f2b}.tf-env summary{cursor:pointer;padding:11px 13px;font-weight:800;display:flex;justify-content:space-between;gap:10px}.tf-env-body{padding:0 12px 12px}.tf-env-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.tf-env label{font-size:.76rem;color:#365b45;margin:0}.tf-env select,.tf-env input[type=number]{width:100%;margin-top:4px;padding:8px;border-radius:8px}.tf-env-check{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:.82rem}.tf-env-read{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.tf-env-read div{background:rgba(255,255,255,.62);border-radius:8px;padding:7px;font-size:.68rem;color:#476352}.tf-env-read b{display:block;color:#173f2a;font-size:.92rem}.tf-env-note{font-size:.72rem;line-height:1.35;color:#51685a;margin:8px 0 0}@media(max-width:520px){.tf-env-grid{grid-template-columns:1fr}.tf-env-read{grid-template-columns:repeat(2,1fr)}}`;document.head.appendChild(style);
+const state={A:{n:0,root:0,stress:0,days:0},B:{n:0,root:0,stress:0,days:0}};
+const by=id=>document.getElementById(id);
+function make(key){const panel=by('lawn-'+key.toLowerCase()+'-panel');if(!panel||by('tf-env-'+key))return;const d=document.createElement('details');d.className='tf-env';d.id='tf-env-'+key;d.innerHTML=`<summary><span>🌦️ Mowing + environmental drift</span><span>closed by default</span></summary><div class="tf-env-body"><div class="tf-env-grid">
+<label>Mowing height<select id="tf-mow-height-${key}"><option value="2">2.0 in</option><option value="2.5">2.5 in</option><option value="3" selected>3.0 in</option><option value="3.5">3.5 in</option><option value="4">4.0 in</option></select></label>
+<label>Mowing interval<select id="tf-mow-days-${key}"><option value="4">Every 4 days</option><option value="7" selected>Every 7 days</option><option value="10">Every 10 days</option><option value="14">Every 14 days</option></select></label>
+<label>Blade condition<select id="tf-blade-${key}"><option value="1" selected>Sharp / clean cut</option><option value="0.78">Average</option><option value="0.52">Dull / tearing</option></select></label>
+<label>Traffic<select id="tf-traffic-${key}"><option value="0" selected>Low</option><option value="0.35">Moderate</option><option value="0.7">High</option></select></label></div>
+<label class="tf-env-check"><input id="tf-clippings-${key}" type="checkbox" checked> Mulch / return clippings</label>
+<div class="tf-env-read"><div>Recycled N proxy<b id="tf-n-${key}">0.0</b></div><div>Root-depth tendency<b id="tf-root-${key}">0</b></div><div>Canopy stress<b id="tf-stress-${key}">0</b></div><div>Management quality<b id="tf-mgmt-${key}">—</b></div></div>
+<p class="tf-env-note">These are modeled management indices. Returned clippings recycle nutrients gradually; mowing height changes root/stress tendency by turf species rather than acting as direct fertilizer.</p></div>`;
+ const kpis=by('kpi'+key);(kpis||panel.firstElementChild)?.insertAdjacentElement('afterend',d);
+ ['tf-mow-height-','tf-mow-days-','tf-blade-','tf-traffic-','tf-clippings-'].forEach(p=>by(p+key)?.addEventListener('change',()=>render(key)));
+}
+function readKpi(key,name,fallback){const t=by('kpi'+key)?.textContent||'';const m=t.match(new RegExp(name+'[^0-9]{0,60}([0-9]+(?:\\.[0-9]+)?)','i'));return +(m?.[1]??fallback)}
+function factors(key){const grass=by('grass')?.value||'Tall fescue',range=speciesRange[grass]||[2.5,3.5],h=+by('tf-mow-height-'+key)?.value||3,interval=+by('tf-mow-days-'+key)?.value||7,blade=+by('tf-blade-'+key)?.value||1,traffic=+by('tf-traffic-'+key)?.value||0,clip=!!by('tf-clippings-'+key)?.checked;
+ const mid=(range[0]+range[1])/2;const heightFit=clamp(1-Math.abs(h-mid)/(Math.max(.7,range[1]-range[0]+.4)),0,1);const lowPenalty=h<range[0]?clamp((range[0]-h)/1.5,0,1):0;const highPenalty=h>range[1]?clamp((h-range[1])/1.8,0,.6):0;const freqFit=clamp(1-Math.abs(interval-7)/11,0.35,1);return{grass,h,interval,blade,traffic,clip,heightFit,lowPenalty,highPenalty,freqFit};}
+function step(key,days){const s=state[key],f=factors(key),vigor=readKpi(key,'Turf vigor',65),bio=readKpi(key,'Beneficial guilds',35);const growth=clamp((vigor*.6+bio*.4)/100,.15,1);const cutQuality=f.heightFit*f.freqFit*f.blade;const returned=f.clip?1:0;
+ // slow clipping-N loop: grows with biomass, season/growth proxy and management quality, capped to stay illustrative.
+ s.n=clamp(s.n + days/30*(0.18*growth*returned*cutQuality) - days/30*(0.035+0.025*(1-growth)),0,8);
+ // taller-in-range mowing supports root allocation; mowing below species range raises chronic stress.
+ const rootDrive=(f.heightFit*.55 + clamp((f.h-factors(key).h+0.5),0,1)*0 + (f.h>=((speciesRange[f.grass]||[2.5,3.5])[0])?0.28:0) + f.blade*.17) - f.lowPenalty*.9 - f.traffic*.25;
+ s.root=clamp(s.root + days/30*((rootDrive-.48)*3.2),-20,20);
+ const stressDrive=f.lowPenalty*.62+f.highPenalty*.15+(1-f.blade)*.28+f.traffic*.38+(1-f.freqFit)*.18;
+ s.stress=clamp(s.stress + days/30*(stressDrive*8 - cutQuality*2.5),0,100);s.days+=days;render(key);
+}
+function render(key){const s=state[key],f=factors(key);by('tf-n-'+key)&&(by('tf-n-'+key).textContent=s.n.toFixed(1));by('tf-root-'+key)&&(by('tf-root-'+key).textContent=(s.root>=0?'+':'')+s.root.toFixed(1));by('tf-stress-'+key)&&(by('tf-stress-'+key).textContent=Math.round(s.stress));const quality=clamp((f.heightFit*.42+f.freqFit*.20+f.blade*.25+(f.clip?.13:0)-f.traffic*.18)*100,0,100);by('tf-mgmt-'+key)&&(by('tf-mgmt-'+key).textContent=Math.round(quality)+'/100');const stage=by('lawn-'+key.toLowerCase()+'-panel')?.querySelector('.photo-stage');if(stage){stage.dataset.tfClipN=s.n.toFixed(2);stage.dataset.tfMowRoot=s.root.toFixed(2);stage.dataset.tfMowStress=s.stress.toFixed(1);stage.dataset.tfManagement=Math.round(quality);const photo=stage.querySelector('img.soil-photo');if(photo){const vigor=readKpi(key,'Turf vigor',65);const green=clamp((quality-50)*.0016+s.n*.008-s.stress*.0015,-.12,.16);photo.style.setProperty('--tf-env-green',green.toFixed(3));}}window.dispatchEvent(new CustomEvent('tf-environment-update',{detail:{key,...s,management:quality}}));}
+function hookTimeline(){document.querySelectorAll('[data-step]').forEach(b=>{if(b.dataset.tfEnvHook)return;b.dataset.tfEnvHook='1';b.addEventListener('click',()=>{const days=+b.dataset.step||0;if(days>0){step('A',days);step('B',days)}},true)});}
+['A','B'].forEach(k=>{make(k);render(k)});hookTimeline();new MutationObserver(hookTimeline).observe(document.body,{subtree:true,childList:true});
+})();
