@@ -1,4 +1,4 @@
-/* Force the current clean soil photo after legacy layout scripts run, then load current living motion + biology layers. */
+/* Force the current clean soil photo after legacy layout scripts run, then load current living motion + biology + environmental drift layers. */
 (()=>{'use strict';
 const image='file_00000000f35481f5a24a1191fdf2adf5.png?v=clean-4';
 function apply(){
@@ -17,6 +17,9 @@ function inject(){
  }
  if(!document.getElementById('tf-bio-A')&&!document.querySelector('script[data-tf-bio-loader]')){
   const s=document.createElement('script');s.dataset.tfBioLoader='1';s.src='turfarium-biology-v1.js?v=1.0.0';document.body.appendChild(s);
+ }
+ if(!document.getElementById('tf-env-A')&&!document.querySelector('script[data-tf-env-loader]')){
+  const s=document.createElement('script');s.dataset.tfEnvLoader='1';s.src='turfarium-environment-v1.js?v=1.0.0';document.body.appendChild(s);
  }
 }
 apply();
