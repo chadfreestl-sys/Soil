@@ -1,0 +1,62 @@
+name: Publish isolated Turfarium v25 preview
+on:
+  push:
+    branches: [turfarium-v25-development]
+    paths:
+      - 'lab.html'
+      - 'v25-workspace.js'
+      - 'v25-workspace.css'
+      - '.github/workflows/v25-preview-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: turfarium-v25-preview
+  cancel-in-progress: false
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: turfarium-v25-development
+      - name: Run static checks
+        run: python3 scripts/check_v25.py
+      - name: Prepare preview without modifying production
+        run: |
+          mkdir -p /tmp/v25-preview
+          rsync -a --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='browser-results' ./ /tmp/v25-preview/
+          cat > /tmp/v25-preview/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta http-equiv="refresh" content="0;url=lab.html">
+          <title>Turfarium v25 Development Preview</title></head>
+          <body><a href="lab.html">Open Turfarium v25 development preview</a></body></html>
+          EOF
+          touch /tmp/v25-preview/.nojekyll
+      - name: Deploy isolated preview to gh-pages/v25
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          work="$(mktemp -d)"
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git clone --quiet --branch gh-pages --single-branch "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$work"
+          else
+            git -C "$work" init -q
+            git -C "$work" checkout -qb gh-pages
+            git -C "$work" remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          fi
+          mkdir -p "$work/v25"
+          rsync -a --delete --exclude='.git' /tmp/v25-preview/ "$work/v25/"
+          touch "$work/.nojekyll"
+          git -C "$work" add v25 .nojekyll
+          if ! git -C "$work" diff --cached --quiet; then
+            git -C "$work" commit -qm "Deploy isolated Turfarium v25 development preview"
+            git -C "$work" push origin HEAD:gh-pages
+          fi
+          echo "Preview content published to gh-pages branch /v25/"
+          echo "Note: URL is public only if repository Pages settings serve gh-pages branch root."
