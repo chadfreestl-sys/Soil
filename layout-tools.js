@@ -15,7 +15,7 @@
   if(!document.querySelector('link[data-context-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='context-layout-v20-18.css?v=20.18';
+    css.href='context-layout-v20-18.css?v=20.19';
     css.dataset.contextLayout='true';
     document.head.appendChild(css);
   }
@@ -62,7 +62,7 @@
     visit.classList.add('profile-visit-note');
     timeSlot.appendChild(visit);
   }
-  timeline.classList.add('timeline-report-only');
+  timeline.classList.add('timeline-report-only','tf-change-lower');
 
   const styleMemory=memory=>{
     if(!memory)return;
@@ -123,7 +123,8 @@
   };
 
   // Primary causal flow:
-  // Scenario -> Site/Turf -> Weather/Climate -> Profile/Time -> Save -> Lawns -> Replay -> What Changed.
+  // Scenario -> Site/Turf -> Weather/Climate -> Profile/Time -> Save -> Lawns -> Replay.
+  // What Changed is intentionally lower, after Diagnostics.
   const arrangePrimaryPanels=()=>{
     const scenarios=byId('scenario-onboarding');
     const memory=byId('scenario-memory');
@@ -147,9 +148,8 @@
     const replay=document.querySelector('.tf-replay-bar');
     if(replay){
       replay.classList.add('tf-replay-primary');
-      anchor=appendAfter(anchor,replay);
+      appendAfter(anchor,replay);
     }
-    appendAfter(anchor,timeline);
 
     const topAnchor=document.querySelector('.mode-shell')||document.querySelector('header');
     if(topAnchor&&grid.previousElementSibling!==topAnchor)topAnchor.insertAdjacentElement('afterend',grid);
@@ -186,6 +186,9 @@
     let anchor=grid;
     const diagnostic=byId('diagnostic-lens');
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
+
+    // Put the response summary after the diagnostic interpretation, not in the hero flow.
+    anchor=appendAfter(anchor,timeline);
 
     const management=byId('experiment-controls')?.closest('.card.wide')
       ||byId('experiment-controls')?.closest('section.card')
@@ -236,13 +239,13 @@
     if(!document.querySelector('link[data-living-profiles]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='living-profiles.css?v=20.18';
+      css.href='living-profiles.css?v=20.19';
       css.dataset.livingProfiles='true';
       document.head.appendChild(css);
     }
     if(!document.querySelector('script[data-living-profiles]')){
       const script=document.createElement('script');
-      script.src='living-profiles.js?v=20.18';
+      script.src='living-profiles.js?v=20.19';
       script.defer=true;
       script.dataset.livingProfiles='true';
       script.addEventListener('load',()=>requestAnimationFrame(arrangePrimaryPanels),{once:true});
@@ -252,10 +255,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.18 · CONTEXT FIRST';
+  if(badge)badge.textContent='v20.19 · CONTEXT FIRST';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.18 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.19 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
