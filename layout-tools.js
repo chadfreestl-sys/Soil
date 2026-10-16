@@ -15,14 +15,14 @@
   if(!document.querySelector('link[data-context-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='context-layout-v20-18.css?v=20.21';
+    css.href='context-layout-v20-18.css?v=20.22';
     css.dataset.contextLayout='true';
     document.head.appendChild(css);
   }
   if(!document.querySelector('link[data-collapse-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='collapsible-panels-v20-21.css?v=20.21';
+    css.href='collapsible-panels-v20-21.css?v=20.22';
     css.dataset.collapseLayout='true';
     document.head.appendChild(css);
   }
@@ -149,12 +149,6 @@
     return panel.id;
   };
 
-  const defaultOpenPanel=panel=>{
-    if(panel.id==='scenario-onboarding'||panel===deck||panel===lawnA||panel===lawnB)return true;
-    if(panel.classList.contains('tf-site-context')||panel.classList.contains('tf-weather-context'))return true;
-    return false;
-  };
-
   const setCollapsed=(panel,collapsed,save=true)=>{
     const button=panel.querySelector(':scope > .tf-collapse-toggle');
     const body=panel.querySelector(':scope > .tf-collapse-body');
@@ -181,12 +175,15 @@
     const button=document.createElement('button');
     button.type='button';
     button.className='tf-collapse-toggle';
-    button.innerHTML=`<span class="tf-collapse-title"></span><span class="tf-collapse-chevron" aria-hidden="true">▾</span>`;
+    button.innerHTML=`<span class="tf-collapse-title"></span><span class="tf-collapse-chevron" aria-hidden="true">▸</span>`;
     button.querySelector('.tf-collapse-title').textContent=title;
     button.setAttribute('aria-controls',`${id}-body`);
     body.id=`${id}-body`;
     panel.append(button,body);
-    let collapsed=!defaultOpenPanel(panel);
+
+    // v20.22: every collapsible section starts closed on a fresh load.
+    // Session state still remembers what the user explicitly opened/closed during this session.
+    let collapsed=true;
     try{
       const saved=sessionStorage.getItem(`turfarium-collapse:${id}`);
       if(saved==='1'||saved==='0')collapsed=saved==='1';
@@ -213,9 +210,6 @@
     [...new Set(panels)].forEach(makeCollapsible);
   };
 
-  // Primary causal flow:
-  // Scenario -> Site/Turf -> Weather/Climate -> Profile/Time -> Save -> Lawns -> Replay.
-  // What Changed is intentionally lower, after Diagnostics.
   const arrangePrimaryPanels=()=>{
     const scenarios=byId('scenario-onboarding');
     const memory=byId('scenario-memory');
@@ -278,8 +272,6 @@
     let anchor=grid;
     const diagnostic=byId('diagnostic-lens');
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
-
-    // Put the response summary after the diagnostic interpretation, not in the hero flow.
     anchor=appendAfter(anchor,timeline);
 
     const management=byId('experiment-controls')?.closest('.card.wide')
@@ -332,13 +324,13 @@
     if(!document.querySelector('link[data-living-profiles]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='living-profiles.css?v=20.21';
+      css.href='living-profiles.css?v=20.22';
       css.dataset.livingProfiles='true';
       document.head.appendChild(css);
     }
     if(!document.querySelector('script[data-living-profiles]')){
       const script=document.createElement('script');
-      script.src='living-profiles.js?v=20.21';
+      script.src='living-profiles.js?v=20.22';
       script.defer=true;
       script.dataset.livingProfiles='true';
       script.addEventListener('load',()=>requestAnimationFrame(()=>{arrangePrimaryPanels();decorateCollapsibles();}),{once:true});
@@ -348,10 +340,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.21 · COLLAPSIBLE WORKSPACE';
+  if(badge)badge.textContent='v20.22 · ALL CLOSED';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.21 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.22 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
