@@ -1,0 +1,37 @@
+/* Turfarium v25 visual system: landing-page warmth, high contrast, consistent iconography. */
+/* Presentation-only. No model values, input IDs, or simulation events are changed. */
+:root{--v25-deep:#173e2d;--v25-green:#15573a;--v25-ink:#17251c;--v25-border:#c7d5c6;--v25-cream:#fffdf7;--v25-soft:#eaf3e8}
+body{background:radial-gradient(circle at 7% 0%,#e7f0e3,transparent 30%),linear-gradient(180deg,#eef4ea,#f8f5eb)!important;color:var(--v25-ink)!important}
+main{max-width:1180px;margin-inline:auto}
+header{background:linear-gradient(125deg,#fffdf7,#edf5e9)!important;border:1px solid #c7d6c5!important;border-radius:24px!important;box-shadow:0 14px 32px #173e2d12!important;padding:16px 20px!important}
+header h1{font-weight:900!important;letter-spacing:-.045em!important}
+header .build-badge,header .badge{font-size:.68rem!important;letter-spacing:.07em!important}
+.simulation-grid.tf-primary-workspace{gap:14px!important;align-items:start}
+.simulation-grid.tf-primary-workspace>.card,.simulation-grid.tf-primary-workspace>section.card{background:var(--v25-cream)!important;border:1px solid var(--v25-border)!important;border-radius:22px!important;box-shadow:0 8px 22px #1c402914!important}
+.tf-collapse-toggle,.v25-fold-toggle{background:linear-gradient(110deg,#edf5eb,#e5efe4)!important;border:1px solid #c1d4c0!important;color:#173e2d!important;font-weight:850!important;border-radius:14px!important;min-height:48px!important;box-shadow:none!important}
+.tf-collapse-title{font-weight:850!important}
+.tf-collapse-toggle:hover,.v25-fold-toggle:hover{background:#dfeede!important}
+.v25-overview{background:#fffdf7!important;border:1px solid #c7d6c5!important;border-radius:18px!important;padding:12px!important;gap:9px!important;box-shadow:0 6px 20px #173e2d12!important}
+.v25-overview-title{font-size:.85rem!important;color:#173e2d!important;letter-spacing:-.01em}
+.v25-overview-link{background:#eaf3e8!important;border:1px solid #bed0bc!important;color:#173e2d!important;font-size:.81rem!important;gap:7px;box-shadow:none!important}
+.v25-overview-link:hover{background:#dcebdd!important}
+.v25-overview-link svg{width:17px;height:17px;flex:none;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.v25-overview-link span{white-space:nowrap}
+.v25-fold,.v25-history{border:1px solid #cad9c7!important;border-radius:16px!important;background:#fffdf8!important}
+.v25-fold-toggle{padding:11px 13px!important}
+.v25-fold-toggle .v25-arrow{font-size:1rem;color:#245b3d}
+.v25-fold-content{padding:12px!important}
+.card p,.card small,.card .note,.card .subtle,.card label{color:#27392e!important;opacity:1!important}
+.card h2,.card h3,.card h4{color:#173e2d!important}
+button:focus-visible,a:focus-visible{outline:3px solid #397e58!important;outline-offset:3px!important}
+@media(max-width:760px){
+ header{padding:12px 14px!important;border-radius:18px!important}
+ header h1{font-size:1.6rem!important}
+ .simulation-grid.tf-primary-workspace{gap:11px!important}
+ .simulation-grid.tf-primary-workspace>.card{border-radius:18px!important}
+ .v25-overview{padding:9px!important}
+ .v25-overview-title{flex-basis:100%!important}
+ .v25-overview-link{font-size:.74rem!important;min-height:46px!important;padding:9px 6px!important}
+ .v25-overview-link svg{width:16px;height:16px}
+ .v25-overview-link span{white-space:normal}
+}
