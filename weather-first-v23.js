@@ -1,6 +1,7 @@
-/* Turfarium Weather-first layout v23.5. Weather lab stays open and sits directly under the lawn images, above mowing/management. */
+/* Turfarium Weather-first layout v23.6. Weather lab stays open and sits directly under the lawn images, above mowing/management. */
 (()=>{
 'use strict';
+if(window.__tfWeatherFirst236)return;window.__tfWeatherFirst236=true;
 const LABEL='Site, Season & Weather Lab';
 const GAP=16;
 let ro=null;
@@ -45,8 +46,9 @@ const find=()=>{
    sizeSpacer(panel,spacer);
   }));
  }
- const innerTitle=panel.querySelector('.tf-collapse-body .head h2,.head h2');
- if(innerTitle&&innerTitle.textContent.trim()!==LABEL)innerTitle.textContent=LABEL;
+ /* Keep one Weather Lab heading only. The collapsible header is the visible title. */
+ const innerTitle=panel.querySelector('.tf-collapse-body .head h2,.tf-collapse-body h2');
+ if(innerTitle){innerTitle.style.display='none';innerTitle.setAttribute('aria-hidden','true');}
  const desktop=matchMedia('(min-width:901px)').matches;
  if(desktop){
   panel.style.width=`calc(200% + ${GAP}px)`;
