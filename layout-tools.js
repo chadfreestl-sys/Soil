@@ -15,14 +15,14 @@
   if(!document.querySelector('link[data-context-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='context-layout-v20-18.css?v=20.25';
+    css.href='context-layout-v20-18.css?v=20.26';
     css.dataset.contextLayout='true';
     document.head.appendChild(css);
   }
   if(!document.querySelector('link[data-collapse-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='collapsible-panels-v20-21.css?v=20.25';
+    css.href='collapsible-panels-v20-21.css?v=20.26';
     css.dataset.collapseLayout='true';
     document.head.appendChild(css);
   }
@@ -153,7 +153,7 @@
     return panel.id;
   };
 
-  const collapseStorageKey=panel=>`turfarium-collapse-v20.25:${keyForPanel(panel)}`;
+  const collapseStorageKey=panel=>`turfarium-collapse-v20.26:${keyForPanel(panel)}`;
   const defaultOpenPanel=panel=>panel===timeline||panel===lawnA||panel===lawnB;
 
   const setCollapsed=(panel,collapsed,save=true)=>{
@@ -200,7 +200,7 @@
   const decorateCollapsibles=()=>{
     const {site,weather}=findContextPanels();
     const panels=[
-      findManagementPanel(),timeline,lawnA,lawnB,
+      lawnA,lawnB,findManagementPanel(),timeline,
       byId('scenario-onboarding'),site,weather,deck,byId('scenario-memory'),
       document.querySelector('.tf-replay-bar'),byId('diagnostic-lens'),
       majorForHeading(/Soil Physics|Soil Lab|Nutrient Cycling|Soil & Nutrient|Nutrient Detail/i),
@@ -215,9 +215,9 @@
     [...new Set(panels)].forEach(makeCollapsible);
   };
 
-  // Priority workspace:
-  // Lawn Treatments at the top, What Changed open directly beneath it,
-  // then setup/context and the normally-open Lawn A/B visual panels.
+  // Visual-first workspace:
+  // Lawn A and Lawn B are the first open panels, then Lawn Treatments,
+  // then What Changed open directly beneath the treatment panel.
   const arrangePrimaryPanels=()=>{
     const scenarios=byId('scenario-onboarding');
     const memory=byId('scenario-memory');
@@ -227,17 +227,14 @@
     scenarios.classList.add('tf-scenarios-first');
     styleMemory(memory);
     if(management)management.classList.add('tf-treatment-priority');
+    lawnA.classList.add('tf-visual-priority');
+    lawnB.classList.add('tf-visual-priority');
 
-    let anchor=null;
-    if(management){
-      if(grid.firstElementChild!==management)grid.prepend(management);
-      anchor=management;
-      anchor=appendAfter(anchor,timeline);
-    }else{
-      if(grid.firstElementChild!==timeline)grid.prepend(timeline);
-      anchor=timeline;
-    }
-
+    if(grid.firstElementChild!==lawnA)grid.prepend(lawnA);
+    let anchor=lawnA;
+    anchor=appendAfter(anchor,lawnB);
+    if(management)anchor=appendAfter(anchor,management);
+    anchor=appendAfter(anchor,timeline);
     anchor=appendAfter(anchor,scenarios);
 
     const {site,weather}=findContextPanels();
@@ -246,8 +243,6 @@
 
     anchor=appendAfter(anchor,deck);
     if(memory)anchor=appendAfter(anchor,memory);
-    anchor=appendAfter(anchor,lawnA);
-    anchor=appendAfter(anchor,lawnB);
 
     const replay=document.querySelector('.tf-replay-bar');
     if(replay){
@@ -337,13 +332,13 @@
     if(!document.querySelector('link[data-living-profiles]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='living-profiles.css?v=20.25';
+      css.href='living-profiles.css?v=20.26';
       css.dataset.livingProfiles='true';
       document.head.appendChild(css);
     }
     if(!document.querySelector('script[data-living-profiles]')){
       const script=document.createElement('script');
-      script.src='living-profiles.js?v=20.25';
+      script.src='living-profiles.js?v=20.26';
       script.defer=true;
       script.dataset.livingProfiles='true';
       script.addEventListener('load',()=>requestAnimationFrame(()=>{arrangePrimaryPanels();decorateCollapsibles();}),{once:true});
@@ -353,10 +348,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.25 · PRIORITY RESULTS';
+  if(badge)badge.textContent='v20.26 · VISUALS FIRST';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.25 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.26 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
