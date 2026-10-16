@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='20.28';
+  const VERSION='20.29';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -196,8 +196,8 @@
   const decorateCollapsibles=()=>{
     const {site,weather}=findContextPanels();
     const panels=[
-      lawnA,lawnB,deck,findManagementPanel(),byId('scenario-onboarding'),weather,site,
-      document.querySelector('.tf-replay-bar'),byId('scenario-memory'),byId('diagnostic-lens'),timeline,
+      deck,lawnA,lawnB,findManagementPanel(),timeline,byId('scenario-onboarding'),weather,site,
+      document.querySelector('.tf-replay-bar'),byId('scenario-memory'),byId('diagnostic-lens'),
       ...deepPanels()
     ].filter(Boolean);
     [...new Set(panels)].forEach(makeCollapsible);
@@ -218,14 +218,15 @@
     lawnB.classList.add('tf-visual-priority');
     if(replay)replay.classList.add('tf-replay-primary');
 
-    // Lawn comparison is the primary visual workspace.
-    // Lawn A -> Lawn B -> Profile/Time -> Treatments -> Scenario -> Weather -> Site/Turf
-    // -> Replay -> Save/Compare -> Diagnostic -> What Changed -> deeper science/lab panels.
-    if(grid.firstElementChild!==lawnA)grid.prepend(lawnA);
-    let anchor=lawnA;
+    // Profile controls directly above the open lawn comparison.
+    // Profile/Time -> Lawn A + Lawn B -> Treatments -> What Changed -> Scenario -> Weather -> Site/Turf
+    // -> Replay -> Save/Compare -> Diagnostic -> deeper science/lab panels.
+    if(grid.firstElementChild!==deck)grid.prepend(deck);
+    let anchor=deck;
+    anchor=appendAfter(anchor,lawnA);
     anchor=appendAfter(anchor,lawnB);
-    anchor=appendAfter(anchor,deck);
     if(management)anchor=appendAfter(anchor,management);
+    anchor=appendAfter(anchor,timeline);
     anchor=appendAfter(anchor,scenarios);
 
     const {site,weather}=findContextPanels();
@@ -234,7 +235,6 @@
     if(replay)anchor=appendAfter(anchor,replay);
     if(memory)anchor=appendAfter(anchor,memory);
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
-    anchor=appendAfter(anchor,timeline);
 
     for(const panel of deepPanels()){
       if(panel===diagnostic||panel===timeline||grid.contains(panel))continue;
@@ -296,10 +296,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.28 · LAWNS FIRST';
+  if(badge)badge.textContent='v20.29 · PROFILE + LAWNS';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.28 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.29 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
