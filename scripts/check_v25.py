@@ -38,8 +38,6 @@ for match in re.finditer(r'<(?:script|link)\b[^>]*?(?:src|href)\s*=\s*["\']([^"\
     if path and not (root / path).is_file():
         warnings.append(f"Local resource not found: {path}")
 
-for key in ("A", "B"):
-    check(f"'lawn-'+key.toLowerCase()" not in "", "") if False else None
 for script_name in ("treatment-history-v23-6.js", "turfarium-details-v24.js"):
     script = (root / script_name).read_text(encoding="utf-8")
     check("aria-expanded" in script and "hidden" in script,
