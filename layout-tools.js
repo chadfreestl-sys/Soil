@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='21.9';
+  const VERSION='22.0';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -251,6 +251,18 @@
     if(context.weather && context.weather!==deck && context.weather!==lawnA && context.weather!==lawnB){
       anchor=appendAfter(anchor,context.weather);
     }
+    // Locate the exact laboratory by its visible title, including inside
+    // collapsible panels; do not depend on generic Weather/Climate labels.
+    const labHeading=[...document.querySelectorAll('h1,h2,h3,h4,.tf-collapse-title')].find(el=>
+      /site\\s*,?\\s*season\\s*(?:&|and)\\s*weather\\s*laboratory/i.test((el.textContent||'').trim())
+    );
+    const labPanel=labHeading?.closest('section.card,article.card,.card.wide,.card')||null;
+    if(labPanel && labPanel!==deck && !labPanel.contains(deck) && !labPanel.contains(lawnA) && !labPanel.contains(lawnB)){
+      labPanel.classList.add('tf-weather-context','tf-context-panel');
+      anchor=appendAfter(deck,labPanel);
+      labPanel.style.setProperty('order','-999.5','important');
+      labPanel.style.setProperty('grid-column','1 / -1','important');
+    }
     anchor=appendAfter(anchor,lawnA);
     anchor=appendAfter(anchor,lawnB);
     if(management)anchor=appendAfter(anchor,management);
@@ -258,8 +270,8 @@
     if(scenarios)anchor=appendAfter(anchor,scenarios);
 
     const {site,weather}=findContextPanels();
-    if(weather && weather!==context.weather)anchor=appendAfter(anchor,weather);
-    if(site && site!==context.weather)anchor=appendAfter(anchor,site);
+    if(weather && weather!==context.weather && weather!==labPanel)anchor=appendAfter(anchor,weather);
+    if(site && site!==context.weather && site!==labPanel)anchor=appendAfter(anchor,site);
     if(replay)anchor=appendAfter(anchor,replay);
     if(memory)anchor=appendAfter(anchor,memory);
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
