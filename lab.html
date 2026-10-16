@@ -589,9 +589,7 @@ function profile(id,s,seed){
    }
    let vigor=cl(e.vigor/100,0,1);
    if(vigor<.55){g.fillStyle=`rgba(162,117,33,${(.55-vigor)*.4})`;g.fillRect(0,0,w,h*.31)}
-   g.fillStyle='rgba(3,13,19,.8)';g.fillRect(12,h-47,w-24,35);
-   g.font='bold 18px system-ui';g.fillStyle='#d8fff0';g.fillText(`SOM ${s.om.toFixed(1)}%   ·   pH ${s.ph.toFixed(1)}   ·   Roots ${s.rootDepth.toFixed(1)} in`,24,h-24);
-   g.fillStyle='rgba(5,20,22,.78)';g.fillRect(12,12,204,34);g.fillStyle='#c5fce0';g.font='bold 17px system-ui';g.fillText(mode==='natural'?'ECOSYSTEM VIEW':mode==='biology'?'BIOLOGY OVERLAY':mode==='moisture'?'MOISTURE OVERLAY':'ROOT ARCHITECTURE',24,35);
+   // Labels and numeric bars belong in the dashboard, never over the soil photograph.
    return;
  }
  const horizon=145,depth=h-horizon,rand=n=>{let x=Math.sin(n*129.73+seed*73.3)*43758.5453;return x-Math.floor(x)};
