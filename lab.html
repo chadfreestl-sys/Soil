@@ -860,6 +860,15 @@ function start(){
   const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel'),stage=panel&&panel.querySelector('.photo-stage');
   if(!stage)return null;
   stage.style.position='relative';
+  // The replacement soil photograph is opt-in: preserve the current image until the asset is uploaded.
+  const soilPhoto=new Image();
+  soilPhoto.onload=()=>{
+   const existing=stage.querySelector('img');
+   if(existing){existing.dataset.tfOriginalPhoto=existing.getAttribute('src')||'';existing.src='turfarium-soil.jpg';}
+   else {stage.style.backgroundImage='url("turfarium-soil.jpg")';stage.style.backgroundSize='cover';}
+   stage.classList.add('tf-photo-realistic');
+  };
+  soilPhoto.src='turfarium-soil.jpg';
   stage.querySelectorAll('.tf-live-worm,.tf-worm-layer,.tf-worm-status-live').forEach(el=>el.remove());
   const worms=Array.from({length:3},(_,i)=>{
    const node=document.createElement('div');node.className='tf-live-worm';node.innerHTML=wormSVG;
@@ -879,7 +888,7 @@ function start(){
   s.day=Number((document.getElementById('day'+s.key)?.textContent||'').match(/Day\s*(\d+)/i)?.[1]||0);
   const count=s.activity<10?0:s.activity<35?1:s.activity<65?2:3;
   s.worms.forEach((w,i)=>{w.node.style.opacity=i<count?'1':'0';});
-  s.label.textContent='Soil activity '+s.activity.toFixed(0)+'/100 · Day '+s.day;
+  s.label.textContent='Earthworm activity '+s.activity.toFixed(0)+'/100 · Day '+s.day;
  };
  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  let last=0;
