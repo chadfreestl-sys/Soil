@@ -43,8 +43,8 @@ jobs:
           audience_css='<link rel="stylesheet" href="turfarium-audience-compact-v23-5.css?v=23.5">'
           html=re.sub(r'<link[^>]*turfarium-audience-compact-v23-5[.]css[^>]*>','',html)
           html=html.replace('</head>',audience_css+'\\n</head>',1)
-          history_css='<link rel="stylesheet" href="treatment-history-v23-6.css?v=23.8">'
-          history_js='<script defer src="treatment-history-v23-6.js?v=23.8"></script>'
+          history_css='<link rel="stylesheet" href="treatment-history-v23-6.css?v=23.9">'
+          history_js='<script defer src="treatment-history-v23-6.js?v=23.9"></script>'
           html=re.sub(r'<link[^>]*treatment-history-v23-6[.]css[^>]*>','',html)
           html=re.sub(r'<script[^>]*treatment-history-v23-6[.]js[^>]*></script>','',html)
           html=html.replace('</head>',history_css+'\\n</head>',1)
