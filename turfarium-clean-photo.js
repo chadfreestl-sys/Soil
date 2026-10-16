@@ -1,4 +1,4 @@
-/* Force the current clean soil photo after legacy layout scripts run, then load current living motion + biology + environmental drift layers. */
+/* Force the current clean soil photo after legacy layout scripts run, then load current living motion + biology + environmental drift + weather placement layers. */
 (()=>{'use strict';
 const image='file_00000000f35481f5a24a1191fdf2adf5.png?v=clean-4';
 function apply(){
@@ -16,10 +16,13 @@ function inject(){
   const s=document.createElement('script');s.dataset.tfMotionLoader='1';s.src='turfarium-living-window.js?v=4.0.0';document.body.appendChild(s);
  }
  if(!document.getElementById('tf-bio-A')&&!document.querySelector('script[data-tf-bio-loader]')){
-  const s=document.createElement('script');s.dataset.tfBioLoader='1';s.src='turfarium-biology-v1.js?v=1.0.0';document.body.appendChild(s);
+  const s=document.createElement('script');s.dataset.tfBioLoader='1';s.src='turfarium-biology-v1.js?v=1.1.0';document.body.appendChild(s);
  }
  if(!document.getElementById('tf-env-A')&&!document.querySelector('script[data-tf-env-loader]')){
-  const s=document.createElement('script');s.dataset.tfEnvLoader='1';s.src='turfarium-environment-v1.js?v=1.0.0';document.body.appendChild(s);
+  const s=document.createElement('script');s.dataset.tfEnvLoader='1';s.src='turfarium-environment-v1.js?v=1.1.0';document.body.appendChild(s);
+ }
+ if(!document.querySelector('script[data-tf-weather-loader]')){
+  const s=document.createElement('script');s.dataset.tfWeatherLoader='1';s.src='weather-first-v23.js?v=23.5.1';document.body.appendChild(s);
  }
 }
 apply();
