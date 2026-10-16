@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='22.3';
+  const VERSION='23.2';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -203,10 +203,10 @@
     body.id=`${id}-body`;
     panel.append(button,body);
 
-    let collapsed=!defaultOpenPanel(panel);
+    let collapsed=panel.id==='experiment-controls'?true:!defaultOpenPanel(panel);
     try{
       const saved=sessionStorage.getItem(collapseStorageKey(panel));
-      if(saved==='1'||saved==='0')collapsed=saved==='1';
+      if(panel.id!=='experiment-controls' && (saved==='1'||saved==='0'))collapsed=saved==='1';
     }catch(_){ }
     setCollapsed(panel,collapsed,false);
     button.addEventListener('click',()=>setCollapsed(panel,!panel.classList.contains('tf-panel-collapsed')));
