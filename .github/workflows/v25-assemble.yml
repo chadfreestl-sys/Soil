@@ -24,6 +24,15 @@ jobs:
           import re
           path=Path('lab.html')
           html=path.read_text(encoding='utf-8')
+          # Repair pre-existing visible literal backslash-n artifacts only in
+          # the two HTML resource-tag chains (never in the simulation engine).
+          lines=html.splitlines(keepends=True)
+          for i,line in enumerate(lines):
+              if line.startswith(('</style><link ', '</script><script ')) and '\\n' in line:
+                  fixed=line.replace('\\n', '\n')
+                  print('Normalized resource-tag newlines on source line',i+1)
+                  lines[i]=fixed
+          html=''.join(lines)
           # Remove competing v23/v24 extension controllers only; do not
           # remove layout-tools.js or modify the scientific engine.
           old=['weather-first-v23.js','treatment-history-v23-6.js','turfarium-details-v24.js']
