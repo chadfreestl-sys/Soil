@@ -1,0 +1,56 @@
+name: Assemble Turfarium v25 preview
+on:
+  push:
+    branches: [turfarium-v25-development]
+    paths:
+      - 'v25-workspace.js'
+      - 'v25-workspace.css'
+      - '.github/workflows/v25-assemble.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: turfarium-v25-development
+      - name: Wire unified controller into development HTML only
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          path=Path('lab.html')
+          html=path.read_text(encoding='utf-8')
+          # Remove competing v23/v24 extension controllers only; do not
+          # remove layout-tools.js or modify the scientific engine.
+          old=['weather-first-v23.js','treatment-history-v23-6.js','turfarium-details-v24.js']
+          for name in old:
+              html,n=re.subn(r'<script\b[^>]*\bsrc\s*=\s*["\'][^"\']*'+re.escape(name)+r'[^"\']*["\'][^>]*>\s*</script>','',html,flags=re.I)
+              print('Removed',name,n)
+          html=re.sub(r'<script\b[^>]*\bsrc\s*=\s*["\'][^"\']*v25-workspace[.]js[^"\']*["\'][^>]*>\s*</script>','',html,flags=re.I)
+          html=re.sub(r'<link\b[^>]*\bhref\s*=\s*["\'][^"\']*v25-workspace[.]css[^"\']*["\'][^>]*>','',html,flags=re.I)
+          assert '</head>' in html and '</body>' in html
+          html=html.replace('</head>','<link rel="stylesheet" href="v25-workspace.css?v=25.1">\n</head>',1)
+          html=html.replace('</body>','<script defer src="v25-workspace.js?v=25.1"></script>\n</body>',1)
+          assert html.count('v25-workspace.js?v=25.1')==1
+          assert html.count('v25-workspace.css?v=25.1')==1
+          for name in old:
+              assert not re.search(r'<script[^>]*'+re.escape(name),html,re.I)
+          path.write_text(html,encoding='utf-8')
+          print('v25 preview HTML wired:',len(html),'characters')
+          PY
+      - name: Run static quality gate
+        run: python3 scripts/check_v25.py
+      - name: Commit only development HTML
+        run: |
+          if git diff --quiet -- lab.html; then
+            echo "Already assembled"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lab.html
+          git commit -m "v25: wire consolidated workspace into development HTML"
+          git push origin HEAD:turfarium-v25-development
