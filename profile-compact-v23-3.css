@@ -1,0 +1,30 @@
+/* Turfarium v23.3 compact profile workspace */
+#profile-control-deck{padding:9px 12px!important}
+#profile-control-deck>.tf-collapse-toggle{min-height:38px!important;padding:8px 12px!important;margin-bottom:5px!important}
+#profile-control-deck .tf-collapse-body{padding-top:0!important}
+#profile-control-deck .profile-deck-label{display:none!important}
+#profile-control-deck .profile-deck-grid{grid-template-columns:minmax(190px,.72fr) minmax(340px,1.28fr)!important;gap:8px!important;align-items:center!important}
+#profile-control-deck .profile-view-slot,#profile-control-deck .profile-time-slot{padding:8px 10px!important;min-height:0!important}
+#profile-control-deck .profile-view-embedded{gap:4px 8px!important}
+#profile-control-deck .profile-view-embedded select{min-height:36px!important;padding:5px 8px!important}
+#profile-control-deck .profile-view-embedded .note{font-size:.65rem!important;line-height:1.2!important}
+#profile-control-deck .profile-time-head{margin-bottom:4px!important;gap:5px!important}
+#profile-control-deck .profile-time-head h2{font-size:.8rem!important}
+#profile-control-deck .profile-time-head p,#profile-control-deck .profile-time-head .note{font-size:.67rem!important;line-height:1.2!important;margin:0!important}
+#profile-control-deck .profile-step-row{gap:5px!important}
+#profile-control-deck .profile-step-row button{padding:6px 4px!important;min-height:34px!important;font-size:.72rem!important}
+#profile-control-deck .profile-visit-note{margin:4px 0 0!important;font-size:.65rem!important;line-height:1.2!important}
+.tf-quick-visuals{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0}
+.tf-quick-visual{display:flex;align-items:center;gap:9px;padding:5px 9px;border:1px solid #a7c7b1;border-radius:10px;background:#f0f7ef;color:#203d30;min-height:55px}
+.tf-quick-visual svg{flex:none;width:76px;height:45px;border-radius:7px}
+.tf-quick-visual strong{display:block;font-size:.74rem;line-height:1.2}
+.tf-quick-visual small{display:block;font-size:.62rem;line-height:1.2}
+@media(max-width:760px){
+ #profile-control-deck .profile-deck-grid{grid-template-columns:minmax(0,1fr)!important;gap:6px!important}
+ #profile-control-deck .profile-view-slot,#profile-control-deck .profile-time-slot{padding:7px 9px!important}
+ #profile-control-deck .profile-time-head{flex-wrap:wrap!important}
+ .tf-quick-visuals{gap:5px}
+ .tf-quick-visual{padding:5px;gap:5px}
+ .tf-quick-visual svg{width:52px;height:42px}
+ .tf-quick-visual small{font-size:.58rem}
+}
