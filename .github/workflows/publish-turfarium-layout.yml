@@ -31,6 +31,12 @@ jobs:
           print('Weather lab ID:',html.count('id="experiment-controls"'))
           print('Profile deck runtime:', 'layout-tools.js' in html)
           print('Weather controller installed:',script in html)
+          compact_css='<link rel="stylesheet" href="profile-compact-v23-3.css?v=23.3">'
+          compact_js='<script defer src="profile-compact-v23-3.js?v=23.3"></script>'
+          html=re.sub(r'<link[^>]*profile-compact-v23-3[.]css[^>]*>','',html)
+          html=re.sub(r'<script[^>]*profile-compact-v23-3[.]js[^>]*></script>','',html)
+          html=html.replace('</head>',compact_css+'\\n</head>',1)
+          html=html.replace('</body>',compact_js+'\\n</body>',1)
           p.write_text(html,encoding='utf-8')
       - name: Commit only the HTML reference update
         run: |
