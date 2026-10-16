@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='21.6';
+  const VERSION='21.7';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -21,7 +21,7 @@
       .simulation-grid.tf-primary-workspace > #profile-control-deck {order:-1000!important;grid-column:1/-1!important}
       .simulation-grid.tf-primary-workspace > #lawn-a-panel {order:-999!important}
       .simulation-grid.tf-primary-workspace > #lawn-b-panel {order:-998!important}
-      .simulation-grid.tf-primary-workspace > :not(#profile-control-deck):not(#lawn-a-panel):not(#lawn-b-panel) {order:0!important}
+      .simulation-grid.tf-primary-workspace > :not(#profile-control-deck):not(#lawn-a-panel):not(#lawn-b-panel):not(.tf-weather-context) {order:0!important}
     `;
     document.head.appendChild(style);
   }
