@@ -20,10 +20,10 @@ jobs:
           import re
           p=Path('lab.html')
           html=p.read_text(encoding='utf-8')
-          html=re.sub(r'layout-tools[.]js[?]v=[0-9.]+','layout-tools.js?v=23.0',html)
-          html=re.sub(r'turfarium-v20[.]js[?]v=[0-9.]+','turfarium-v20.js?v=23.0',html)
-          html=re.sub(r'turfarium-layout-v21-4[.]css[?]v=[0-9.]+','turfarium-layout-v21-4.css?v=23.0',html)
-          script='<script defer src="weather-first-v23.js?v=23.0"></script>'
+          html=re.sub(r'layout-tools[.]js[?]v=[0-9.]+','layout-tools.js?v=23.1',html)
+          html=re.sub(r'turfarium-v20[.]js[?]v=[0-9.]+','turfarium-v20.js?v=23.1',html)
+          html=re.sub(r'turfarium-layout-v21-4[.]css[?]v=[0-9.]+','turfarium-layout-v21-4.css?v=23.1',html)
+          script='<script defer src="weather-first-v23.js?v=23.1"></script>'
           html=re.sub(r'<script[^>]+weather-first-v23[.]js[^>]*></script>','',html)
           if '</body>' not in html:
               raise RuntimeError('Missing body end: refusing unsafe HTML change')
