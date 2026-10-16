@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='20.32';
+  const VERSION='21.2';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -209,7 +209,7 @@
     const management=findManagementPanel();
     const replay=document.querySelector('.tf-replay-bar');
     const diagnostic=byId('diagnostic-lens');
-    if(!scenarios)return false;
+    // Scenario setup is optional; never block the primary layout while it loads.
 
     scenarios.classList.add('tf-scenarios-first');
     styleMemory(memory);
@@ -218,16 +218,14 @@
     lawnB.classList.add('tf-visual-priority');
     if(replay)replay.classList.add('tf-replay-primary');
 
-    // Visual-first dashboard: lawns are the first content visitors see.
-    // Lawn A + Lawn B -> Profile Viewer / Time Advance -> Treatments -> What Changed
-    // -> Scenario -> Weather -> Site/Turf -> Replay -> Save/Compare -> Diagnostics -> Labs.
-    if(grid.firstElementChild!==lawnA)grid.prepend(lawnA);
-    let anchor=lawnA;
+    // Keep profile controls directly above the two lawn images.
+    if(grid.firstElementChild!==deck)grid.prepend(deck);
+    let anchor=deck;
+    anchor=appendAfter(anchor,lawnA);
     anchor=appendAfter(anchor,lawnB);
-    anchor=appendAfter(anchor,deck);
     if(management)anchor=appendAfter(anchor,management);
     anchor=appendAfter(anchor,timeline);
-    anchor=appendAfter(anchor,scenarios);
+    if(scenarios)anchor=appendAfter(anchor,scenarios);
 
     const {site,weather}=findContextPanels();
     if(weather)anchor=appendAfter(anchor,weather);
@@ -296,10 +294,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.30 · LAWNS FIRST';
+  if(badge)badge.textContent='v21.2 · PROFILE + LAWNS';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.30 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v21.2 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
