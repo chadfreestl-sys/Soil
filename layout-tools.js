@@ -15,8 +15,15 @@
   if(!document.querySelector('link[data-context-layout]')){
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='context-layout-v20-18.css?v=20.19';
+    css.href='context-layout-v20-18.css?v=20.21';
     css.dataset.contextLayout='true';
+    document.head.appendChild(css);
+  }
+  if(!document.querySelector('link[data-collapse-layout]')){
+    const css=document.createElement('link');
+    css.rel='stylesheet';
+    css.href='collapsible-panels-v20-21.css?v=20.21';
+    css.dataset.collapseLayout='true';
     document.head.appendChild(css);
   }
 
@@ -122,6 +129,90 @@
     return {site,weather};
   };
 
+  const titleForPanel=panel=>{
+    if(panel===lawnA)return 'Lawn A';
+    if(panel===lawnB)return 'Lawn B';
+    if(panel.id==='scenario-onboarding')return 'Scenario Quick Start';
+    if(panel.id==='scenario-memory')return 'Save & Compare';
+    if(panel===deck)return 'Profile Viewer + Time Advance';
+    if(panel===timeline)return 'What Changed';
+    if(panel.id==='diagnostic-lens')return 'Diagnostic Lens';
+    if(panel.classList.contains('tf-replay-bar'))return 'Replay';
+    const heading=panel.querySelector('h1,h2,h3,h4,.scenario-kicker,.profile-deck-label strong');
+    return (heading?.textContent||'Section').trim().replace(/\s+/g,' ');
+  };
+
+  const keyForPanel=panel=>{
+    if(panel.id)return panel.id;
+    const slug=titleForPanel(panel).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48)||'section';
+    panel.id=`tf-panel-${slug}`;
+    return panel.id;
+  };
+
+  const defaultOpenPanel=panel=>{
+    if(panel.id==='scenario-onboarding'||panel===deck||panel===lawnA||panel===lawnB)return true;
+    if(panel.classList.contains('tf-site-context')||panel.classList.contains('tf-weather-context'))return true;
+    return false;
+  };
+
+  const setCollapsed=(panel,collapsed,save=true)=>{
+    const button=panel.querySelector(':scope > .tf-collapse-toggle');
+    const body=panel.querySelector(':scope > .tf-collapse-body');
+    if(!button||!body)return;
+    panel.classList.toggle('tf-panel-collapsed',collapsed);
+    button.setAttribute('aria-expanded',String(!collapsed));
+    button.querySelector('.tf-collapse-chevron').textContent=collapsed?'▸':'▾';
+    body.hidden=collapsed;
+    if(save){
+      try{sessionStorage.setItem(`turfarium-collapse:${keyForPanel(panel)}`,collapsed?'1':'0');}catch(_){ }
+    }
+  };
+
+  const makeCollapsible=(panel)=>{
+    if(!panel||panel.dataset.tfCollapsible==='1')return;
+    if(panel.closest('.tf-collapse-body'))return;
+    panel.dataset.tfCollapsible='1';
+    panel.classList.add('tf-collapsible-panel');
+    const id=keyForPanel(panel);
+    const title=titleForPanel(panel);
+    const body=document.createElement('div');
+    body.className='tf-collapse-body';
+    while(panel.firstChild)body.appendChild(panel.firstChild);
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='tf-collapse-toggle';
+    button.innerHTML=`<span class="tf-collapse-title"></span><span class="tf-collapse-chevron" aria-hidden="true">▾</span>`;
+    button.querySelector('.tf-collapse-title').textContent=title;
+    button.setAttribute('aria-controls',`${id}-body`);
+    body.id=`${id}-body`;
+    panel.append(button,body);
+    let collapsed=!defaultOpenPanel(panel);
+    try{
+      const saved=sessionStorage.getItem(`turfarium-collapse:${id}`);
+      if(saved==='1'||saved==='0')collapsed=saved==='1';
+    }catch(_){ }
+    setCollapsed(panel,collapsed,false);
+    button.addEventListener('click',()=>setCollapsed(panel,!panel.classList.contains('tf-panel-collapsed')));
+  };
+
+  const decorateCollapsibles=()=>{
+    const {site,weather}=findContextPanels();
+    const panels=[
+      byId('scenario-onboarding'),site,weather,deck,byId('scenario-memory'),lawnA,lawnB,
+      document.querySelector('.tf-replay-bar'),byId('diagnostic-lens'),timeline,
+      byId('experiment-controls')?.closest('.card.wide')||byId('experiment-controls')?.closest('section.card')||majorForHeading(/Management|Treatment Controls|Treatments|Applications/i),
+      majorForHeading(/Soil Physics|Soil Lab|Nutrient Cycling|Soil & Nutrient|Nutrient Detail/i),
+      majorForHeading(/Soil Food Web|Biology|Microbial|Microbiology/i),
+      majorForHeading(/Seaweed\s+Response\s+Lab/i),
+      majorForHeading(/Worm\s+Tea\s+Brewing\s+Lab/i),
+      majorForHeading(/Brew\s+Microscope|Microscope\s+Observation/i),
+      majorForHeading(/Custom\s+Product|Formulation\s+Studio/i),
+      document.querySelector('.evidence-layer')?.closest('.card.wide')||majorForHeading(/Evidence Layer|Experiment Activity|Evidence & Confidence/i),
+      majorForHeading(/^Scientific transparency$/i)
+    ].filter(Boolean);
+    [...new Set(panels)].forEach(makeCollapsible);
+  };
+
   // Primary causal flow:
   // Scenario -> Site/Turf -> Weather/Climate -> Profile/Time -> Save -> Lawns -> Replay.
   // What Changed is intentionally lower, after Diagnostics.
@@ -153,6 +244,7 @@
 
     const topAnchor=document.querySelector('.mode-shell')||document.querySelector('header');
     if(topAnchor&&grid.previousElementSibling!==topAnchor)topAnchor.insertAdjacentElement('afterend',grid);
+    decorateCollapsibles();
     return true;
   };
 
@@ -176,7 +268,7 @@
     }
     if(!relevant)return;
     clearTimeout(observerTimer);
-    observerTimer=setTimeout(arrangePrimaryPanels,55);
+    observerTimer=setTimeout(()=>{arrangePrimaryPanels();decorateCollapsibles();},55);
   };
   const observer=new MutationObserver(onMutations);
   observer.observe(document.body,{childList:true,subtree:true});
@@ -227,6 +319,7 @@
       const main=document.querySelector('main');
       if(main&&main.lastElementChild!==transparency)main.appendChild(transparency);
     }
+    decorateCollapsibles();
   };
 
   const idle=(fn,timeout=700)=>{
@@ -239,26 +332,26 @@
     if(!document.querySelector('link[data-living-profiles]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='living-profiles.css?v=20.19';
+      css.href='living-profiles.css?v=20.21';
       css.dataset.livingProfiles='true';
       document.head.appendChild(css);
     }
     if(!document.querySelector('script[data-living-profiles]')){
       const script=document.createElement('script');
-      script.src='living-profiles.js?v=20.19';
+      script.src='living-profiles.js?v=20.21';
       script.defer=true;
       script.dataset.livingProfiles='true';
-      script.addEventListener('load',()=>requestAnimationFrame(arrangePrimaryPanels),{once:true});
+      script.addEventListener('load',()=>requestAnimationFrame(()=>{arrangePrimaryPanels();decorateCollapsibles();}),{once:true});
       document.body.appendChild(script);
     }
   };
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.19 · CONTEXT FIRST';
+  if(badge)badge.textContent='v20.21 · COLLAPSIBLE WORKSPACE';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.19 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.21 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
