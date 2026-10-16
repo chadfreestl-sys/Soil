@@ -1,0 +1,9 @@
+/* Turfarium 21.4: final layout precedence */
+.simulation-grid.tf-primary-workspace > *{order:100!important}
+.simulation-grid.tf-primary-workspace > #profile-control-deck{order:-30!important;grid-column:1/-1!important}
+.simulation-grid.tf-primary-workspace > #lawn-a-panel{order:-20!important}
+.simulation-grid.tf-primary-workspace > #lawn-b-panel{order:-19!important}
+.simulation-grid.tf-primary-workspace > .tf-treatment-priority{order:-10!important;grid-column:1/-1!important}
+.simulation-grid.tf-primary-workspace > #timeline-workflow{order:-5!important;grid-column:1/-1!important}
+.simulation-grid.tf-primary-workspace > #scenario-onboarding{order:0!important;grid-column:1/-1!important}
+@media(max-width:760px){.simulation-grid.tf-primary-workspace{grid-template-columns:minmax(0,1fr)!important}.simulation-grid.tf-primary-workspace > #profile-control-deck,.simulation-grid.tf-primary-workspace > #lawn-a-panel,.simulation-grid.tf-primary-workspace > #lawn-b-panel{grid-column:1!important}}
