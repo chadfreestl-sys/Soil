@@ -13,3 +13,30 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check simulator anchors and assets
         run: python3 scripts/check_v25.py
+      - name: Diagnose escaped newline artifacts
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          lines=Path('lab.html').read_text(encoding='utf-8').splitlines()
+          for i,line in enumerate(lines,1):
+              if re.search(r'(?:\\n){3,}',line):
+                  print(f'Artifact line {i}: length={len(line)}')
+                  for token in ('\\n', '<script', '</script>', '<style', '</style>'):
+                      print(f'  {token}: {line.count(token)}')
+                  print('  START:',repr(line[:240]))
+                  print('  END:',repr(line[-240:]))
+          PY
+      - name: Package isolated v25 browser preview
+        run: |
+          mkdir -p /tmp/turfarium-v25
+          cp -a . /tmp/turfarium-v25/
+          rm -rf /tmp/turfarium-v25/.git
+          cd /tmp
+          zip -qr turfarium-v25-preview.zip turfarium-v25
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: turfarium-v25-preview
+          path: /tmp/turfarium-v25-preview.zip
+          retention-days: 14
