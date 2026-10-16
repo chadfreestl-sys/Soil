@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='21.2';
+  const VERSION='21.3';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -12,6 +12,18 @@
   if(!grid||!lawnA||!lawnB||!timeline)return;
 
   grid.classList.add('tf-primary-workspace');
+  // Override legacy CSS ordering regardless of stylesheet load order.
+  if(!document.getElementById('tf-profile-first-rule')){
+    const style=document.createElement('style');
+    style.id='tf-profile-first-rule';
+    style.textContent=`
+      .simulation-grid.tf-primary-workspace > #profile-control-deck {order:-1000!important;grid-column:1/-1!important}
+      .simulation-grid.tf-primary-workspace > #lawn-a-panel {order:-999!important}
+      .simulation-grid.tf-primary-workspace > #lawn-b-panel {order:-998!important}
+      .simulation-grid.tf-primary-workspace > :not(#profile-control-deck):not(#lawn-a-panel):not(#lawn-b-panel) {order:0!important}
+    `;
+    document.head.appendChild(style);
+  }
 
   const loadCss=(key,href)=>{
     if(document.querySelector(`link[data-${key}]`))return;
@@ -211,7 +223,7 @@
     const diagnostic=byId('diagnostic-lens');
     // Scenario setup is optional; never block the primary layout while it loads.
 
-    scenarios.classList.add('tf-scenarios-first');
+    if(scenarios)scenarios.classList.add('tf-scenarios-first');
     styleMemory(memory);
     if(management)management.classList.add('tf-treatment-priority');
     lawnA.classList.add('tf-visual-priority');
