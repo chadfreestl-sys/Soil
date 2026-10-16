@@ -7,7 +7,6 @@
   const timeline=byId('timeline-workflow');
   const intro=document.querySelector('.visual-intro');
   const viewOptions=intro?.querySelector('.view-options');
-  const memory=byId('scenario-memory');
   const modeShell=document.querySelector('.mode-shell');
   const header=document.querySelector('header');
 
@@ -58,9 +57,10 @@
     timeSlot.appendChild(visit);
   }
 
-  grid.insertBefore(deck,lawnA);
+  timeline.classList.add('timeline-report-only');
 
-  if(memory){
+  const styleMemory=memory=>{
+    if(!memory)return;
     memory.classList.add('profile-save-memory');
     const kicker=memory.querySelector('.scenario-kicker');
     const heading=memory.querySelector('h2');
@@ -70,41 +70,41 @@
     if(heading)heading.textContent='Save this point';
     if(copy)copy.textContent='Keep a snapshot before you test the next change, then load or compare it later.';
     if(local)local.textContent='Stored on this device';
-    deck.insertAdjacentElement('afterend',memory);
-  }
-
-  lawnB.insertAdjacentElement('afterend',timeline);
-  timeline.classList.add('timeline-report-only');
-
-  // Scenarios must always be the first working block, with the live lawn workspace directly after.
-  // scenario-tools.js can render asynchronously relative to this file, so enforce the order repeatedly.
-  const placePrimaryFlow=()=>{
-    const topAnchor=document.querySelector('.mode-shell')||document.querySelector('header');
-    const scenarios=byId('scenario-onboarding');
-    if(!topAnchor)return false;
-    if(scenarios){
-      scenarios.classList.add('tf-scenarios-first');
-      topAnchor.insertAdjacentElement('afterend',scenarios);
-      scenarios.insertAdjacentElement('afterend',grid);
-      return true;
-    }
-    topAnchor.insertAdjacentElement('afterend',grid);
-    return false;
   };
 
-  placePrimaryFlow();
-  setTimeout(placePrimaryFlow,0);
-  setTimeout(placePrimaryFlow,120);
-  setTimeout(placePrimaryFlow,500);
-  setTimeout(placePrimaryFlow,1400);
-  const observer=new MutationObserver(()=>{
-    if(byId('scenario-onboarding')){
-      placePrimaryFlow();
-      observer.disconnect();
+  // v20.14: enforce one deterministic panel order INSIDE the same grid.
+  // This removes the old race where separate scripts inserted panels around the same anchor.
+  const arrangePrimaryPanels=()=>{
+    const scenarios=byId('scenario-onboarding');
+    const memory=byId('scenario-memory');
+    if(!scenarios)return false;
+
+    scenarios.classList.add('tf-scenarios-first');
+    styleMemory(memory);
+
+    // Exact user-facing order:
+    // 1 scenarios, 2 Lawn A, 3 Lawn B, 4 profile/time, 5 save/compare, 6 What Changed.
+    grid.prepend(scenarios);
+    scenarios.insertAdjacentElement('afterend',lawnA);
+    lawnA.insertAdjacentElement('afterend',lawnB);
+    lawnB.insertAdjacentElement('afterend',deck);
+    if(memory){
+      deck.insertAdjacentElement('afterend',memory);
+      memory.insertAdjacentElement('afterend',timeline);
+    }else{
+      deck.insertAdjacentElement('afterend',timeline);
     }
-  });
+
+    const topAnchor=document.querySelector('.mode-shell')||document.querySelector('header');
+    if(topAnchor)topAnchor.insertAdjacentElement('afterend',grid);
+    return true;
+  };
+
+  arrangePrimaryPanels();
+  [0,80,250,700,1600].forEach(ms=>setTimeout(arrangePrimaryPanels,ms));
+  const observer=new MutationObserver(()=>arrangePrimaryPanels());
   observer.observe(document.body,{childList:true,subtree:true});
-  setTimeout(()=>observer.disconnect(),4000);
+  setTimeout(()=>observer.disconnect(),4500);
 
   if(intro) intro.classList.add('visual-intro-workspace-moved','visual-intro-without-controls');
 
@@ -122,13 +122,9 @@
     const worm=cardsForHeading(/Worm\s+Tea\s+Brewing\s+Lab/i).pop();
     const microscope=cardsForHeading(/Brew\s+Microscope|Microscope\s+Observation/i).pop();
     let anchor=worm||microscope;
-
     seaweeds.forEach(seaweed=>{
-      if(anchor&&anchor!==seaweed&&anchor.parentElement){
-        anchor.insertAdjacentElement('afterend',seaweed);
-      }else{
-        (document.querySelector('main')||document.body).appendChild(seaweed);
-      }
+      if(anchor&&anchor!==seaweed&&anchor.parentElement)anchor.insertAdjacentElement('afterend',seaweed);
+      else (document.querySelector('main')||document.body).appendChild(seaweed);
       seaweed.dataset.tfSeaweedMoved='true';
       seaweed.classList.add('tf-advanced-input-lab');
       seaweed.style.order='900';
@@ -157,10 +153,10 @@
   }
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.13 · SCENARIOS FIRST';
+  if(badge)badge.textContent='v20.14 · FIXED PANEL FLOW';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.13 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.14 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
