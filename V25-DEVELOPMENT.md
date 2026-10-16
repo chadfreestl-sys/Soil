@@ -30,3 +30,11 @@ Run `python3 scripts/check_v25.py`. This is read-only. Warnings are not silently
 
 ## Known issue to investigate
 The old publish workflow uses Python HTML string replacements containing literal backslash-n sequences. Do not rerun it against development HTML; remove any existing visible escape sequences as part of the controlled HTML cleanup.
+
+## Phase 2 implementation (v25.1)
+- `v25-workspace.js` is the single extension controller for weather placement, independent Treatment History A/B, Application Rate & Settings, Soil Metrics, and Lawn Overview shortcuts.
+- `layout-tools.js` remains responsible for the core profile/timeline layout and base accordion until we can test its complete replacement.
+- `v25-workspace.css` handles compact responsive styling.
+- The `v25-assemble.yml` workflow rewires **only development `lab.html`**, removing the three competing legacy extension scripts from that page. No simulation engine code is modified.
+- The v25 static checker verifies script wiring and panel anchors; it does **not** prove visual correctness or simulation behavior.
+- Remaining work: investigate two pre-existing literal `\\n` warnings, browser QA, and an isolated hosted preview. Do not merge before these pass.
