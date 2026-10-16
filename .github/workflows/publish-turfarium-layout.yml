@@ -51,6 +51,12 @@ jobs:
           html=html.replace('</body>',history_js+'\\n</body>',1)
           for match in list(re.finditer(r'treatment history|recent-applications',html,re.I))[:18]:
               print('HISTORY HTML:',repr(html[max(0,match.start()-320):match.end()+500]))
+          detail_css='<link rel="stylesheet" href="turfarium-details-v24.css?v=24.0">'
+          detail_js='<script defer src="turfarium-details-v24.js?v=24.0"></script>'
+          html=re.sub(r'<link[^>]*turfarium-details-v24[.]css[^>]*>','',html)
+          html=re.sub(r'<script[^>]*turfarium-details-v24[.]js[^>]*></script>','',html)
+          html=html.replace('</head>',detail_css+'\\n</head>',1)
+          html=html.replace('</body>',detail_js+'\\n</body>',1)
           p.write_text(html,encoding='utf-8')
       - name: Commit only the HTML reference update
         run: |
