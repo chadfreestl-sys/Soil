@@ -1,4 +1,5 @@
 name: Assemble Turfarium v25 preview
+# Uses the v25 quality gate before committing any development HTML.
 on:
   push:
     branches: [turfarium-v25-development]
