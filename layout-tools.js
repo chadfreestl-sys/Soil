@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='23.2';
+  const VERSION='23.4';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -24,6 +24,36 @@
       .simulation-grid.tf-primary-workspace > :not(#profile-control-deck):not(#lawn-a-panel):not(#lawn-b-panel):not(.tf-weather-context) {order:0!important}
     `;
     document.head.appendChild(style);
+  }
+
+
+  // v23.4: Visual-first desktop dashboard. Preserve all simulation controls and state.
+  if(!document.getElementById('tf-dashboard-polish-v234')){
+    const polish=document.createElement('style');
+    polish.id='tf-dashboard-polish-v234';
+    polish.textContent=`
+      @media(min-width:900px){
+        .simulation-grid.tf-primary-workspace{gap:12px!important}
+        .simulation-grid.tf-primary-workspace>#profile-control-deck{padding:11px 14px!important}
+        #profile-control-deck .tf-collapse-toggle{min-height:36px!important;padding:7px 11px!important;margin-bottom:7px!important}
+        #profile-control-deck .profile-deck-grid{gap:10px!important}
+        #profile-control-deck .profile-deck-label{margin-bottom:6px!important}
+        #lawn-a-panel,#lawn-b-panel{padding:12px!important;min-width:0!important}
+        #lawn-a-panel>.tf-collapse-toggle,#lawn-b-panel>.tf-collapse-toggle{min-height:36px!important;padding:7px 11px!important;margin-bottom:8px!important}
+        #lawn-a-panel .photo-stage,#lawn-b-panel .photo-stage{min-height:300px!important;overflow:hidden!important;border-radius:14px!important}
+        #lawn-a-panel .photo-stage img,#lawn-b-panel .photo-stage img{width:100%!important;display:block!important;object-fit:cover!important}
+        #lawn-a-panel .head,#lawn-b-panel .head{margin-bottom:8px!important}
+        #lawn-a-panel .head h2,#lawn-b-panel .head h2{font-size:1.1rem!important}
+      }
+      @media(max-width:899px){
+        #lawn-a-panel .photo-stage,#lawn-b-panel .photo-stage{overflow:hidden!important;border-radius:12px!important}
+        #lawn-a-panel,#lawn-b-panel{min-width:0!important}
+      }
+      #lawn-a-panel .photo-stage,#lawn-b-panel .photo-stage{border:1px solid #8ca99a!important;box-shadow:0 4px 14px rgba(16,55,35,.12)!important}
+      #lawn-a-panel .tf-collapse-title,#lawn-b-panel .tf-collapse-title{font-weight:900!important}
+      #lawn-a-panel button,#lawn-b-panel button{cursor:pointer}
+    `;
+    document.head.appendChild(polish);
   }
 
   const loadCss=(key,href)=>{
