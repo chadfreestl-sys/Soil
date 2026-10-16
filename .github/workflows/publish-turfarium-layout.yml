@@ -20,9 +20,9 @@ jobs:
           p=Path('lab.html')
           html=p.read_text(encoding='utf-8')
           import re
-          html=re.sub(r'layout-tools\\.js\\?v=[^"\\\']+', 'layout-tools.js?v=21.7', html)
-          html=re.sub(r'turfarium-v20\\.js\\?v=[^"\\\']+', 'turfarium-v20.js?v=21.7', html)
-          css='<link rel="stylesheet" href="turfarium-layout-v21-4.css?v=21.7">'
+          html=re.sub(r'layout-tools\\.js\\?v=[^"\\\']+', 'layout-tools.js?v=21.8', html)
+          html=re.sub(r'turfarium-v20\\.js\\?v=[^"\\\']+', 'turfarium-v20.js?v=21.8', html)
+          css='<link rel="stylesheet" href="turfarium-layout-v21-4.css?v=21.8">'
           if 'turfarium-layout-v21-4.css' in html:
               html=re.sub(r'<link[^>]+turfarium-layout-v21-4\\.css[^>]*>',css,html)
           else:
