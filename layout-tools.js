@@ -7,8 +7,6 @@
   const timeline=byId('timeline-workflow');
   const intro=document.querySelector('.visual-intro');
   const viewOptions=intro?.querySelector('.view-options');
-  const modeShell=document.querySelector('.mode-shell');
-  const header=document.querySelector('header');
 
   if(!grid||!lawnA||!lawnB||!timeline)return;
 
@@ -72,8 +70,16 @@
     if(local)local.textContent='Stored on this device';
   };
 
-  // v20.14: enforce one deterministic panel order INSIDE the same grid.
-  // This removes the old race where separate scripts inserted panels around the same anchor.
+  const cardsForHeading=pattern=>{
+    const seen=new Set();
+    return [...document.querySelectorAll('h1,h2,h3,h4')]
+      .filter(el=>pattern.test((el.textContent||'').trim()))
+      .map(el=>el.closest('.card')||el.closest('section,article,.panel')||el.parentElement)
+      .filter(el=>el&&!seen.has(el)&&seen.add(el));
+  };
+
+  // v20.15 exact primary order requested by user:
+  // scenarios -> profile/time -> save/compare -> Lawn A -> Lawn B -> What Changed.
   const arrangePrimaryPanels=()=>{
     const scenarios=byId('scenario-onboarding');
     const memory=byId('scenario-memory');
@@ -82,39 +88,48 @@
     scenarios.classList.add('tf-scenarios-first');
     styleMemory(memory);
 
-    // Exact user-facing order:
-    // 1 scenarios, 2 Lawn A, 3 Lawn B, 4 profile/time, 5 save/compare, 6 What Changed.
     grid.prepend(scenarios);
-    scenarios.insertAdjacentElement('afterend',lawnA);
-    lawnA.insertAdjacentElement('afterend',lawnB);
-    lawnB.insertAdjacentElement('afterend',deck);
+    scenarios.insertAdjacentElement('afterend',deck);
     if(memory){
       deck.insertAdjacentElement('afterend',memory);
-      memory.insertAdjacentElement('afterend',timeline);
+      memory.insertAdjacentElement('afterend',lawnA);
     }else{
-      deck.insertAdjacentElement('afterend',timeline);
+      deck.insertAdjacentElement('afterend',lawnA);
     }
+    lawnA.insertAdjacentElement('afterend',lawnB);
+    lawnB.insertAdjacentElement('afterend',timeline);
 
     const topAnchor=document.querySelector('.mode-shell')||document.querySelector('header');
     if(topAnchor)topAnchor.insertAdjacentElement('afterend',grid);
     return true;
   };
 
+  // Scientific transparency belongs at the very end of the simulator, not in the working flow.
+  const moveTransparencyToEnd=()=>{
+    const panel=cardsForHeading(/^Scientific transparency$/i).pop();
+    if(!panel)return false;
+    panel.classList.add('tf-transparency-last');
+    const main=document.querySelector('main');
+    if(main)main.appendChild(panel);
+    else document.body.appendChild(panel);
+    return true;
+  };
+
   arrangePrimaryPanels();
-  [0,80,250,700,1600].forEach(ms=>setTimeout(arrangePrimaryPanels,ms));
-  const observer=new MutationObserver(()=>arrangePrimaryPanels());
+  moveTransparencyToEnd();
+  [0,80,250,700,1600].forEach(ms=>setTimeout(()=>{
+    arrangePrimaryPanels();
+    moveTransparencyToEnd();
+  },ms));
+
+  const observer=new MutationObserver(()=>{
+    arrangePrimaryPanels();
+    moveTransparencyToEnd();
+  });
   observer.observe(document.body,{childList:true,subtree:true});
-  setTimeout(()=>observer.disconnect(),4500);
+  setTimeout(()=>observer.disconnect(),5000);
 
   if(intro) intro.classList.add('visual-intro-workspace-moved','visual-intro-without-controls');
-
-  const cardsForHeading=pattern=>{
-    const seen=new Set();
-    return [...document.querySelectorAll('h1,h2,h3,h4')]
-      .filter(el=>pattern.test((el.textContent||'').trim()))
-      .map(el=>el.closest('.card')||el.closest('section,article,.panel')||el.parentElement)
-      .filter(el=>el&&!seen.has(el)&&seen.add(el));
-  };
 
   const moveSeaweedLab=()=>{
     const seaweeds=cardsForHeading(/Seaweed\s+Response\s+Lab/i);
@@ -153,10 +168,10 @@
   }
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.14 · FIXED PANEL FLOW';
+  if(badge)badge.textContent='v20.15 · WORKFLOW ORDER';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.14 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.15 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
