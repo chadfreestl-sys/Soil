@@ -21,7 +21,7 @@ function inject(){
   const s=document.createElement('script');s.dataset.tfEnvLoader='1';s.src='turfarium-environment-v1.js?v=1.1.0';document.body.appendChild(s);
  }
  if(!document.querySelector('script[src*="weather-first-v23.js"]')){
-  const s=document.createElement('script');s.dataset.tfWeatherLoader='1';s.src='weather-first-v23.js?v=23.7.0';document.body.appendChild(s);
+  const s=document.createElement('script');s.dataset.tfWeatherLoader='1';s.src='weather-first-v23.js?v=24.0.0';document.body.appendChild(s);
  }
 }
 apply();
