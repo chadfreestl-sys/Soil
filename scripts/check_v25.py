@@ -25,6 +25,24 @@ for file in ("weather-first-v23.js", "treatment-history-v23-6.js",
              "turfarium-details-v24.js"):
     check(file in html, f"Missing existing panel controller: {file}")
 
+# Regression: the layout controller must never reopen Weather on every reorder.
+layout_js = (root / "layout-tools.js").read_text(encoding="utf-8")
+weather_fn = layout_js.split("const putWeatherFirst=()=>", 1)
+check(len(weather_fn) == 2, "Weather positioning function missing")
+if len(weather_fn) == 2:
+    weather_body = weather_fn[1].split("const arrangePrimaryPanels=()=>", 1)[0]
+    check("panel.classList.remove('tf-panel-collapsed')" not in weather_body,
+          "Weather reorder code forcibly reopens the panel")
+    check("tfV25WeatherDefault" in weather_body,
+          "Weather initial closed state is not protected")
+
+# Verify the two independent treatment histories remain wired to real DOM nodes.
+history_js = (root / "treatment-history-v23-6.js").read_text(encoding="utf-8")
+check("'.recent-applications'" in history_js,
+      "Treatment history must reuse the original live records")
+check("'tf-history-card-'" in history_js,
+      "Independent treatment history cards are missing")
+
 # Catch literal escaped newline sequences injected by the old publishing workflow.
 for line_no, line in enumerate(html.splitlines(), 1):
     if re.search(r'(?:\\n){3,}', line):
