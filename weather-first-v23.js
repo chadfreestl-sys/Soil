@@ -1,20 +1,22 @@
-/* Turfarium Weather-first layout v23.3. Weather lab stays open by default above the lawn management controls. */
+/* Turfarium Weather-first layout v23.4. Weather lab stays open and sits immediately above the lawn cards/mowing controls. */
 (()=>{
 'use strict';
 const LABEL='Site, Season & Weather Lab';
 const find=()=>{
- const deck=document.getElementById('profile-control-deck');
- const grid=deck?.parentElement;
+ const lawnA=document.getElementById('lawn-a-panel');
+ const grid=lawnA?.parentElement;
  const lab=document.getElementById('experiment-controls');
- if(!deck||!grid||!lab||lab===deck||lab.contains(deck))return;
+ if(!lawnA||!grid||!lab)return;
  const panel=lab.closest('.card.wide,section.card,article.card,.card')||lab;
- if(panel===deck||panel.contains(deck))return;
+ if(panel===lawnA||panel.contains(lawnA))return;
  panel.classList.add('tf-weather-first','tf-weather-context');
- panel.style.setProperty('order','-2000','important');
  panel.style.setProperty('grid-column','1 / -1','important');
- deck.style.setProperty('order','-1900','important');
- if(panel.parentElement!==grid||panel.nextElementSibling!==deck){
-   grid.insertBefore(panel,deck);
+ panel.style.setProperty('order','-1','important');
+ lawnA.style.setProperty('order','0','important');
+ const lawnB=document.getElementById('lawn-b-panel');
+ if(lawnB)lawnB.style.setProperty('order','0','important');
+ if(panel.parentElement!==grid||panel.nextElementSibling!==lawnA){
+   grid.insertBefore(panel,lawnA);
  }
  const toggle=panel.querySelector(':scope > .tf-collapse-toggle');
  const body=panel.querySelector(':scope > .tf-collapse-body');
@@ -48,7 +50,7 @@ const find=()=>{
  if(innerTitle && innerTitle.textContent.trim()!==LABEL)innerTitle.textContent=LABEL;
 };
 const css=document.createElement('style');
-css.textContent='.simulation-grid.tf-primary-workspace > .tf-weather-first{order:-2000!important;grid-column:1/-1!important}.simulation-grid.tf-primary-workspace > #profile-control-deck{order:-1900!important;grid-column:1/-1!important}';
+css.textContent='.simulation-grid.tf-primary-workspace > .tf-weather-first{grid-column:1/-1!important;order:-1!important}.simulation-grid.tf-primary-workspace > #lawn-a-panel,.simulation-grid.tf-primary-workspace > #lawn-b-panel{order:0!important}';
 document.head.appendChild(css);
 let pending=false;
 const observer=new MutationObserver(()=>{
@@ -60,5 +62,5 @@ observer.observe(document.documentElement,{childList:true,subtree:true});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',find,{once:true});
 else find();
 window.addEventListener('load',find,{once:true});
-setTimeout(find,1000);setTimeout(find,3500);setTimeout(()=>observer.disconnect(),12000);
+setTimeout(find,700);setTimeout(find,1800);setTimeout(find,3500);setTimeout(()=>observer.disconnect(),12000);
 })();
