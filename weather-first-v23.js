@@ -1,4 +1,4 @@
-/* Turfarium Weather Lab v24 — stable weather tab beside mowing. No outer-grid reordering and no duplicated weather controls. */
+/* Turfarium Weather Lab v24.1 — stable compact Weather + Mowing controls. No outer-grid reordering or duplicated weather controls. */
 (()=>{
 'use strict';
 const LABEL='Site, Season & Weather Lab';
@@ -27,7 +27,7 @@ function setExpanded(panel,open){
 }
 function cleanOldArtifacts(){
  document.querySelectorAll('.tf-weather-near-mow,.tf-weather-peer-spacer').forEach(el=>el.remove());
- const old=document.getElementById('tf-weather-near-mow-style');if(old)old.remove();
+ document.getElementById('tf-weather-near-mow-style')?.remove();
 }
 function hideNative(){
  const panel=nativeWeather();if(!panel||panel.closest('#tf-weather-drawer'))return;
@@ -74,7 +74,11 @@ function installBesideMowing(){
  for(const key of ['A','B']){
   const env=by('tf-env-'+key);if(!env)continue;
   const summary=env.querySelector(':scope > summary');
-  if(summary){const first=summary.querySelector('span:first-child');if(first)first.textContent='✂️ Mowing + environmental drift';}
+  if(summary){
+   const spans=summary.querySelectorAll(':scope > span');
+   if(spans[0])spans[0].textContent='✂️ Mowing';
+   if(spans[1])spans[1].textContent='closed by default';
+  }
   let shell=env.parentElement?.classList.contains('tf-management-tabs')?env.parentElement:null;
   if(!shell){
    shell=document.createElement('div');shell.className='tf-management-tabs';shell.dataset.lawn=key;
@@ -82,23 +86,27 @@ function installBesideMowing(){
   }
   let weather=shell.querySelector(':scope > .tf-weather-tab');
   if(!weather){
-   weather=document.createElement('button');weather.type='button';weather.className='tf-weather-tab';weather.innerHTML='<span>🌦️ Weather</span><small>closed by default</small>';
+   weather=document.createElement('button');weather.type='button';weather.className='tf-weather-tab';weather.innerHTML='<strong>🌦️ Weather</strong><small>closed by default</small>';
    weather.addEventListener('click',openDrawer);
    shell.insertBefore(weather,env);
   }
  }
 }
 const style=document.createElement('style');style.id='tf-weather-v24-style';style.textContent=`
-.tf-management-tabs{display:grid;grid-template-columns:minmax(145px,.42fr) minmax(0,1fr);gap:8px;align-items:start;margin:10px 0 2px}
-.tf-management-tabs>.tf-env{margin:0!important;min-width:0}
-.tf-weather-tab{min-height:46px;border:1px solid #b9d0bd!important;border-radius:13px!important;background:rgba(240,248,238,.72)!important;color:#183f2b!important;padding:9px 12px!important;text-align:left!important;display:flex!important;flex-direction:column;justify-content:center;gap:1px;font:inherit!important;font-weight:800!important;box-shadow:none!important}
-.tf-weather-tab span{font-size:.86rem;line-height:1.15}.tf-weather-tab small{font-size:.65rem;color:#587060;line-height:1.1}.tf-weather-tab:hover{background:#fff!important}
+.tf-management-tabs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:start;margin:10px 0 2px}
+.tf-management-tabs>.tf-env{margin:0!important;min-width:0;border-radius:13px!important}
+.tf-management-tabs>.tf-env>summary{min-height:64px!important;padding:10px 12px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:2px!important;line-height:1.1!important}
+.tf-management-tabs>.tf-env>summary>span:first-child{font-size:.88rem!important;font-weight:850!important;white-space:nowrap!important}
+.tf-management-tabs>.tf-env>summary>span:last-child{font-size:.66rem!important;font-weight:650!important;color:#587060!important;white-space:nowrap!important}
+.tf-weather-tab{min-height:64px;border:1px solid #b9d0bd!important;border-radius:13px!important;background:rgba(240,248,238,.72)!important;color:#183f2b!important;padding:10px 12px!important;text-align:left!important;display:flex!important;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;font:inherit!important;box-shadow:none!important}
+.tf-weather-tab strong{font-size:.88rem;line-height:1.1;font-weight:850}.tf-weather-tab small{font-size:.66rem;color:#587060;line-height:1.1;font-weight:650}.tf-weather-tab:hover{background:#fff!important}
 #tf-weather-overlay{position:fixed;inset:0;z-index:999999;background:rgba(5,15,18,.58);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:clamp(12px,4vh,42px) 12px;overflow:auto}
 #tf-weather-overlay.open{display:flex}body.tf-weather-lock{overflow:hidden}
 #tf-weather-drawer{width:min(1120px,96vw);max-height:90vh;overflow:auto;background:#eef4ee;border:1px solid #9fb7a4;border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.35);padding:12px;color:#183f2b}
 .tf-weather-drawer-head{position:sticky;top:-12px;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 8px 12px;background:#eef4ee;border-bottom:1px solid #c5d5c8;margin:-1px -1px 10px}.tf-weather-drawer-head strong{font-size:1rem}.tf-weather-drawer-head button{width:38px;height:38px;border-radius:10px!important;padding:0!important;font-weight:900!important;background:#fff!important;color:#173f2a!important;border:1px solid #aec3b2!important}
 #tf-weather-drawer .tf-collapse-toggle{display:none!important}#tf-weather-drawer .tf-collapse-body{display:block!important}#tf-weather-drawer .tf-panel-collapsed>.tf-collapse-body{display:block!important}
-@media(max-width:620px){.tf-management-tabs{grid-template-columns:1fr 1.5fr;gap:6px}.tf-weather-tab{padding:8px!important;min-height:44px}.tf-weather-tab span{font-size:.78rem}.tf-weather-tab small{font-size:.6rem}#tf-weather-overlay{padding:8px}#tf-weather-drawer{width:100%;max-height:94vh;border-radius:13px}}
+@media(max-width:620px){.tf-management-tabs{grid-template-columns:1fr 1fr;gap:8px}.tf-management-tabs>.tf-env>summary,.tf-weather-tab{min-height:62px!important;padding:9px 10px!important}.tf-management-tabs>.tf-env>summary>span:first-child,.tf-weather-tab strong{font-size:.84rem!important}.tf-management-tabs>.tf-env>summary>span:last-child,.tf-weather-tab small{font-size:.63rem!important}#tf-weather-overlay{padding:8px}#tf-weather-drawer{width:100%;max-height:94vh;border-radius:13px}}
+@media(max-width:390px){.tf-management-tabs>.tf-env>summary>span:first-child,.tf-weather-tab strong{font-size:.8rem!important}.tf-management-tabs>.tf-env>summary>span:last-child,.tf-weather-tab small{font-size:.6rem!important}}
 `;
 if(!by(style.id))document.head.appendChild(style);
 function boot(){installBesideMowing();ensureDrawer()}
