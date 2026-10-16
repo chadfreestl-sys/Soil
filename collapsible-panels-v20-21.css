@@ -41,9 +41,9 @@
 .tf-collapsible-panel:not(.tf-panel-collapsed)>.tf-collapse-body{overflow:visible!important}
 
 /* Hard visual order so older DOM placement rules cannot put What Changed above the lawns. */
-.tf-primary-workspace>#profile-control-deck{order:10!important;grid-column:1/-1!important}
+.tf-primary-workspace>#profile-control-deck{order:20!important;grid-column:1/-1!important}
 .tf-primary-workspace>#lawn-a-panel,
-.tf-primary-workspace>#lawn-b-panel{order:20!important}
+.tf-primary-workspace>#lawn-b-panel{order:10!important}
 .tf-primary-workspace>.tf-treatment-priority,
 .tf-primary-workspace>.card:has(#experiment-controls),
 .tf-primary-workspace>section:has(#experiment-controls){order:30!important;grid-column:1/-1!important}
