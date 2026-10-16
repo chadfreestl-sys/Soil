@@ -1,4 +1,4 @@
-/* Force the current clean soil photo after legacy layout scripts run, then load current living motion + biology + environmental drift + weather placement layers. */
+/* Force the current clean soil photo after legacy layout scripts run, then load current living motion + biology + environmental drift + weather layers once. */
 (()=>{'use strict';
 const image='file_00000000f35481f5a24a1191fdf2adf5.png?v=clean-4';
 function apply(){
@@ -8,22 +8,20 @@ function apply(){
   el.removeAttribute('srcset');
  }
 }
-const hasScript=needle=>[...document.scripts].some(s=>(s.getAttribute('src')||'').includes(needle));
 function inject(){
- if(!window.__tfLivingV4Loaded&&!hasScript('turfarium-living-window.js')){
-  window.__tfLivingV4Loaded=true;
+ if(!document.querySelector('script[src*="turfarium-living-window.js"]')){
   document.querySelectorAll('.tf-photo-motion,.tf-soil-lens').forEach(el=>el.remove());
   document.getElementById('tf-photo-motion-style')?.remove();
   const s=document.createElement('script');s.dataset.tfMotionLoader='1';s.src='turfarium-living-window.js?v=4.0.0';document.body.appendChild(s);
  }
- if(!document.getElementById('tf-bio-A')&&!hasScript('turfarium-biology-v1.js')){
+ if(!document.getElementById('tf-bio-A')&&!document.querySelector('script[src*="turfarium-biology-v1.js"]')){
   const s=document.createElement('script');s.dataset.tfBioLoader='1';s.src='turfarium-biology-v1.js?v=1.1.0';document.body.appendChild(s);
  }
- if(!document.getElementById('tf-env-A')&&!hasScript('turfarium-environment-v1.js')){
+ if(!document.getElementById('tf-env-A')&&!document.querySelector('script[src*="turfarium-environment-v1.js"]')){
   const s=document.createElement('script');s.dataset.tfEnvLoader='1';s.src='turfarium-environment-v1.js?v=1.1.0';document.body.appendChild(s);
  }
- if(!hasScript('weather-first-v23.js')){
-  const s=document.createElement('script');s.dataset.tfWeatherLoader='1';s.src='weather-first-v23.js?v=23.6.0';document.body.appendChild(s);
+ if(!document.querySelector('script[src*="weather-first-v23.js"]')){
+  const s=document.createElement('script');s.dataset.tfWeatherLoader='1';s.src='weather-first-v23.js?v=23.7.0';document.body.appendChild(s);
  }
 }
 apply();
