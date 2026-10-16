@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='21.8';
+  const VERSION='21.9';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -127,7 +127,9 @@
       const h=panel.querySelector(':scope > h1,:scope > h2,:scope > h3,:scope > h4,:scope > .head h2,:scope > .head h3,:scope > .tf-collapse-toggle .tf-collapse-title,:scope > .tf-collapse-body > .head h2,:scope > .tf-collapse-body > h2');
       return (h?.textContent||'').trim();
     };
-    let weather=candidates.find(p=>/^(?:Weather|Weather Conditions|Weather & Climate|Climate|Environmental Conditions|Growing Conditions)\b/i.test(title(p)));
+    // Actual simulator panel is titled "Site, season & weather laboratory".
+    let weather=candidates.find(p=>/site\s*,?\s*season\s*(?:&|and)\s*weather\s*laboratory/i.test(title(p)));
+    if(!weather)weather=candidates.find(p=>/^(?:Weather|Weather Conditions|Weather & Climate|Climate|Environmental Conditions|Growing Conditions)\b/i.test(title(p)));
     if(!weather)weather=candidates.find(p=>/\b(?:Weather|Climate)\b/i.test(title(p)) && !/response|effect|history|simulation|evidence/i.test(title(p)));
     if(!weather)weather=panelForControlText(/^(?:Climate profile|Weather pattern|Rain pattern|Temperature|Rainfall|Drought|Heat pattern)$/i);
     let site=candidates.find(p=>/^(?:Site|Site & Turf|Turf Setup|Lawn Setup|Turfgrass Setup)\b/i.test(title(p)));
