@@ -101,7 +101,17 @@ function overview(){
  bar.appendChild(heading);
  for(const [label,target] of [['Lawn A','lawn-a-panel'],['Lawn B','lawn-b-panel'],['Time advance','profile-control-deck']]){
    const link=document.createElement('a');link.href='#'+target;
-   link.textContent=label;link.className='v25-overview-link';
+   link.className='v25-overview-link';
+   const icons={
+     'Lawn A':'<path d="M3 20h18M5 20l3-8 3 8M11 20l3-12 4 12M17 20l2-7 2 7"/>',
+     'Lawn B':'<path d="M3 20h18M5 20l3-8 3 8M11 20l3-12 4 12M17 20l2-7 2 7"/>',
+     'Time advance':'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+   };
+   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+   svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');
+   svg.innerHTML=icons[label]||'';
+   const labelSpan=document.createElement('span');labelSpan.textContent=label;
+   link.append(svg,labelSpan);
    link.addEventListener('click',()=>{
      const panel=$(target);
      const toggle=panel?.querySelector(':scope > .tf-collapse-toggle');
