@@ -1,15 +1,26 @@
-/* Turfarium living observation window: model-driven visuals, no fixed A/B outcome. */
+/* Turfarium observation window v2: understated visual response, model-driven, no painted roots. */
 (()=>{'use strict';
-const cap=(v,a,b)=>Math.max(a,Math.min(b,v));
-const stages=['A','B'].map(key=>{const p=document.getElementById('lawn-'+key.toLowerCase()+'-panel'),stage=p?.querySelector('.photo-stage');if(!stage)return null;const canvas=document.createElement('canvas');canvas.className='tf-living-window';canvas.setAttribute('aria-label','Live turf canopy and root architecture visualization for Lawn '+key);Object.assign(canvas.style,{position:'absolute',inset:0,width:'100%',height:'100%',zIndex:3,pointerEvents:'none'});stage.append(canvas);return {key,stage,canvas,ctx:canvas.getContext('2d')};}).filter(Boolean);
-function state(s){const el=document.getElementById('kpi'+s.key),text=el?.textContent||'';const metric=(name,fallback)=>{const m=text.match(new RegExp(name+'[^0-9]{0,65}(\\d+(?:\\.\\d+)?)','i'));return m?+m[1]:fallback};const day=+(document.getElementById('day'+s.key)?.textContent.match(/Day\\s*(\\d+)/i)?.[1]||0);return {vigor:cap(metric('Turf vigor',65),0,100),worm:cap(metric('Earthworm activity',30),0,100),guilds:cap(metric('Beneficial guilds',35),0,100),day};}
-function rand(seed){let x=Math.sin(seed*127.1+17.3)*43758.5453;return x-Math.floor(x)}
-function draw(s){const r=s.stage.getBoundingClientRect(),w=r.width,h=r.height;if(!w||!h)return;const d=Math.min(devicePixelRatio||1,2),c=s.canvas;if(c.width!==Math.round(w*d)||c.height!==Math.round(h*d)){c.width=Math.round(w*d);c.height=Math.round(h*d)}const g=s.ctx;g.setTransform(d,0,0,d,0,0);g.clearRect(0,0,w,h);const st=state(s),surface=h*.27,health=st.vigor/100,rootLength=h*(.17+health*.28+Math.min(st.day/1825,1)*.1),density=Math.round(28+health*48); 
-// Soft soil shading changes with vigor; no preassigned advantage to either lawn.
-g.fillStyle='rgba(28,19,13,'+(0.03+(1-health)*.09)+')';g.fillRect(0,surface,w,h-surface);
-// Roots originate at real grass crowns and taper into fine feeder branches.
-for(let i=0;i<density;i++){const x=w*(i+.4)/density,seed=i*13.4+3,depth=rootLength*(.38+rand(seed)*.7);g.beginPath();g.moveTo(x,surface);const dx=(rand(seed+2)-.5)*w*.055;g.bezierCurveTo(x+dx*.4,surface+depth*.25,x-dx,surface+depth*.67,x+dx,surface+depth);g.strokeStyle=i%4===0?'rgba(237,215,165,.56)':'rgba(246,229,190,.38)';g.lineWidth=i%5===0?1.35:.7;g.stroke();for(let j=1;j<5;j++){const yy=surface+depth*j/6,xx=x+dx*Math.sin(j*.9);g.beginPath();g.moveTo(xx,yy);g.quadraticCurveTo(xx+(j%2?8:-8),yy+depth*.12,xx+(j%2?14:-14),yy+depth*.22);g.lineWidth=.48;g.stroke()}}
- // Sparse fine grass highlights to make turf response visible without obscuring photography.
-for(let i=0;i<density;i++){let x=w*(i+.5)/density,ht=h*(.07+health*.13)*(0.7+rand(i+5)*.65);g.beginPath();g.moveTo(x,surface);g.quadraticCurveTo(x+(rand(i+10)-.5)*13,surface-ht*.6,x+(rand(i+20)-.5)*24,surface-ht);g.strokeStyle=health>.65?'rgba(78,143,45,.34)':'rgba(157,147,56,.34)';g.lineWidth=1+rand(i+7)*1.5;g.stroke()}
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+for(const key of ['A','B']){
+ const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
+ const stage=panel?.querySelector('.photo-stage');
+ const photo=stage?.querySelector('img.soil-photo');
+ if(!stage||!photo)continue;
+ const mask=document.createElement('div');mask.className='tf-soil-lens';
+ mask.setAttribute('aria-hidden','true');
+ Object.assign(mask.style,{position:'absolute',inset:'0',zIndex:'2',pointerEvents:'none',transition:'background 1.2s ease'});
+ stage.append(mask);
+ const read=(name,fallback)=>{const t=document.getElementById('kpi'+key)?.textContent||'';const re=new RegExp(name+'[^0-9]{0,75}([0-9]+(?:[.][0-9]+)?)','i');return +(t.match(re)?.[1]??fallback)};
+ const refresh=()=>{
+  const vigor=clamp(read('Turf vigor',65),0,100),biology=clamp(read('Beneficial guilds',35),0,100);
+  const health=vigor/100,soil=biology/100;
+  // Small, bounded color/contrast responses. A and B follow their own model values.
+  photo.style.setProperty('filter',`saturate(${(.79+health*.37).toFixed(3)}) brightness(${(.89+health*.15).toFixed(3)}) contrast(${(.98+soil*.07).toFixed(3)})`,'important');
+  mask.style.background=`linear-gradient(to bottom, rgba(116,101,45,${((1-health)*.085).toFixed(3)}) 0%, transparent 34%, rgba(33,21,13,${((1-soil)*.08).toFixed(3)}) 100%)`;
+  stage.dataset.tfVisualVigor=String(Math.round(vigor));
+ };
+ const target=document.getElementById('kpi'+key);
+ if(target)new MutationObserver(()=>requestAnimationFrame(refresh)).observe(target,{subtree:true,childList:true,characterData:true});
+ refresh();
 }
-let timer=0;function update(){for(const s of stages)draw(s)};update();const obs=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(update,70)});for(const s of stages){for(const id of ['kpi'+s.key,'day'+s.key]){const el=document.getElementById(id);if(el)obs.observe(el,{subtree:true,childList:true,characterData:true})}}addEventListener('resize',update);})();
+})();
