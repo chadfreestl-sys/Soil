@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='20.29';
+  const VERSION='20.30';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -139,7 +139,7 @@
   };
 
   const collapseStorageKey=panel=>`turfarium-collapse-v${VERSION}:${keyForPanel(panel)}`;
-  const defaultOpenPanel=panel=>panel===lawnA||panel===lawnB;
+  const defaultOpenPanel=panel=>panel===lawnA||panel===lawnB||panel===deck||panel===findManagementPanel()||panel===timeline;
 
   const setCollapsed=(panel,collapsed,save=true)=>{
     const button=panel.querySelector(':scope > .tf-collapse-toggle');
@@ -218,13 +218,13 @@
     lawnB.classList.add('tf-visual-priority');
     if(replay)replay.classList.add('tf-replay-primary');
 
-    // Profile controls directly above the open lawn comparison.
-    // Profile/Time -> Lawn A + Lawn B -> Treatments -> What Changed -> Scenario -> Weather -> Site/Turf
-    // -> Replay -> Save/Compare -> Diagnostic -> deeper science/lab panels.
-    if(grid.firstElementChild!==deck)grid.prepend(deck);
-    let anchor=deck;
-    anchor=appendAfter(anchor,lawnA);
+    // Visual-first dashboard: lawns are the first content visitors see.
+    // Lawn A + Lawn B -> Profile Viewer / Time Advance -> Treatments -> What Changed
+    // -> Scenario -> Weather -> Site/Turf -> Replay -> Save/Compare -> Diagnostics -> Labs.
+    if(grid.firstElementChild!==lawnA)grid.prepend(lawnA);
+    let anchor=lawnA;
     anchor=appendAfter(anchor,lawnB);
+    anchor=appendAfter(anchor,deck);
     if(management)anchor=appendAfter(anchor,management);
     anchor=appendAfter(anchor,timeline);
     anchor=appendAfter(anchor,scenarios);
@@ -296,10 +296,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.29 · PROFILE + LAWNS';
+  if(badge)badge.textContent='v20.30 · LAWNS FIRST';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.29 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.30 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
