@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='21.7';
+  const VERSION='21.8';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -115,15 +115,26 @@
   };
 
   const findContextPanels=()=>{
-    let site=majorForHeading(/Site\s*(?:&|\/|\+)?\s*Turf|Turf\s*(?:Type|Species|Setup)|Lawn\s+Setup|Site\s+Setup|Turfgrass\s+Setup/i);
-    let weather=majorForHeading(/Weather|Climate|Growing Conditions|Environmental Conditions/i);
-    if(excludedContextPanel(site))site=null;
-    if(excludedContextPanel(weather))weather=null;
+    // Prefer a distinct, top-level weather card rather than the first
+    // incidental 'weather' heading inside a lawn or scientific module.
+    const candidates=[...document.querySelectorAll('.card,section.panel,article.panel')].filter(panel=>
+      !excludedContextPanel(panel) &&
+      !lawnA.contains(panel) && !lawnB.contains(panel) &&
+      !panel.contains(lawnA) && !panel.contains(lawnB) &&
+      !panel.closest('#profile-control-deck,.tf-collapse-body')
+    );
+    const title=panel=>{
+      const h=panel.querySelector(':scope > h1,:scope > h2,:scope > h3,:scope > h4,:scope > .head h2,:scope > .head h3,:scope > .tf-collapse-toggle .tf-collapse-title,:scope > .tf-collapse-body > .head h2,:scope > .tf-collapse-body > h2');
+      return (h?.textContent||'').trim();
+    };
+    let weather=candidates.find(p=>/^(?:Weather|Weather Conditions|Weather & Climate|Climate|Environmental Conditions|Growing Conditions)\b/i.test(title(p)));
+    if(!weather)weather=candidates.find(p=>/\b(?:Weather|Climate)\b/i.test(title(p)) && !/response|effect|history|simulation|evidence/i.test(title(p)));
+    if(!weather)weather=panelForControlText(/^(?:Climate profile|Weather pattern|Rain pattern|Temperature|Rainfall|Drought|Heat pattern)$/i);
+    let site=candidates.find(p=>/^(?:Site|Site & Turf|Turf Setup|Lawn Setup|Turfgrass Setup)\b/i.test(title(p)));
     if(!site)site=panelForControlText(/^(?:Turf type|Turf species|Grass type|Turfgrass|Species|Sun\s*\/\s*shade|Sun exposure|Shade|Mowing height|Mowing baseline)$/i);
-    if(!weather)weather=panelForControlText(/^(?:Climate profile|Weather|Weather pattern|Climate|Temperature|Rainfall|Rain pattern|Drought|Heat pattern)$/i);
+    if(site===weather)site=null;
     if(site)site.classList.add('tf-context-panel','tf-site-context');
     if(weather)weather.classList.add('tf-context-panel','tf-weather-context');
-    if(site&&weather===site)weather=null;
     return {site,weather};
   };
 
@@ -246,7 +257,7 @@
 
     const {site,weather}=findContextPanels();
     if(weather && weather!==context.weather)anchor=appendAfter(anchor,weather);
-    if(site)anchor=appendAfter(anchor,site);
+    if(site && site!==context.weather)anchor=appendAfter(anchor,site);
     if(replay)anchor=appendAfter(anchor,replay);
     if(memory)anchor=appendAfter(anchor,memory);
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
