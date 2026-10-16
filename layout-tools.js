@@ -12,6 +12,14 @@
 
   grid.classList.add('tf-primary-workspace');
 
+  if(!document.querySelector('link[data-context-layout]')){
+    const css=document.createElement('link');
+    css.rel='stylesheet';
+    css.href='context-layout-v20-18.css?v=20.18';
+    css.dataset.contextLayout='true';
+    document.head.appendChild(css);
+  }
+
   const deck=document.createElement('section');
   deck.id='profile-control-deck';
   deck.className='card wide profile-control-deck';
@@ -75,7 +83,47 @@
     return panel;
   };
 
-  // FAST PATH: only touch the small primary workspace during startup.
+  const majorForHeading=pattern=>{
+    const headings=document.querySelectorAll('h1,h2,h3,h4');
+    for(const heading of headings){
+      if(pattern.test((heading.textContent||'').trim())){
+        return heading.closest('.card.wide')||heading.closest('section.card')||heading.closest('.card')||heading.closest('section,article,.panel')||null;
+      }
+    }
+    return null;
+  };
+
+  const excludedContextPanel=panel=>!panel||panel===lawnA||panel===lawnB||panel===timeline||panel===deck||panel.id==='scenario-onboarding'||panel.id==='scenario-memory';
+
+  const panelForControlText=pattern=>{
+    const nodes=document.querySelectorAll('label,legend,.label,.control-label,.field-label');
+    for(const node of nodes){
+      const text=(node.textContent||'').trim().replace(/\s+/g,' ');
+      if(!pattern.test(text))continue;
+      const panel=node.closest('.card.wide')||node.closest('section.card')||node.closest('.card')||node.closest('.panel')||node.closest('section');
+      if(!excludedContextPanel(panel))return panel;
+    }
+    return null;
+  };
+
+  const findContextPanels=()=>{
+    let site=majorForHeading(/Site\s*(?:&|\/|\+)?\s*Turf|Turf\s*(?:Type|Species|Setup)|Lawn\s+Setup|Site\s+Setup|Turfgrass\s+Setup/i);
+    let weather=majorForHeading(/Weather|Climate|Growing Conditions|Environmental Conditions/i);
+
+    if(excludedContextPanel(site))site=null;
+    if(excludedContextPanel(weather))weather=null;
+
+    if(!site)site=panelForControlText(/^(?:Turf type|Turf species|Grass type|Turfgrass|Species|Sun\s*\/\s*shade|Sun exposure|Shade|Mowing height|Mowing baseline)$/i);
+    if(!weather)weather=panelForControlText(/^(?:Climate profile|Weather|Weather pattern|Climate|Temperature|Rainfall|Rain pattern|Drought|Heat pattern)$/i);
+
+    if(site)site.classList.add('tf-context-panel','tf-site-context');
+    if(weather)weather.classList.add('tf-context-panel','tf-weather-context');
+    if(site&&weather===site)weather=null;
+    return {site,weather};
+  };
+
+  // Primary causal flow:
+  // Scenario -> Site/Turf -> Weather/Climate -> Profile/Time -> Save -> Lawns -> Replay -> What Changed.
   const arrangePrimaryPanels=()=>{
     const scenarios=byId('scenario-onboarding');
     const memory=byId('scenario-memory');
@@ -86,6 +134,11 @@
 
     if(grid.firstElementChild!==scenarios)grid.prepend(scenarios);
     let anchor=scenarios;
+
+    const {site,weather}=findContextPanels();
+    if(site)anchor=appendAfter(anchor,site);
+    if(weather)anchor=appendAfter(anchor,weather);
+
     anchor=appendAfter(anchor,deck);
     if(memory)anchor=appendAfter(anchor,memory);
     anchor=appendAfter(anchor,lawnA);
@@ -105,44 +158,30 @@
 
   if(intro)intro.classList.add('visual-intro-workspace-moved','visual-intro-without-controls');
 
-  // First paint gets the main experiment immediately.
   arrangePrimaryPanels();
   requestAnimationFrame(arrangePrimaryPanels);
 
-  // Watch only briefly for asynchronously-created scenario/replay UI; debounce all work.
   let observerTimer=0;
-  let observer;
   const onMutations=records=>{
     let relevant=false;
     for(const record of records){
       for(const node of record.addedNodes){
         if(node.nodeType!==1)continue;
-        if(node.matches?.('#scenario-onboarding,#scenario-memory,.tf-replay-bar') ||
-           node.querySelector?.('#scenario-onboarding,#scenario-memory,.tf-replay-bar')){
-          relevant=true; break;
+        if(node.matches?.('#scenario-onboarding,#scenario-memory,.tf-replay-bar,.card,section') ||
+           node.querySelector?.('#scenario-onboarding,#scenario-memory,.tf-replay-bar,label,legend,h2,h3')){
+          relevant=true;break;
         }
       }
       if(relevant)break;
     }
     if(!relevant)return;
     clearTimeout(observerTimer);
-    observerTimer=setTimeout(arrangePrimaryPanels,40);
+    observerTimer=setTimeout(arrangePrimaryPanels,55);
   };
-  observer=new MutationObserver(onMutations);
+  const observer=new MutationObserver(onMutations);
   observer.observe(document.body,{childList:true,subtree:true});
-  setTimeout(()=>observer.disconnect(),2200);
+  setTimeout(()=>observer.disconnect(),2300);
 
-  const majorForHeading=pattern=>{
-    const headings=document.querySelectorAll('h1,h2,h3,h4');
-    for(const heading of headings){
-      if(pattern.test((heading.textContent||'').trim())){
-        return heading.closest('.card.wide')||heading.closest('section.card')||heading.closest('section,article,.panel')||null;
-      }
-    }
-    return null;
-  };
-
-  // DEEP PATH: reorder off-screen expert/lab panels only after the browser is idle.
   const arrangeDeepPanels=()=>{
     let anchor=grid;
     const diagnostic=byId('diagnostic-lens');
@@ -193,18 +232,17 @@
   };
   idle(arrangeDeepPanels,800);
 
-  // Living profile animation/replay is non-critical. Load it after first paint/idle.
   const loadLivingProfiles=()=>{
     if(!document.querySelector('link[data-living-profiles]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='living-profiles.css?v=20.17';
+      css.href='living-profiles.css?v=20.18';
       css.dataset.livingProfiles='true';
       document.head.appendChild(css);
     }
     if(!document.querySelector('script[data-living-profiles]')){
       const script=document.createElement('script');
-      script.src='living-profiles.js?v=20.17';
+      script.src='living-profiles.js?v=20.18';
       script.defer=true;
       script.dataset.livingProfiles='true';
       script.addEventListener('load',()=>requestAnimationFrame(arrangePrimaryPanels),{once:true});
@@ -214,10 +252,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.17 · FAST START';
+  if(badge)badge.textContent='v20.18 · CONTEXT FIRST';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.17 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.18 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
