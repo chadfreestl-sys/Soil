@@ -21,9 +21,11 @@ for identifier in (
           f"Missing engine/UI anchor: {identifier}")
 
 check("layout-tools.js" in html, "Missing primary layout script")
-for file in ("weather-first-v23.js", "treatment-history-v23-6.js",
-             "turfarium-details-v24.js"):
-    check(file in html, f"Missing existing panel controller: {file}")
+check("v25-workspace.js" in html, "Unified v25 workspace script is not loaded")
+check("v25-workspace.css" in html, "Unified v25 workspace stylesheet is not loaded")
+for legacy in ("weather-first-v23.js", "treatment-history-v23-6.js", "turfarium-details-v24.js"):
+    check(not re.search(r'<script[^>]*' + re.escape(legacy), html, re.I),
+          f"Competing legacy controller still loaded: {legacy}")
 
 # Regression: the layout controller must never reopen Weather on every reorder.
 layout_js = (root / "layout-tools.js").read_text(encoding="utf-8")
@@ -36,12 +38,14 @@ if len(weather_fn) == 2:
     check("tfV25WeatherDefault" in weather_body,
           "Weather initial closed state is not protected")
 
-# Verify the two independent treatment histories remain wired to real DOM nodes.
-history_js = (root / "treatment-history-v23-6.js").read_text(encoding="utf-8")
-check("'.recent-applications'" in history_js,
-      "Treatment history must reuse the original live records")
-check("'tf-history-card-'" in history_js,
-      "Independent treatment history cards are missing")
+# The single workspace extension owns weather, histories, details and overview.
+workspace_js = (root / "v25-workspace.js").read_text(encoding="utf-8")
+for marker in ("function weather()", "function histories()", "function details()", "function overview()"):
+    check(marker in workspace_js, f"Unified controller missing: {marker}")
+check("'.recent-applications'" in workspace_js,
+      "Treatment histories must reuse the original live records")
+check("aria-expanded" in workspace_js and "hidden" in workspace_js,
+      "Unified controller must support accessible collapsed panels")
 
 # Catch literal escaped newline sequences injected by the old publishing workflow.
 for line_no, line in enumerate(html.splitlines(), 1):
