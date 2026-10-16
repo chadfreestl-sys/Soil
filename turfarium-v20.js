@@ -97,6 +97,16 @@
     const diagnosticHead=diagnostic?.querySelector('h2');
     if(diagnosticHead) diagnosticHead.textContent='What may be holding the lawn back right now?';
 
+    // Bootstrap the visual-first workspace even when lab.html does not load
+    // layout-tools.js itself. Existing script tags are respected.
+    if(!window.__tfLayoutBootstrapped && !document.querySelector('script[src*="layout-tools.js"]')){
+      window.__tfLayoutBootstrapped=true;
+      const layout=document.createElement('script');
+      layout.src='layout-tools.js?v=20.31';
+      layout.dataset.tfLayoutBootstrap='true';
+      document.body.appendChild(layout);
+    }
+
     const profile=document.querySelector('.profile-control-deck');
     const profileStrong=profile?.querySelector('.profile-deck-label strong');
     if(profileStrong) profileStrong.textContent='Profile Viewer + Time Advance';
