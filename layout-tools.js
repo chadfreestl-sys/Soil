@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='22.0';
+  const VERSION='22.1';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -140,9 +140,13 @@
     return {site,weather};
   };
 
-  const findManagementPanel=()=>byId('experiment-controls')?.closest('.card.wide')
-    ||byId('experiment-controls')?.closest('section.card')
-    ||majorForHeading(/Management|Treatment Controls|Treatments|Applications/i);
+  // #experiment-controls is the WEATHER laboratory, not treatments.
+  // Never classify or relocate it as the management panel.
+  const findManagementPanel=()=>{
+    const candidate=majorForHeading(/^(?:Management|Treatment Controls|Treatments|Applications)(?:\\b|\\s)/i);
+    if(!candidate || candidate.id==='experiment-controls' || candidate.classList.contains('tf-weather-context'))return null;
+    return candidate;
+  };
 
   const titleForPanel=panel=>{
     if(panel===lawnA)return 'Lawn A';
@@ -248,7 +252,14 @@
     if(grid.firstElementChild!==deck)grid.prepend(deck);
     let anchor=deck;
     const context=findContextPanels();
-    if(context.weather && context.weather!==deck && context.weather!==lawnA && context.weather!==lawnB){
+    const weatherLab=byId('experiment-controls');
+    if(weatherLab){
+      weatherLab.classList.add('tf-weather-context','tf-context-panel');
+      anchor=appendAfter(anchor,weatherLab);
+      weatherLab.style.setProperty('order','-999.5','important');
+      weatherLab.style.setProperty('grid-column','1 / -1','important');
+    }
+    if(context.weather && context.weather!==weatherLab && context.weather!==deck && context.weather!==lawnA && context.weather!==lawnB){
       anchor=appendAfter(anchor,context.weather);
     }
     // Locate the exact laboratory by its visible title, including inside
@@ -270,8 +281,8 @@
     if(scenarios)anchor=appendAfter(anchor,scenarios);
 
     const {site,weather}=findContextPanels();
-    if(weather && weather!==context.weather && weather!==labPanel)anchor=appendAfter(anchor,weather);
-    if(site && site!==context.weather && site!==labPanel)anchor=appendAfter(anchor,site);
+    if(weather && weather!==context.weather && weather!==labPanel && weather!==weatherLab)anchor=appendAfter(anchor,weather);
+    if(site && site!==context.weather && site!==labPanel && site!==weatherLab)anchor=appendAfter(anchor,site);
     if(replay)anchor=appendAfter(anchor,replay);
     if(memory)anchor=appendAfter(anchor,memory);
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
