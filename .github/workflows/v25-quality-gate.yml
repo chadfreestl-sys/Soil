@@ -1,0 +1,15 @@
+name: Turfarium v25 quality gate
+on:
+  push:
+    branches: [turfarium-v25-development]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  static-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check simulator anchors and assets
+        run: python3 scripts/check_v25.py
