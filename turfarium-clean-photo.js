@@ -1,4 +1,4 @@
-/* Force the current clean soil photo after legacy layout scripts run, then load current living motion + biology + environmental drift + weather layers once. */
+/* Force the current clean soil photo after legacy layout scripts run, then load current living motion + biology + environmental drift + weather + treatment layout layers once. */
 (()=>{'use strict';
 const image='file_00000000f35481f5a24a1191fdf2adf5.png?v=clean-4';
 function apply(){
@@ -22,6 +22,9 @@ function inject(){
  }
  if(!document.querySelector('script[src*="weather-first-v23.js"]')){
   const s=document.createElement('script');s.dataset.tfWeatherLoader='1';s.src='weather-first-v23.js?v=24.1.0';document.body.appendChild(s);
+ }
+ if(!document.querySelector('script[src*="turfarium-treatment-layout-v1.js"]')){
+  const s=document.createElement('script');s.dataset.tfTreatmentLayoutLoader='1';s.src='turfarium-treatment-layout-v1.js?v=1.0.0';document.body.appendChild(s);
  }
 }
 apply();
