@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='20.27';
+  const VERSION='20.28';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -139,6 +139,7 @@
   };
 
   const collapseStorageKey=panel=>`turfarium-collapse-v${VERSION}:${keyForPanel(panel)}`;
+  const defaultOpenPanel=panel=>panel===lawnA||panel===lawnB;
 
   const setCollapsed=(panel,collapsed,save=true)=>{
     const button=panel.querySelector(':scope > .tf-collapse-toggle');
@@ -172,8 +173,7 @@
     body.id=`${id}-body`;
     panel.append(button,body);
 
-    // Every section starts closed in v20.27. Session state only applies after a user opens/closes it.
-    let collapsed=true;
+    let collapsed=!defaultOpenPanel(panel);
     try{
       const saved=sessionStorage.getItem(collapseStorageKey(panel));
       if(saved==='1'||saved==='0')collapsed=saved==='1';
@@ -196,7 +196,7 @@
   const decorateCollapsibles=()=>{
     const {site,weather}=findContextPanels();
     const panels=[
-      deck,lawnA,lawnB,findManagementPanel(),byId('scenario-onboarding'),weather,site,
+      lawnA,lawnB,deck,findManagementPanel(),byId('scenario-onboarding'),weather,site,
       document.querySelector('.tf-replay-bar'),byId('scenario-memory'),byId('diagnostic-lens'),timeline,
       ...deepPanels()
     ].filter(Boolean);
@@ -218,13 +218,13 @@
     lawnB.classList.add('tf-visual-priority');
     if(replay)replay.classList.add('tf-replay-primary');
 
-    // User-defined top-to-bottom order:
-    // Profile/Time -> Lawn A -> Lawn B -> Treatments -> Scenario -> Weather -> Site/Turf
+    // Lawn comparison is the primary visual workspace.
+    // Lawn A -> Lawn B -> Profile/Time -> Treatments -> Scenario -> Weather -> Site/Turf
     // -> Replay -> Save/Compare -> Diagnostic -> What Changed -> deeper science/lab panels.
-    if(grid.firstElementChild!==deck)grid.prepend(deck);
-    let anchor=deck;
-    anchor=appendAfter(anchor,lawnA);
+    if(grid.firstElementChild!==lawnA)grid.prepend(lawnA);
+    let anchor=lawnA;
     anchor=appendAfter(anchor,lawnB);
+    anchor=appendAfter(anchor,deck);
     if(management)anchor=appendAfter(anchor,management);
     anchor=appendAfter(anchor,scenarios);
 
@@ -296,10 +296,10 @@
   idle(loadLivingProfiles,1000);
 
   const badge=document.querySelector('.build-badge');
-  if(badge)badge.textContent='v20.27 · ORDERED + CLOSED';
+  if(badge)badge.textContent='v20.28 · LAWNS FIRST';
   const topBadge=document.querySelector('header .badge');
   if(topBadge){
     const mode=(document.documentElement.dataset.audience||'professional');
-    topBadge.textContent=`v20.27 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+    topBadge.textContent=`v20.28 · ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
   }
 })();
