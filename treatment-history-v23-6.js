@@ -34,8 +34,8 @@ function install(){
     toggle.querySelector('.tf-history-chevron').textContent=open?'▾':'▸';
    });
   }
-  panel.style.order='-997';
-  panel.style.gridColumn='auto';
+  panel.style.setProperty('order','-997','important');
+  panel.style.setProperty('grid-column','auto','important');
   const body=panel.querySelector('.tf-history-body');
   if(history.parentElement!==body)body.appendChild(history);
   history.dataset.tfHistoryWrapped='1';
