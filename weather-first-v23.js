@@ -1,4 +1,4 @@
-/* Turfarium Weather-first layout v23.2. No simulation engine changes. */
+/* Turfarium Weather-first layout v23.3. Weather lab stays open by default above the lawn management controls. */
 (()=>{
 'use strict';
 const LABEL='Site, Season & Weather Lab';
@@ -23,11 +23,11 @@ const find=()=>{
    if(title && title.textContent!==LABEL)title.textContent=LABEL;
    if(!panel.dataset.tfWeatherInitialized){
      panel.dataset.tfWeatherInitialized='1';
-     panel.classList.add('tf-panel-collapsed');
-     toggle.setAttribute('aria-expanded','false');
-     if(body){body.hidden=true;body.style.setProperty('display','none','important');}
+     panel.classList.remove('tf-panel-collapsed');
+     toggle.setAttribute('aria-expanded','true');
+     if(body){body.hidden=false;body.style.removeProperty('display');}
      const chevron=toggle.querySelector('.tf-collapse-chevron');
-     if(chevron)chevron.textContent='▸';
+     if(chevron)chevron.textContent='▾';
    }
  }
  if(toggle && body && !panel.dataset.tfWeatherClickHook){
