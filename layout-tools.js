@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='21.3';
+  const VERSION='21.6';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -17,6 +17,7 @@
     const style=document.createElement('style');
     style.id='tf-profile-first-rule';
     style.textContent=`
+      .simulation-grid.tf-primary-workspace > .tf-weather-context {order:-999.5!important;grid-column:1/-1!important}
       .simulation-grid.tf-primary-workspace > #profile-control-deck {order:-1000!important;grid-column:1/-1!important}
       .simulation-grid.tf-primary-workspace > #lawn-a-panel {order:-999!important}
       .simulation-grid.tf-primary-workspace > #lawn-b-panel {order:-998!important}
@@ -233,6 +234,10 @@
     // Keep profile controls directly above the two lawn images.
     if(grid.firstElementChild!==deck)grid.prepend(deck);
     let anchor=deck;
+    const context=findContextPanels();
+    if(context.weather && context.weather!==deck && context.weather!==lawnA && context.weather!==lawnB){
+      anchor=appendAfter(anchor,context.weather);
+    }
     anchor=appendAfter(anchor,lawnA);
     anchor=appendAfter(anchor,lawnB);
     if(management)anchor=appendAfter(anchor,management);
@@ -240,7 +245,7 @@
     if(scenarios)anchor=appendAfter(anchor,scenarios);
 
     const {site,weather}=findContextPanels();
-    if(weather)anchor=appendAfter(anchor,weather);
+    if(weather && weather!==context.weather)anchor=appendAfter(anchor,weather);
     if(site)anchor=appendAfter(anchor,site);
     if(replay)anchor=appendAfter(anchor,replay);
     if(memory)anchor=appendAfter(anchor,memory);
