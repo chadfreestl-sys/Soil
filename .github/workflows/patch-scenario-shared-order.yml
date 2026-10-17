@@ -1,0 +1,46 @@
+name: Patch scenario shared order
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-scenario-shared-order.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Put Shared Starting Conditions directly below Scenario Quick Start
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scenario-tools.js')
+          s=p.read_text()
+          old="    anchor.insertAdjacentElement('afterend',onboarding);"
+          new="""    anchor.insertAdjacentElement('afterend',onboarding);
+    // Keep the real Shared Starting Conditions card immediately below Quick Start.
+    // Anchor it by the unique Turf species control so this does not depend on titles or later layout wrappers.
+    const sharedStart=byId('grass')?.closest('section.card,.card');
+    if(sharedStart && sharedStart!==onboarding){
+      sharedStart.id=sharedStart.id||'shared-starting-conditions';
+      sharedStart.classList.add('tf-shared-start-top');
+      onboarding.insertAdjacentElement('afterend',sharedStart);
+    }"""
+          if new in s:
+              print('scenario-tools.js already patched')
+          elif old in s:
+              s=s.replace(old,new,1)
+              p.write_text(s)
+              print('patched scenario-tools.js')
+          else:
+              raise SystemExit('target insertion point not found')
+          PY
+      - name: Commit patch
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scenario-tools.js
+          git commit -m "Place shared starting conditions directly under quick start"
+          git push
