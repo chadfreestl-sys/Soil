@@ -1,4 +1,4 @@
-/* Turfarium science pairs v1 — compact normally-closed science modules in two desktop columns. */
+/* Turfarium science pairs v1.1 — root-zone physics above earthworm; physics open by default. */
 (()=>{'use strict';
 const byTitle=pattern=>{
   for(const h of document.querySelectorAll('h1,h2,h3,h4,.tf-collapse-title')){
@@ -8,25 +8,27 @@ const byTitle=pattern=>{
   }
   return null;
 };
-function makeClosed(panel){
-  if(!panel)return;
+function setDefault(panel,open){
+  if(!panel||panel.dataset.tfScienceDefaulted==='1')return;
   const existingToggle=panel.querySelector(':scope > .tf-collapse-toggle');
   const existingBody=panel.querySelector(':scope > .tf-collapse-body');
   if(existingToggle&&existingBody){
-    panel.classList.add('tf-panel-collapsed');
-    existingToggle.setAttribute('aria-expanded','false');
-    const chev=existingToggle.querySelector('.tf-collapse-chevron');if(chev)chev.textContent='▸';
-    existingBody.hidden=true;
+    panel.classList.toggle('tf-panel-collapsed',!open);
+    existingToggle.setAttribute('aria-expanded',String(open));
+    const chev=existingToggle.querySelector('.tf-collapse-chevron');if(chev)chev.textContent=open?'▾':'▸';
+    existingBody.hidden=!open;
+    panel.dataset.tfScienceDefaulted='1';
     return;
   }
   const heading=panel.querySelector(':scope > h1,:scope > h2,:scope > h3,:scope > h4,:scope > .head h2,:scope > .head h3');
   const title=(heading?.textContent||'Details').trim();
   const body=document.createElement('div');body.className='tf-collapse-body';
   while(panel.firstChild)body.appendChild(panel.firstChild);
-  const btn=document.createElement('button');btn.type='button';btn.className='tf-collapse-toggle';btn.setAttribute('aria-expanded','false');
-  btn.innerHTML='<span class="tf-collapse-title"></span><span class="tf-collapse-chevron" aria-hidden="true">▸</span>';
+  const btn=document.createElement('button');btn.type='button';btn.className='tf-collapse-toggle';btn.setAttribute('aria-expanded',String(open));
+  btn.innerHTML='<span class="tf-collapse-title"></span><span class="tf-collapse-chevron" aria-hidden="true"></span>';
   btn.querySelector('.tf-collapse-title').textContent=title;
-  panel.append(btn,body);panel.classList.add('tf-collapsible-panel','tf-panel-collapsed');panel.dataset.tfCollapsible='1';body.hidden=true;
+  btn.querySelector('.tf-collapse-chevron').textContent=open?'▾':'▸';
+  panel.append(btn,body);panel.classList.add('tf-collapsible-panel');panel.classList.toggle('tf-panel-collapsed',!open);panel.dataset.tfCollapsible='1';panel.dataset.tfScienceDefaulted='1';body.hidden=!open;
   btn.addEventListener('click',()=>{const closed=panel.classList.toggle('tf-panel-collapsed');btn.setAttribute('aria-expanded',String(!closed));btn.querySelector('.tf-collapse-chevron').textContent=closed?'▸':'▾';body.hidden=closed;});
 }
 function arrange(){
@@ -38,14 +40,17 @@ function arrange(){
   let wrap=document.getElementById('tf-science-pairs');
   if(!wrap){
     wrap=document.createElement('div');wrap.id='tf-science-pairs';wrap.className='tf-science-pairs';
-    earth.parentNode?.insertBefore(wrap,earth);
+    physics.parentNode?.insertBefore(wrap,physics);
   }
-  for(const p of [earth,food,physics,seaweed]){
+  for(const p of [physics,food,earth,seaweed]){
     p.classList.add('tf-science-pair-card');
     p.style.removeProperty('order');p.style.removeProperty('grid-column');p.style.removeProperty('width');p.style.removeProperty('max-width');
-    if(p.parentElement!==wrap)wrap.appendChild(p);
-    makeClosed(p);
+    wrap.appendChild(p);
   }
+  setDefault(physics,true);
+  setDefault(earth,false);
+  setDefault(food,false);
+  setDefault(seaweed,false);
   return true;
 }
 const style=document.createElement('style');style.id='tf-science-pairs-style';style.textContent=`
