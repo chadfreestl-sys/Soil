@@ -1,0 +1,43 @@
+name: Patch shared-start loader
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-shared-layout-loader.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch lab loader
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('lab.html')
+          s = p.read_text(encoding='utf-8')
+          s = re.sub(r'turfarium-clean-photo\.js\?v=[^"\']+', 'turfarium-clean-photo.js?v=3.1', s)
+          tag = '<script defer src="turfarium-shared-start-layout-v1.js?v=2.0.0"></script>'
+          if tag not in s:
+              s = s.replace('</body></html>', tag + '</body></html>')
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit patch if needed
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo 'No patch needed.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lab.html
+          git commit -m 'Directly load shared starting conditions layout'
+          git push
