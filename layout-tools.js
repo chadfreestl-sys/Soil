@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='23.4';
+  const VERSION='23.5';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -199,7 +199,7 @@
   };
 
   const collapseStorageKey=panel=>`turfarium-collapse-v${VERSION}:${keyForPanel(panel)}`;
-  const defaultOpenPanel=panel=>panel===lawnA||panel===lawnB||panel===deck||panel===findManagementPanel()||panel===timeline;
+  const defaultOpenPanel=panel=>panel===lawnA||panel===lawnB||panel===deck||panel===findManagementPanel()||panel===timeline||panel.id==='scenario-memory'||panel.classList.contains('tf-replay-bar');
 
   const setCollapsed=(panel,collapsed,save=true)=>{
     const button=panel.querySelector(':scope > .tf-collapse-toggle');
