@@ -1,4 +1,4 @@
-/* Turfarium header polish v1.1 — compact, single-source masthead for desktop and mobile. */
+/* Turfarium header polish v1.2 — bolder desktop masthead, no desktop audience badge. */
 (()=>{'use strict';
 function polish(){
   const header=document.querySelector('main > header')||document.querySelector('header');
@@ -19,23 +19,23 @@ function polish(){
   return true;
 }
 const style=document.createElement('style');
-style.id='tf-header-polish-v11-style';
+style.id='tf-header-polish-v12-style';
 style.textContent=`
 header.tf-header-polish{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important;padding:20px 22px!important;flex-wrap:nowrap!important}
 .tf-header-main{display:flex;align-items:center;gap:14px;min-width:0;flex:1 1 auto}
-.tf-header-logo{width:66px;height:66px;flex:0 0 66px;display:block}
-.tf-header-copy{min-width:0}.tf-header-copy h1{margin:0!important;color:#0d613b!important;font-size:clamp(2rem,4vw,2.7rem)!important;line-height:.98!important;letter-spacing:-.045em!important;font-weight:900!important;white-space:nowrap}
-.tf-header-product-line{margin-top:6px;color:#20392d!important;font-size:.98rem;font-weight:850;line-height:1.2}
-.tf-header-sub{margin:4px 0 0!important;color:#617469!important;font-size:.8rem!important;line-height:1.35!important}
-.tf-header-mode-badge{flex:0 0 auto;white-space:nowrap!important;padding:8px 13px!important;font-weight:850!important}
+.tf-header-logo{width:70px;height:70px;flex:0 0 70px;display:block}
+.tf-header-copy{min-width:0}.tf-header-copy h1{margin:0!important;color:#0d613b!important;font-size:clamp(2.2rem,4.4vw,3rem)!important;line-height:.95!important;letter-spacing:-.055em!important;font-weight:950!important;white-space:nowrap;text-shadow:0 .35px 0 currentColor}
+.tf-header-product-line{margin-top:6px;color:#20392d!important;font-size:1rem;font-weight:900!important;line-height:1.18;letter-spacing:-.015em}
+.tf-header-sub{margin:4px 0 0!important;color:#617469!important;font-size:.8rem!important;line-height:1.35!important;font-weight:650!important}
+.tf-header-mode-badge{display:none!important}
 @media(max-width:620px){
   header.tf-header-polish{display:block!important;padding:16px 16px 15px!important}
   .tf-header-main{gap:11px;align-items:center}
   .tf-header-logo{width:54px;height:54px;flex-basis:54px}
-  .tf-header-copy h1{font-size:1.85rem!important;white-space:normal}
-  .tf-header-product-line{font-size:.84rem!important;margin-top:4px!important;line-height:1.22!important}
-  .tf-header-sub{font-size:.72rem!important;margin-top:3px!important;line-height:1.25!important}
-  .tf-header-mode-badge{display:inline-flex!important;margin:12px 0 0 65px!important;padding:6px 10px!important;font-size:.74rem!important}
+  .tf-header-copy h1{font-size:1.85rem!important;white-space:normal;font-weight:900!important;letter-spacing:-.045em!important;text-shadow:none}
+  .tf-header-product-line{font-size:.84rem!important;margin-top:4px!important;line-height:1.22!important;font-weight:850!important}
+  .tf-header-sub{font-size:.72rem!important;margin-top:3px!important;line-height:1.25!important;font-weight:600!important}
+  .tf-header-mode-badge{display:inline-flex!important;margin:12px 0 0 65px!important;padding:6px 10px!important;font-size:.74rem!important;font-weight:850!important}
 }
 @media(max-width:390px){
   .tf-header-copy h1{font-size:1.7rem!important}
