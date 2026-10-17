@@ -27,10 +27,10 @@ jobs:
           s = re.sub(r'turfarium-shared-start-layout-v1\.js\?v=[^"\']+', 'turfarium-shared-start-layout-v1.js?v=3.0.0', s)
           s = re.sub(r'inviting-theme\.js\?v=[^"\']+', 'inviting-theme.js?v=20.6', s)
           s = re.sub(r'turfarium-science-pairs-v1\.js\?v=[^"\']+', 'turfarium-science-pairs-v1.js?v=1.2.0', s)
-          s = re.sub(r'turfarium-header-polish-v1\.js\?v=[^"\']+', 'turfarium-header-polish-v1.js?v=1.0.0', s)
+          s = re.sub(r'turfarium-header-polish-v1\.js\?v=[^"\']+', 'turfarium-header-polish-v1.js?v=1.1.0', s)
           shared_tag = '<script defer src="turfarium-shared-start-layout-v1.js?v=3.0.0"></script>'
           science_tag = '<script defer src="turfarium-science-pairs-v1.js?v=1.2.0"></script>'
-          header_tag = '<script defer src="turfarium-header-polish-v1.js?v=1.0.0"></script>'
+          header_tag = '<script defer src="turfarium-header-polish-v1.js?v=1.1.0"></script>'
           if 'turfarium-shared-start-layout-v1.js' not in s:
               s = s.replace('</body></html>', shared_tag + '</body></html>')
           if 'turfarium-science-pairs-v1.js' not in s:
@@ -49,5 +49,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add lab.html
-          git commit -m 'Load optimized Turfarium header'
+          git commit -m 'Load mobile-safe Turfarium header'
           git push
