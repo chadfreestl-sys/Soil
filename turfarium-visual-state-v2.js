@@ -1,16 +1,16 @@
-/* Turfarium Visual State Engine v2.0 — model-driven, independent Lawn A/B photographic succession. */
+/* Turfarium Visual State Engine v2.1 — model-driven, independent Lawn A/B photographic succession using uploaded state images. */
 (()=>{'use strict';
 const BASE='file_00000000f35481f5a24a1191fdf2adf5.png?v=clean-4';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const STATES=[
- {id:'stressed',min:0,candidates:['images/states/state-01-stressed.webp','images/states/state-01-stressed.jpg','images/states/state-01-stressed.png']},
- {id:'poor',min:16,candidates:['images/states/state-02-poor.webp','images/states/state-02-poor.jpg','images/states/state-02-poor.png']},
- {id:'fair',min:29,candidates:['images/states/state-03-fair.webp','images/states/state-03-fair.jpg','images/states/state-03-fair.png']},
- {id:'recovering',min:43,candidates:['images/states/state-04-recovering.webp','images/states/state-04-recovering.jpg','images/states/state-04-recovering.png']},
- {id:'healthy',min:57,candidates:['images/states/state-05-healthy.webp','images/states/state-05-healthy.jpg','images/states/state-05-healthy.png']},
- {id:'very-healthy',min:71,candidates:['images/states/state-06-very-healthy.webp','images/states/state-06-very-healthy.jpg','images/states/state-06-very-healthy.png']},
- {id:'lush',min:83,candidates:['images/states/state-07-lush.webp','images/states/state-07-lush.jpg','images/states/state-07-lush.png']},
- {id:'elite',min:93,candidates:['images/states/state-08-elite-no-weeds.webp','images/states/state-08-elite-no-weeds.jpg','images/states/state-08-elite-no-weeds.png']}
+ {id:'stressed',min:0,candidates:['images/file_00000000f60c81f58e1f9164cec9f9d0.png']},
+ {id:'poor',min:16,candidates:['images/file_00000000c8c081f5b7ed6a85460fa618.png']},
+ {id:'fair',min:29,candidates:['images/file_00000000a54881f58bfef47b7c6a0230.png']},
+ {id:'recovering',min:43,candidates:['images/file_000000005a7081f5876ddfa2f162213a.png']},
+ {id:'healthy',min:57,candidates:['images/file_00000000069081f5b11be646372e7edc.png']},
+ {id:'very-healthy',min:71,candidates:['images/file_00000000ccd481f5abee6788cae396de.png']},
+ {id:'lush',min:83,candidates:['images/file_00000000450881f5a5dda37355d92399.png']},
+ {id:'elite',min:93,candidates:['images/file_00000000712881f58d3f5b83c6615429.png']}
 ];
 const loaded=new Map(),stateByKey=new Map();
 function readMetric(key,label,fallback=50){
@@ -65,6 +65,6 @@ function boot(){for(const key of ['A','B']){
  const kpi=document.getElementById('kpi'+key),d=document.getElementById('day'+key);if(kpi&&!kpi.dataset.tfVisualStateObserved){kpi.dataset.tfVisualStateObserved='1';new MutationObserver(()=>requestAnimationFrame(()=>refresh(key))).observe(kpi,{subtree:true,childList:true,characterData:true});}if(d&&!d.dataset.tfVisualStateObserved){d.dataset.tfVisualStateObserved='1';new MutationObserver(()=>requestAnimationFrame(()=>refresh(key))).observe(d,{subtree:true,childList:true,characterData:true});}refresh(key);
  }}
 const style=document.createElement('style');style.id='tf-visual-state-v2-style';style.textContent=`.photo-stage{position:relative}.photo-stage>img.tf-state-photo{border-radius:inherit}@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}`;if(!document.getElementById(style.id))document.head.appendChild(style);
-window.TurfariumVisualState={version:'2.0',states:STATES,score,refresh,refreshAll:boot};
+window.TurfariumVisualState={version:'2.1',states:STATES,score,refresh,refreshAll:boot};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();window.addEventListener('load',boot,{once:true});[250,700,1500,3000].forEach(ms=>setTimeout(boot,ms));
 })();
