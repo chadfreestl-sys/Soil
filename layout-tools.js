@@ -353,7 +353,7 @@
     // Move the actual interactive panels into the compact deck, before the lawn images.
     const replaySlot=deck.querySelector('.profile-replay-slot');
     const saveSlot=deck.querySelector('.profile-save-slot');
-    if(replay&&replaySlot&&replay.parentElement!==replaySlot)replaySlot.appendChild(replay);
+    // Replay is owned by the unified progression strip; never move it back into the profile deck.
     // Keep Save / Compare directly beneath both lawn photos, outside the playback strip.
     if(memory){
       memory.style.setProperty('grid-column','1 / -1','important');
