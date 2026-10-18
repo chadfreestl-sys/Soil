@@ -1,4 +1,4 @@
-/* Turfarium compact playback strip: reuse existing controls and listeners. */
+/* Turfarium unified time advance + replay strip, directly above lawn comparisons. */
 (()=>{'use strict';
  const style=document.createElement('style');
  style.id='tf-playback-strip-style';
@@ -110,7 +110,42 @@
       visit._tfHideTimer=setTimeout(()=>visit.classList.remove('tf-show-status'),4000);
     }
   }
-  if(!replayBar)replay.hidden=true;else {replay.hidden=false;replayBar.classList.remove('tf-panel-collapsed');replayBar.querySelectorAll('[hidden].tf-collapse-body').forEach(el=>el.hidden=false);}
+  // Keep time advance and replay in the SAME bar directly above both lawns.
+  // If the full replay module is unavailable, expose a safe time-advance replay
+  // that advances via the original buttons (never fabricates saved history).
+  if(!replayBar){
+    let control=replay.querySelector('#tf-replay-advance');
+    if(!control){
+      control=document.createElement('button');
+      control.id='tf-replay-advance';control.type='button';
+      control.textContent='▶ Replay';
+      control.title='Automatically advance the simulation in 7-day steps. This does not rewind previous states.';
+      replay.appendChild(control);
+      control.addEventListener('click',()=>{
+        if(replay._timer){
+          clearInterval(replay._timer);replay._timer=null;
+          control.textContent='▶ Replay';return;
+        }
+        const stepButton=()=>[...time.querySelectorAll('button[data-step]')].find(b=>Number(b.dataset.step)===7&&!b.disabled);
+        if(!stepButton()){control.title='7-day advance is unavailable';return;}
+        control.textContent='■ Stop';
+        const tick=()=>{
+          const b=stepButton();
+          if(!b){clearInterval(replay._timer);replay._timer=null;control.textContent='▶ Replay';return;}
+          b.click();
+        };
+        tick();
+        replay._timer=setInterval(tick,1700);
+        setTimeout(()=>{if(replay._timer){clearInterval(replay._timer);replay._timer=null;control.textContent='▶ Replay';}},30000);
+      });
+    }
+    replay.hidden=false;
+  }else{
+    replay.querySelector('#tf-replay-advance')?.remove();
+    replay.hidden=false;
+    replayBar.classList.remove('tf-panel-collapsed');
+    replayBar.querySelectorAll('[hidden].tf-collapse-body').forEach(el=>el.hidden=false);
+  }
   if(!report)changes.hidden=true;else changes.hidden=false;
   if(!note)visit.hidden=true;else visit.hidden=false;
  }
