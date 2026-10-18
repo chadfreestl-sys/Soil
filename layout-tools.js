@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='24.0';
+  const VERSION='24.1';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -347,7 +347,12 @@
     const replaySlot=deck.querySelector('.profile-replay-slot');
     const saveSlot=deck.querySelector('.profile-save-slot');
     if(replay&&replaySlot&&replay.parentElement!==replaySlot)replaySlot.appendChild(replay);
-    if(memory&&saveSlot&&memory.parentElement!==saveSlot)saveSlot.appendChild(memory);
+    // Keep Save / Compare directly beneath both lawn photos, outside the playback strip.
+    if(memory){
+      memory.style.setProperty('grid-column','1 / -1','important');
+      memory.style.setProperty('order','-997','important');
+      if(memory.parentElement!==grid||memory.previousElementSibling!==lawnB)lawnB.insertAdjacentElement('afterend',memory);
+    }
     const changesSlot=deck.querySelector('.profile-changes-slot');
     const report=byId('tf-what-changed-details')||byId('changeReport');
     if(report&&changesSlot&&report.parentElement!==changesSlot)changesSlot.appendChild(report);
