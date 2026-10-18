@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'turfarium-seasonal-32.zip'
+      - 'Turfarium_32_Seasonal_Images.zip'
   workflow_dispatch:
 
 permissions:
@@ -23,8 +24,8 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import zipfile,hashlib,json
-          archive=Path('turfarium-seasonal-32.zip')
-          if not archive.exists():
+          archive=next((p for p in [Path('turfarium-seasonal-32.zip'),Path('Turfarium_32_Seasonal_Images.zip')] if p.exists()),None)
+          if archive is None:
               print('Seasonal archive is not present; nothing to install.')
               raise SystemExit(0)
           with zipfile.ZipFile(archive) as z:
@@ -49,12 +50,14 @@ jobs:
           print('Validated and extracted all 32 seasonal Turfarium photos.')
           PY
       - name: Commit installed artwork and remove import archive
-        if: hashFiles('turfarium-seasonal-32.zip') != ''
+        if: hashFiles('turfarium-seasonal-32.zip', 'Turfarium_32_Seasonal_Images.zip') != ''
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add images/seasons
-          git rm -f turfarium-seasonal-32.zip
+          for archive in turfarium-seasonal-32.zip Turfarium_32_Seasonal_Images.zip; do
+            if [ -f "$archive" ]; then git rm -f "$archive"; fi
+          done
           git commit -m 'Install 32 seasonal Turfarium photos (8 states x 4 seasons)'
           git push
