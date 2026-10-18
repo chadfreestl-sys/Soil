@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='23.9';
+  const VERSION='24.0';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -80,6 +80,7 @@
       <div class="profile-time-slot"></div>
       <div class="profile-replay-slot"></div>
       <div class="profile-save-slot"></div>
+      <div class="profile-changes-slot"></div>
     </div>`;
 
   const viewSlot=deck.querySelector('.profile-view-slot');
@@ -347,6 +348,9 @@
     const saveSlot=deck.querySelector('.profile-save-slot');
     if(replay&&replaySlot&&replay.parentElement!==replaySlot)replaySlot.appendChild(replay);
     if(memory&&saveSlot&&memory.parentElement!==saveSlot)saveSlot.appendChild(memory);
+    const changesSlot=deck.querySelector('.profile-changes-slot');
+    const report=byId('tf-what-changed-details')||byId('changeReport');
+    if(report&&changesSlot&&report.parentElement!==changesSlot)changesSlot.appendChild(report);
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
 
     for(const panel of deepPanels()){
