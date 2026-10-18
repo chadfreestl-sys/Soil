@@ -22,7 +22,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import zipfile,hashlib,json,re
+          import zipfile,hashlib,json
           archive=Path('turfarium-seasonal-32.zip')
           if not archive.exists():
               print('Seasonal archive is not present; nothing to install.')
@@ -35,9 +35,11 @@ jobs:
               expected={(season,i) for season in ('spring','summer','fall','winter') for i in range(1,9)}
               found={(entry['season'],entry['index']) for entry in photos}
               assert found==expected, 'A season or visual state is missing'
+              states=('stressed','poor','fair','recovering','healthy','very-healthy','lush','elite')
               for entry in photos:
                   path=entry['path']
-                  assert re.fullmatch(r'images/seasons/(spring|summer|fall|winter)/state-0[1-8]-(stressed|poor|fair|recovering|healthy|very-healthy|lush|elite)\\.webp',path),path
+                  expected_path=f"images/seasons/{entry['season']}/state-{entry['index']:02}-{states[entry['index']-1]}.webp"
+                  assert path==expected_path, 'Unexpected photo path: '+path
                   content=z.read(path)
                   assert content[:4]==b'RIFF' and content[8:12]==b'WEBP', 'Invalid WebP file: '+path
                   assert hashlib.sha256(content).hexdigest()==entry['sha256'], 'Checksum mismatch: '+path
