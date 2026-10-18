@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='23.5';
+  const VERSION='23.6';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -56,7 +56,7 @@
     document.head.appendChild(polish);
   }
 
-  const loadCss=(key,href)=>{
+  // One vertical control flow: profile viewer, time, replay, then save.\n  if(!document.getElementById('tf-deck-stack-v236')){\n    const st=document.createElement('style');st.id='tf-deck-stack-v236';\n    st.textContent=`#profile-control-deck .profile-deck-grid{display:flex!important;flex-direction:column!important;gap:12px!important}#profile-control-deck .profile-deck-grid>div{width:100%;min-width:0}#profile-control-deck .profile-replay-slot:empty,#profile-control-deck .profile-save-slot:empty{display:none}#profile-control-deck .profile-replay-slot>*,#profile-control-deck .profile-save-slot>*{width:100%;margin:0!important;box-sizing:border-box}#profile-control-deck .profile-replay-slot .tf-collapse-body,#profile-control-deck .profile-save-slot .tf-collapse-body{width:100%}#profile-control-deck .profile-step-row{display:flex;flex-wrap:wrap;gap:8px}#profile-control-deck .profile-step-row button{flex:1 1 120px}`;\n    document.head.appendChild(st);\n  }\n\n  const loadCss=(key,href)=>{
     if(document.querySelector(`link[data-${key}]`))return;
     const css=document.createElement('link');
     css.rel='stylesheet';
@@ -77,7 +77,7 @@
     </div>
     <div class="profile-deck-grid">
       <div class="profile-view-slot"></div>
-      <div class="profile-time-slot"></div>
+      <div class="profile-time-slot"></div>\n      <div class="profile-replay-slot"></div>\n      <div class="profile-save-slot"></div>
     </div>`;
 
   const viewSlot=deck.querySelector('.profile-view-slot');
