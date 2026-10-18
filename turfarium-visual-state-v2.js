@@ -1,4 +1,4 @@
-/* Turfarium Visual State Engine v2.1 — model-driven, independent Lawn A/B photographic succession using uploaded state images. */
+/* Turfarium Visual State Engine v2.2 — model-driven, independent Lawn A/B photographic succession using uploaded state images. */
 (()=>{'use strict';
 const BASE='file_00000000f35481f5a24a1191fdf2adf5.png?v=clean-4';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -12,7 +12,7 @@ const STATES=[
  {id:'lush',min:83,candidates:['images/file_00000000450881f5a5dda37355d92399.png']},
  {id:'elite',min:93,candidates:['images/file_00000000712881f58d3f5b83c6615429.png']}
 ];
-const loaded=new Map(),stateByKey=new Map();
+const loaded=new Map(),stateByKey=new Map(),requestByKey=new Map();
 function readMetric(key,label,fallback=50){
  const text=document.getElementById('kpi'+key)?.textContent||'';
  const re=new RegExp(label+'[^0-9]{0,90}([0-9]+(?:[.]?[0-9]+)?)','i');
@@ -46,25 +46,28 @@ async function assetFor(st){for(const src of st.candidates){const ok=await canLo
 function ensureLayers(stage,photo){
  stage.dataset.tfVisualEngine='v2';
  let top=stage.querySelector('img.tf-state-photo');
- if(!top){top=photo.cloneNode(false);top.className='soil-photo tf-state-photo';top.removeAttribute('id');top.removeAttribute('srcset');top.setAttribute('aria-hidden','true');Object.assign(top.style,{position:'absolute',inset:'0',width:'100%',height:'100%',objectFit:'cover',opacity:'0',transition:'opacity 1.8s ease',zIndex:'1',pointerEvents:'none'});photo.style.position='relative';photo.style.zIndex='0';stage.insertBefore(top,photo.nextSibling);}
+ if(!top){top=photo.cloneNode(false);top.className='tf-state-photo';top.setAttribute('alt','');top.removeAttribute('id');top.removeAttribute('srcset');top.setAttribute('aria-hidden','true');Object.assign(top.style,{position:'absolute',inset:'0',width:'100%',height:'100%',objectFit:'cover',opacity:'0',transition:'opacity 1.8s ease',zIndex:'1',pointerEvents:'none'});photo.style.position='relative';photo.style.zIndex='0';stage.insertBefore(top,photo.nextSibling);}
  return top;
 }
 async function refresh(key){
+ const request=(requestByKey.get(key)||0)+1;requestByKey.set(key,request);
  const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel'),stage=panel?.querySelector('.photo-stage'),photo=stage?.querySelector('img.soil-photo:not(.tf-state-photo)');if(!stage||!photo)return;
  const top=ensureLayers(stage,photo),s=score(key),wanted=hysteretic(key,stateForScore(s),s),prev=stateByKey.get(key);
  stage.dataset.tfVisualScore=String(s);stage.dataset.tfVisualState=wanted.id;stage.dataset.tfVisualDay=String(day(key));
  if(prev===wanted.id&&top.dataset.tfStateReady==='1')return;
  const src=await assetFor(wanted);
+ if(request!==requestByKey.get(key))return;
+ const notify=()=>stage.dispatchEvent(new CustomEvent('turfarium:visual-photo',{detail:{key,src,state:wanted.id,score:s}}));
  stateByKey.set(key,wanted.id);
- if(src===BASE){photo.src=BASE;photo.removeAttribute('srcset');top.style.opacity='0';top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;return;}
- if(top.src.endsWith(src)||top.getAttribute('src')===src){top.style.opacity='1';top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;return;}
+ if(src===BASE){photo.src=BASE;photo.removeAttribute('srcset');top.style.opacity='0';top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;notify();return;}
+ if(top.src.endsWith(src)||top.getAttribute('src')===src){top.style.opacity='1';top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;notify();return;}
  top.style.opacity='0';
- const preload=new Image();preload.onload=()=>{top.src=src;top.removeAttribute('srcset');requestAnimationFrame(()=>requestAnimationFrame(()=>{top.style.opacity='1'}));top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;};preload.src=src;
+ const preload=new Image();preload.onload=()=>{if(request!==requestByKey.get(key))return;top.src=src;top.removeAttribute('srcset');notify();requestAnimationFrame(()=>requestAnimationFrame(()=>{top.style.opacity='1'}));top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;};preload.src=src;
 }
 function boot(){for(const key of ['A','B']){
  const kpi=document.getElementById('kpi'+key),d=document.getElementById('day'+key);if(kpi&&!kpi.dataset.tfVisualStateObserved){kpi.dataset.tfVisualStateObserved='1';new MutationObserver(()=>requestAnimationFrame(()=>refresh(key))).observe(kpi,{subtree:true,childList:true,characterData:true});}if(d&&!d.dataset.tfVisualStateObserved){d.dataset.tfVisualStateObserved='1';new MutationObserver(()=>requestAnimationFrame(()=>refresh(key))).observe(d,{subtree:true,childList:true,characterData:true});}refresh(key);
  }}
 const style=document.createElement('style');style.id='tf-visual-state-v2-style';style.textContent=`.photo-stage{position:relative}.photo-stage>img.tf-state-photo{border-radius:inherit}@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}`;if(!document.getElementById(style.id))document.head.appendChild(style);
-window.TurfariumVisualState={version:'2.1',states:STATES,score,refresh,refreshAll:boot};
+window.TurfariumVisualState={version:'2.2',states:STATES,score,refresh,refreshAll:boot};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();window.addEventListener('load',boot,{once:true});[250,700,1500,3000].forEach(ms=>setTimeout(boot,ms));
 })();
