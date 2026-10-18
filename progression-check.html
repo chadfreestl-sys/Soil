@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Turfarium | Photo Progression Check</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#1b2b21;background:#e9eee5}
+*{box-sizing:border-box}body{margin:0;padding:20px 14px 40px}
+main{max-width:1200px;margin:auto}
+header{background:#123e2c;color:#fff;padding:24px;border-radius:18px;box-shadow:0 5px 24px #1b352430}
+h1{font-size:clamp(1.65rem,4vw,2.4rem);letter-spacing:-.04em;margin:0 0 10px}
+header p{color:#e0f1e4;max-width:880px;line-height:1.5;margin:0}
+a.back{display:inline-block;color:#143a26;background:#fff;margin-top:17px;padding:10px 14px;border-radius:10px;font-weight:800;text-decoration:none}
+.note{background:#fff8e4;color:#493c23;border:1px solid #deca8b;border-radius:12px;margin:18px 0;padding:13px 15px;font-size:.91rem;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.card{border:1px solid #aebfab;border-radius:15px;overflow:hidden;background:#fff;box-shadow:0 3px 10px #123e2c14}
+.head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:12px 14px;font-weight:850}
+.head small{font-size:.75rem;color:#405747;font-weight:750}
+figure{margin:0;aspect-ratio:1.65;background:#e3e7db;position:relative;overflow:hidden}
+figure img{width:100%;height:100%;object-fit:cover;display:block}
+.status{font-weight:800;font-size:.77rem;letter-spacing:.02em;color:#2a633e;padding:11px 14px}
+.status[data-error="1"]{color:#a6332a}
+footer{margin-top:20px;font-size:.88rem;line-height:1.5;color:#37503d}
+@media(min-width:820px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}body{padding:25px}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+</style></head><body><main>
+<header><h1>🌱 Turfarium · 8 photographic progression states</h1>
+<p>Independent visual asset check, ordered from stressed to elite. These are illustrative visual categories selected by modeled conditions—not a prediction that grass automatically improves with elapsed time.</p>
+<a class="back" href="/lab">← Return to simulator</a></header>
+<div class="note"><strong>How to read this:</strong> All eight photos should appear as distinct stages. Green status confirms image access. If a lawn inside the simulator remains visually identical to the other, compare its <strong>Photo stage</strong> text under each image: identical modeled scores can correctly select the same photo. Different treatments or management are needed to test divergent outcomes.</div>
+<section class="grid" id="grid" aria-label="Eight progression images"></section>
+<footer>Diagnostic only. This gallery does not change either lawn, treatments, or timeline. Image states are linked to the currently deployed Turfarium v2.3 engine.</footer>
+</main>
+<script src="/turfarium-visual-state-v2.js?v=2.3.0"></script>
+<script>
+(()=>{
+const grid=document.getElementById('grid'),states=window.TurfariumVisualState?.states||[];
+if(!states.length){grid.textContent='The visual-state script did not load. Please refresh after deployment.';return}
+states.forEach((state,index)=>{
+ const card=document.createElement('article');card.className='card';
+ const title=state.id==='very-healthy'?'Very healthy':state.id[0].toUpperCase()+state.id.slice(1);
+ const head=document.createElement('div');head.className='head';const name=document.createElement('strong');name.textContent=String(index+1).padStart(2,'0')+' · '+title;const rank=document.createElement('small');rank.textContent='Index '+state.min+'+';head.append(name,rank);
+ const fig=document.createElement('figure'),img=document.createElement('img');img.alt=title+' turf and soil cross-section';img.loading='lazy';fig.append(img);
+ const status=document.createElement('div');status.className='status';status.textContent='Checking image…';
+ card.append(head,fig,status);grid.append(card);
+ const local='/'+state.candidates[0],backup='https://raw.githubusercontent.com/chadfreestl-sys/Soil/main/'+state.candidates[0];
+ img.onload=()=>{status.textContent=(img.src.includes('raw.githubusercontent.com')?'✓ GitHub backup':'✓ Local asset')+' · image loaded';status.dataset.error='0'};
+ img.onerror=()=>{if(img.dataset.backup==='1'){status.textContent='✕ Could not load image';status.dataset.error='1';return}img.dataset.backup='1';img.src=backup};
+ img.src=local;
+});
+})();
+</script>
+</body></html>
