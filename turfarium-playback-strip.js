@@ -30,6 +30,12 @@
  #timeline-workflow.tf-time-controls-moved{display:none!important}
  @media(max-width:850px){#tf-playback-strip .tf-strip-time{flex:1 1 100%!important}#tf-playback-strip .tf-strip-row{justify-content:flex-start}#tf-playback-strip .tf-strip-time button{font-size:.75rem!important;padding:5px 4px!important}}
  #tf-playback-strip .tf-strip-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+ .simulation-grid.tf-primary-workspace>.tf-history-standalone{order:-996!important;grid-column:auto!important;margin:0 0 6px!important;padding:7px 9px!important}
+ .simulation-grid.tf-primary-workspace>.tf-history-standalone .tf-history-toggle{min-height:34px!important;padding:6px 10px!important;font-size:.8rem!important}
+ #tf-playback-strip .tf-strip-visit.tf-climate-status{display:none!important}
+ #tf-playback-strip .tf-strip-visit.tf-climate-status.tf-show-status{display:block!important}
+ #tf-playback-strip .tf-strip-replay .tf-collapse-body{display:block!important;max-height:none!important;visibility:visible!important}
+
  #tf-playback-strip .tf-strip-label{font-weight:800;color:#1a4330;font-size:.85rem;white-space:nowrap}
  #tf-playback-strip .tf-strip-time{display:flex;align-items:center;flex:1 1 330px;gap:6px;flex-wrap:wrap;min-width:0}
  #tf-playback-strip .tf-strip-time button{flex:1 1 75px!important;width:auto!important;min-width:65px!important;min-height:38px!important;padding:7px 9px!important;margin:0!important;font-size:.82rem!important}
@@ -71,6 +77,17 @@
     if(drawer.parentElement!==grid||drawer.previousElementSibling!==b)b.insertAdjacentElement('afterend',drawer);
     if(memory.parentElement!==drawer)drawer.appendChild(memory);
   }
+  // Keep treatment history BELOW the paired lawn photographs and save drawer.
+  // The existing history cards retain their own click handlers and content.
+  let historyAnchor=document.getElementById('tf-save-drawer')||b;
+  for(const key of ['a','b']){
+    const history=document.getElementById('tf-history-card-'+key);
+    if(!history||!historyAnchor)continue;
+    history.style.setProperty('order','-996','important');
+    history.style.setProperty('grid-column','auto','important');
+    if(history.parentElement!==grid||history.previousElementSibling!==historyAnchor)historyAnchor.insertAdjacentElement('afterend',history);
+    historyAnchor=history;
+  }
   const time=strip.querySelector('.tf-strip-time'),replay=strip.querySelector('.tf-strip-replay'),changes=strip.querySelector('.tf-strip-changes'),visit=strip.querySelector('.tf-strip-visit');
   const steps=document.querySelector('#timeline-workflow .row:has([data-step])')||document.querySelector('#profile-control-deck .profile-step-row')||document.querySelector('.profile-step-row');
   if(steps&&steps.parentElement!==time)time.appendChild(steps);
@@ -82,7 +99,18 @@
   if(report&&report.parentElement!==changes)changes.appendChild(report);
   const note=document.getElementById('visit');
   if(note&&note.parentElement!==visit)visit.appendChild(note);
-  if(!replayBar)replay.hidden=true;else replay.hidden=false;
+  // A permanent climate message obscures the lawn images. Show it briefly on change.
+  if(note){
+    const isClimate=/^Climate scenario changed/i.test((note.textContent||'').trim());
+    visit.classList.toggle('tf-climate-status',isClimate);
+    if(isClimate&&visit.dataset.lastClimateText!==note.textContent){
+      visit.dataset.lastClimateText=note.textContent;
+      visit.classList.add('tf-show-status');
+      clearTimeout(visit._tfHideTimer);
+      visit._tfHideTimer=setTimeout(()=>visit.classList.remove('tf-show-status'),4000);
+    }
+  }
+  if(!replayBar)replay.hidden=true;else {replay.hidden=false;replayBar.classList.remove('tf-panel-collapsed');replayBar.querySelectorAll('[hidden].tf-collapse-body').forEach(el=>el.hidden=false);}
   if(!report)changes.hidden=true;else changes.hidden=false;
   if(!note)visit.hidden=true;else visit.hidden=false;
  }
