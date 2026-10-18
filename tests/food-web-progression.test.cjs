@@ -1,0 +1,22 @@
+/* Run: node tests/food-web-progression.test.cjs */
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const window={};
+vm.runInNewContext(fs.readFileSync('js/food-web.js','utf8'),{window});
+const {baseline,advance}=window.TurfariumFoodWeb;
+const run=(environment,months=12)=>{let state=baseline();for(let i=0;i<months;i++)state=advance(state,environment,30);return state};
+const base=baseline(),normal=run({}),organic=run({organicInputs:90,clippings:85,rootExudates:65});
+const dry=run({moisture:10,temperatureF:95}),flooded=run({moisture:98,oxygen:12}),winter=run({temperatureF:30});
+const disturbed=run({disturbance:90});
+assert.deepEqual(advance(base,{},0),base,'zero days must not progress');
+assert(organic.bacteria>normal.bacteria,'organic input supports bacteria');
+assert(organic.fungi>normal.fungi,'organic input supports fungi');
+assert(organic.carbon>normal.carbon,'organic input increases carbon proxy');
+assert(organic.carbon<75,'one year must not saturate carbon proxy');
+assert(dry.earthworms<normal.earthworms,'drought suppresses earthworms');
+assert(flooded.earthworms<normal.earthworms,'waterlogging suppresses earthworms');
+assert(winter.earthworms<normal.earthworms,'winter suppresses earthworm activity');
+assert(disturbed.aggregation<normal.aggregation,'disturbance reduces aggregation');
+for(const state of [normal,organic,dry,flooded,winter,disturbed])for(const [k,v] of Object.entries(state))assert(Number.isFinite(v)&&v>=0&&v<=100,k+' bounded');
+console.log('PASS: zero-day, organic, carbon, drought, waterlogging, winter, disturbance, bounded outputs');
