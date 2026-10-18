@@ -6,7 +6,7 @@ function install(){
  const b=document.getElementById('lawn-b-panel');
  const grid=a?.parentElement;
  if(!a||!b||!grid||b.parentElement!==grid)return;
- let anchor=b;
+ let anchor=document.getElementById('tf-save-drawer')||b;
  for(const key of ['A','B']){
   const lawn=key==='A'?a:b;
   const history=lawn.querySelector('.recent-applications');
@@ -34,7 +34,7 @@ function install(){
     toggle.querySelector('.tf-history-chevron').textContent=open?'▾':'▸';
    });
   }
-  panel.style.setProperty('order','-997','important');
+  panel.style.setProperty('order','-996','important');
   panel.style.setProperty('grid-column','auto','important');
   const body=panel.querySelector('.tf-history-body');
   if(history.parentElement!==body)body.appendChild(history);
@@ -46,4 +46,5 @@ function install(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
 window.addEventListener('load',install,{once:true});
 setTimeout(install,850);setTimeout(install,2600);
+setTimeout(install,4200);
 })();
