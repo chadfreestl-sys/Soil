@@ -1,4 +1,4 @@
-/* Turfarium Visual State Engine v2.3 — model-driven, independent Lawn A/B photographic succession using uploaded state images. */
+/* Turfarium Visual State Engine v2.4 — model-driven, independent Lawn A/B photographic succession using uploaded state images. */
 (()=>{'use strict';
 const BASE='file_00000000f35481f5a24a1191fdf2adf5.png?v=clean-4';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -35,6 +35,12 @@ function score(key){
   (100-compaction)*.07+(100-saltStress)*.04+rootMass*.08;
  return Math.round(clamp(raw,0,100));
 }
+function seasonFor(key){
+ const selected=Number(document.getElementById('startMonth')?.value);
+ const startMonth=Number.isInteger(selected)&&selected>=0&&selected<=11?selected:2;
+ const m=(startMonth+Math.floor((day(key)%365)/30.4167))%12;
+ return m<=1||m===11?'winter':m<=4?'spring':m<=7?'summer':'fall';
+}
 function stateForScore(s){let out=STATES[0];for(const st of STATES)if(s>=st.min)out=st;return out}
 function hysteretic(key,target,s){
  const prev=stateByKey.get(key);if(!prev)return target;
@@ -48,13 +54,20 @@ function canLoad(src){
  if(loaded.has(src))return loaded.get(src);
  const p=new Promise(resolve=>{const im=new Image();im.onload=()=>resolve(src);im.onerror=()=>resolve(null);im.src=src;});loaded.set(src,p);return p;
 }
-async function assetFor(st){
- for(const path of st.candidates){
-  for(const src of [path,'https://raw.githubusercontent.com/chadfreestl-sys/Soil/main/'+path]){
-   if(await canLoad(src))return src;
+async function assetFor(st,season){
+ const index=STATES.findIndex(x=>x.id===st.id)+1;
+ const path='images/seasons/'+season+'/state-'+String(index).padStart(2,'0')+'-'+st.id+'.webp';
+ // Prefer a season-specific photograph, then fall back to the existing eight-state library.
+ // The 32-image pack is installed atomically by a GitHub workflow; until then, classic photos remain usable.
+ for(const src of [path,'https://raw.githubusercontent.com/chadfreestl-sys/Soil/main/'+path]){
+  if(await canLoad(src))return {src,seasonal:true};
+ }
+ for(const candidate of st.candidates){
+  for(const src of [candidate,'https://raw.githubusercontent.com/chadfreestl-sys/Soil/main/'+candidate]){
+   if(await canLoad(src))return {src,seasonal:false};
   }
  }
- return null;
+ return {src:null,seasonal:false};
 }
 function labelState(id){return id==='very-healthy'?'Very healthy':id[0].toUpperCase()+id.slice(1)}
 function setIndicator(stage,message,unavailable=false){
@@ -77,14 +90,16 @@ async function refresh(key){
  if(!stage||!photo)return;
  const top=ensureLayers(stage,photo);
  const s=score(key),wanted=hysteretic(key,stateForScore(s),s),previous=stateByKey.get(key);
- const headline='Photo stage: '+labelState(wanted.id)+' · visual index '+s;
+ const season=seasonFor(key),priorSeason=stage.dataset.tfVisualSeason;
+ const headline='Photo stage: '+labelState(wanted.id)+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+s;
  stage.dataset.tfVisualScore=String(s);
  stage.dataset.tfVisualState=wanted.id;
  stage.dataset.tfVisualDay=String(day(key));
+ stage.dataset.tfVisualSeason=season;
  // Continuous appearance adjustments make conditions within one stage distinguishable.
  const strength=clamp((s-50)/50,-1,1);
  top.style.filter='saturate('+(1+strength*.14).toFixed(3)+') brightness('+(1+strength*.065).toFixed(3)+')';
- if(previous===wanted.id&&top.dataset.tfStateReady==='1'){
+ if(previous===wanted.id&&priorSeason===season&&top.dataset.tfStateReady==='1'){
   setIndicator(stage,headline+(stage.dataset.tfVisualAsset==='missing'?' · image unavailable':''),stage.dataset.tfVisualAsset==='missing');
   return;
  }
@@ -92,21 +107,21 @@ async function refresh(key){
  stateByKey.set(key,wanted.id);
  top.dataset.tfStateReady='0';
  setIndicator(stage,headline+' · loading photo…');
- const src=await assetFor(wanted);
+ const asset=await assetFor(wanted,season),src=asset.src;
  if(request!==requestByKey.get(key))return;
  const finalSrc=src||BASE;
- const notify=()=>stage.dispatchEvent(new CustomEvent('turfarium:visual-photo',{detail:{key,src:finalSrc,state:wanted.id,score:s}}));
+ const notify=()=>stage.dispatchEvent(new CustomEvent('turfarium:visual-photo',{detail:{key,src:finalSrc,state:wanted.id,score:s,season}}));
  if(!src){
   stage.dataset.tfVisualAsset='missing';
   top.style.opacity='0';top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;
   setIndicator(stage,headline+' · image unavailable',true);
   notify();return;
  }
- stage.dataset.tfVisualAsset=src.startsWith('http')?'github':'local';
+ stage.dataset.tfVisualAsset=(asset.seasonal?'seasonal-':'classic-')+(src.startsWith('http')?'github':'local');
  const finish=()=>{
   if(request!==requestByKey.get(key))return;
   top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;
-  setIndicator(stage,headline);
+  setIndicator(stage,headline+(asset.seasonal?'':' · classic photo'));
   notify();
   requestAnimationFrame(()=>requestAnimationFrame(()=>{if(request===requestByKey.get(key))top.style.opacity='1'}));
  };
@@ -123,10 +138,11 @@ async function refresh(key){
  top.removeAttribute('srcset');top.src=src;
  if(top.complete&&top.naturalWidth>0)finish();
 }
-function boot(){for(const key of ['A','B']){
+function boot(){const monthControl=document.getElementById('startMonth');if(monthControl&&!monthControl.dataset.tfSeasonObserved){monthControl.dataset.tfSeasonObserved='1';monthControl.addEventListener('change',()=>{for(const k of ['A','B'])refresh(k)});}
+ for(const key of ['A','B']){
  const kpi=document.getElementById('kpi'+key),d=document.getElementById('day'+key);if(kpi&&!kpi.dataset.tfVisualStateObserved){kpi.dataset.tfVisualStateObserved='1';new MutationObserver(()=>requestAnimationFrame(()=>refresh(key))).observe(kpi,{subtree:true,childList:true,characterData:true});}if(d&&!d.dataset.tfVisualStateObserved){d.dataset.tfVisualStateObserved='1';new MutationObserver(()=>requestAnimationFrame(()=>refresh(key))).observe(d,{subtree:true,childList:true,characterData:true});}refresh(key);
  }}
 const style=document.createElement('style');style.id='tf-visual-state-v2-style';style.textContent=`.photo-stage{position:relative}#lawn-a-panel .photo-stage>img.tf-state-photo,#lawn-b-panel .photo-stage>img.tf-state-photo{display:block;visibility:visible;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;border-radius:inherit}.tf-visual-indicator{margin:7px 2px 2px;font-size:.71rem;font-weight:800;line-height:1.3;color:#244b37;letter-spacing:.005em}.tf-visual-indicator[data-tf-image-unavailable=\"1\"]{color:#9b3323}@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}`;if(!document.getElementById(style.id))document.head.appendChild(style);
-window.TurfariumVisualState={version:'2.3',states:STATES,score,refresh,refreshAll:boot};
+window.TurfariumVisualState={version:'2.4',states:STATES,score,refresh,refreshAll:boot};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();window.addEventListener('load',boot,{once:true});[250,700,1500,3000].forEach(ms=>setTimeout(boot,ms));
 })();
