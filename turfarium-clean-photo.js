@@ -16,7 +16,7 @@ function inject(){
  if(!document.querySelector('script[src*="turfarium-treatment-layout-v1.js"]')){const s=document.createElement('script');s.dataset.tfTreatmentLayoutLoader='1';s.src='turfarium-treatment-layout-v1.js?v=1.0.0';document.body.appendChild(s);}
  if(!document.querySelector('script[src*="turfarium-default-month-v1.js"]')){const s=document.createElement('script');s.dataset.tfDefaultMonthLoader='1';s.src='turfarium-default-month-v1.js?v=1.0.0';document.body.appendChild(s);}
  if(!document.querySelector('script[src*="turfarium-shared-start-layout-v1.js"]')){const s=document.createElement('script');s.dataset.tfSharedStartLayoutLoader='1';s.src='turfarium-shared-start-layout-v1.js?v=2.0.0';document.body.appendChild(s);}
- if(!document.querySelector('script[src*="turfarium-visual-state-v2.js"]')){const s=document.createElement('script');s.dataset.tfVisualStateLoader='1';s.src='turfarium-visual-state-v2.js?v=2.4.0';document.body.appendChild(s);}
+ if(!document.querySelector('script[src*="turfarium-visual-state-v2.js"]')){const s=document.createElement('script');s.dataset.tfVisualStateLoader='1';s.src='turfarium-visual-state-v2.js?v=3.0.0';document.body.appendChild(s);}
 }
 apply();addEventListener('load',()=>{apply();setTimeout(inject,160)});
 const observer=new MutationObserver(apply);for(const id of ['lawn-a-panel','lawn-b-panel']){const p=document.getElementById(id);if(p)observer.observe(p,{subtree:true,attributes:true,attributeFilter:['src','srcset'],childList:true});}
