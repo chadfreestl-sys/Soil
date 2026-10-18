@@ -8,6 +8,13 @@
  .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1001!important}
  .simulation-grid.tf-primary-workspace>#lawn-a-panel{order:-999!important}
  .simulation-grid.tf-primary-workspace>#lawn-b-panel{order:-998!important}
+ .simulation-grid.tf-primary-workspace>#tf-save-drawer{grid-column:1/-1!important;order:-997!important;margin:0 0 8px!important;padding:0!important;border:1px solid #b8cbb9;border-radius:10px;overflow:hidden;background:#f5f8f2}
+ #tf-save-drawer>summary{display:list-item;list-style:revert;list-style-position:inside;cursor:pointer;padding:9px 13px;font-weight:800;font-size:.82rem;line-height:1.25;color:#193d2c;min-height:18px}
+ #tf-save-drawer[open]>summary{border-bottom:1px solid #c8d8c8}
+ #tf-save-drawer>#scenario-memory{display:block!important;width:100%!important;max-width:none!important;box-sizing:border-box!important;margin:0!important;padding:10px 12px!important;border:0!important;box-shadow:none!important}
+ #tf-save-drawer:not([open])>#scenario-memory{display:none!important}
+ #tf-save-drawer #scenario-memory .scenario-head{margin-bottom:6px!important}
+ #tf-save-drawer #scenario-memory button{max-width:160px!important;width:auto!important;min-height:32px!important;padding:6px 10px!important;font-size:.8rem!important}
  #tf-playback-strip .tf-strip-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
  #tf-playback-strip .tf-strip-label{font-weight:800;color:#1a4330;font-size:.85rem;white-space:nowrap}
  #tf-playback-strip .tf-strip-time{display:flex;align-items:center;flex:1 1 330px;gap:6px;flex-wrap:wrap;min-width:0}
@@ -37,9 +44,18 @@
   const b=document.getElementById('lawn-b-panel');
   const memory=document.getElementById('scenario-memory');
   if(memory&&b){
-    memory.style.setProperty('grid-column','1 / -1','important');
-    memory.style.setProperty('order','-997','important');
-    if(memory.parentElement!==grid||memory.previousElementSibling!==b)b.insertAdjacentElement('afterend',memory);
+    let drawer=document.getElementById('tf-save-drawer');
+    if(!drawer){
+      drawer=document.createElement('details');
+      drawer.id='tf-save-drawer';
+      drawer.className='tf-save-drawer';
+      const summary=document.createElement('summary');
+      summary.textContent='Save state · Load · Compare';
+      drawer.appendChild(summary);
+      drawer.open=false;
+    }
+    if(drawer.parentElement!==grid||drawer.previousElementSibling!==b)b.insertAdjacentElement('afterend',drawer);
+    if(memory.parentElement!==drawer)drawer.appendChild(memory);
   }
   const time=strip.querySelector('.tf-strip-time'),replay=strip.querySelector('.tf-strip-replay'),changes=strip.querySelector('.tf-strip-changes'),visit=strip.querySelector('.tf-strip-visit');
   const steps=document.querySelector('#timeline-workflow .row:has([data-step])')||document.querySelector('#profile-control-deck .profile-step-row')||document.querySelector('.profile-step-row');
