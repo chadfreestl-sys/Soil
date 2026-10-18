@@ -203,6 +203,22 @@ async function refresh(key){
  stage.dataset.tfVisualRawScore=String(rawScore);
  stage.dataset.tfVisualState=id;
  stage.dataset.tfVisualSeason=season;
+ // Continuous within-stage visual response. State photos are discrete; this
+ // makes gradual changes visible between photo thresholds without swapping to
+ // an unjustifiably healthier image.
+ const previousVisual=Number(stage.dataset.tfLastRenderedScore);
+ const scoreDelta=Number.isFinite(previousVisual)?n-previousVisual:0;
+ const dayNow=Number(snapshot.day??dayFor(key))||0;
+ const growth=clamp((n-20)/75,0,1);
+ const green=clamp(0.88+growth*.24,0.82,1.16);
+ const saturation=clamp(.83+growth*.37,.78,1.22);
+ const brightness=clamp(.95+growth*.11,.90,1.10);
+ photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+')');
+ photo.style.setProperty('transition','filter 1.2s ease');
+ stage.dataset.tfLastRenderedScore=String(n);
+ stage.dataset.tfLastRenderedDay=String(dayNow);
+ stage.dataset.tfVisualProgress='score '+n+' / day '+dayNow;
+
  if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature){
   indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+n+(establishmentOffset?' · early-spring canopy adjustment':''));
   return;
