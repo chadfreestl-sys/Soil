@@ -1,0 +1,58 @@
+name: Import Turfarium seasonal artwork
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'turfarium-seasonal-32.zip'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Validate and install 32 optimized seasonal photos
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,hashlib,json,re
+          archive=Path('turfarium-seasonal-32.zip')
+          if not archive.exists():
+              print('Seasonal archive is not present; nothing to install.')
+              raise SystemExit(0)
+          with zipfile.ZipFile(archive) as z:
+              manifest=json.loads(z.read('SEASONAL-IMAGE-MAP.json'))
+              assert manifest['imageCount']==32, 'Expected 32 images'
+              photos=manifest['images']
+              assert len(photos)==32, 'Manifest photo count mismatch'
+              expected={(season,i) for season in ('spring','summer','fall','winter') for i in range(1,9)}
+              found={(entry['season'],entry['index']) for entry in photos}
+              assert found==expected, 'A season or visual state is missing'
+              for entry in photos:
+                  path=entry['path']
+                  assert re.fullmatch(r'images/seasons/(spring|summer|fall|winter)/state-0[1-8]-(stressed|poor|fair|recovering|healthy|very-healthy|lush|elite)\\.webp',path),path
+                  content=z.read(path)
+                  assert content[:4]==b'RIFF' and content[8:12]==b'WEBP', 'Invalid WebP file: '+path
+                  assert hashlib.sha256(content).hexdigest()==entry['sha256'], 'Checksum mismatch: '+path
+                  dst=Path(path)
+                  dst.parent.mkdir(parents=True,exist_ok=True)
+                  dst.write_bytes(content)
+          print('Validated and extracted all 32 seasonal Turfarium photos.')
+          PY
+      - name: Commit installed artwork and remove import archive
+        if: hashFiles('turfarium-seasonal-32.zip') != ''
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add images/seasons
+          git rm -f turfarium-seasonal-32.zip
+          git commit -m 'Install 32 seasonal Turfarium photos (8 states x 4 seasons)'
+          git push
