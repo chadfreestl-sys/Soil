@@ -15,6 +15,20 @@
  #tf-save-drawer:not([open])>#scenario-memory{display:none!important}
  #tf-save-drawer #scenario-memory .scenario-head{margin-bottom:6px!important}
  #tf-save-drawer #scenario-memory button{max-width:160px!important;width:auto!important;min-height:32px!important;padding:6px 10px!important;font-size:.8rem!important}
+ #tf-playback-strip{padding:7px 10px!important;margin-bottom:3px!important}
+ #tf-playback-strip .tf-strip-row{gap:6px 9px!important}
+ #tf-playback-strip .tf-strip-label{font-size:.78rem!important;flex:0 0 auto}
+ #tf-playback-strip .tf-strip-time{flex:1 1 410px!important;gap:5px!important;flex-wrap:nowrap!important}
+ #tf-playback-strip .tf-strip-time .row{display:flex!important;flex-wrap:nowrap!important;gap:5px!important;width:100%!important;margin:0!important;padding:0!important}
+ #tf-playback-strip .tf-strip-time button{flex:1 1 0!important;min-width:0!important;width:auto!important;min-height:34px!important;padding:5px 7px!important;font-size:.78rem!important;white-space:nowrap}
+ #tf-playback-strip .tf-strip-replay button{min-height:34px!important;padding:5px 8px!important;font-size:.78rem!important}
+ #tf-playback-strip .tf-strip-changes{flex:0 0 auto!important;min-width:0!important}
+ #tf-playback-strip #tf-what-changed-details>summary{padding:8px 10px!important;font-size:.78rem!important}
+ #tf-playback-strip .tf-strip-visit{flex:0 1 auto!important;font-size:.72rem!important;margin:0!important;white-space:normal}
+ #tf-playback-strip .tf-strip-visit:empty{display:none!important}
+ #tf-playback-strip .tf-strip-time .row .note{display:none!important}
+ #timeline-workflow.tf-time-controls-moved{display:none!important}
+ @media(max-width:850px){#tf-playback-strip .tf-strip-time{flex:1 1 100%!important}#tf-playback-strip .tf-strip-row{justify-content:flex-start}#tf-playback-strip .tf-strip-time button{font-size:.75rem!important;padding:5px 4px!important}}
  #tf-playback-strip .tf-strip-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
  #tf-playback-strip .tf-strip-label{font-weight:800;color:#1a4330;font-size:.85rem;white-space:nowrap}
  #tf-playback-strip .tf-strip-time{display:flex;align-items:center;flex:1 1 330px;gap:6px;flex-wrap:wrap;min-width:0}
@@ -60,6 +74,8 @@
   const time=strip.querySelector('.tf-strip-time'),replay=strip.querySelector('.tf-strip-replay'),changes=strip.querySelector('.tf-strip-changes'),visit=strip.querySelector('.tf-strip-visit');
   const steps=document.querySelector('#timeline-workflow .row:has([data-step])')||document.querySelector('#profile-control-deck .profile-step-row')||document.querySelector('.profile-step-row');
   if(steps&&steps.parentElement!==time)time.appendChild(steps);
+  const timeline=document.getElementById('timeline-workflow');
+  if(timeline&&steps&&time.contains(steps))timeline.classList.add('tf-time-controls-moved');
   const replayBar=document.querySelector('.tf-replay-bar');
   if(replayBar&&replayBar.parentElement!==replay)replay.appendChild(replayBar);
   const report=document.getElementById('tf-what-changed-details')||document.getElementById('changeReport');
