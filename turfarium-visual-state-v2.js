@@ -177,16 +177,23 @@ async function refresh(key){
  if(!stage||!photo)return;
  const {overlay,indicator}=ensureStage(stage,photo);
  const snapshot=snapshotFor(key);
- const n=scoreFrom(snapshot);
+ const rawScore=scoreFrom(snapshot);
  const month=monthFor(key,snapshot),season=SEASONS[month];
+ // March-start photos should not imply a fully established summer canopy at day zero.
+ // Visual-only early-season adjustment fades gradually; underlying vigor is unchanged.
+ const elapsed=Math.max(0,Number(snapshot.day??dayFor(key))||0);
+ const earlySpring=month===2||month===3||month===4;
+ const establishmentOffset=earlySpring?Math.round(16*Math.max(0,1-elapsed/90)):0;
+ const n=clamp(rawScore-establishmentOffset,0,100);
  const index=stateWithHysteresis(key,stateForScore(n),n);
  const id=STATES[index].id,signature=season+'/'+id;
  stage.dataset.tfVisualDay=String(snapshot.day??dayFor(key));
  stage.dataset.tfVisualScore=String(n);
+ stage.dataset.tfVisualRawScore=String(rawScore);
  stage.dataset.tfVisualState=id;
  stage.dataset.tfVisualSeason=season;
  if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature){
-  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · index '+n);
+  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+n+(establishmentOffset?' · early-spring canopy adjustment':''));
   return;
  }
  const request=(pending.get(key)||0)+1;
