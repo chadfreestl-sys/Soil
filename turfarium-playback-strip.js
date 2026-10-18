@@ -4,6 +4,10 @@
  style.id='tf-playback-strip-style';
  style.textContent=`
  .simulation-grid.tf-primary-workspace>#tf-playback-strip{grid-column:1/-1!important;order:-1001!important;min-width:0!important;margin:0 0 4px!important;padding:10px 12px!important;border-radius:12px!important}
+ .simulation-grid.tf-primary-workspace>#scenario-memory{grid-column:1/-1!important;order:-997!important;margin:4px 0 10px!important}
+ .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1001!important}
+ .simulation-grid.tf-primary-workspace>#lawn-a-panel{order:-999!important}
+ .simulation-grid.tf-primary-workspace>#lawn-b-panel{order:-998!important}
  #tf-playback-strip .tf-strip-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
  #tf-playback-strip .tf-strip-label{font-weight:800;color:#1a4330;font-size:.85rem;white-space:nowrap}
  #tf-playback-strip .tf-strip-time{display:flex;align-items:center;flex:1 1 330px;gap:6px;flex-wrap:wrap;min-width:0}
@@ -30,6 +34,13 @@
   if(!strip){strip=document.createElement('section');strip.id='tf-playback-strip';strip.className='card wide';
     strip.innerHTML='<div class="tf-strip-row"><span class="tf-strip-label">⏱ Progression</span><div class="tf-strip-time"></div><div class="tf-strip-replay"></div><div class="tf-strip-changes"></div><p class="tf-strip-visit"></p></div>';}
   if(strip.parentElement!==grid||strip.nextElementSibling!==a)grid.insertBefore(strip,a);
+  const b=document.getElementById('lawn-b-panel');
+  const memory=document.getElementById('scenario-memory');
+  if(memory&&b){
+    memory.style.setProperty('grid-column','1 / -1','important');
+    memory.style.setProperty('order','-997','important');
+    if(memory.parentElement!==grid||memory.previousElementSibling!==b)b.insertAdjacentElement('afterend',memory);
+  }
   const time=strip.querySelector('.tf-strip-time'),replay=strip.querySelector('.tf-strip-replay'),changes=strip.querySelector('.tf-strip-changes'),visit=strip.querySelector('.tf-strip-visit');
   const steps=document.querySelector('#timeline-workflow .row:has([data-step])')||document.querySelector('#profile-control-deck .profile-step-row')||document.querySelector('.profile-step-row');
   if(steps&&steps.parentElement!==time)time.appendChild(steps);
