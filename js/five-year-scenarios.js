@@ -6,7 +6,7 @@ const clamp=(x)=>Math.max(0,Math.min(100,x));
 const CHECKPOINTS=[0,30,90,180,365,730,1825];
 const SEASONAL_TEMP=[37,41,51,62,71,79,84,82,74,62,49,40];
 function weather(day){const month=(2+Math.floor(day/30.4375))%12;const temperatureF=SEASONAL_TEMP[month];const dry=month>=5&&month<=7;return {month,temperatureF,moisture:dry?40:55,oxygen:dry?72:67,pH:6.3};}
-function management(name,day){const organic=name==='biological';return {clippings:organic?80:45,organicInputs:organic?65:10,disturbance:organic?5:12,rootExudates:organic?58:52};}
+function management(name,day){const organic=name==='biological';return {clippings:organic?80:45,organicInputs:organic?38:10,disturbance:organic?5:12,rootExudates:organic?58:52};}
 function step(state,day,days,name){const env={...weather(day+days/2),...management(name,day)};const food=F.advance(state.food,env,days);
  const heat=Math.max(0,env.temperatureF-79)/25;
  const moistureStress=Math.abs(env.moisture-55)/55;
