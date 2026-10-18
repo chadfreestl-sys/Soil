@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='23.7';
+  const VERSION='23.9';
   const byId=id=>document.getElementById(id);
   const grid=document.querySelector('.simulation-grid');
   const lawnA=byId('lawn-a-panel');
@@ -77,7 +77,9 @@
     </div>
     <div class="profile-deck-grid">
       <div class="profile-view-slot"></div>
-      <div class="profile-time-slot"></div>\n      <div class="profile-replay-slot"></div>\n      <div class="profile-save-slot"></div>
+      <div class="profile-time-slot"></div>
+      <div class="profile-replay-slot"></div>
+      <div class="profile-save-slot"></div>
     </div>`;
 
   const viewSlot=deck.querySelector('.profile-view-slot');
@@ -340,8 +342,11 @@
     const {site,weather}=findContextPanels();
     if(weather && weather!==context.weather && weather!==labPanel && weather!==weatherLab)anchor=appendAfter(anchor,weather);
     if(site && site!==context.weather && site!==labPanel && site!==weatherLab)anchor=appendAfter(anchor,site);
-    if(replay)anchor=appendAfter(anchor,replay);
-    if(memory)anchor=appendAfter(anchor,memory);
+    // Move the actual interactive panels into the compact deck, before the lawn images.
+    const replaySlot=deck.querySelector('.profile-replay-slot');
+    const saveSlot=deck.querySelector('.profile-save-slot');
+    if(replay&&replaySlot&&replay.parentElement!==replaySlot)replaySlot.appendChild(replay);
+    if(memory&&saveSlot&&memory.parentElement!==saveSlot)saveSlot.appendChild(memory);
     if(diagnostic)anchor=appendAfter(anchor,diagnostic);
 
     for(const panel of deepPanels()){
