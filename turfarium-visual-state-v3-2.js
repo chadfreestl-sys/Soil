@@ -186,6 +186,17 @@ async function refresh(key){
  const establishmentOffset=earlySpring?Math.round(16*Math.max(0,1-elapsed/90)):0;
  const n=clamp(rawScore-establishmentOffset,0,100);
  const index=stateWithHysteresis(key,stateForScore(n),n);
+ // Continuous, model-linked visual progression even when the photo stays in the
+ // same categorical image band. Small increments should be subtle, not dramatic.
+ const growth=clamp((n-22)/65,0,1);
+ const seasonalWarmth=season==='summer'?1.025:season==='winter'?.94:1;
+ const saturation=(.78+growth*.38)*seasonalWarmth;
+ const brightness=.96+growth*.09;
+ const contrast=1.02+growth*.035;
+ photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+') contrast('+contrast.toFixed(3)+')','important');
+ photo.style.transition='filter 1.1s ease';
+ stage.dataset.tfVisualFilter='saturation '+saturation.toFixed(2)+'; brightness '+brightness.toFixed(2);
+
  const id=STATES[index].id,signature=season+'/'+id;
  stage.dataset.tfVisualDay=String(snapshot.day??dayFor(key));
  stage.dataset.tfVisualScore=String(n);
@@ -238,7 +249,7 @@ css.textContent='.photo-stage{position:relative}'+
  '@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
- version:'3.2',states:STATES,score,refresh,refreshAll:boot,
+ version:'3.3',states:STATES,score,refresh,refreshAll:boot,
  getStatus:key=>{const st=elements(key).stage;return st?{
   state:st.dataset.tfVisualState,season:st.dataset.tfVisualSeason,score:st.dataset.tfVisualScore,
   asset:st.dataset.tfVisualAsset,src:st.dataset.tfVisualSource,ready:st.dataset.tfPhotoReady
