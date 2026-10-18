@@ -23,7 +23,8 @@ jobs:
           import re
           p = Path('lab.html')
           s = p.read_text(encoding='utf-8')
-          s = re.sub(r'turfarium-clean-photo\.js\?v=[^"\']+', 'turfarium-clean-photo.js?v=3.4', s)
+          s = re.sub(r'turfarium-clean-photo\.js\?v=[^"\']+', 'turfarium-clean-photo.js?v=3.5', s)
+          s = re.sub(r'turfarium-living-window\.js\?v=[^"\']+', 'turfarium-living-window.js?v=4.1.0', s)
           s = re.sub(r'turfarium-shared-start-layout-v1\.js\?v=[^"\']+', 'turfarium-shared-start-layout-v1.js?v=3.0.0', s)
           s = re.sub(r'inviting-theme\.js\?v=[^"\']+', 'inviting-theme.js?v=20.6', s)
           s = re.sub(r'turfarium-science-pairs-v1\.js\?v=[^"\']+', 'turfarium-science-pairs-v1.js?v=1.2.0', s)
