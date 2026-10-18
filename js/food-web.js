@@ -23,7 +23,7 @@ function advance(previous,environment={},days=30){
  nematodesFungal:clamp(7+p.fungi*.5+habitat*13),
  nematodesPlant:clamp(5+e.rootExudates*.28+habitat*10),
  nematodesPredator:clamp(5+(p.nematodesBacterial+p.nematodesFungal)*.22+habitat*12),
- earthworms:clamp(5+food*.40+wet*20+air*16-e.disturbance*.22),
+ earthworms:clamp(5+food*.34+habitat*35-e.disturbance*.22),
  microarthropods:clamp(7+food*.37+p.fungi*.18+habitat*15-e.disturbance*.18)
  };
  const next={...p};
@@ -31,9 +31,9 @@ function advance(previous,environment={},days=30){
    const rate=key==="earthworms"?.10:key==="fungi"?.17:.24;
    next[key]=clamp(p[key]+(value-p[key])*(1-Math.exp(-rate*delta)));
  }
- next.carbon=clamp(p.carbon+delta*(e.clippings*.025+e.organicInputs*.045-(next.bacteria+next.fungi)*.014));
+ next.carbon=clamp(p.carbon+delta*(e.clippings*.012+e.organicInputs*.018-(next.bacteria+next.fungi)*.009));
  next.aggregation=clamp(p.aggregation+delta*((next.fungi+next.earthworms)*.014-e.disturbance*.025));
  return next;
 }
-global.TurfariumFoodWeb={baseline,advance,version:"1.0.0",note:"Illustrative relative indices, not laboratory-calibrated organism counts."};
+global.TurfariumFoodWeb={baseline,advance,version:"1.1.0",note:"Illustrative relative indices, not laboratory-calibrated organism counts."};
 })(window);
