@@ -1,4 +1,4 @@
-/* Turfarium shared-start layout v3 — create one stable top stack: Scenario Quick Start, then Shared Starting Conditions. */
+/* Turfarium shared-start layout v4 — create one stable top stack: Scenario Quick Start, then Shared Starting Conditions. */
 (()=>{'use strict';
 function getShared(){
   const grass=document.getElementById('grass');
@@ -6,6 +6,13 @@ function getShared(){
   if(!panel)return null;
   panel.id=panel.id||'shared-starting-conditions';
   panel.classList.add('tf-shared-start-top');
+  const lab=panel.querySelector('details.labinputs');
+  if(lab&&!lab.dataset.tfCompactInit){lab.open=false;lab.dataset.tfCompactInit='1';}
+  if(!panel.dataset.tfCompactSummary){
+    const heading=panel.querySelector(':scope > .head h2');
+    if(heading)heading.textContent='Shared starting conditions · Soil lab baseline';
+    panel.dataset.tfCompactSummary='1';
+  }
   return panel;
 }
 function topAnchor(){
@@ -46,6 +53,33 @@ style.textContent=`
 #tf-top-start-stack>#scenario-onboarding,#tf-top-start-stack>#shared-starting-conditions{display:block!important;width:100%!important;max-width:none!important;margin:0 0 12px!important}
 #tf-top-start-stack>#shared-starting-conditions{margin-bottom:0!important}
 `;
+
+const compact=document.createElement('style');compact.id='tf-compact-baseline-v4';compact.textContent=`
+#tf-top-start-stack{margin:8px 0 10px!important}
+#tf-top-start-stack>#shared-starting-conditions{padding:10px 14px!important;border-radius:12px!important}
+#shared-starting-conditions>.head{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;margin:0 0 7px!important}
+#shared-starting-conditions>.head h2{font-size:1rem!important;margin:0!important;line-height:1.3!important}
+#shared-starting-conditions>.head .badge{font-size:.72rem!important;padding:3px 8px!important}
+#shared-starting-conditions>.controls{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px 12px!important;margin:0!important}
+#shared-starting-conditions>.controls>div{min-width:0!important}
+#shared-starting-conditions label{font-size:.78rem!important;margin-bottom:3px!important}
+#shared-starting-conditions input,#shared-starting-conditions select{max-width:100%!important;box-sizing:border-box!important}
+#shared-starting-conditions #turfInfo{font-size:.73rem!important;line-height:1.25!important;margin-top:3px!important}
+#shared-starting-conditions details.labinputs{margin:6px 0!important;padding:0!important}
+#shared-starting-conditions details.labinputs>summary{cursor:pointer;font-size:.82rem!important;font-weight:700;padding:7px 9px;border:1px solid #b9cdbb;border-radius:8px}
+#shared-starting-conditions details.labinputs:not([open])>summary{margin-bottom:0!important}
+#shared-starting-conditions details.labinputs .controls{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
+#shared-starting-conditions>.row{display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin-top:6px!important}
+#shared-starting-conditions>.row button{width:auto!important;flex:0 1 auto!important;min-height:36px!important;padding:7px 12px!important;font-size:.8rem!important}
+#shared-starting-conditions>small.note{display:block;font-size:.72rem!important;line-height:1.3!important;margin-top:5px!important}
+#profile-control-deck{padding:12px 14px!important}
+#profile-control-deck .profile-deck-grid{gap:8px!important}
+#profile-control-deck .profile-deck-title{margin-bottom:7px!important}
+#profile-control-deck .profile-replay-slot>*,#profile-control-deck .profile-save-slot>*{padding:8px 10px!important}
+@media(max-width:750px){#shared-starting-conditions>.controls,#shared-starting-conditions details.labinputs .controls{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:420px){#shared-starting-conditions>.controls,#shared-starting-conditions details.labinputs .controls{grid-template-columns:minmax(0,1fr)!important}#shared-starting-conditions>.row button{flex:1 1 100%!important}}
+`;
+document.head.appendChild(compact);
 document.head.appendChild(style);
 let queued=false;
 const run=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;place();});};
