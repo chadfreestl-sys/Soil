@@ -1,7 +1,11 @@
-/* Turfarium Visual State Engine v2.4 — model-driven, independent Lawn A/B photographic succession using uploaded state images. */
+/* Turfarium Seasonal Photo Engine v3.0.
+ * The ACTUAL lawn photograph is replaced on each verified state/season update;
+ * the former photo is only a fading overlay. No hidden base photograph can mask progression.
+ * The visual index and its photographs are illustrative; not a validated prediction.
+ */
 (()=>{'use strict';
 const BASE='file_00000000f35481f5a24a1191fdf2adf5.png?v=clean-4';
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const STATES=[
  {id:'stressed',min:0,candidates:['images/file_00000000f60c81f58e1f9164cec9f9d0.png']},
  {id:'poor',min:16,candidates:['images/file_00000000c8c081f5b7ed6a85460fa618.png']},
@@ -12,137 +16,227 @@ const STATES=[
  {id:'lush',min:83,candidates:['images/file_00000000450881f5a5dda37355d92399.png']},
  {id:'elite',min:93,candidates:['images/file_00000000712881f58d3f5b83c6615429.png']}
 ];
-const loaded=new Map(),stateByKey=new Map(),requestByKey=new Map();
-function readMetric(key,label,fallback=50,container='kpi'){
- const value=document.getElementById(container+key)?.textContent||'';
- const escaped=label.replace(/[.*+?^$\{\}()|[\]\\]/g,'\\$&');
- const m=value.match(new RegExp(escaped+'[^0-9]{0,100}([0-9]+(?:\\.[0-9]+)?)','i'));
- return m?clamp(Number(m[1]),0,100):fallback;
+
+const loaded=new Map();
+const lastState=new Map();
+const pending=new Map();
+const labels=STATES.map(x=>x.id==='very-healthy'?'Very healthy':x.id[0].toUpperCase()+x.id.slice(1));
+const SEASONS=['winter','winter','spring','spring','spring','summer','summer','summer','fall','fall','fall','winter'];
+function monthFor(key,snapshot){
+ if(snapshot&&Number.isInteger(snapshot.month))return clamp(snapshot.month,0,11);
+ const sel=Number(document.getElementById('startMonth')?.value);
+ const start=Number.isInteger(sel)&&sel>=0&&sel<=11?sel:2;
+ const days=dayFor(key);
+ return (start+Math.floor((days%365)/30.4167))%12;
 }
-function day(key){const t=document.getElementById('day'+key)?.textContent||'';return +(t.match(/([0-9]+)/)?.[1]||0)}
-// Illustrative visual index: real model outputs, not an independently validated turf-health measurement.
-function score(key){
- const vigor=readMetric(key,'Turf vigor',65);
- const biology=readMetric(key,'Beneficial guilds',40);
- const worms=readMetric(key,'Earthworm activity',35);
- const disease=readMetric(key,'Disease pressure',20);
- const oxygen=readMetric(key,'Root-zone oxygen',65,'metric');
- const structure=readMetric(key,'Soil structure',50,'metric');
- const compaction=readMetric(key,'Compaction',45,'metric');
- const saltStress=readMetric(key,'Soluble salt stress proxy',20,'metric');
- const rootMass=readMetric(key,'Root biomass index',50,'roots');
- const raw=vigor*.33+biology*.12+worms*.06+(100-disease)*.10+oxygen*.10+structure*.10+
-  (100-compaction)*.07+(100-saltStress)*.04+rootMass*.08;
+function dayFor(key){
+ const d=document.getElementById('day'+key)?.textContent||'';
+ return +(d.match(/\d+/)?.[0]||0);
+}
+function metric(key,label,fallback,group='kpi'){
+ const root=document.getElementById(group+key);
+ if(!root)return fallback;
+ // Labels in the panel may contain extra evidence badges; only use the numeric result.
+ const nodes=[...root.querySelectorAll(group==='kpi'?'.kpi':'.metric')];
+ const node=nodes.find(el=>(el.querySelector('span')?.textContent||'').includes(label));
+ if(node){
+  const v=parseFloat((node.querySelector('strong,b')?.textContent||'').replace(/,/g,''));
+  if(Number.isFinite(v))return clamp(v,0,100);
+ }
+ return fallback;
+}
+function fallbackSnapshot(key){
+ return {
+  day:dayFor(key),vigor:metric(key,'Turf vigor',55),
+  biology:metric(key,'Beneficial guilds',30),worms:metric(key,'Earthworm activity',20),
+  disease:metric(key,'Disease pressure',35),oxygen:metric(key,'Root-zone oxygen',45,'metric'),
+  structure:metric(key,'Soil structure',35,'metric'),
+  compaction:metric(key,'Compaction',55,'metric'),
+  saltStress:metric(key,'Soluble salt stress proxy',12,'metric'),
+  rootMass:metric(key,'Root biomass index',30,'roots')
+ };
+}
+function snapshotFor(key){
+ try{const direct=window.TurfariumVisualSnapshot?.(key);if(direct&&Number.isFinite(direct.vigor))return direct}
+ catch(e){console.warn('[Turfarium] visual snapshot unavailable:',e)}
+ return fallbackSnapshot(key);
+}
+function scoreFrom(s){
+ const raw=Number(s.vigor)*.33+Number(s.biology)*.12+Number(s.worms)*.06+
+ (100-Number(s.disease))*.10+Number(s.oxygen)*.10+Number(s.structure)*.10+
+ (100-Number(s.compaction))*.07+(100-Number(s.saltStress))*.04+Number(s.rootMass)*.08;
  return Math.round(clamp(raw,0,100));
 }
-function seasonFor(key){
- const selected=Number(document.getElementById('startMonth')?.value);
- const startMonth=Number.isInteger(selected)&&selected>=0&&selected<=11?selected:2;
- const m=(startMonth+Math.floor((day(key)%365)/30.4167))%12;
- return m<=1||m===11?'winter':m<=4?'spring':m<=7?'summer':'fall';
+function score(key){return scoreFrom(snapshotFor(key))}
+function stateForScore(n){
+ let ix=0;for(let i=0;i<STATES.length;i++)if(n>=STATES[i].min)ix=i;
+ return ix;
 }
-function stateForScore(s){let out=STATES[0];for(const st of STATES)if(s>=st.min)out=st;return out}
-function hysteretic(key,target,s){
- const prev=stateByKey.get(key);if(!prev)return target;
- const pi=STATES.findIndex(x=>x.id===prev),ti=STATES.findIndex(x=>x.id===target.id);if(pi<0||ti===pi)return target;
- const margin=3;
- if(ti>pi){const threshold=STATES[Math.min(pi+1,STATES.length-1)].min+margin;if(s<threshold)return STATES[pi];}
- else {const threshold=STATES[pi].min-margin;if(s>=threshold)return STATES[pi];}
+function stateWithHysteresis(key,target,n){
+ const old=lastState.get(key);
+ if(!old)return target;
+ const previous=old.index;
+ if(previous===target)return target;
+ const margin=2;
+ if(target>previous&&n<STATES[Math.min(previous+1,7)].min+margin)return previous;
+ if(target<previous&&n>=STATES[previous].min-margin)return previous;
  return target;
 }
-function canLoad(src){
- if(loaded.has(src))return loaded.get(src);
- const p=new Promise(resolve=>{const im=new Image();im.onload=()=>resolve(src);im.onerror=()=>resolve(null);im.src=src;});loaded.set(src,p);return p;
+function imageUrl(index,season){
+ return 'images/seasons/'+season+'/state-'+String(index+1).padStart(2,'0')+'-'+STATES[index].id+'.webp';
 }
-async function assetFor(st,season){
- const index=STATES.findIndex(x=>x.id===st.id)+1;
- const path='images/seasons/'+season+'/state-'+String(index).padStart(2,'0')+'-'+st.id+'.webp';
- // Prefer a season-specific photograph, then fall back to the existing eight-state library.
- // The 32-image pack is installed atomically by a GitHub workflow; until then, classic photos remain usable.
- for(const src of [path,'https://raw.githubusercontent.com/chadfreestl-sys/Soil/main/'+path]){
-  if(await canLoad(src))return {src,seasonal:true};
+function canLoad(url){
+ if(loaded.has(url))return loaded.get(url);
+ const result=new Promise(resolve=>{
+  const image=new Image();
+  image.onload=()=>resolve(true);
+  image.onerror=()=>resolve(false);
+  image.src=url;
+ });
+ loaded.set(url,result);
+ return result;
+}
+async function imageFor(index,season){
+ const local=imageUrl(index,season);
+ if(await canLoad(local))return {src:local,kind:'seasonal'};
+ // CDN fallback if Cloudflare's asset layer has not finished updating.
+ const remote='https://raw.githubusercontent.com/chadfreestl-sys/Soil/main/'+local;
+ if(await canLoad(remote))return {src:remote,kind:'seasonal-github'};
+ for(const src of STATES[index].candidates){
+  if(await canLoad(src))return {src,kind:'classic'};
  }
- for(const candidate of st.candidates){
-  for(const src of [candidate,'https://raw.githubusercontent.com/chadfreestl-sys/Soil/main/'+candidate]){
-   if(await canLoad(src))return {src,seasonal:false};
-  }
- }
- return {src:null,seasonal:false};
+ return {src:null,kind:'unavailable'};
 }
-function labelState(id){return id==='very-healthy'?'Very healthy':id[0].toUpperCase()+id.slice(1)}
-function setIndicator(stage,message,unavailable=false){
- const el=stage.nextElementSibling?.classList.contains('tf-visual-indicator')?stage.nextElementSibling:null;
- if(el){el.textContent=message;el.dataset.tfImageUnavailable=unavailable?'1':'0'}
-}
-function ensureLayers(stage,photo){
- stage.dataset.tfVisualEngine='v2';
- if(!stage.nextElementSibling?.classList.contains('tf-visual-indicator')){
-  const info=document.createElement('div');info.className='tf-visual-indicator';info.title='Illustrative photo stage based on the simulator\'s current state, not a calibrated agronomic prediction.';stage.after(info);
- }
- let top=stage.querySelector('img.tf-state-photo');
- if(!top){top=photo.cloneNode(false);top.className='tf-state-photo';top.setAttribute('alt','');top.removeAttribute('id');top.removeAttribute('srcset');top.setAttribute('aria-hidden','true');Object.assign(top.style,{position:'absolute',inset:'0',width:'100%',height:'100%',objectFit:'cover',opacity:'0',transition:'opacity 1.8s ease',zIndex:'1',pointerEvents:'none'});photo.style.position='relative';photo.style.zIndex='0';stage.insertBefore(top,photo.nextSibling);}
- return top;
-}
-async function refresh(key){
+function elements(key){
  const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
  const stage=panel?.querySelector('.photo-stage');
  const photo=stage?.querySelector('img.soil-photo:not(.tf-state-photo)');
+ return {stage,photo};
+}
+function ensureStage(stage,photo){
+ stage.dataset.tfVisualEngine='v2'; // Prevent clean-photo's legacy base-image reset.
+ let overlay=stage.querySelector('img.tf-state-photo');
+ if(!overlay){
+  overlay=document.createElement('img');
+  overlay.className='tf-state-photo';
+  overlay.setAttribute('alt','');overlay.setAttribute('aria-hidden','true');
+  Object.assign(overlay.style,{position:'absolute',inset:'0',width:'100%',height:'100%',
+   objectFit:'cover',objectPosition:'center',zIndex:'2',opacity:'0',
+   transition:'opacity 1.3s ease',pointerEvents:'none'});
+  photo.insertAdjacentElement('afterend',overlay);
+ }
+ let indicator=stage.nextElementSibling;
+ if(!indicator?.classList.contains('tf-visual-indicator')){
+  indicator=document.createElement('div');
+  indicator.className='tf-visual-indicator';
+  indicator.title='Illustrative image selected from the live turf ecosystem state.';
+  stage.insertAdjacentElement('afterend',indicator);
+ }
+ return {overlay,indicator};
+}
+function indicatorText(indicator,text,error=false){
+ indicator.textContent=text;indicator.dataset.tfImageUnavailable=error?'1':'0';
+}
+function notify(stage,key,src,season,index,n){
+ stage.dispatchEvent(new CustomEvent('turfarium:visual-photo',{detail:{
+  key,src,season,state:STATES[index].id,score:n
+ }}));
+}
+function present(key,stage,photo,overlay,indicator,url,season,index,n,kind,request){
+ if(pending.get(key)!==request)return;
+ const display='Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · index '+n;
+ const already=photo.getAttribute('src')===url||photo.src===url;
+ const done=()=>{
+  if(pending.get(key)!==request)return;
+  stage.dataset.tfVisualAsset=kind;
+  stage.dataset.tfVisualSource=url;
+  stage.dataset.tfPhotoReady='1';
+  indicatorText(indicator,display+(kind==='classic'?' · classic fallback':''));
+  notify(stage,key,url,season,index,n);
+  // Reveal new image by fading OUT the previous one.
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{if(pending.get(key)===request)overlay.style.opacity='0'}));
+ };
+ if(already){overlay.style.opacity='0';done();return;}
+ const previous=photo.currentSrc||photo.src;
+ overlay.src=previous||BASE;
+ overlay.style.opacity='1';
+ photo.onload=done;
+ photo.onerror=()=>{
+  if(pending.get(key)!==request)return;
+  photo.onload=null;photo.onerror=null;
+  stage.dataset.tfPhotoReady='0';stage.dataset.tfVisualAsset='unavailable';
+  indicatorText(indicator,display+' · photo unavailable',true);
+  overlay.style.opacity='0';
+ };
+ photo.removeAttribute('srcset');
+ photo.src=url; // IMPORTANT: update the actual photo; the overlay is only transitional.
+ if(photo.complete&&photo.naturalWidth>0)done();
+}
+async function refresh(key){
+ const {stage,photo}=elements(key);
  if(!stage||!photo)return;
- const top=ensureLayers(stage,photo);
- const s=score(key),wanted=hysteretic(key,stateForScore(s),s),previous=stateByKey.get(key);
- const season=seasonFor(key),priorSeason=stage.dataset.tfVisualSeason;
- const headline='Photo stage: '+labelState(wanted.id)+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+s;
- stage.dataset.tfVisualScore=String(s);
- stage.dataset.tfVisualState=wanted.id;
- stage.dataset.tfVisualDay=String(day(key));
+ const {overlay,indicator}=ensureStage(stage,photo);
+ const snapshot=snapshotFor(key);
+ const n=scoreFrom(snapshot);
+ const month=monthFor(key,snapshot),season=SEASONS[month];
+ const index=stateWithHysteresis(key,stateForScore(n),n);
+ const id=STATES[index].id,signature=season+'/'+id;
+ stage.dataset.tfVisualDay=String(snapshot.day??dayFor(key));
+ stage.dataset.tfVisualScore=String(n);
+ stage.dataset.tfVisualState=id;
  stage.dataset.tfVisualSeason=season;
- // Continuous appearance adjustments make conditions within one stage distinguishable.
- const strength=clamp((s-50)/50,-1,1);
- top.style.filter='saturate('+(1+strength*.14).toFixed(3)+') brightness('+(1+strength*.065).toFixed(3)+')';
- if(previous===wanted.id&&priorSeason===season&&top.dataset.tfStateReady==='1'){
-  setIndicator(stage,headline+(stage.dataset.tfVisualAsset==='missing'?' · image unavailable':''),stage.dataset.tfVisualAsset==='missing');
+ if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature){
+  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · index '+n);
   return;
  }
- const request=(requestByKey.get(key)||0)+1;requestByKey.set(key,request);
- stateByKey.set(key,wanted.id);
- top.dataset.tfStateReady='0';
- setIndicator(stage,headline+' · loading photo…');
- const asset=await assetFor(wanted,season),src=asset.src;
- if(request!==requestByKey.get(key))return;
- const finalSrc=src||BASE;
- const notify=()=>stage.dispatchEvent(new CustomEvent('turfarium:visual-photo',{detail:{key,src:finalSrc,state:wanted.id,score:s,season}}));
- if(!src){
-  stage.dataset.tfVisualAsset='missing';
-  top.style.opacity='0';top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;
-  setIndicator(stage,headline+' · image unavailable',true);
-  notify();return;
+ const request=(pending.get(key)||0)+1;
+ pending.set(key,request);
+ stage.dataset.tfPhotoSignature=signature;stage.dataset.tfPhotoReady='0';
+ lastState.set(key,{index,signature});
+ indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · loading…');
+ const asset=await imageFor(index,season);
+ if(pending.get(key)!==request)return;
+ if(!asset.src){
+  stage.dataset.tfVisualAsset='unavailable';
+  stage.dataset.tfPhotoReady='0';
+  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season+' · image unavailable',true);
+  return;
  }
- stage.dataset.tfVisualAsset=(asset.seasonal?'seasonal-':'classic-')+(src.startsWith('http')?'github':'local');
- const finish=()=>{
-  if(request!==requestByKey.get(key))return;
-  top.dataset.tfStateReady='1';top.dataset.tfState=wanted.id;
-  setIndicator(stage,headline+(asset.seasonal?'':' · classic photo'));
-  notify();
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{if(request===requestByKey.get(key))top.style.opacity='1'}));
- };
- if(top.getAttribute('src')===src){finish();return;}
- top.style.opacity='0';
- // The source was preloaded above; reuse the browser image cache and wait for the visible image to decode.
- top.onload=finish;
- top.onerror=()=>{
-  if(request!==requestByKey.get(key))return;
-  stage.dataset.tfVisualAsset='missing';
-  top.style.opacity='0';top.dataset.tfStateReady='1';
-  setIndicator(stage,headline+' · photo failed to display',true);
- };
- top.removeAttribute('srcset');top.src=src;
- if(top.complete&&top.naturalWidth>0)finish();
+ present(key,stage,photo,overlay,indicator,asset.src,season,index,n,asset.kind,request);
 }
-function boot(){const monthControl=document.getElementById('startMonth');if(monthControl&&!monthControl.dataset.tfSeasonObserved){monthControl.dataset.tfSeasonObserved='1';monthControl.addEventListener('change',()=>{for(const k of ['A','B'])refresh(k)});}
- for(const key of ['A','B']){
- const kpi=document.getElementById('kpi'+key),d=document.getElementById('day'+key);if(kpi&&!kpi.dataset.tfVisualStateObserved){kpi.dataset.tfVisualStateObserved='1';new MutationObserver(()=>requestAnimationFrame(()=>refresh(key))).observe(kpi,{subtree:true,childList:true,characterData:true});}if(d&&!d.dataset.tfVisualStateObserved){d.dataset.tfVisualStateObserved='1';new MutationObserver(()=>requestAnimationFrame(()=>refresh(key))).observe(d,{subtree:true,childList:true,characterData:true});}refresh(key);
- }}
-const style=document.createElement('style');style.id='tf-visual-state-v2-style';style.textContent=`.photo-stage{position:relative}#lawn-a-panel .photo-stage>img.tf-state-photo,#lawn-b-panel .photo-stage>img.tf-state-photo{display:block;visibility:visible;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;border-radius:inherit}.tf-visual-indicator{margin:7px 2px 2px;font-size:.71rem;font-weight:800;line-height:1.3;color:#244b37;letter-spacing:.005em}.tf-visual-indicator[data-tf-image-unavailable=\"1\"]{color:#9b3323}@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}`;if(!document.getElementById(style.id))document.head.appendChild(style);
-window.TurfariumVisualState={version:'2.4',states:STATES,score,refresh,refreshAll:boot};
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();window.addEventListener('load',boot,{once:true});[250,700,1500,3000].forEach(ms=>setTimeout(boot,ms));
+let observing=false;
+function boot(){
+ if(!observing){
+  observing=true;
+  for(const key of ['A','B']){
+   for(const id of ['kpi'+key,'day'+key]){
+    const el=document.getElementById(id);
+    if(!el)continue;
+    new MutationObserver(()=>requestAnimationFrame(()=>refresh(key))).observe(el,
+      {subtree:true,childList:true,characterData:true});
+   }
+  }
+  const month=document.getElementById('startMonth');
+  if(month)month.addEventListener('change',()=>{refresh('A');refresh('B')});
+ }
+ refresh('A');refresh('B');
+}
+const css=document.createElement('style');
+css.id='tf-visual-state-v3-style';
+css.textContent='.photo-stage{position:relative}'+
+ '#lawn-a-panel .photo-stage>img.tf-state-photo,#lawn-b-panel .photo-stage>img.tf-state-photo{'+
+ 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;pointer-events:none}'+
+ '.tf-visual-indicator{margin:7px 2px 3px;font-size:.72rem;font-weight:800;line-height:1.35;color:#234f37}'+
+ '.tf-visual-indicator[data-tf-image-unavailable="1"]{color:#a1382d}'+
+ '@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}';
+if(!document.getElementById(css.id))document.head.appendChild(css);
+window.TurfariumVisualState={
+ version:'3.0',states:STATES,score,refresh,refreshAll:boot,
+ getStatus:key=>{const st=elements(key).stage;return st?{
+  state:st.dataset.tfVisualState,season:st.dataset.tfVisualSeason,score:st.dataset.tfVisualScore,
+  asset:st.dataset.tfVisualAsset,src:st.dataset.tfVisualSource,ready:st.dataset.tfPhotoReady
+ }:null}
+};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+window.addEventListener('load',boot,{once:true});
 })();
