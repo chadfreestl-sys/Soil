@@ -76,11 +76,11 @@ const compact=document.createElement('style');compact.id='tf-compact-baseline-v4
 #profile-control-deck .profile-deck-grid{gap:8px!important}
 #profile-control-deck .profile-deck-title{margin-bottom:7px!important}
 #profile-control-deck .profile-replay-slot>*,#profile-control-deck .profile-save-slot>*{padding:8px 10px!important}
-#profile-control-deck .profile-save-slot button{width:auto!important;max-width:190px!important;min-width:0!important;flex:0 0 auto!important;padding:7px 12px!important;min-height:36px!important;font-size:.82rem!important}
+#profile-control-deck .profile-save-slot button{width:auto!important;max-width:125px!important;min-width:0!important;flex:0 0 auto!important;padding:5px 8px!important;min-height:32px!important;font-size:.74rem!important}
 #profile-control-deck .profile-save-slot .row,#profile-control-deck .profile-save-slot .scenario-actions{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:8px!important;flex-wrap:wrap!important}
 #profile-control-deck .profile-save-slot select,#profile-control-deck .profile-save-slot input{max-width:min(100%,300px)!important;min-width:0!important}
 #profile-control-deck .profile-save-slot .scenario-head{margin-bottom:5px!important}
-@media(max-width:420px){#profile-control-deck .profile-save-slot button{max-width:170px!important}}
+@media(max-width:420px){#profile-control-deck .profile-save-slot button{max-width:125px!important}}
 @media(max-width:750px){#shared-starting-conditions>.controls,#shared-starting-conditions details.labinputs .controls{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:420px){#shared-starting-conditions>.controls,#shared-starting-conditions details.labinputs .controls{grid-template-columns:minmax(0,1fr)!important}#shared-starting-conditions>.row button{flex:1 1 100%!important}}
 `;
