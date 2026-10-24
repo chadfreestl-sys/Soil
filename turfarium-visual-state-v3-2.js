@@ -122,7 +122,7 @@ function ensureStage(stage,photo){
   overlay.setAttribute('alt','');overlay.setAttribute('aria-hidden','true');
   Object.assign(overlay.style,{position:'absolute',inset:'0',width:'100%',height:'100%',
    objectFit:'cover',objectPosition:'center',zIndex:'2',opacity:'0',
-   transition:'opacity 1.3s ease',pointerEvents:'none'});
+   transition:'opacity 2.4s ease-in-out',pointerEvents:'none'});
   photo.insertAdjacentElement('afterend',overlay);
  }
  let indicator=stage.nextElementSibling;
@@ -158,8 +158,11 @@ function present(key,stage,photo,overlay,indicator,url,season,index,n,kind,reque
  };
  if(already){overlay.style.opacity='0';done();return;}
  const previous=photo.currentSrc||photo.src;
+ overlay.style.transition='none';
  overlay.src=previous||BASE;
  overlay.style.opacity='1';
+ void overlay.offsetWidth;
+ overlay.style.transition='opacity 2.4s ease-in-out';
  photo.onload=done;
  photo.onerror=()=>{
   if(pending.get(key)!==request)return;
