@@ -30,7 +30,7 @@ function update(){
  range.max=String(Math.max(0,frames.length-1));
  if(!viewing)range.value=String(Math.max(0,frames.length-1));
  play.disabled=frames.length<2;
- note.textContent=frames.length<2?'Advance time to record replay frames.':'Recorded '+frames.length+' stages · playback does not change simulation.';
+ note.textContent=frames.length<2?'Advance time to record replay frames.':'Recorded '+frames.length+' stages · replay starts at the first saved day.';
  if(!viewing)label.textContent=frames.length?'Day '+frames[frames.length-1].day:'No history';
 }
 function show(i){
@@ -76,8 +76,7 @@ function mount(){
  play.addEventListener('click',()=>{
   if(playing){stop(false);return;}
   if(frames.length<2)return;
-  if(viewing&&index>=frames.length-1)index=0;
-  else if(!viewing)index=0;
+  index=0; // Always restart recorded history from the first frame.
   show(index);playing=true;play.textContent='⏸ Pause';
   timer=setInterval(tick,DELAY);
  });
