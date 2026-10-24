@@ -20,6 +20,7 @@ const STATES=[
 const loaded=new Map();
 const lastState=new Map();
 const pending=new Map();
+const replaySnapshots=new Map();
 const labels=STATES.map(x=>x.id==='very-healthy'?'Very healthy':x.id[0].toUpperCase()+x.id.slice(1));
 const SEASONS=['winter','winter','spring','spring','spring','summer','summer','summer','fall','fall','fall','winter'];
 function monthFor(key,snapshot){
@@ -57,6 +58,7 @@ function fallbackSnapshot(key){
  };
 }
 function snapshotFor(key){
+ if(replaySnapshots.has(key))return replaySnapshots.get(key);
  try{const direct=window.TurfariumVisualSnapshot?.(key);if(direct&&Number.isFinite(direct.vigor))return direct}
  catch(e){console.warn('[Turfarium] visual snapshot unavailable:',e)}
  return fallbackSnapshot(key);
@@ -268,7 +270,9 @@ css.textContent='.photo-stage{position:relative}'+
  '@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
- version:'3.3',states:STATES,score,refresh,refreshAll:boot,
+ version:'3.8',states:STATES,score,refresh,refreshAll:boot,
+ showReplayFrame:(frames)=>{for(const key of ['A','B'])if(frames?.[key])replaySnapshots.set(key,frames[key]);refresh('A');refresh('B');},
+ endReplay:()=>{replaySnapshots.clear();lastState.clear();refresh('A');refresh('B');},
  getStatus:key=>{const st=elements(key).stage;return st?{
   state:st.dataset.tfVisualState,season:st.dataset.tfVisualSeason,score:st.dataset.tfVisualScore,
   asset:st.dataset.tfVisualAsset,src:st.dataset.tfVisualSource,ready:st.dataset.tfPhotoReady
