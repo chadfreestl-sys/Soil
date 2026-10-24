@@ -21,6 +21,9 @@ function record(frame){
  update();
 }
 window.addEventListener('turfarium:history-frame',e=>record(e.detail));
+function captureInitial(){if(frames.length||typeof window.TurfariumVisualSnapshot!=='function')return;
+ try{const A=window.TurfariumVisualSnapshot('A'),B=window.TurfariumVisualSnapshot('B');if(A&&B)record({day:Number(A.day)||0,A,B});}catch(e){console.warn('[Turfarium replay] Initial frame unavailable',e);}}
+
 let box,play,range,label,note,exit;
 function update(){
  if(!box)return;
@@ -83,6 +86,6 @@ function mount(){
  update();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
-window.addEventListener('load',mount);setTimeout(mount,850);
+window.addEventListener('load',()=>{captureInitial();mount();});setTimeout(()=>{captureInitial();mount();},850);
 window.addEventListener('pagehide',()=>stop(true));
 })();
