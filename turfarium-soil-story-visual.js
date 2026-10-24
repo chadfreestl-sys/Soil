@@ -23,7 +23,13 @@ function init(){
  .tf-story-water{position:absolute;width:7px;height:11px;background:#85c6d9;border-radius:60% 60% 65% 65%;transform:rotate(35deg)}.w1{left:32%;top:42%}.w2{left:62%;top:80%}.w3{left:90%;top:64%}
  .tf-story-foot{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-around;padding:11px 9px;font-size:10px;font-weight:800;color:#315c41;background:#edf3e7}
  @media(max-width:420px){.tf-story-scene{height:150px}.tf-story-head{padding:14px 15px 10px}.tf-story-foot{font-size:9px;gap:6px}}
- `;document.head.appendChild(style);section.insertAdjacentElement('afterend',panel);
+ `;document.head.appendChild(style);const baseline=[...document.querySelectorAll('h2,h3,summary')].find(el=>el.textContent.trim().toLowerCase().startsWith('shared starting conditions'));
+ const anchor=baseline?.closest('section,.card,details')||section;
+ const profile=[...document.querySelectorAll('summary,h2,h3')].find(el=>el.textContent.toLowerCase().includes('profile viewer'));
+ const profileBox=profile?.closest('details,section,.card');
+ if(profileBox&&profileBox.parentElement){profileBox.insertAdjacentElement('beforebegin',panel);}
+ else {anchor.insertAdjacentElement('afterend',panel);}
+
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
