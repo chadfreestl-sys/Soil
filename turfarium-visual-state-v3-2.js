@@ -188,7 +188,11 @@ async function refresh(key){
  const earlySpring=month===2||month===3||month===4;
  const establishmentOffset=earlySpring?Math.round(16*Math.max(0,1-elapsed/90)):0;
  const n=clamp(rawScore-establishmentOffset,0,100);
+ // A restart or backward replay must not retain the later photograph's state.
+ const previousDay=Number(lastState.get(key)?.day);
+ if(Number.isFinite(previousDay)&&elapsed<previousDay)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
+ const signature=season+'|'+index+'|'+Math.round(n/2);
  // Continuous, model-linked visual progression even when the photo stays in the
  // same categorical image band. Small increments should be subtle, not dramatic.
  // Canopy appearance follows modeled turf vigor and stress; root status informs
@@ -224,7 +228,7 @@ async function refresh(key){
  const request=(pending.get(key)||0)+1;
  pending.set(key,request);
  stage.dataset.tfPhotoSignature=signature;stage.dataset.tfPhotoReady='0';
- lastState.set(key,{index,signature});
+ lastState.set(key,{index,signature,day:elapsed});
  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · loading…');
  const asset=await imageFor(index,season);
  if(pending.get(key)!==request)return;
