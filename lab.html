@@ -889,13 +889,13 @@ microscope();
   btn.addEventListener('click',function(){
    if(timer){stop();return;}
    if(typeof window.TurfariumAdvanceDays!=='function'){status.textContent='Timeline not ready';return;}
-   btn.textContent='■ Stop';btn.setAttribute('aria-pressed','true');status.textContent='Playing forward';
+   btn.textContent='■ Stop';btn.setAttribute('aria-pressed','true');status.textContent='Playing slowly · 5.2s per step';
    const tick=function(){
     const day=Number((document.getElementById('dayA')?.textContent||'').match(/\\d+/)?.[0]||0);
     if(day+7>1825){stop();status.textContent='Five-year limit reached';return;}
     try{window.TurfariumAdvanceDays(7);}catch(err){stop();status.textContent='Playback stopped';console.error(err);}
    };
-   tick();timer=setInterval(tick,1800);
+   tick();timer=setInterval(tick,5200);
   });
   time.append(btn,status);
   window.addEventListener('pagehide',stop,{once:true});
