@@ -875,6 +875,36 @@ microscope();
 @media(min-width:701px){.tf-mobile-advance{display:none!important}}
 </style><script>
 (function(){
+ let timer=null;
+ function install(){
+  const strip=document.getElementById('tf-playback-strip');
+  const time=strip&&strip.querySelector('.tf-strip-time');
+  if(!time||strip.querySelector('#tf-timelapse-play'))return;
+  const btn=document.createElement('button');
+  btn.id='tf-timelapse-play';btn.type='button';btn.textContent='▶ Time-lapse';
+  btn.title='Play forward in 7-day steps; this does not rewind previously simulated days.';
+  btn.style.cssText='flex:0 0 auto;min-height:35px;padding:6px 10px;border-radius:9px;background:#174c48;color:#fff;font-weight:750;white-space:nowrap';
+  const status=document.createElement('span');status.id='tf-timelapse-status';status.style.cssText='font-size:.72rem;color:#365b45';
+  function stop(){if(timer){clearInterval(timer);timer=null;}btn.textContent='▶ Time-lapse';btn.setAttribute('aria-pressed','false');}
+  btn.addEventListener('click',function(){
+   if(timer){stop();return;}
+   if(typeof window.TurfariumAdvanceDays!=='function'){status.textContent='Timeline not ready';return;}
+   btn.textContent='■ Stop';btn.setAttribute('aria-pressed','true');status.textContent='Playing forward';
+   const tick=function(){
+    const day=Number((document.getElementById('dayA')?.textContent||'').match(/\\d+/)?.[0]||0);
+    if(day+7>1825){stop();status.textContent='Five-year limit reached';return;}
+    try{window.TurfariumAdvanceDays(7);}catch(err){stop();status.textContent='Playback stopped';console.error(err);}
+   };
+   tick();timer=setInterval(tick,1800);
+  });
+  time.append(btn,status);
+  window.addEventListener('pagehide',stop,{once:true});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+ window.addEventListener('load',install);setTimeout(install,700);setTimeout(install,1800);
+})();
+</script><script>
+(function(){
  function place(){
   for(const key of ['A','B']){
    const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
