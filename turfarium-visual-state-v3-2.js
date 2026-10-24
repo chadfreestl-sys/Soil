@@ -192,7 +192,7 @@ async function refresh(key){
  const previousDay=Number(lastState.get(key)?.day);
  if(Number.isFinite(previousDay)&&elapsed<previousDay)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
- const signature=season+'|'+index+'|'+Math.round(n/2);
+ const signature=season+'|'+index;
  // Continuous, model-linked visual progression even when the photo stays in the
  // same categorical image band. Small increments should be subtle, not dramatic.
  // Canopy appearance follows modeled turf vigor and stress; root status informs
@@ -205,11 +205,11 @@ async function refresh(key){
  const rootSupport=clamp((root*.65+oxygen*.35)/100,0,1);
  const stressPenalty=clamp(salt/100,0,1);
  const seasonalWarmth=season==='summer'?1.025:season==='winter'?.94:1;
- const saturation=clamp((.82+canopyGrowth*.34-stressPenalty*.08)*seasonalWarmth,.70,1.22);
- const brightness=clamp(.95+canopyGrowth*.10-stressPenalty*.035,.88,1.10);
+ const saturation=clamp((.72+canopyGrowth*.35+n*.0024-stressPenalty*.10)*seasonalWarmth,.65,1.30);
+ const brightness=clamp(.88+canopyGrowth*.12+n*.0012-stressPenalty*.05,.82,1.13);
  const contrast=clamp(1.015+canopyGrowth*.03,1,1.06);
  photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+') contrast('+contrast.toFixed(3)+')','important');
- photo.style.transition='filter 1.2s ease';
+ photo.style.transition='filter 3.8s ease-in-out';
  stage.dataset.tfVisualFilter='saturation '+saturation.toFixed(2)+'; brightness '+brightness.toFixed(2);
  stage.dataset.tfVisualDay=String(snapshot.day??dayFor(key));
  stage.dataset.tfVisualScore=String(n);
@@ -222,6 +222,7 @@ async function refresh(key){
  stage.dataset.tfLastRenderedDay=String(Number(snapshot.day??dayFor(key))||0);
  stage.dataset.tfVisualProgress='score '+n+' / canopy '+Math.round(canopy)+' / root support '+Math.round(rootSupport*100);
  if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature){
+  lastState.set(key,{index,signature,day:elapsed});
   indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+n+(establishmentOffset?' · early-spring canopy adjustment':''));
   return;
  }
