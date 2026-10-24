@@ -1,7 +1,7 @@
 /* Turfarium historical visual replay: read-only; never advances or mutates model state. */
 (()=>{'use strict';
 const frames=[];let timer=null,index=0,playing=false,viewing=false;
-const MAX=350,DELAY=5200;
+const MAX=350,DELAY=4200;
 const css=document.createElement('style');css.textContent=`
 #tf-playback-strip .tf-strip-replay{display:none!important}
 .tf-history-replay{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px;padding:8px 0 0;border-top:1px solid #d5e1d3;width:100%}
