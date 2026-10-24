@@ -188,37 +188,32 @@ async function refresh(key){
  const index=stateWithHysteresis(key,stateForScore(n),n);
  // Continuous, model-linked visual progression even when the photo stays in the
  // same categorical image band. Small increments should be subtle, not dramatic.
- const growth=clamp((n-22)/65,0,1);
+ // Canopy appearance follows modeled turf vigor and stress; root status informs
+ // the photographic stage, but is not mistaken for directly visible leaf color.
+ const canopy=clamp(Number(snapshot.vigor)||0,0,100);
+ const root=clamp(Number(snapshot.rootMass)||0,0,100);
+ const oxygen=clamp(Number(snapshot.oxygen)||0,0,100);
+ const salt=clamp(Number(snapshot.saltStress)||0,0,100);
+ const canopyGrowth=clamp((canopy-20)/75,0,1);
+ const rootSupport=clamp((root*.65+oxygen*.35)/100,0,1);
+ const stressPenalty=clamp(salt/100,0,1);
  const seasonalWarmth=season==='summer'?1.025:season==='winter'?.94:1;
- const saturation=(.78+growth*.38)*seasonalWarmth;
- const brightness=.96+growth*.09;
- const contrast=1.02+growth*.035;
+ const saturation=clamp((.82+canopyGrowth*.34-stressPenalty*.08)*seasonalWarmth,.70,1.22);
+ const brightness=clamp(.95+canopyGrowth*.10-stressPenalty*.035,.88,1.10);
+ const contrast=clamp(1.015+canopyGrowth*.03,1,1.06);
  photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+') contrast('+contrast.toFixed(3)+')','important');
- photo.style.transition='filter 1.1s ease';
+ photo.style.transition='filter 1.2s ease';
  stage.dataset.tfVisualFilter='saturation '+saturation.toFixed(2)+'; brightness '+brightness.toFixed(2);
-
- const id=STATES[index].id,signature=season+'/'+id;
  stage.dataset.tfVisualDay=String(snapshot.day??dayFor(key));
  stage.dataset.tfVisualScore=String(n);
  stage.dataset.tfVisualRawScore=String(rawScore);
- stage.dataset.tfVisualState=id;
+ stage.dataset.tfVisualState=STATES[index].id;
  stage.dataset.tfVisualSeason=season;
- // Continuous within-stage visual response. State photos are discrete; this
- // makes gradual changes visible between photo thresholds without swapping to
- // an unjustifiably healthier image.
- const previousVisual=Number(stage.dataset.tfLastRenderedScore);
- const scoreDelta=Number.isFinite(previousVisual)?n-previousVisual:0;
- const dayNow=Number(snapshot.day??dayFor(key))||0;
- const growth=clamp((n-20)/75,0,1);
- const green=clamp(0.88+growth*.24,0.82,1.16);
- const saturation=clamp(.83+growth*.37,.78,1.22);
- const brightness=clamp(.95+growth*.11,.90,1.10);
- photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+')');
- photo.style.setProperty('transition','filter 1.2s ease');
+ stage.dataset.tfRootSupport=rootSupport.toFixed(3);
+ stage.dataset.tfCanopyVigor=String(Math.round(canopy));
  stage.dataset.tfLastRenderedScore=String(n);
- stage.dataset.tfLastRenderedDay=String(dayNow);
- stage.dataset.tfVisualProgress='score '+n+' / day '+dayNow;
-
+ stage.dataset.tfLastRenderedDay=String(Number(snapshot.day??dayFor(key))||0);
+ stage.dataset.tfVisualProgress='score '+n+' / canopy '+Math.round(canopy)+' / root support '+Math.round(rootSupport*100);
  if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature){
   indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+n+(establishmentOffset?' · early-spring canopy adjustment':''));
   return;
