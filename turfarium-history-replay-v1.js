@@ -21,7 +21,10 @@ function record(frame){
  update();
 }
 window.addEventListener('turfarium:history-frame',e=>record(e.detail));
-function captureInitial(){if(frames.length||typeof window.TurfariumVisualSnapshot!=='function')return;
+function captureInitial(){
+ const buffered=window.TurfariumRecordedFrames;
+ if(Array.isArray(buffered)&&buffered.length){for(const frame of buffered)record(frame);return;}
+ if(frames.length||typeof window.TurfariumVisualSnapshot!=='function')return;
  try{const A=window.TurfariumVisualSnapshot('A'),B=window.TurfariumVisualSnapshot('B');if(A&&B)record({day:Number(A.day)||0,A,B});}catch(e){console.warn('[Turfarium replay] Initial frame unavailable',e);}}
 
 let box,play,range,label,note,exit;
@@ -34,11 +37,11 @@ function update(){
  if(!viewing)label.textContent=frames.length?'Day '+frames[frames.length-1].day:'No history';
 }
 function show(i){
- if(!frames.length||!window.TurfariumVisualState?.showReplayFrame)return;
+ if(!frames.length)return;
  index=Math.max(0,Math.min(frames.length-1,Number(i)||0));
  viewing=true;
  const frame=frames[index];
- window.TurfariumVisualState.showReplayFrame({A:frame.A,B:frame.B});
+ window.TurfariumVisualState?.showReplayFrame?.({A:frame.A,B:frame.B});
  for(const key of ['A','B']){
   const badge=document.getElementById('day'+key);
   if(badge)badge.textContent='Day '+frame.day+' · Replay';
@@ -75,6 +78,7 @@ function mount(){
  box.append(play,range,label,exit,note);strip.appendChild(box);
  play.addEventListener('click',()=>{
   if(playing){stop(false);return;}
+  captureInitial();
   if(frames.length<2)return;
   index=0; // Always restart recorded history from the first frame.
   show(index);playing=true;play.textContent='⏸ Pause';
