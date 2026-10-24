@@ -271,7 +271,7 @@ css.textContent='.photo-stage{position:relative}'+
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
  version:'3.8',states:STATES,score,refresh,refreshAll:boot,
- showReplayFrame:(frames)=>{for(const key of ['A','B'])if(frames?.[key])replaySnapshots.set(key,frames[key]);refresh('A');refresh('B');},
+ showReplayFrame:(frames)=>{for(const key of ['A','B']){if(!frames?.[key])continue;replaySnapshots.set(key,frames[key]);const stage=elements(key).stage;if(stage){stage.dataset.tfPhotoSignature='';stage.dataset.tfPhotoReady='0';}lastState.delete(key);refresh(key);}},
  endReplay:()=>{replaySnapshots.clear();lastState.clear();refresh('A');refresh('B');},
  getStatus:key=>{const st=elements(key).stage;return st?{
   state:st.dataset.tfVisualState,season:st.dataset.tfVisualSeason,score:st.dataset.tfVisualScore,
