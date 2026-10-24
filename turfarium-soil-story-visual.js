@@ -1,16 +1,16 @@
 /* Turfarium soil story visual — decorative, responsive, no model-state claims. */
 (()=>{'use strict';
 function init(){
- if(document.getElementById('tf-soil-story'))return;
+ const existing=document.getElementById('tf-soil-story');
  const heading=[...document.querySelectorAll('h2,h3,summary')].find(el=>el.textContent.trim().toLowerCase().startsWith('shared starting conditions'));
  if(!heading)return;
  const section=heading.closest('section,.card,details')||heading.parentElement;
  if(!section)return;
- const panel=document.createElement('section');
+ const panel=existing||document.createElement('section');
  panel.id='tf-soil-story';
  panel.setAttribute('aria-label','Living lawn illustration');
- panel.innerHTML=`<div class="tf-story-head"><span class="tf-story-kicker">ABOVE & BELOW THE SURFACE</span><strong>One lawn. A whole living ecosystem.</strong><span>Follow the connections between turf, roots, water, and soil life.</span></div><div class="tf-story-scene" aria-hidden="true"><div class="tf-story-sky"><span class="tf-story-sun"></span><span class="tf-story-cloud"></span></div><div class="tf-story-grass"></div><div class="tf-story-earth"><div class="tf-story-roots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="tf-story-worm"></span><span class="tf-story-microbe m1"></span><span class="tf-story-microbe m2"></span><span class="tf-story-microbe m3"></span><span class="tf-story-water w1"></span><span class="tf-story-water w2"></span><span class="tf-story-water w3"></span></div></div><div class="tf-story-foot"><span>☀ Turf canopy</span><span>↳ Root zone</span><span>● Soil biology</span><span>◈ Moisture</span></div>`;
- const style=document.createElement('style');style.textContent=`
+ if(!existing)panel.innerHTML=`<div class="tf-story-head"><span class="tf-story-kicker">ABOVE & BELOW THE SURFACE</span><strong>One lawn. A whole living ecosystem.</strong><span>Follow the connections between turf, roots, water, and soil life.</span></div><div class="tf-story-scene" aria-hidden="true"><div class="tf-story-sky"><span class="tf-story-sun"></span><span class="tf-story-cloud"></span></div><div class="tf-story-grass"></div><div class="tf-story-earth"><div class="tf-story-roots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="tf-story-worm"></span><span class="tf-story-microbe m1"></span><span class="tf-story-microbe m2"></span><span class="tf-story-microbe m3"></span><span class="tf-story-water w1"></span><span class="tf-story-water w2"></span><span class="tf-story-water w3"></span></div></div><div class="tf-story-foot"><span>☀ Turf canopy</span><span>↳ Root zone</span><span>● Soil biology</span><span>◈ Moisture</span></div>`;
+ if(!document.getElementById('tf-soil-story-style')){const style=document.createElement('style');style.id='tf-soil-story-style';style.textContent=`
  #tf-soil-story{overflow:hidden;margin:12px 0;border:1px solid #b8cbb5;border-radius:22px;background:#f5f8ee;color:#183d2d;box-shadow:0 10px 24px #152c1918}
  .tf-story-head{padding:16px 18px 12px;display:grid;gap:4px}.tf-story-kicker{font-size:10px;font-weight:900;letter-spacing:.17em;color:#54775d}.tf-story-head strong{font-size:clamp(18px,4.5vw,25px);line-height:1.18;color:#12472e}.tf-story-head>span:last-child{font-size:12px;font-weight:600;color:#47634f;line-height:1.45}
  .tf-story-scene{position:relative;height:180px;overflow:hidden;background:linear-gradient(#cce8e5 0%,#e7f3e0 47%,#7cad63 48%,#4f783a 53%,#715037 54%,#3e3028 100%)}
@@ -23,7 +23,7 @@ function init(){
  .tf-story-water{position:absolute;width:7px;height:11px;background:#85c6d9;border-radius:60% 60% 65% 65%;transform:rotate(35deg)}.w1{left:32%;top:42%}.w2{left:62%;top:80%}.w3{left:90%;top:64%}
  .tf-story-foot{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-around;padding:11px 9px;font-size:10px;font-weight:800;color:#315c41;background:#edf3e7}
  @media(max-width:420px){.tf-story-scene{height:150px}.tf-story-head{padding:14px 15px 10px}.tf-story-foot{font-size:9px;gap:6px}}
- `;document.head.appendChild(style);const baseline=[...document.querySelectorAll('h2,h3,summary')].find(el=>el.textContent.trim().toLowerCase().startsWith('shared starting conditions'));
+ `;document.head.appendChild(style);}const baseline=[...document.querySelectorAll('h2,h3,summary')].find(el=>el.textContent.trim().toLowerCase().startsWith('shared starting conditions'));
  const anchor=baseline?.closest('section,.card,details')||section;
  const profile=[...document.querySelectorAll('summary,h2,h3')].find(el=>el.textContent.toLowerCase().includes('profile viewer'));
  const profileBox=profile?.closest('details,section,.card');
@@ -31,5 +31,5 @@ function init(){
  else {anchor.insertAdjacentElement('afterend',panel);}
 
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+function sync(){try{init()}catch(e){console.warn('Turfarium soil story placement:',e)}}\nif(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();\nwindow.addEventListener('load',sync,{once:true});\nsetTimeout(sync,600);setTimeout(sync,1800);setTimeout(sync,4000);
 })();
