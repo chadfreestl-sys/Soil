@@ -31,5 +31,8 @@ function init(){
  else {anchor.insertAdjacentElement('afterend',panel);}
 
 }
-function sync(){try{init()}catch(e){console.warn('Turfarium soil story placement:',e)}}\nif(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();\nwindow.addEventListener('load',sync,{once:true});\nsetTimeout(sync,600);setTimeout(sync,1800);setTimeout(sync,4000);
+function sync(){try{init()}catch(e){console.warn('Turfarium soil story placement:',e)}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();
+window.addEventListener('load',sync,{once:true});
+setTimeout(sync,600);setTimeout(sync,1800);setTimeout(sync,4000);
 })();
