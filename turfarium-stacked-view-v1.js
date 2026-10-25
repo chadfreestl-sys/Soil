@@ -10,7 +10,7 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns .photo-stage canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
  #tf-stacked-lawns .tf-lawn-time{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:8px}
  #tf-stacked-lawns .tf-lawn-time button{min-width:0!important;min-height:42px!important;padding:7px 2px!important;font-size:.78rem!important;font-weight:750;color:#173e2d;background:#fff;border:1px solid #b5cbb8;border-radius:9px}
- #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:8px 0!important;padding:8px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n #tf-stacked-lawns .tf-lawn-time{display:none!important}
+ #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n #tf-stacked-lawns .tf-lawn-time{display:none!important}
  #lawn-a-panel,#lawn-b-panel{width:100%!important;max-width:100%!important;min-width:0!important}
  #lawn-a-panel>.photo-stage,#lawn-b-panel>.photo-stage{display:none!important}
  #lawn-a-panel .tf-paired-toggle,#lawn-b-panel .tf-paired-toggle{display:none!important}
@@ -54,6 +54,17 @@ function mount(){
  // Place the real, shared progression controls between the two images. 
  const first=view.querySelector('.tf-lawn-visual'); 
  if(strip.parentElement!==view){view.appendChild(strip);} 
+ if(!window.__tfStackStripGuard){
+   window.__tfStackStripGuard=true;
+   let pending=false;
+   const guard=new MutationObserver(()=>{
+     if(pending)return;
+     if(strip.parentElement===view&&strip===view.lastElementChild)return;
+     pending=true;
+     requestAnimationFrame(()=>{pending=false;if(view.isConnected&&strip.isConnected&&strip.parentElement!==view)view.appendChild(strip);});
+   });
+   guard.observe(document.body,{childList:true,subtree:true});
+ } 
  const sync=()=>{for(const k of ['A','B']){const src=document.getElementById('day'+k),dst=document.getElementById('tf-stack-day-'+k);if(src&&dst)dst.textContent=src.textContent;}};
  sync();setInterval(sync,1300);
  return true;
