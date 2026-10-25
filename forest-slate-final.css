@@ -16,3 +16,24 @@ button.primary,.primary,.btn-primary,[class*=apply-btn]{background:#275d4c!impor
 button:focus-visible,summary:focus-visible{outline:3px solid #4c88a5!important;outline-offset:2px}
 input,select,textarea{accent-color:#27614c;color:#213c36}
 @media(max-width:700px){body{background:#e5eeea!important}.tf-research-drawer{background:#f8faf7!important}.tf-research-drawer>summary{background:#dce9e8!important;color:#244d60!important}}
+
+/* Forest & Slate Bold: saturated color, compact mobile research navigation */
+:root{--tf-forest:#0c493b;--tf-slate:#224a68;--tf-sage:#c9e3d8;--tf-copper:#a95632;--tf-ink:#102e2b}
+body{background:linear-gradient(155deg,#b9d9cd 0%,#e7f0e9 40%,#d0e3dc 100%)!important}
+.card,section.card,.tf-card{border-color:#8fb6a8!important}
+.card h2,.card h3,.tf-card h2,.tf-card h3{color:#125442!important}
+button.primary,.primary,.btn-primary,[class*=apply-btn]{background:#09664b!important}
+@media(max-width:700px){
+body{background:#d2e5dd!important}
+#tf-research-organizer{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:8px!important;width:100%!important;max-width:100%!important;min-width:0!important;padding:0!important;margin:8px 0 14px!important;background:transparent!important;border:0!important;box-shadow:none!important}
+#tf-research-organizer>.tf-research-drawer{display:block!important;box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:4px!important;border-radius:13px!important;border:1px solid #6b9e91!important;box-shadow:0 2px 7px #153d3215!important}
+#tf-research-organizer>.tf-research-drawer>summary{box-sizing:border-box!important;width:100%!important;min-height:53px!important;margin:0!important;padding:13px 16px!important;border:0!important;border-radius:10px!important;font-size:16px!important;font-weight:800!important;letter-spacing:.1px!important;color:#fff!important}
+#tf-research-records>summary{background:#224a68!important}
+#tf-research-ecology>summary{background:#08674e!important}
+#tf-research-experiments>summary{background:#9b542d!important}
+#tf-research-organizer>.tf-research-drawer[open]>summary{border-radius:10px 10px 5px 5px!important}
+#tf-research-organizer .tf-research-body{padding:9px 2px 2px!important;background:#f5faf6!important}
+#tf-research-organizer .tf-research-body>*{width:100%!important;max-width:100%!important;margin:0!important;min-width:0!important}
+#tf-research-organizer .tf-research-body .card{padding:10px!important}
+#tf-research-organizer .tf-research-body summary{overflow-wrap:anywhere}
+}
