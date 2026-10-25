@@ -351,7 +351,7 @@ const productLibrary={
 const productDecay={seaweed102:.09,seaweed0014:.09,kelpmeal:.015,humic:.012,molasses:.25,fish:.05,alfalfa:.018,wormcast:.014,microbeinoc:.20,slowN:.016,urea:.10,ammsulf:.09,potassium:.015,phosphate:.008,micros:.045,phosphite:.065,wetting:.075};
 function productDescription(key){if(customProfiles[key]){const p=customProfiles[key];return `<strong>${escapeHtml(p.name)}</strong><div>${p.n}-${p.p}-${p.k} · ${p.form} · ${p.release} release · ${p.action}</div><small>User-entered formulation; response is an educational proxy, not a manufacturer model.</small>`}const info=productLibrary[key];if(info)return `<strong>${info[0]} · ${treatments[key]}</strong><div>${info[1]}</div><small>${info[2]}</small>`;return `<strong>${treatments[key]}</strong><div>Illustrative response; not a product label rate or field recommendation.</div>`}
 function refreshProductInfo(key){const t=$('treat'+key).value;$('productInfo'+key).innerHTML=productDescription(t);doseInfo(key)}
-function make(){const om=val('organic',.5,10,3),bd=val('bulk',.7,2.1,1.45);return {comp:cl((bd-.85)/1.05*100),carbon:cl(om/10*100),om,bulk:bd,ec:val('ec',0,20,.6),no3:val('nitrate',0,300,12),nh4:val('ammonium',0,200,5),p:val('psoil',0,500,20),k:val('ksoil',0,1000,120),cec:val('cec',1,60,14),texture:$('texture').value,ph:val('ph',4.5,8.5,6.3),moist:49,n:24,salts:12,good:[18,16,13,12,11],bad:[54,50,47],worms:[12,19,13],structure:20,effects:[],grass:$('grass').value,temp:68,rootDepth:9,thatch:.28,rootMass:25,organicN:om*1100,labileC:cl(om*7,2,75),microbialC:cl(om*4,2,60),grazing:25,seaweedSignal:0,seaweedRootResponse:0,seaweedStressBuffer:0,cycle:{mineral:0,nitrified:0,uptake:0,leached:0},soilMoistMemory:49,oxygenReserve:38,drainageIndex:35,anaerobicStress:0,competition:40,waterInput:0}}
+function make(){const om=val('organic',.5,10,3),bd=val('bulk',.7,2.1,1.45);return {comp:cl((bd-.85)/1.05*100),carbon:cl(om/10*100),om,bulk:bd,ec:val('ec',0,20,.6),no3:val('nitrate',0,300,12),nh4:val('ammonium',0,200,5),p:val('psoil',0,500,20),k:val('ksoil',0,1000,120),cec:val('cec',1,60,14),texture:$('texture').value,ph:val('ph',4.5,8.5,6.3),moist:49,n:24,salts:12,good:[18,16,13,12,11],bad:[54,50,47],worms:[12,19,13],structure:20,effects:[],grass:$('grass').value,temp:68,rootDepth:9,thatch:.28,rootMass:25,leafArea:58,carbReserve:55,tillerDensity:42,canopyCover:65,mowHeight:3.5,plantEnergyBalance:0,organicN:om*1100,labileC:cl(om*7,2,75),microbialC:cl(om*4,2,60),grazing:25,seaweedSignal:0,seaweedRootResponse:0,seaweedStressBuffer:0,cycle:{mineral:0,nitrified:0,uptake:0,leached:0},soilMoistMemory:49,oxygenReserve:38,drainageIndex:35,anaerobicStress:0,competition:40,waterInput:0}}
 function avg(x){return x.reduce((a,b)=>a+b,0)/x.length}
 function env(s){const oxygen=cl(s.oxygenReserve),heat=cl(100-Math.max(0,Math.abs(s.temp-(turf[s.grass]||turf['Tall fescue']).t)-12)*2.7),wet=cl(100-Math.abs(s.moist-58)*1.5),phFit=cl(100-Math.max(0,(turf[s.grass]||turf['Tall fescue']).lo-s.ph,s.ph-(turf[s.grass]||turf['Tall fescue']).hi)*38),saltStress=cl((s.salts-24)*1.4);
 const good=avg(s.good),bad=avg(s.bad),worms=avg(s.worms),vigor=cl(17+good*.3-bad*.22+oxygen*.12+heat*.15+wet*.12+s.n*.14+phFit*.08-saltStress*.18);
@@ -363,7 +363,7 @@ window.TurfariumVisualSnapshot=function(key){
  const e=env(site);
  return {day,month:monthIndex(day),vigor:e.vigor,biology:e.good,worms:e.worms,
    disease:e.bad,oxygen:e.oxygen,structure:site.structure,compaction:site.comp,
-   saltStress:site.salts,rootMass:site.rootMass};
+   saltStress:site.salts,rootMass:site.rootMass,leafArea:site.leafArea,carbReserve:site.carbReserve,tillerDensity:site.tillerDensity,canopyCover:site.canopyCover,mowHeight:site.mowHeight};
 };
 function daily(s){
 let [t,m]=weather(day);s.temp+=(t-s.temp)*.13;
@@ -445,8 +445,30 @@ s.seaweedRootResponse=cl(s.seaweedRootResponse*.985+s.seaweedSignal*.018,0,8);
 s.seaweedStressBuffer=cl(s.seaweedSignal*.55,0,7);
 s.good=s.good.map((v,i)=>cl(v+(target[i]-v)*.022));s.bad=s.bad.map((v,i)=>cl(v+(pathogen[i]-v)*.018));s.worms=s.worms.map((v,i)=>cl(v+(worms[i]-v)*.011));
 const residue=.0009*tr[1]*tempFit*(.3+e.vigor/100);const decomposition=.0012*active*(.5+s.good[1]/80);s.thatch=cl(s.thatch+residue-decomposition,0,2.5);
-s.rootDepth=cl(s.rootDepth+.012*tempFit*aeration*salinity*(1-s.rootDepth/tr[0])*(1+s.seaweedRootResponse*.025)-.0008*(1-tempFit),2,tr[0]);
-s.rootMass=cl(s.rootMass+.08*tempFit*aeration-.025+.018*s.seaweedRootResponse*tempFit*moisture,5,100);
+// Plant physiology v1: illustrative, bounded carbon budget. This replaces automatic root
+// gains with leaf-supported growth; coefficients require field/experimental calibration.
+// mowHeight defaults to 3.5 in until the management UI is wired to this state.
+const height=cl(Number(s.mowHeight)||3.5,1,5);
+const leafRetention=cl((height-1)/2.5,.15,1);
+const lightFit=cl(.65+.35*leafRetention,.45,1);
+const stressFit=cl(tempFit*moisture*oxygenFactor*salinity,.02,1);
+const assimilation=.36*lightFit*(s.leafArea/100)*stressFit;
+const maintenance=.09+.085*(1-tempFit)+.05*(1-moisture);
+const available=assimilation-maintenance;
+s.plantEnergyBalance=available;
+s.carbReserve=cl(s.carbReserve+available*.32-.025*Math.max(0,60-s.carbReserve)/60,5,100);
+const carbonFactor=cl((s.carbReserve-12)/58,0,1);
+const growthOpportunity=stressFit*carbonFactor;
+const leafTarget=cl(22+65*leafRetention*growthOpportunity,15,94);
+s.leafArea=cl(s.leafArea+(leafTarget-s.leafArea)*.018,5,100);
+const tillerTarget=cl(25+55*growthOpportunity*leafRetention,12,88);
+s.tillerDensity=cl(s.tillerDensity+(tillerTarget-s.tillerDensity)*.004,5,100);
+const coverTarget=cl(55+s.tillerDensity*.20,45,82);
+s.canopyCover=cl(s.canopyCover+(coverTarget-s.canopyCover)*.0015*growthOpportunity,30,90);
+const rootGrowth=.09*growthOpportunity*aeration*(1+s.seaweedRootResponse*.02);
+const rootLoss=.018+.032*(1-stressFit)+.014*(1-leafRetention);
+s.rootMass=cl(s.rootMass+rootGrowth-rootLoss,5,100);
+s.rootDepth=cl(s.rootDepth+.013*growthOpportunity*aeration*(1-s.rootDepth/tr[0])-.002*(1-stressFit),2,tr[0]);
 s.bulk=cl(s.bulk-.000008*(avg(s.worms)-25)-.000006*(s.om-2),.7,2.1);
 s.comp=cl((s.bulk-.85)/1.05*100);s.carbon=cl(s.om*10);s.salts=cl(s.ec*24);s.n=cl((s.no3+s.nh4)*2.4);s.structure=cl(90-(s.bulk-1)*65+s.om*2);
 }
@@ -672,7 +694,7 @@ for(const key of ['A','B']){
  $('history'+key).innerHTML=records.length?records.slice(0,7).map(r=>`<div class="entry"><strong>${r.month||"Month ?"} · Day ${r.day} · ${r.label}${r.rate?' · '+r.rate:''}</strong><small>${evidenceChip(treatmentEvidenceTier(r.type))}${['seaweed','seaweed102','seaweed0014'].includes(r.type)?'Conditional seaweed response; nutrient contribution differs by grade.':'Illustrative treatment · inspect changes after advancing time.'}</small></div>`).join(''):'<span class="note">No treatments yet. Choose a treatment above.</span>';
 }renderSeaweedReportsV19();chart()}
 function updateTurf(){const x=turf[$('grass').value],v=+$('ph').value;const status=v<x.lo?'below':v>x.hi?'above':'within';$('turfInfo').innerHTML=`<strong>Suggested soil pH: ${x.lo.toFixed(1)}–${x.hi.toFixed(1)}</strong><br>Current pH ${v.toFixed(1)} is ${status} this range. ${x.note}<br><small>General turf guidance, not a site-specific lime/sulfur recommendation. Confirm with a soil test and local extension guidance.</small>`}
-function reset(){day=0;A=make();B=make();history=[];treatmentRecords={A:[],B:[]};for(const key of ['A','B']){$('feedback'+key).textContent='Ready to apply a treatment.';$('feedback'+key).classList.remove('success')}log=['Day 0 · Two identical Fair-condition lawn ecosystems initialized.'];record();render();$('changePeriod').textContent='Day 0 · Apply a treatment and advance the timeline to generate a change report.';$('changeGrid').innerHTML='<div class="change-lawn"><h4>Lawn A</h4>No time has advanced yet.</div><div class="change-lawn"><h4>Lawn B</h4>No time has advanced yet.</div>';$('nextActions').textContent='Choose a treatment, apply it, then advance time. Your next report will compare before and after values; seaweed applications also receive a phase-aware response report.';}
+function reset(){day=0;A=make();B=make();history=[];window.TurfariumRecordedFrames=[];treatmentRecords={A:[],B:[]};for(const key of ['A','B']){$('feedback'+key).textContent='Ready to apply a treatment.';$('feedback'+key).classList.remove('success')}log=['Day 0 · Two identical Fair-condition lawn ecosystems initialized.'];record();render();$('changePeriod').textContent='Day 0 · Apply a treatment and advance the timeline to generate a change report.';$('changeGrid').innerHTML='<div class="change-lawn"><h4>Lawn A</h4>No time has advanced yet.</div><div class="change-lawn"><h4>Lawn B</h4>No time has advanced yet.</div>';$('nextActions').textContent='Choose a treatment, apply it, then advance time. Your next report will compare before and after values; seaweed applications also receive a phase-aware response report.';}
 
 // v15 formulation library: local browser storage only, bounded user inputs and safe labels.
 const customProfiles={};
