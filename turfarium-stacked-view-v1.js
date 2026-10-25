@@ -7,8 +7,8 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns .tf-lawn-title{display:flex;justify-content:space-between;color:#173e2d;font-weight:800;font-size:1rem;margin-bottom:6px}
 
  /* Compact one-heading profile selector above the lawn photos. */
- #profile-control-deck{padding:10px 12px!important;margin:0 0 8px!important;border-radius:14px!important;min-height:0!important}
- #profile-control-deck .profile-deck-label{margin:0 0 6px!important;padding:0!important;min-height:0!important}
+ #profile-control-deck{padding:5px 8px!important;margin:0 0 4px!important;border-radius:12px!important;min-height:0!important}
+ #profile-control-deck .profile-deck-label{margin:0!important;padding:0!important;min-height:0!important}
  #profile-control-deck .profile-deck-label strong{font-size:1rem!important;line-height:1.25!important}
  #profile-control-deck .profile-deck-kicker{display:none!important}
  #profile-control-deck .profile-deck-grid{display:block!important;gap:0!important;margin:0!important;padding:0!important}
