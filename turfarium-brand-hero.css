@@ -8,3 +8,58 @@
 .tf-brand-sub{font-size:clamp(14px,2.6vw,23px)!important;line-height:1.25!important;font-weight:750!important;margin:0 0 8px!important;color:#f7fff8!important}
 .tf-brand-tag{font-size:clamp(10px,1.5vw,14px)!important;font-weight:750!important;letter-spacing:1.6px!important;color:#d1f0db!important;text-transform:uppercase}
 @media(max-width:700px){.tf-brand-hero{gap:12px!important;min-height:125px!important;padding:17px 13px!important;border-radius:20px!important;background-position:60% center!important}.tf-brand-mark{flex-basis:74px;width:74px;height:74px;border-width:3px}.tf-brand-title{font-size:clamp(32px,9vw,46px)!important;letter-spacing:-1px!important;margin-bottom:5px!important}.tf-brand-sub{font-size:12px!important;margin-bottom:6px!important}.tf-brand-tag{font-size:9px!important;letter-spacing:.8px!important;line-height:1.35!important}}
+
+/* Mobile masthead repair: neutralize inherited generic header layout.
+   Scope every rule to the brand hero; do not affect simulator panels. */
+header.tf-brand-hero{
+  box-sizing:border-box;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  flex-wrap:nowrap!important;
+  justify-content:flex-start!important;
+}
+header.tf-brand-hero .tf-brand-copy{
+  min-width:0!important;
+  overflow-wrap:normal;
+}
+@media(max-width:700px){
+  header.tf-brand-hero{
+    display:grid!important;
+    grid-template-columns:clamp(52px,17vw,72px) minmax(0,1fr)!important;
+    align-items:center!important;
+    column-gap:clamp(9px,2.6vw,13px)!important;
+    min-height:0!important;
+    padding:13px 11px!important;
+  }
+  header.tf-brand-hero .tf-brand-mark{
+    width:100%!important;
+    height:auto!important;
+    aspect-ratio:1;
+    min-width:0!important;
+    flex:none!important;
+    box-sizing:border-box;
+  }
+  header.tf-brand-hero .tf-brand-copy{width:100%!important}
+  header.tf-brand-hero h1.tf-brand-title{
+    font-size:clamp(25px,8vw,40px)!important;
+    line-height:1.06!important;
+    letter-spacing:-.045em!important;
+    overflow-wrap:normal!important;
+    white-space:nowrap;
+  }
+  header.tf-brand-hero p.tf-brand-sub{
+    font-size:clamp(11px,3vw,13px)!important;
+    line-height:1.3!important;
+    overflow-wrap:break-word;
+  }
+  header.tf-brand-hero .tf-brand-tag{
+    font-size:clamp(8px,2.1vw,10px)!important;
+    letter-spacing:.02em!important;
+    overflow-wrap:break-word;
+  }
+}
+@media(max-width:340px){
+  header.tf-brand-hero{grid-template-columns:48px minmax(0,1fr)!important;padding:11px 9px!important}
+  header.tf-brand-hero h1.tf-brand-title{font-size:25px!important}
+}
