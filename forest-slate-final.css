@@ -1,0 +1,18 @@
+/* Turfarium Forest & Slate — unified visual palette, loaded last */
+:root{--tf-forest:#193d34;--tf-slate:#334f61;--tf-sage:#dceae1;--tf-paper:#f7f8f3;--tf-ink:#203b36}
+html,body{color-scheme:light!important;background:#e8efec!important;color:var(--tf-ink)!important}
+body{background:linear-gradient(160deg,#dce9e5 0%,#f1f5f1 52%,#dbe6e3 100%)!important}
+header{background:#233f43!important;color:#f5faf7!important;border-bottom:3px solid #8caa9c!important}
+header h1,header h2,header a,header .brand,header p{color:#f5faf7!important}
+main{color:#213e38!important}
+.card,.tf-card,section.card,.panel,details.tf-research-drawer{background:#f8faf7!important;color:#243e37!important;border:1px solid #b9cec7!important;box-shadow:0 3px 12px #243e3710!important}
+.card h2,.card h3,.tf-card h2,.tf-card h3{color:#244e52!important}
+.card p,.card label,.card small,.card .note,.tf-card p{color:#2c4b43!important}
+.tf-research-drawer>summary{background:#dbe8e7!important;color:#244d60!important;border:1px solid #c0d4d0!important}
+.tf-research-drawer[open]>summary{background:#cddedc!important}
+.tf-research-body{background:#f8faf7!important}
+button,.btn,[role=button]{border-color:#8caaa3!important}
+button.primary,.primary,.btn-primary,[class*=apply-btn]{background:#275d4c!important;color:#fff!important}
+button:focus-visible,summary:focus-visible{outline:3px solid #4c88a5!important;outline-offset:2px}
+input,select,textarea{accent-color:#27614c;color:#213c36}
+@media(max-width:700px){body{background:#e5eeea!important}.tf-research-drawer{background:#f8faf7!important}.tf-research-drawer>summary{background:#dce9e8!important;color:#244d60!important}}
