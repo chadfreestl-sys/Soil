@@ -27,7 +27,7 @@
  #tf-playback-strip .tf-strip-visit{flex:0 1 auto!important;font-size:.72rem!important;margin:0!important;white-space:normal}
  #tf-playback-strip .tf-strip-visit:empty{display:none!important}
  #tf-playback-strip .tf-strip-time .row .note{display:none!important}
- #timeline-workflow.tf-time-controls-moved{display:none!important}
+ #timeline-workflow.tf-time-controls-moved{display:none!important}\n #tf-playback-strip>#canopyTimeline{display:block!important;width:100%;margin:10px 0 0!important;order:2!important;grid-column:1/-1!important}\n #tf-playback-strip .tf-strip-row{width:100%}
  @media(max-width:850px){#tf-playback-strip .tf-strip-time{flex:1 1 100%!important}#tf-playback-strip .tf-strip-row{justify-content:flex-start}#tf-playback-strip .tf-strip-time button{font-size:.75rem!important;padding:5px 4px!important}}
  #tf-playback-strip .tf-strip-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
  .simulation-grid.tf-primary-workspace>.tf-history-standalone{order:-996!important;grid-column:auto!important;margin:0 0 6px!important;padding:7px 9px!important}
@@ -90,6 +90,10 @@
     if(history.parentElement!==grid||history.previousElementSibling!==historyAnchor)historyAnchor.insertAdjacentElement('afterend',history);
     historyAnchor=history;
   }
+  // The original timeline is hidden by the unified toolbar; relocate the live
+  // canopy readout rather than leaving it in an invisible legacy section.
+  const canopy=document.getElementById('canopyTimeline');
+  if(canopy&&canopy.parentElement!==strip)strip.appendChild(canopy);
   const time=strip.querySelector('.tf-strip-time'),replay=strip.querySelector('.tf-strip-replay'),changes=strip.querySelector('.tf-strip-changes'),visit=strip.querySelector('.tf-strip-visit');
   const steps=document.querySelector('#timeline-workflow .row:has([data-step])')||document.querySelector('#profile-control-deck .profile-step-row')||document.querySelector('.profile-step-row');
   if(steps&&steps.parentElement!==time)time.appendChild(steps);
