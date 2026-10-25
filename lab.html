@@ -172,7 +172,39 @@ button.primary{background:#176b54;border-color:#38b48c}
 #lawn-a-panel .photo-stage,#lawn-b-panel .photo-stage{aspect-ratio:1.65!important}
 #lawn-a-panel .photo-stage>canvas.tf-living-window,#lawn-b-panel .photo-stage>canvas.tf-living-window{display:none!important}
 </style>
-<style id="tf-custom-grass-icon-style">.tf-grass-icon{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.22em;margin-right:.2em;background-image:url('turfarium-grass-icons.svg');background-size:100% 100%;background-repeat:no-repeat;flex:none} .tf-grass-icon.tf-soil{filter:saturate(.75)} .tf-grass-icon.tf-growth{filter:hue-rotate(12deg) brightness(1.12)} .tf-grass-icon.tf-water{filter:hue-rotate(55deg)} </style><style id="tf-mobile-photo-recovery-v27">@media(max-width:700px){#tf-mobile-pair{display:none!important}.simulation-grid.tf-primary-workspace{display:flex!important;flex-direction:column!important;gap:10px!important}.simulation-grid.tf-primary-workspace>#lawn-a-panel,.simulation-grid.tf-primary-workspace>#lawn-b-panel{display:block!important;width:100%!important;grid-column:auto!important;padding:8px!important}.simulation-grid.tf-primary-workspace .photo-stage{display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:21/9!important;position:relative!important;overflow:hidden!important}.simulation-grid.tf-primary-workspace .photo-stage .soil-photo{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important}.simulation-grid.tf-primary-workspace .photo-stage canvas{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important}.simulation-grid.tf-primary-workspace #lawn-a-panel .tf-paired-toggle,.simulation-grid.tf-primary-workspace #lawn-b-panel .tf-paired-toggle{display:none!important}.simulation-grid.tf-primary-workspace #lawn-a-panel .tf-paired-extra,.simulation-grid.tf-primary-workspace #lawn-b-panel .tf-paired-extra{display:block!important}}</style></head><body><main>
+<style id="tf-custom-grass-icon-style">.tf-grass-icon{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.22em;margin-right:.2em;background-image:url('turfarium-grass-icons.svg');background-size:100% 100%;background-repeat:no-repeat;flex:none} .tf-grass-icon.tf-soil{filter:saturate(.75)} .tf-grass-icon.tf-growth{filter:hue-rotate(12deg) brightness(1.12)} .tf-grass-icon.tf-water{filter:hue-rotate(55deg)} </style><style id="tf-mobile-photo-recovery-v27">@media(max-width:700px){#tf-mobile-pair{display:none!important}.simulation-grid.tf-primary-workspace{display:flex!important;flex-direction:column!important;gap:10px!important}.simulation-grid.tf-primary-workspace>#lawn-a-panel,.simulation-grid.tf-primary-workspace>#lawn-b-panel{display:block!important;width:100%!important;grid-column:auto!important;padding:8px!important}.simulation-grid.tf-primary-workspace .photo-stage{display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:21/9!important;position:relative!important;overflow:hidden!important}.simulation-grid.tf-primary-workspace .photo-stage .soil-photo{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important}.simulation-grid.tf-primary-workspace .photo-stage canvas{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important}.simulation-grid.tf-primary-workspace #lawn-a-panel .tf-paired-toggle,.simulation-grid.tf-primary-workspace #lawn-b-panel .tf-paired-toggle{display:none!important}.simulation-grid.tf-primary-workspace #lawn-a-panel .tf-paired-extra,.simulation-grid.tf-primary-workspace #lawn-b-panel .tf-paired-extra{display:block!important}}</style><style id="tf-forest-slate-theme">
+/* Turfarium Forest & Slate: global palette, readable surfaces and semantic accents. */
+:root{--tf-forest:#173e32;--tf-pine:#245744;--tf-slate:#344d60;--tf-sage:#e8f0e9;--tf-ivory:#f6f7f1;--tf-copper:#b4774f;--tf-water:#337b9c;--tf-bio:#775e9a;--tf-amber:#b27b2f;--tf-ink:#1a302c;color-scheme:light}
+html{background:#e8eeeb!important}
+body{background:linear-gradient(160deg,#e5ece9 0%,#f4f6f0 48%,#e8efed 100%)!important;color:var(--tf-ink)!important}
+main{color:var(--tf-ink)}
+header{background:linear-gradient(120deg,#f9faf4,#e5efe9)!important;color:var(--tf-forest)!important}
+h1,h2,h3,h4{color:var(--tf-forest)}
+button,select,input,textarea{accent-color:var(--tf-pine)}
+button{transition:background-color .16s,border-color .16s,box-shadow .16s}
+button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #4e91a5!important;outline-offset:2px}
+button:not(.tf-mowing-close):not([aria-selected="true"]){border-color:#b9cbc4}
+button.primary,.primary-btn,.btn-primary,[class*="apply-btn"],[class*="apply-button"]{background:#28654c!important;color:#fff!important;border-color:#28654c!important}
+button.primary:hover,.primary-btn:hover,.btn-primary:hover{background:#1a4838!important}
+.card,.tf-card,details.tf-research-drawer,.tf-lower-disclosure{border-color:#c9d7cf!important}
+.tf-research-drawer>summary{background:#e4eceb!important;color:#244c5a!important}
+.tf-research-drawer[open]>summary{background:#dce9e2!important}
+.tf-research-body{background:#f9faf6!important}
+.tf-module-heading,.tf-module-label{color:var(--tf-slate)!important;border-color:#b6c8c9!important}
+.tf-history-replay,.tf-playback-strip,#tf-stacked-replay,#tf-stacked-quick-progress{border-color:#c4d5d0!important}
+[id*="soil"] h3,[class*="root"] h3{color:#8d5b3d}
+[id*="bio"] h3,[class*="microbe"] h3{color:#674e8b}
+[id*="weather"] h3,[class*="moisture"] h3{color:#276b8d}
+#tf-mowing-dialog .tf-mowing-sheet{background:#f4f7f3!important;color:#173e32!important}
+#tf-mowing-dialog .tf-mowing-tabs button[aria-selected=true]{background:#344d60!important;color:white!important}
+@media(max-width:700px){
+ body{background:#edf1eb!important}
+ main{padding-left:12px!important;padding-right:12px!important}
+ #tf-stacked-lawns .tf-lawn-title{background:rgba(248,250,244,.93)!important;color:#163d31!important}
+ .tf-research-drawer{background:#f7f9f5!important}
+ .tf-research-drawer>summary{background:#e6eeec!important}
+}
+</style></head><body><main>
 <header><div class="build-badge" aria-label="Build version">v19.4 · EVIDENCE LAYER</div><div><h1>🌱 Turfarium</h1><p class="sub">Ecosystem Studio · Interactive turfgrass and soil ecology</p></div><span class="badge">v19.4 · Evidence Confidence</span></header>
 <div class="v8-hero"><strong>✦ NEW · Evidence tiers on modeled outputs · confidence separated from prediction certainty</strong><span>Every major response surface now shows whether it is a mechanistic core, a biological heuristic, or an exploratory hypothesis. Numeric magnitudes remain simulated rather than field-calibrated.</span></div>
 <section class="card"><div class="head"><h2>Shared starting conditions</h2><span class="badge">Matched baseline + weather</span></div>
