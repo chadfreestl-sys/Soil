@@ -5,6 +5,18 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns{display:block!important;order:-2000!important;width:100%!important;grid-column:1/-1!important;margin:4px 0 12px!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-replay .tf-history-replay{display:flex!important}\n .simulation-grid.tf-primary-workspace>#profile-control-deck{order:-1999!important}\n .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1998!important}\n #tf-stacked-lawns .tf-lawn-visual:first-child{margin-top:0!important}\n #tf-mobile-intro{display:block;padding:8px 13px;margin:0 0 7px;border:1px solid #cad9c9;border-radius:12px;background:#f3f8ef;color:#204332;font-size:.84rem;line-height:1.35}\n #tf-mobile-intro p{margin:0}\n #tf-mobile-intro details{margin-top:4px}\n #tf-mobile-intro summary{cursor:pointer;font-weight:800;color:#20523b}\n #tf-mobile-intro details p{margin-top:5px}\n main .tf-homeowner-original-intro{display:none!important}
  #tf-stacked-lawns .tf-lawn-visual{margin:0 0 3px;padding:9px;background:#f4f8f2;border:1px solid #c5d8c7;border-radius:13px;min-width:0}
  #tf-stacked-lawns .tf-lawn-title{display:flex;justify-content:space-between;color:#173e2d;font-weight:800;font-size:1rem;margin-bottom:6px}
+
+ /* Compact one-heading profile selector above the lawn photos. */
+ #profile-control-deck{padding:10px 12px!important;margin:0 0 8px!important;border-radius:14px!important;min-height:0!important}
+ #profile-control-deck .profile-deck-label{margin:0 0 6px!important;padding:0!important;min-height:0!important}
+ #profile-control-deck .profile-deck-label strong{font-size:1rem!important;line-height:1.25!important}
+ #profile-control-deck .profile-deck-kicker{display:none!important}
+ #profile-control-deck .profile-deck-grid{display:block!important;gap:0!important;margin:0!important;padding:0!important}
+ #profile-control-deck .profile-view-slot{padding:0!important;margin:0!important;min-width:0!important}
+ #profile-control-deck .profile-view-slot label[for="viewMode"]{display:none!important}
+ #profile-control-deck .profile-view-slot .note,#profile-control-deck .profile-view-slot .subtle{font-size:.72rem!important;margin:3px 0 0!important}
+ #profile-control-deck .profile-view-slot select{width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin:0!important}
+ #profile-control-deck .profile-view-embedded{padding:0!important;margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important}
  #tf-stacked-lawns .tf-lawn-visual{position:relative!important}
  /* Only the original lower-page timeline buttons are redundant on mobile. */
  #timeline-workflow>.row{display:none!important}
