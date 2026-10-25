@@ -1152,4 +1152,26 @@ microscope();
  #lawn-a-panel .tf-paired-toggle,#lawn-b-panel .tf-paired-toggle{display:none!important}
 }
 </style><script defer src="turfarium-stacked-view-v1.js?v=1.2.5"></script><script src="turfarium-mobile-module-organizer-v1.js?v=1.2.0"></script>
-<link rel="stylesheet" href="forest-slate-final.css?v=2.1.0"><link rel="stylesheet" href="turfarium-brand-hero.css?v=2.0.1"></body></html>
+<link rel="stylesheet" href="forest-slate-final.css?v=2.1.0"><link rel="stylesheet" href="turfarium-brand-hero.css?v=2.0.1"><script id="tf-divergence-title-fix-v1">
+/* Rename the actual mobile disclosure label, including labels created after load. */
+(function(){
+ const label='Five-year divergence tracker';
+ function fix(){
+  const panel=document.getElementById('tf-divergence-panel');
+  if(!panel)return;
+  const details=panel.querySelector('#tf-divergence-details');
+  if(details){const summary=details.querySelector(':scope > summary');if(summary)summary.textContent=label;}
+  const candidates=[...panel.querySelectorAll('summary,button,.tf-collapse-toggle')];
+  for(const el of candidates){
+   if((el.textContent||'').trim()==='Details'){
+    const textNodes=[...el.childNodes].filter(n=>n.nodeType===3&&n.textContent.trim()==='Details');
+    if(textNodes.length)textNodes.forEach(n=>n.textContent=n.textContent.replace('Details',label));
+    else {const leaf=[...el.querySelectorAll('span,strong,b')].find(n=>n.textContent.trim()==='Details');if(leaf)leaf.textContent=label;else el.textContent=label;}
+   }
+  }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();
+ window.addEventListener('load',fix);
+ [400,1200,2800].forEach(ms=>setTimeout(fix,ms));
+})();
+</script></body></html>
