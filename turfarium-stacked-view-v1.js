@@ -2,6 +2,22 @@
 (()=>{'use strict';
 const css=document.createElement('style');css.textContent=`
 @media(max-width:700px){
+ /* Consistent mobile typography for controls below the lawn comparisons. */
+ .simulation-grid .tf-primary-workspace,
+ .simulation-grid .tf-card{font-size:inherit}
+ .simulation-grid button,
+ .simulation-grid select,
+ .simulation-grid input,
+ .simulation-grid summary,
+ .simulation-grid label{font-size:clamp(14px,3.6vw,16px)!important;line-height:1.35!important}
+ .simulation-grid .head,
+ .simulation-grid h3,
+ .simulation-grid h4{font-size:clamp(16px,4vw,19px)!important;line-height:1.3!important}
+ .simulation-grid small,
+ .simulation-grid .note,
+ .simulation-grid .subtle{font-size:clamp(12px,3.2vw,14px)!important;line-height:1.45!important}
+ .simulation-grid .tf-collapse-toggle,
+ .simulation-grid details>summary{max-width:100%;overflow-wrap:anywhere}
  #tf-stacked-lawns{display:block!important;order:-2000!important;width:100%!important;grid-column:1/-1!important;margin:4px 0 12px!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-replay .tf-history-replay{display:flex!important}\n .simulation-grid.tf-primary-workspace>#profile-control-deck{order:-1999!important}\n .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1998!important}\n #tf-stacked-lawns .tf-lawn-visual:first-child{margin-top:0!important}\n #tf-mobile-intro{display:block;padding:8px 13px;margin:0 0 7px;border:1px solid #cad9c9;border-radius:12px;background:#f3f8ef;color:#204332;font-size:.84rem;line-height:1.35}\n #tf-mobile-intro p{margin:0}\n #tf-mobile-intro details{margin-top:4px}\n #tf-mobile-intro summary{cursor:pointer;font-weight:800;color:#20523b}\n #tf-mobile-intro details p{margin-top:5px}\n main .tf-homeowner-original-intro{display:none!important}
  #tf-stacked-lawns .tf-lawn-visual{margin:0 0 3px;padding:9px;background:#f4f8f2;border:1px solid #c5d8c7;border-radius:13px;min-width:0}
  #tf-stacked-lawns .tf-lawn-title{display:flex;justify-content:space-between;color:#173e2d;font-weight:800;font-size:1rem;margin-bottom:6px}
