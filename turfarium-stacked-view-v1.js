@@ -93,7 +93,7 @@ function mount(){
  // Put the real Profile Viewer deck directly above the photo comparison.
  function placeProfileAbove(){
   const deck=document.getElementById('profile-control-deck');
-  if(deck){for(const label of deck.querySelectorAll('strong,summary,h2,h3')){if((label.textContent||'').trim()==='Profile Viewer + Time Advance')label.textContent='Profile Viewer';}}
+  if(deck){for(const label of deck.querySelectorAll('strong,summary,h2,h3')){if((label.textContent||'').trim()==='Profile Viewer + Time Advance')label.textContent='Soil Profile';}}
   const home=view.parentElement;
   if(!deck||!home||deck.contains(view))return;
   // Move the whole deck so its live selector and listeners remain intact.
