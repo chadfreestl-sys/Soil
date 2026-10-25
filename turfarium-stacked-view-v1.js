@@ -86,7 +86,12 @@ function mount(){
  if(!liveReplay){let attempts=0;const retry=setInterval(()=>{const bar=document.querySelector('#tf-playback-strip > .tf-history-replay')||document.querySelector('.tf-replay-bar');if(bar){replayHost.appendChild(bar);clearInterval(retry);}else if(++attempts>25)clearInterval(retry);},400);}
 
 
- // Position the two images consecutively; shared progression and replay follow both.\n const cards=[...view.querySelectorAll(':scope > .tf-lawn-visual')];\n if(cards.length===2){view.insertBefore(cards[0],view.firstElementChild);cards[0].insertAdjacentElement('afterend',cards[1]);}\n if(quick&&cards[1]&&quick.previousElementSibling!==cards[1])cards[1].insertAdjacentElement('afterend',quick);\n if(replayHost&&quick&&replayHost.previousElementSibling!==quick)quick.insertAdjacentElement('afterend',replayHost);\n const sync=()=>{for(const k of ['A','B']){const src=document.getElementById('day'+k),dst=document.getElementById('tf-stack-day-'+k);if(src&&dst)dst.textContent=src.textContent;}};
+ // Position the two images consecutively; shared progression and replay follow both.
+ const cards=[...view.querySelectorAll(':scope > .tf-lawn-visual')];
+ if(cards.length===2){view.insertBefore(cards[0],view.firstElementChild);cards[0].insertAdjacentElement('afterend',cards[1]);}
+ if(quick&&cards[1]&&quick.previousElementSibling!==cards[1])cards[1].insertAdjacentElement('afterend',quick);
+ if(replayHost&&quick&&replayHost.previousElementSibling!==quick)quick.insertAdjacentElement('afterend',replayHost);
+ const sync=()=>{for(const k of ['A','B']){const src=document.getElementById('day'+k),dst=document.getElementById('tf-stack-day-'+k);if(src&&dst)dst.textContent=src.textContent;}};
  sync();setInterval(sync,1300);
  return true;
 }
