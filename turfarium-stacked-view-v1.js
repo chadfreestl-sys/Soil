@@ -103,7 +103,31 @@ function mount(){
  }
  placeResearchAbove();
  // Put the real Profile Viewer deck directly above the photo comparison.
+ function closeMobileSoilProfile(){
+   if(!window.matchMedia('(max-width:700px)').matches)return;
+   const deck=document.getElementById('profile-control-deck');
+   if(!deck)return;
+   // Reuse the existing collapse control, preserving its built-in expand behavior.
+   const toggle=deck.querySelector(':scope > .tf-collapse-toggle');
+   if(toggle){
+     if(toggle.getAttribute('aria-expanded')==='true')toggle.click();
+     return;
+   }
+   // Fallback if the collapse enhancer has not attached.
+   const label=deck.querySelector('.profile-deck-label');
+   const grid=deck.querySelector('.profile-deck-grid');
+   if(!label||!grid||label.dataset.tfDisclosureReady)return;
+   label.dataset.tfDisclosureReady='1';
+   label.setAttribute('role','button');
+   label.setAttribute('tabindex','0');
+   label.setAttribute('aria-expanded','false');
+   grid.hidden=true;
+   const flip=()=>{grid.hidden=!grid.hidden;label.setAttribute('aria-expanded',String(!grid.hidden));};
+   label.addEventListener('click',flip);
+   label.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}});
+ }
  function placeProfileAbove(){
+  closeMobileSoilProfile();
   const deck=document.getElementById('profile-control-deck');
   if(deck){for(const label of deck.querySelectorAll('strong,summary,h2,h3')){if((label.textContent||'').trim()==='Profile Viewer + Time Advance')label.textContent='Soil Profile';}}
   const home=view.parentElement;
