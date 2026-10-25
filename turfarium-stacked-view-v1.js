@@ -2,7 +2,7 @@
 (()=>{'use strict';
 const css=document.createElement('style');css.textContent=`
 @media(max-width:700px){
- #tf-stacked-lawns{display:block!important;order:-2000!important;width:100%!important;grid-column:1/-1!important;margin:4px 0 12px!important}\n .simulation-grid.tf-primary-workspace>#profile-control-deck{order:-1999!important}\n .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1998!important}\n #tf-stacked-lawns .tf-lawn-visual:first-child{margin-top:0!important}
+ #tf-stacked-lawns{display:block!important;order:-2000!important;width:100%!important;grid-column:1/-1!important;margin:4px 0 12px!important}\n .simulation-grid.tf-primary-workspace>#profile-control-deck{order:-1999!important}\n .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1998!important}\n #tf-stacked-lawns .tf-lawn-visual:first-child{margin-top:0!important}\n #tf-mobile-intro{display:block;padding:8px 13px;margin:0 0 7px;border:1px solid #cad9c9;border-radius:12px;background:#f3f8ef;color:#204332;font-size:.84rem;line-height:1.35}\n #tf-mobile-intro p{margin:0}\n #tf-mobile-intro details{margin-top:4px}\n #tf-mobile-intro summary{cursor:pointer;font-weight:800;color:#20523b}\n #tf-mobile-intro details p{margin-top:5px}\n main .tf-homeowner-original-intro{display:none!important}
  #tf-stacked-lawns .tf-lawn-visual{margin:0 0 3px;padding:9px;background:#f4f8f2;border:1px solid #c5d8c7;border-radius:13px;min-width:0}
  #tf-stacked-lawns .tf-lawn-title{display:flex;justify-content:space-between;color:#173e2d;font-weight:800;font-size:1rem;margin-bottom:6px}
  #tf-stacked-lawns .photo-stage{display:block!important;position:relative!important;width:100%!important;aspect-ratio:5/3!important;min-height:0!important;height:auto!important;margin:0!important;overflow:hidden!important}
@@ -45,8 +45,11 @@ function mount(){
  // Visual-first mobile: lawn A begins in the first viewport, B directly after.
  const intro=document.querySelector('main header');
  if(intro&&intro.parentElement){
-   if(view.previousElementSibling!==intro)intro.insertAdjacentElement('afterend',view);
+   if(view.previousElementSibling!==intro&&view.previousElementSibling?.id!=='tf-mobile-intro')intro.insertAdjacentElement('afterend',view);
  }else if(view.parentElement!==grid){grid.insertBefore(view,grid.firstElementChild);}
+ let compact=document.getElementById('tf-mobile-intro');
+ if(!compact){compact=document.createElement('section');compact.id='tf-mobile-intro';compact.innerHTML='<p><strong>Explore your living lawn.</strong> Compare turf, roots and soil as weather, mowing and treatments change over time.</p><details><summary>How Turfarium works</summary><p>Start with two comparable lawns, apply different management choices, then advance time to explore modeled responses. Results are educational scenarios, not field-tested predictions.</p></details>';}
+ if(view.parentElement&&view.previousElementSibling!==compact)view.parentElement.insertBefore(compact,view);
  view.style.order='';
  // Place the real, shared progression controls between the two images. 
  const first=view.querySelector('.tf-lawn-visual'); 
