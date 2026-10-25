@@ -1,6 +1,6 @@
 /* Turfarium build and non-invasive dashboard diagnostics. */
 (()=>{'use strict';
-const BUILD='24.3.0';
+const BUILD='25.0.0';
 const style=document.createElement('style');
 style.textContent='#tf-build-status{position:fixed;right:10px;bottom:10px;z-index:9999;background:#173e2d;color:#fff;border:1px solid #9cbda9;border-radius:9px;padding:5px 9px;font:600 11px/1.3 system-ui,sans-serif;box-shadow:0 2px 9px #0003;opacity:.88}#tf-build-status[data-health="issues"]{background:#70471d}';
 document.head.appendChild(style);
@@ -15,7 +15,10 @@ function check(){
  window.TurfariumBuildStatus=result;
  let badge=document.getElementById('tf-build-status');
  if(!badge){badge=document.createElement('div');badge.id='tf-build-status';badge.title='Turfarium build status; click to see layout diagnostics';badge.addEventListener('click',()=>{console.table(window.TurfariumBuildStatus);alert(JSON.stringify(window.TurfariumBuildStatus,null,2));});document.body.appendChild(badge);}
- const healthy=!missing.length&&!wrong;
+ const canopy=document.getElementById('canopyTimeline');
+ const canopyVisible=!!(canopy&&canopy.getClientRects().length&&canopy.closest('#tf-playback-strip'));
+ result.canopyVisible=canopyVisible;
+ const healthy=!missing.length&&!wrong&&canopyVisible;
  badge.dataset.health=healthy?'ok':'issues';
  badge.textContent='Turfarium v'+BUILD+(healthy?' ✓':' · check layout');
 }
