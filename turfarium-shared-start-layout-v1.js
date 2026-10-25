@@ -6,6 +6,29 @@ function getShared(){
   if(!panel)return null;
   panel.id=panel.id||'shared-starting-conditions';
   panel.classList.add('tf-shared-start-top');
+  // Default the shared baseline panel closed on mobile; preserve controls in the DOM.
+  if(window.matchMedia('(max-width:700px)').matches && !panel.dataset.tfSharedDefaultClosed){
+    panel.dataset.tfSharedDefaultClosed='1';
+    const collapse=panel.querySelector(':scope > .tf-collapse-toggle');
+    if(collapse){
+      if(collapse.getAttribute('aria-expanded')==='true')collapse.click();
+    }else{
+      const head=panel.querySelector(':scope > .head');
+      if(head){
+        head.setAttribute('role','button');
+        head.setAttribute('tabindex','0');
+        head.setAttribute('aria-expanded','false');
+        const toggle=()=>{
+          const opened=head.getAttribute('aria-expanded')!=='true';
+          head.setAttribute('aria-expanded',String(opened));
+          panel.classList.toggle('tf-shared-open',opened);
+        };
+        head.addEventListener('click',toggle);
+        head.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+      }
+    }
+  }
+
   const lab=panel.querySelector('details.labinputs');
   if(lab&&!lab.dataset.tfCompactInit){lab.open=false;lab.dataset.tfCompactInit='1';}
   if(!panel.dataset.tfCompactSummary){
@@ -54,6 +77,13 @@ style.textContent=`
 #tf-top-start-stack>#shared-starting-conditions{margin-bottom:0!important}
 `;
 
+const closedStyle=document.createElement('style');
+closedStyle.textContent=`@media(max-width:700px){
+ #shared-starting-conditions:not(.tf-shared-open) > :not(.head):not(.tf-collapse-toggle){display:none!important}
+ #shared-starting-conditions:not(.tf-shared-open) > .head{margin:0!important;cursor:pointer}
+ #shared-starting-conditions:not(.tf-shared-open){padding:8px 12px!important}
+}`;
+document.head.appendChild(closedStyle);
 const compact=document.createElement('style');compact.id='tf-compact-baseline-v4';compact.textContent=`
 #tf-top-start-stack{margin:8px 0 10px!important}
 #tf-top-start-stack>#shared-starting-conditions{padding:10px 14px!important;border-radius:12px!important}
