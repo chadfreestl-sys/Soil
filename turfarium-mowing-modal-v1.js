@@ -19,6 +19,11 @@ css.textContent=`
 #tf-mowing-dialog .tf-mowing-help{font-size:.82rem;line-height:1.4;margin:0 0 8px;color:#416451}
 #lawn-a-panel .tf-mowing-source-compact,#lawn-b-panel .tf-mowing-source-compact{max-height:95px!important;min-height:0!important;overflow:hidden!important}
 #tf-mowing-dialog .tf-mowing-source-compact{max-height:none!important;overflow:visible!important}
+/* Hide all dashboard control branches, not merely crop their height. */
+#lawn-a-panel .tf-mowing-dashboard-hidden,#lawn-b-panel .tf-mowing-dashboard-hidden{display:none!important}
+#tf-mowing-dialog .tf-mowing-dashboard-hidden{display:revert!important}
+#lawn-a-panel .tf-mowing-source-compact,#lawn-b-panel .tf-mowing-source-compact{max-height:none!important;overflow:visible!important}
+
 
 `;
 document.head.appendChild(css);
@@ -57,6 +62,21 @@ function init(){
      if(!tile || !tile.querySelector('select'))continue;
      tile.classList.add('tf-mowing-source-compact');
      tile.dataset.tfMowingLawn=lawn;
+     // Keep only the interactive Mowing heading visible on the dashboard.
+     // Hide sibling branches at every level, so nested forms cannot peek out.
+     const trigger=[...tile.querySelectorAll('button,summary,[role="button"]')]
+       .find(el=>/mowing/i.test(el.textContent||''));
+     if(trigger){
+       let branch=trigger;
+       while(branch&&branch!==tile){
+         const parent=branch.parentElement;
+         if(!parent)break;
+         for(const sibling of parent.children){
+           if(sibling!==branch)sibling.classList.add('tf-mowing-dashboard-hidden');
+         }
+         branch=parent;
+       }
+     }
    }
  }
  function restore(){
