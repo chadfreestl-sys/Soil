@@ -64,6 +64,16 @@ function snapshotFor(key){
  return fallbackSnapshot(key);
 }
 function scoreFrom(s){
+ // Visible canopy determines photographic succession. Soil biology and root
+ // metrics influence photos indirectly through the plant growth model.
+ // Fallback retains compatibility with snapshots recorded before physiology v1.
+ if(Number.isFinite(Number(s.canopyCover))&&Number.isFinite(Number(s.tillerDensity))){
+  const cover=clamp(Number(s.canopyCover),0,100);
+  const tillers=clamp(Number(s.tillerDensity),0,100);
+  const leaves=clamp(Number(s.leafArea)||0,0,100);
+  const color=clamp(Number(s.vigor)||0,0,100);
+  return Math.round(clamp(cover*.52+tillers*.24+leaves*.12+color*.12,0,100));
+ }
  const raw=Number(s.vigor)*.33+Number(s.biology)*.12+Number(s.worms)*.06+
  (100-Number(s.disease))*.10+Number(s.oxygen)*.10+Number(s.structure)*.10+
  (100-Number(s.compaction))*.07+(100-Number(s.saltStress))*.04+Number(s.rootMass)*.08;
