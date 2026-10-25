@@ -322,6 +322,22 @@ const turf={
 const speciesTraits={
 'Tall fescue':[22,.75,1.0,'cool'], 'Fine fescue':[18,.55,.72,'cool'], 'Kentucky bluegrass':[14,1.15,1.05,'cool'], 'Perennial ryegrass':[16,.75,1.15,'cool'], 'Creeping bentgrass':[12,1.2,1.0,'cool'],
 'Zoysia':[16,1.4,.65,'warm'],'Bermudagrass':[20,1.3,1.2,'warm'],'St. Augustinegrass':[16,1.1,.95,'warm'],'Centipedegrass':[15,.85,.5,'warm'],'Bahiagrass':[28,.65,.6,'warm'],'Buffalograss':[24,.65,.45,'warm'],'Seashore paspalum':[19,1.1,.95,'warm']};
+// Conceptual species growth architecture: tillering, stolons, rhizomes, regrowth.
+// These indices are hypotheses for scenario comparison, not measured rates.
+const turfGrowthHabit={
+ 'Tall fescue':{tiller:1,stolon:0,rhizome:.02,regrowth:.85},
+ 'Fine fescue':{tiller:.8,stolon:0,rhizome:.15,regrowth:.7},
+ 'Kentucky bluegrass':{tiller:.95,stolon:0,rhizome:.85,regrowth:.9},
+ 'Perennial ryegrass':{tiller:1.05,stolon:0,rhizome:0,regrowth:1.05},
+ 'Creeping bentgrass':{tiller:1.15,stolon:1,rhizome:0,regrowth:1.15},
+ 'Zoysia':{tiller:.8,stolon:.85,rhizome:.75,regrowth:.7},
+ 'Bermudagrass':{tiller:1,stolon:1.2,rhizome:1.1,regrowth:1.3},
+ 'St. Augustinegrass':{tiller:.7,stolon:1.1,rhizome:0,regrowth:.95},
+ 'Centipedegrass':{tiller:.65,stolon:.8,rhizome:0,regrowth:.65},
+ 'Bahiagrass':{tiller:.65,stolon:0,rhizome:.75,regrowth:.8},
+ 'Buffalograss':{tiller:.65,stolon:1,rhizome:0,regrowth:.7},
+ 'Seashore paspalum':{tiller:.85,stolon:1,rhizome:.8,regrowth:1}
+};
 const treatments={kelpmeal:'Kelp meal',humic:'Humic / fulvic substances',molasses:'Molasses',fish:'Fish hydrolysate',alfalfa:'Alfalfa meal',wormcast:'Worm castings',microbeinoc:'Microbial inoculant (hypothetical)',slowN:'Controlled-release N',urea:'Urea N',ammsulf:'Ammonium sulfate',potassium:'Soluble potassium',phosphate:'Phosphate fertilizer',micros:'Chelated micronutrients',phosphite:'Potassium phosphite',wetting:'Wetting agent',lime:"Lime (illustrative)",sulfur:"Elemental sulfur (illustrative)",clippings:"Return clippings",dethatch:"Dethatch",mineralN:'Moderate mineral N',highN:'Hypothetical high soluble-salt N pulse',compost:'Mature compost',tea:'Worm/compost tea',aerate:'Core aeration',irrigate:'Irrigation',seaweed:'Seaweed extract',seaweed102:'Seaweed soluble powder 1-0-2',seaweed0014:'Seaweed 0-0-14',biochar:'Conditioned biochar',none:'No treatment'};
 function val(id,lo,hi,fallback){const n=Number($(id).value);return Number.isFinite(n)?Math.max(lo,Math.min(hi,n)):fallback}
 // v14 familiar product classes and transparent dose conversions.
@@ -353,7 +369,7 @@ const productLibrary={
 const productDecay={seaweed102:.09,seaweed0014:.09,kelpmeal:.015,humic:.012,molasses:.25,fish:.05,alfalfa:.018,wormcast:.014,microbeinoc:.20,slowN:.016,urea:.10,ammsulf:.09,potassium:.015,phosphate:.008,micros:.045,phosphite:.065,wetting:.075};
 function productDescription(key){if(customProfiles[key]){const p=customProfiles[key];return `<strong>${escapeHtml(p.name)}</strong><div>${p.n}-${p.p}-${p.k} · ${p.form} · ${p.release} release · ${p.action}</div><small>User-entered formulation; response is an educational proxy, not a manufacturer model.</small>`}const info=productLibrary[key];if(info)return `<strong>${info[0]} · ${treatments[key]}</strong><div>${info[1]}</div><small>${info[2]}</small>`;return `<strong>${treatments[key]}</strong><div>Illustrative response; not a product label rate or field recommendation.</div>`}
 function refreshProductInfo(key){const t=$('treat'+key).value;$('productInfo'+key).innerHTML=productDescription(t);doseInfo(key)}
-function make(){const om=val('organic',.5,10,3),bd=val('bulk',.7,2.1,1.45);return {comp:cl((bd-.85)/1.05*100),carbon:cl(om/10*100),om,bulk:bd,ec:val('ec',0,20,.6),no3:val('nitrate',0,300,12),nh4:val('ammonium',0,200,5),p:val('psoil',0,500,20),k:val('ksoil',0,1000,120),cec:val('cec',1,60,14),texture:$('texture').value,ph:val('ph',4.5,8.5,6.3),moist:49,n:24,salts:12,good:[18,16,13,12,11],bad:[54,50,47],worms:[12,19,13],structure:20,effects:[],grass:$('grass').value,temp:68,rootDepth:9,thatch:.28,rootMass:25,leafArea:58,carbReserve:55,tillerDensity:42,canopyCover:65,mowHeight:val('mowHeight',.1,6,2.5),mowInterval:7,lastMowDay:0,mowEvents:0,lastClippingFraction:0,plantEnergyBalance:0,organicN:om*1100,labileC:cl(om*7,2,75),microbialC:cl(om*4,2,60),grazing:25,seaweedSignal:0,seaweedRootResponse:0,seaweedStressBuffer:0,cycle:{mineral:0,nitrified:0,uptake:0,leached:0},soilMoistMemory:49,oxygenReserve:38,drainageIndex:35,anaerobicStress:0,competition:40,waterInput:0}}
+function make(){const om=val('organic',.5,10,3),bd=val('bulk',.7,2.1,1.45);return {comp:cl((bd-.85)/1.05*100),carbon:cl(om/10*100),om,bulk:bd,ec:val('ec',0,20,.6),no3:val('nitrate',0,300,12),nh4:val('ammonium',0,200,5),p:val('psoil',0,500,20),k:val('ksoil',0,1000,120),cec:val('cec',1,60,14),texture:$('texture').value,ph:val('ph',4.5,8.5,6.3),moist:49,n:24,salts:12,good:[18,16,13,12,11],bad:[54,50,47],worms:[12,19,13],structure:20,effects:[],grass:$('grass').value,temp:68,rootDepth:9,thatch:.28,rootMass:25,leafArea:58,carbReserve:55,tillerDensity:42,canopyCover:65,lateralSpread:0,mowHeight:val('mowHeight',.1,6,2.5),mowInterval:7,lastMowDay:0,mowEvents:0,lastClippingFraction:0,plantEnergyBalance:0,organicN:om*1100,labileC:cl(om*7,2,75),microbialC:cl(om*4,2,60),grazing:25,seaweedSignal:0,seaweedRootResponse:0,seaweedStressBuffer:0,cycle:{mineral:0,nitrified:0,uptake:0,leached:0},soilMoistMemory:49,oxygenReserve:38,drainageIndex:35,anaerobicStress:0,competition:40,waterInput:0}}
 function avg(x){return x.reduce((a,b)=>a+b,0)/x.length}
 function env(s){const oxygen=cl(s.oxygenReserve),heat=cl(100-Math.max(0,Math.abs(s.temp-(turf[s.grass]||turf['Tall fescue']).t)-12)*2.7),wet=cl(100-Math.abs(s.moist-58)*1.5),phFit=cl(100-Math.max(0,(turf[s.grass]||turf['Tall fescue']).lo-s.ph,s.ph-(turf[s.grass]||turf['Tall fescue']).hi)*38),saltStress=cl((s.salts-24)*1.4);
 const good=avg(s.good),bad=avg(s.bad),worms=avg(s.worms),vigor=cl(17+good*.3-bad*.22+oxygen*.12+heat*.15+wet*.12+s.n*.14+phFit*.08-saltStress*.18);
@@ -365,7 +381,7 @@ window.TurfariumVisualSnapshot=function(key){
  const e=env(site);
  return {day,month:monthIndex(day),vigor:e.vigor,biology:e.good,worms:e.worms,
    disease:e.bad,oxygen:e.oxygen,structure:site.structure,compaction:site.comp,
-   saltStress:site.salts,rootMass:site.rootMass,leafArea:site.leafArea,carbReserve:site.carbReserve,tillerDensity:site.tillerDensity,canopyCover:site.canopyCover,mowHeight:site.mowHeight,mowEvents:site.mowEvents,lastClippingFraction:site.lastClippingFraction};
+   saltStress:site.salts,rootMass:site.rootMass,leafArea:site.leafArea,carbReserve:site.carbReserve,tillerDensity:site.tillerDensity,canopyCover:site.canopyCover,lateralSpread:site.lateralSpread,mowHeight:site.mowHeight,mowEvents:site.mowEvents,lastClippingFraction:site.lastClippingFraction};
 };
 function daily(s){
 let [t,m]=weather(day);s.temp+=(t-s.temp)*.13;
@@ -483,12 +499,19 @@ s.plantEnergyBalance=available;
 s.carbReserve=cl(s.carbReserve+available*.32-.025*Math.max(0,60-s.carbReserve)/60,5,100);
 const carbonFactor=cl((s.carbReserve-12)/58,0,1);
 const growthOpportunity=stressFit*carbonFactor;
+const habit=turfGrowthHabit[s.grass]||turfGrowthHabit['Tall fescue'];
 const leafTarget=cl(22+65*leafRetention*growthOpportunity,15,94);
-s.leafArea=cl(s.leafArea+(leafTarget-s.leafArea)*.018,5,100);
+s.leafArea=cl(s.leafArea+(leafTarget-s.leafArea)*.018*habit.regrowth,5,100);
 const tillerTarget=cl(25+55*growthOpportunity*leafRetention,12,88);
-s.tillerDensity=cl(s.tillerDensity+(tillerTarget-s.tillerDensity)*.004,5,100);
-const coverTarget=cl(55+s.tillerDensity*.20,45,82);
-s.canopyCover=cl(s.canopyCover+(coverTarget-s.canopyCover)*.0015*growthOpportunity,30,90);
+s.tillerDensity=cl(s.tillerDensity+(tillerTarget-s.tillerDensity)*.004*habit.tiller,5,100);
+// Lateral expansion is separate from tillering and cannot create cover
+// without available gaps, energy and a suitable growing season.
+const gap=cl((100-s.canopyCover)/100,0,1);
+const lateralPotential=habit.stolon*.55+habit.rhizome*.45;
+const lateralGain=.055*lateralPotential*growthOpportunity*gap;
+s.lateralSpread=cl(s.lateralSpread+lateralGain-.012*(1-stressFit),0,100);
+const coverTarget=cl(55+s.tillerDensity*.20+s.lateralSpread*.25,45,96);
+s.canopyCover=cl(s.canopyCover+(coverTarget-s.canopyCover)*(.0015*growthOpportunity+.0008*lateralPotential*growthOpportunity),30,96);
 const rootGrowth=.09*growthOpportunity*aeration*(1+s.seaweedRootResponse*.02);
 const rootLoss=.018+.032*(1-stressFit)+.014*(1-leafRetention);
 s.rootMass=cl(s.rootMass+rootGrowth-rootLoss,5,100);
