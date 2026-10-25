@@ -15,7 +15,7 @@ css.textContent=`@media(max-width:700px){
 }`;
 document.head.appendChild(css);
 const groups=[
- {id:'records',title:'📋 Records & diagnostics',terms:['Treatment History','Diagnostic Lens','Five-year progression stress test','Evidence & Confidence Layer']},
+ {id:'records',title:'📋 Records & diagnostics',terms:['Diagnostic Lens','Five-year progression stress test','Evidence & Confidence Layer']},
  {id:'ecology',title:'🌱 Ecosystem research',terms:['Turf Species Response','Earthworm Ecology Module','Linked soil food web','Seaweed Response Lab']},
  {id:'experiments',title:'🧪 Experiment tools',terms:['Custom product formulation studio','Worm Tea Brewing Lab','Soil lab & nutrient cycling','Experiment activity']}
 ];
@@ -47,6 +47,15 @@ function organize(){
    const body=drawer.querySelector('.tf-research-body');
    for(const node of group.nodes)if(node.parentElement!==body)body.appendChild(node);
    drawer.hidden=body.children.length===0;
+ }
+  // Keep the independent Lawn A/B history widgets together inside Records.
+ const records=document.querySelector('#tf-research-records .tf-research-body');
+ if(records){
+   const histories=[...document.querySelectorAll('summary,button,h2,h3')].filter(el=>/Treatment History\s*[·:–-]?\s*Lawn\s*[AB]/i.test(el.textContent.trim()) && !el.closest('#tf-research-organizer'));
+   for(const title of histories){
+     const panel=title.closest('details,section.card,article.card,.card');
+     if(panel && panel!==host && !panel.contains(host) && !panel.closest('#tf-stacked-lawns') && !records.contains(panel))records.prepend(panel);
+   }
  }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',organize,{once:true});else organize();
