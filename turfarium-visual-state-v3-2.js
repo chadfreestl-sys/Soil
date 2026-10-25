@@ -193,6 +193,7 @@ async function refresh(key){
  const {overlay,indicator}=ensureStage(stage,photo);
  const snapshot=snapshotFor(key);
  const rawScore=scoreFrom(snapshot);
+ const canopyStatus=' · cover '+(Number(snapshot.canopyCover)||0).toFixed(1)+'% · tillers '+(Number(snapshot.tillerDensity)||0).toFixed(1);
  const month=monthFor(key,snapshot),season=SEASONS[month];
  // March-start photos should not imply a fully established summer canopy at day zero.
  // Visual-only early-season adjustment fades gradually; underlying vigor is unchanged.
@@ -235,7 +236,7 @@ async function refresh(key){
  stage.dataset.tfVisualProgress='score '+n+' / canopy '+Math.round(canopy)+' / root support '+Math.round(rootSupport*100);
  if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature){
   lastState.set(key,{index,signature,day:elapsed});
-  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+n+(establishmentOffset?' · early-spring canopy adjustment':''));
+  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+n+(establishmentOffset?' · early-spring canopy adjustment':'')+canopyStatus);
   return;
  }
  const request=(pending.get(key)||0)+1;
