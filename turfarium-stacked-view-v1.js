@@ -90,8 +90,17 @@ function mount(){
   }
  }
  placeResearchAbove();
+ // Put the real Profile Viewer deck directly above the photo comparison.
+ function placeProfileAbove(){
+  const deck=document.getElementById('profile-control-deck');
+  const home=view.parentElement;
+  if(!deck||!home||deck.contains(view))return;
+  // Move the whole deck so its live selector and listeners remain intact.
+  if(deck.nextElementSibling!==view)home.insertBefore(deck,view);
+ }
+ placeProfileAbove();
  let rearrangePasses=0;
- const rearrangeTimer=setInterval(()=>{placeResearchAbove();if(++rearrangePasses>=20)clearInterval(rearrangeTimer);},600);
+ const rearrangeTimer=setInterval(()=>{placeResearchAbove();placeProfileAbove();if(++rearrangePasses>=20)clearInterval(rearrangeTimer);},600);
  // Remove duplicate local replay mirrors; retain one shared historical replay control.
  document.querySelectorAll('.tf-history-replay-local').forEach(el=>el.remove());
  view.style.order='';
