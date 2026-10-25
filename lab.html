@@ -224,9 +224,9 @@ button.primary{background:#176b54;border-color:#38b48c}
 <small class="note">Earthworm groups: epigeic (surface litter), endogeic (soil-dwelling), and anecic (deep-burrowing). Activity and abundance are distinct; the display is a relative modeled activity index, not worm counts.</small></section>
 <section class="card"><h2>💧 Root-zone physics · drainage & oxygen</h2><p class="note">Dynamic, hypothetical indices. Soil texture and bulk density control infiltration and oxygen recovery; saturation reduces gas exchange.</p><div id="physicsPanel" class="physics-grid" aria-live="polite"></div><p id="physicsExplanation" class="note"></p></section>
 <section class="card"><h2>🍄 Linked soil food web</h2><div id="foodWebNarrative" class="explain" style="margin-bottom:12px"></div><div id="foodWeb"></div><small class="note">These are functional guilds. Disease pressure is not a pathogen diagnosis. Microbial inoculants are not assumed to establish.</small></section>
-<section class="card wide"><h2>Five-year divergence tracker</h2><canvas class="chart" id="chart" width="1200" height="240"></canvas>
+<section class="card wide" id="tf-divergence-panel"><details id="tf-divergence-details"><summary>Five-year divergence tracker · Timeline chart</summary><div class="tf-divergence-content"><canvas class="chart" id="chart" width="1200" height="240"></canvas>
 <div class="legend"><span><i class="swatch" style="background:#78e4a2"></i>Lawn A turf vigor</span><span><i class="swatch" style="background:#b4c9ff"></i>Lawn B turf vigor</span><span><i class="swatch" style="background:#e9bb78"></i>A earthworm activity</span><span><i class="swatch" style="background:#d0a7ed"></i>B earthworm activity</span></div>
-<div class="explain" id="divergence"></div></section>
+<div class="explain" id="divergence"></div></div></details></section>
 
 <section class="card wide" id="formulationStudio"><h2>🧪 Custom product formulation studio</h2><p class="studio-note">Build a generic or label-derived formulation, then apply it independently to either lawn. N–P₂O₅–K₂O is guaranteed analysis by weight. Custom profiles are stored in this browser only.</p>
 <div class="studio-layout">
