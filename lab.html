@@ -471,13 +471,16 @@ const height=cl(Number(s.mowHeight)||2.5,.1,6);
 // configuration change. Clipping removal is bounded by the one-third guideline
 // as a stress proxy; leaf-area loss and carbohydrate cost are heuristic.
 const interval=cl(Number(s.mowInterval)||7,1,30);
-if(day>0&&day-s.lastMowDay>=interval){
+if(day+1-s.lastMowDay>=interval){
  const growthSinceCut=cl(.06+.16*tempFit*moisture*oxygenFactor,0,.25);
- const cutFraction=cl(growthSinceCut*interval/7,.02,.55);
+ // Shorter target heights tend to remove a larger fraction at a given
+ // interval, but the exact removed fraction requires explicit canopy height.
+ const heightPressure=cl(1.15-.14*height,.45,1.2);
+ const cutFraction=cl(growthSinceCut*interval/7*heightPressure,.02,.55);
  s.lastClippingFraction=cutFraction;
  s.leafArea=cl(s.leafArea*(1-cutFraction),5,100);
  s.carbReserve=cl(s.carbReserve-4*cutFraction,5,100);
- s.lastMowDay=day;s.mowEvents++;
+ s.lastMowDay=day+1;s.mowEvents++;
 }
 const mowingTraits={
  'Tall fescue':[2.5,4],'Fine fescue':[2,3.5],'Kentucky bluegrass':[2,3.5],
@@ -510,7 +513,10 @@ const gap=cl((100-s.canopyCover)/100,0,1);
 const lateralPotential=habit.stolon*.55+habit.rhizome*.45;
 const lateralGain=.055*lateralPotential*growthOpportunity*gap;
 s.lateralSpread=cl(s.lateralSpread+lateralGain-.012*(1-stressFit),0,100);
-const coverTarget=cl(55+s.tillerDensity*.20+s.lateralSpread*.25,45,96);
+// Bunch-type turf cannot recover extensive bare cover through tillering
+// alone; canopy densification and actual area colonization are distinct.
+const baseCover=habit.stolon+habit.rhizome<.1?65:55;
+const coverTarget=cl(baseCover+s.tillerDensity*.12+s.lateralSpread*.25,40,96);
 s.canopyCover=cl(s.canopyCover+(coverTarget-s.canopyCover)*(.0015*growthOpportunity+.0008*lateralPotential*growthOpportunity),30,96);
 const rootGrowth=.09*growthOpportunity*aeration*(1+s.seaweedRootResponse*.02);
 const rootLoss=.018+.032*(1-stressFit)+.014*(1-leafRetention);
