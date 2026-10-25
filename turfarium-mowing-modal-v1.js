@@ -17,6 +17,9 @@ css.textContent=`
 #tf-mowing-dialog .tf-mowing-content label{display:block;margin-top:9px}
 #tf-mowing-dialog .tf-mowing-content .tf-mowing-card{min-width:0!important}
 #tf-mowing-dialog .tf-mowing-help{font-size:.82rem;line-height:1.4;margin:0 0 8px;color:#416451}
+#lawn-a-panel .tf-mowing-source-compact,#lawn-b-panel .tf-mowing-source-compact{max-height:95px!important;min-height:0!important;overflow:hidden!important}
+#tf-mowing-dialog .tf-mowing-source-compact{max-height:none!important;overflow:visible!important}
+
 `;
 document.head.appendChild(css);
 function init(){
@@ -48,6 +51,14 @@ function init(){
    }
    return tile;
  }
+ function compactSourceTiles(){
+   for(const lawn of ['A','B']){
+     const tile=locate(lawn);
+     if(!tile || !tile.querySelector('select'))continue;
+     tile.classList.add('tf-mowing-source-compact');
+     tile.dataset.tfMowingLawn=lawn;
+   }
+ }
  function restore(){
    const old=content.firstElementChild;
    if(old&&old.__tfReturn?.parentNode){
@@ -72,12 +83,16 @@ function init(){
    lastFocus?.focus?.();
  }
  function open(trigger){
+   compactSourceTiles();
    lastFocus=trigger;
    const panel=trigger.closest('#lawn-a-panel,#lawn-b-panel');
    const lawn=panel?.id==='lawn-b-panel'?'B':'A';
    dialog.classList.add('tf-open');document.body.style.overflow='hidden';
    show(lawn);dialog.querySelector('.tf-mowing-close').focus();
  }
+ compactSourceTiles();
+ window.addEventListener('load',compactSourceTiles,{once:true});
+ [400,1200,3000].forEach(ms=>setTimeout(compactSourceTiles,ms));
  dialog.querySelector('.tf-mowing-close').addEventListener('click',close);
  dialog.querySelectorAll('[data-lawn]').forEach(btn=>btn.addEventListener('click',()=>show(btn.dataset.lawn)));
  dialog.addEventListener('click',e=>{if(e.target===dialog)close();});
