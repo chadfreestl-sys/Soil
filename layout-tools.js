@@ -90,12 +90,33 @@
       <div class="profile-changes-slot"></div>
     </div>`;
 
+  // Authoritative compact mobile layout, defined alongside the component.
+  const compactStyle=document.createElement('style');
+  compactStyle.id='tf-profile-compact-final';
+  compactStyle.textContent=`@media(max-width:700px){
+    #profile-control-deck{padding:9px 12px!important;margin:0 0 7px!important}
+    #profile-control-deck .profile-deck-label{margin:0 0 6px!important;padding:0!important}
+    #profile-control-deck .profile-deck-kicker{display:none!important}
+    #profile-control-deck .profile-deck-grid{display:block!important;gap:0!important}
+    #profile-control-deck .profile-view-slot{margin:0!important;padding:0!important}
+    #profile-control-deck .tf-mobile-redundant-profile-label{display:none!important}
+    #profile-control-deck .profile-view-embedded{margin:0!important;padding:0!important}
+    #profile-control-deck .profile-view-slot select{margin:0!important}
+  }`;
+  document.head.appendChild(compactStyle);
   const viewSlot=deck.querySelector('.profile-view-slot');
   const timeSlot=deck.querySelector('.profile-time-slot');
   if(viewOptions){
     viewOptions.classList.add('profile-view-embedded');
     const label=viewOptions.querySelector('label[for="viewMode"]');
-    if(label)label.textContent='Profile viewer';
+    if(label){
+      label.textContent='Profile viewer';
+      // The outer Soil Profile heading already names this control on mobile.
+      // Hide the repeated label without removing its accessible association.
+      label.classList.add('tf-mobile-redundant-profile-label');
+    }
+    const viewSelect=viewOptions.querySelector('#viewMode');
+    if(viewSelect)viewSelect.setAttribute('aria-label','Soil profile view');
     viewSlot.appendChild(viewOptions);
   }else{
     viewSlot.innerHTML='<span class="profile-missing">Profile viewer unavailable.</span>';
