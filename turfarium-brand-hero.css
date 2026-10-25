@@ -63,3 +63,36 @@ header.tf-brand-hero .tf-brand-copy{
   header.tf-brand-hero{grid-template-columns:48px minmax(0,1fr)!important;padding:11px 9px!important}
   header.tf-brand-hero h1.tf-brand-title{font-size:25px!important}
 }
+
+/* Approved AI artwork, uploaded as turfarium-hero.webp.
+   Show the complete composition, including its baked-in lettering, without duplicate HTML text. */
+header.tf-brand-hero{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:8/3!important;
+  padding:0!important;
+  margin:0 0 14px!important;
+  border:2px solid #729987!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+  background:#163d32 url('turfarium-hero.webp?v=20261025') center center/100% 100% no-repeat!important;
+  box-shadow:0 5px 0 #638c79,0 12px 24px #173e332b!important;
+}
+header.tf-brand-hero>.tf-brand-mark,
+header.tf-brand-hero>.tf-brand-copy{display:none!important}
+header.tf-brand-hero::before{display:none!important}
+@media(max-width:700px){
+  header.tf-brand-hero{
+    display:block!important;
+    min-height:0!important;
+    height:auto!important;
+    aspect-ratio:8/3!important;
+    padding:0!important;
+    border-radius:15px!important;
+    background:#163d32 url('turfarium-hero.webp?v=20261025') center center/100% 100% no-repeat!important;
+  }
+}
