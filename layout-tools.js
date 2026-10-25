@@ -80,7 +80,7 @@
   deck.innerHTML=`
     <div class="profile-deck-label">
       <span class="profile-deck-kicker">LIVE PROFILE CONTROLS</span>
-      <strong>Profile Viewer + Time Advance</strong>
+      <strong>Profile Viewer</strong>
     </div>
     <div class="profile-deck-grid">
       <div class="profile-view-slot"></div>
@@ -191,7 +191,7 @@
   const titleForPanel=panel=>{
     if(panel===lawnA)return 'Lawn A';
     if(panel===lawnB)return 'Lawn B';
-    if(panel===deck)return 'Profile Viewer + Time Advance';
+    if(panel===deck)return 'Profile Viewer';
     if(panel===timeline)return 'What Changed';
     if(panel.id==='scenario-onboarding')return 'Scenario Quick Start';
     if(panel.id==='scenario-memory')return 'Save & Compare';
