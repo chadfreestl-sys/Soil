@@ -66,10 +66,8 @@ function mount(){
   if(!match)continue;
   const card=match.closest('section,article,.card,.tf-card,details')||match.parentElement;
   if(!card||card.contains(view)||moved.has(card)||!view.parentElement)continue;
-  if(card.parentElement===view.parentElement){
-   view.parentElement.insertBefore(card,compact);
-   moved.add(card);
-  }
+  view.parentElement.insertBefore(card,compact);
+  moved.add(card);
  }
  // Remove duplicate local replay mirrors; retain one shared historical replay control.
  document.querySelectorAll('.tf-history-replay-local').forEach(el=>el.remove());
