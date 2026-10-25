@@ -49,7 +49,9 @@ function mount(){
  }else if(view.parentElement!==grid){grid.insertBefore(view,grid.firstElementChild);}
  let compact=document.getElementById('tf-mobile-intro');
  if(!compact){compact=document.createElement('section');compact.id='tf-mobile-intro';compact.innerHTML='<p><strong>Explore your living lawn.</strong> Compare turf, roots and soil as weather, mowing and treatments change over time.</p><details><summary>How Turfarium works</summary><p>Start with two comparable lawns, apply different management choices, then advance time to explore modeled responses. Results are educational scenarios, not field-tested predictions.</p></details>';}
- if(view.parentElement&&view.previousElementSibling!==compact)view.parentElement.insertBefore(compact,view);\n // Remove duplicate local replay mirrors; retain one shared historical replay control.\n document.querySelectorAll('.tf-history-replay-local').forEach(el=>el.remove());
+ if(view.parentElement&&view.previousElementSibling!==compact)view.parentElement.insertBefore(compact,view);
+ // Remove duplicate local replay mirrors; retain one shared historical replay control.
+ document.querySelectorAll('.tf-history-replay-local').forEach(el=>el.remove());
  view.style.order='';
  // Place the real, shared progression controls between the two images. 
  const first=view.querySelector('.tf-lawn-visual'); 
