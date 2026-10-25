@@ -50,25 +50,36 @@ function mount(){
  let compact=document.getElementById('tf-mobile-intro');
  if(!compact){compact=document.createElement('section');compact.id='tf-mobile-intro';compact.innerHTML='<p><strong>Explore your living lawn.</strong> Compare turf, roots and soil as weather, mowing and treatments change over time.</p><details><summary>How Turfarium works</summary><p>Start with two comparable lawns, apply different management choices, then advance time to explore modeled responses. Results are educational scenarios, not field-tested predictions.</p></details>';}
  if(view.parentElement&&view.previousElementSibling!==compact)view.parentElement.insertBefore(compact,view);
- // On mobile, show the research overview and setup cards above the two lawn images.
- // Move only standalone cards; never move an ancestor of the lawn workspace.
- const headings=[
-  /Explore the model without losing/i,
-  /Scenario Quick Start/i,
-  /Shared starting conditions/i,
-  /One lawn\\. A whole living ecosystem/i,
-  /Profile Viewer \\+ Time Advance/i
- ];
- const moved=new Set();
- for(const pattern of headings){
-  const match=[...document.querySelectorAll('h1,h2,h3,h4,summary,button')]
-    .find(el=>pattern.test((el.textContent||'').trim())&&!el.closest('#tf-stacked-lawns'));
-  if(!match)continue;
-  const card=match.closest('section,article,.card,.tf-card,details')||match.parentElement;
-  if(!card||card.contains(view)||moved.has(card)||!view.parentElement)continue;
-  view.parentElement.insertBefore(card,compact);
-  moved.add(card);
+ // Research sections are inserted by other scripts, sometimes after this mount.
+ // Move their full top-level cards before the comparison, without moving the simulation workspace.
+ function placeResearchAbove(){
+  const patterns=[
+   /Explore the model without losing/i,
+   /Scenario Quick Start/i,
+   /Shared starting conditions/i,
+   /One lawn\\. A whole living ecosystem/i,
+   /Profile Viewer \\+ Time Advance/i
+  ];
+  const home=view.parentElement;
+  if(!home)return;
+  for(const pattern of patterns){
+   const match=[...document.querySelectorAll('h1,h2,h3,h4,summary,button')]
+     .find(el=>pattern.test((el.textContent||'').trim())&&!el.closest('#tf-stacked-lawns'));
+   if(!match)continue;
+   let card=match.closest('section,article,.card,.tf-card,details')||match.parentElement;
+   if(!card||card.contains(view)||card===home||card.contains(home))continue;
+   // If a heading is inside a nested disclosure, move its outer standalone card.
+   while(card.parentElement&&card.parentElement!==home&&card.parentElement.matches('section,article,.card,.tf-card')){
+    if(card.parentElement.contains(view))break;
+    card=card.parentElement;
+   }
+   if(card.contains(view)||card===home||card.contains(home))continue;
+   home.insertBefore(card,compact);
+  }
  }
+ placeResearchAbove();
+ let rearrangePasses=0;
+ const rearrangeTimer=setInterval(()=>{placeResearchAbove();if(++rearrangePasses>=20)clearInterval(rearrangeTimer);},600);
  // Remove duplicate local replay mirrors; retain one shared historical replay control.
  document.querySelectorAll('.tf-history-replay-local').forEach(el=>el.remove());
  view.style.order='';
