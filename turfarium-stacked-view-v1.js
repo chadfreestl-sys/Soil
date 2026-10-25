@@ -3,7 +3,7 @@
 const css=document.createElement('style');css.textContent=`
 @media(max-width:700px){
  #tf-stacked-lawns{display:block!important;order:-2000!important;width:100%!important;grid-column:1/-1!important;margin:8px 0 12px!important}\n .simulation-grid.tf-primary-workspace>#profile-control-deck{order:-1999!important}\n .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1998!important}\n #tf-stacked-lawns .tf-lawn-visual:first-child{margin-top:0!important}
- #tf-stacked-lawns .tf-lawn-visual{margin:0 0 9px;padding:9px;background:#f4f8f2;border:1px solid #c5d8c7;border-radius:13px;min-width:0}
+ #tf-stacked-lawns .tf-lawn-visual{margin:0 0 3px;padding:9px;background:#f4f8f2;border:1px solid #c5d8c7;border-radius:13px;min-width:0}
  #tf-stacked-lawns .tf-lawn-title{display:flex;justify-content:space-between;color:#173e2d;font-weight:800;font-size:1rem;margin-bottom:6px}
  #tf-stacked-lawns .photo-stage{display:block!important;position:relative!important;width:100%!important;aspect-ratio:5/3!important;min-height:0!important;height:auto!important;margin:0!important;overflow:hidden!important}
  #tf-stacked-lawns .photo-stage img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important}
@@ -42,8 +42,13 @@ function mount(){
    card.append(title,stage,controls);view.appendChild(card);
   }
  }
- const intro=document.querySelector('main header');\n if(intro&&intro.parentElement){intro.insertAdjacentElement('afterend',view);}else if(view.parentElement!==grid||grid.firstElementChild!==view){grid.insertBefore(view,grid.firstElementChild);}\n view.style.order='-9999';
- // Place the real, shared progression controls between the two images.\n const first=view.querySelector('.tf-lawn-visual');\n if(first&&strip.parentElement!==view){first.insertAdjacentElement('afterend',strip);}\n const sync=()=>{for(const k of ['A','B']){const src=document.getElementById('day'+k),dst=document.getElementById('tf-stack-day-'+k);if(src&&dst)dst.textContent=src.textContent;}};
+ const intro=document.querySelector('main header'); 
+ if(intro&&intro.parentElement){intro.insertAdjacentElement('afterend',view);}else if(view.parentElement!==grid||grid.firstElementChild!==view){grid.insertBefore(view,grid.firstElementChild);} 
+ view.style.order='-9999';
+ // Place the real, shared progression controls between the two images. 
+ const first=view.querySelector('.tf-lawn-visual'); 
+ if(strip.parentElement!==view){view.appendChild(strip);} 
+ const sync=()=>{for(const k of ['A','B']){const src=document.getElementById('day'+k),dst=document.getElementById('tf-stack-day-'+k);if(src&&dst)dst.textContent=src.textContent;}};
  sync();setInterval(sync,1300);
  return true;
 }
