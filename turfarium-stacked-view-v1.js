@@ -54,17 +54,6 @@ function mount(){
  // Place the real, shared progression controls between the two images. 
  const first=view.querySelector('.tf-lawn-visual'); 
  if(strip.parentElement!==view){view.appendChild(strip);} 
- if(!window.__tfStackStripGuard){
-   window.__tfStackStripGuard=true;
-   let pending=false;
-   const guard=new MutationObserver(()=>{
-     if(pending)return;
-     if(strip.parentElement===view&&strip===view.lastElementChild)return;
-     pending=true;
-     requestAnimationFrame(()=>{pending=false;if(view.isConnected&&strip.isConnected&&strip.parentElement!==view)view.appendChild(strip);});
-   });
-   guard.observe(document.body,{childList:true,subtree:true});
- } 
  const sync=()=>{for(const k of ['A','B']){const src=document.getElementById('day'+k),dst=document.getElementById('tf-stack-day-'+k);if(src&&dst)dst.textContent=src.textContent;}};
  sync();setInterval(sync,1300);
  return true;
