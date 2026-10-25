@@ -100,7 +100,7 @@
   const timeline=document.getElementById('timeline-workflow');
   if(timeline&&steps&&time.contains(steps))timeline.classList.add('tf-time-controls-moved');
   const replayBar=document.querySelector('.tf-replay-bar');
-  if(replayBar&&replayBar.parentElement!==replay)replay.appendChild(replayBar);
+  if(replayBar&&replayBar.parentElement!==replay&&!document.getElementById('tf-stacked-replay')?.contains(replayBar))replay.appendChild(replayBar);
   const report=document.getElementById('tf-what-changed-details')||document.getElementById('changeReport');
   if(report&&report.parentElement!==changes)changes.appendChild(report);
   const note=document.getElementById('visit');
