@@ -955,67 +955,19 @@ microscope();
 <script defer src="profile-compact-v23-3.js?v=23.7"></script>
 <script defer src="treatment-history-v23-6.js?v=24.0"></script>
 <script defer src="turfarium-details-v24.js?v=24.0"></script>
-<!-- Disabled procedural worm overlay: photographic worms are embedded in the background and cannot be independently animated. --><script defer src="turfarium-living-window.js?v=4.1.0"></script><script defer src="turfarium-clean-photo.js?v=3.9"></script><script defer src="turfarium-visual-state-v3-2.js?v=canopy-1-2"></script><script defer src="turfarium-shared-start-layout-v1.js?v=4.2"></script><script defer src="turfarium-science-pairs-v1.js?v=1.2.0"></script><script defer src="turfarium-header-polish-v1.js?v=1.3.0"></script><script defer src="js/food-web.js?v=1.0.0"></script><script defer src="js/food-web-bridge.js?v=1.0.0"></script><script defer src="js/five-year-scenarios.js?v=1.1.0"></script><script defer src="js/five-year-scenario-panel.js?v=1.0.0"></script><script defer src="what-changed-collapse.js?v=1.0.0"></script><script defer src="turfarium-playback-strip.js?v=1.5.2"></script>
+<!-- Disabled procedural worm overlay: photographic worms are embedded in the background and cannot be independently animated. --><script defer src="turfarium-living-window.js?v=4.1.0"></script><script defer src="turfarium-clean-photo.js?v=3.9"></script><script defer src="turfarium-visual-state-v3-2.js?v=canopy-1-2"></script><script defer src="turfarium-shared-start-layout-v1.js?v=4.2"></script><script defer src="turfarium-science-pairs-v1.js?v=1.2.0"></script><script defer src="turfarium-header-polish-v1.js?v=1.3.0"></script><script defer src="js/food-web.js?v=1.0.0"></script><script defer src="js/food-web-bridge.js?v=1.0.0"></script><script defer src="js/five-year-scenarios.js?v=1.1.0"></script><script defer src="js/five-year-scenario-panel.js?v=1.0.0"></script><script defer src="what-changed-collapse.js?v=1.0.0"></script><script defer src="turfarium-playback-strip.js?v=1.6.0"></script>
 <script defer src="turfarium-history-replay-v1.js?v=1.4.0"></script>
-<script defer src="turfarium-build-status.js?v=24.3.0"></script><script defer src="turfarium-soil-story-visual.js?v=1.0.3"></script><style id="tf-mobile-advance-fallback-style">
-@media(max-width:700px){#lawn-a-panel .kpis,#lawn-b-panel .kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}#lawn-a-panel .kpis>.kpi,#lawn-b-panel .kpis>.kpi{min-width:0!important;margin:0!important;padding:9px!important}#lawn-a-panel .tf-mobile-advance,#lawn-b-panel .tf-mobile-advance{display:block!important;margin:8px 0 10px;padding:9px;border:1px solid #b8d0bd;border-radius:12px;background:#eef5ec}.tf-mobile-advance-title{font-size:.8rem;font-weight:800;color:#22533a;margin-bottom:7px}.tf-mobile-advance-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.tf-mobile-advance-actions button{min-width:0;padding:9px 2px;min-height:44px;font-size:.78rem;border-radius:8px;background:#174c48;color:white}}
-@media(min-width:701px){.tf-mobile-advance{display:none!important}}
-</style><script>
-(function(){
- let timer=null;
- function install(){
-  const strip=document.getElementById('tf-playback-strip');
-  const time=strip&&strip.querySelector('.tf-strip-time');
-  if(!time||strip.querySelector('#tf-timelapse-play'))return;
-  const btn=document.createElement('button');
-  btn.id='tf-timelapse-play';btn.type='button';btn.textContent='▶ Time-lapse';
-  btn.title='Play forward in 7-day steps; this does not rewind previously simulated days.';
-  btn.style.cssText='flex:0 0 auto;min-height:35px;padding:6px 10px;border-radius:9px;background:#174c48;color:#fff;font-weight:750;white-space:nowrap';
-  const status=document.createElement('span');status.id='tf-timelapse-status';status.style.cssText='font-size:.72rem;color:#365b45';
-  function stop(){if(timer){clearInterval(timer);timer=null;}btn.textContent='▶ Time-lapse';btn.setAttribute('aria-pressed','false');}
-  btn.addEventListener('click',function(){
-   if(timer){stop();return;}
-   if(typeof window.TurfariumAdvanceDays!=='function'){status.textContent='Timeline not ready';return;}
-   btn.textContent='■ Stop';btn.setAttribute('aria-pressed','true');status.textContent='Playing slowly · 5.2s per step';
-   const tick=function(){
-    const day=Number((document.getElementById('dayA')?.textContent||'').match(/\\d+/)?.[0]||0);
-    if(day+7>1825){stop();status.textContent='Five-year limit reached';return;}
-    try{window.TurfariumAdvanceDays(7);}catch(err){stop();status.textContent='Playback stopped';console.error(err);}
-   };
-   tick();timer=setInterval(tick,5200);
-  });
-  time.append(btn,status);
-  window.addEventListener('pagehide',stop,{once:true});
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
- window.addEventListener('load',install);setTimeout(install,700);setTimeout(install,1800);
-})();
-</script><script>
-(function(){
- function place(){
-  for(const key of ['A','B']){
-   const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
-   const photo=panel&&panel.querySelector('.photo-stage');
-   if(!photo||panel.querySelector('.tf-mobile-advance'))continue;
-   const box=document.createElement('div');box.className='tf-mobile-advance';
-   box.innerHTML='<div class="tf-mobile-advance-title">⏱ Advance time · both lawns</div><div class="tf-mobile-advance-actions"></div>';
-   for(const days of [7,30,90,365]){
-    const button=document.createElement('button');button.type='button';button.textContent=days===365?'+1 year':'+'+days+' days';
-    button.addEventListener('click',function(){
-     if(typeof window.TurfariumAdvanceDays==='function'){
-       window.TurfariumAdvanceDays(days);
-     }else{
-       const original=document.querySelector('#timeline-workflow [data-step="'+days+'"]');
-       if(original)original.click();
-       else console.warn('Turfarium advance unavailable:',days);
-     }
-    });
-    box.querySelector('.tf-mobile-advance-actions').appendChild(button);
-   }
-   photo.parentNode.insertBefore(box,photo);
-  }
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);else place();
- window.addEventListener('load',place);setTimeout(place,900);
-})();
-</script></body></html>
+<script defer src="turfarium-build-status.js?v=25.0.0"></script><script defer src="turfarium-soil-story-visual.js?v=1.0.3"></script><style id="tf-streamline-v25">
+/* One visible progression bar for both lawns; no per-lawn duplicate controls. */
+.tf-mobile-advance{display:none!important}
+#tf-playback-strip>#canopyTimeline{display:block!important;box-sizing:border-box!important;max-width:100%!important}
+#tf-playback-strip #canopyTimelineValues>div{padding:7px 0;border-bottom:1px solid #557663}
+#tf-playback-strip #canopyTimelineValues>div:last-child{border-bottom:0}
+@media(max-width:700px){
+.simulation-grid.tf-primary-workspace{grid-template-columns:minmax(0,1fr)!important}
+.simulation-grid.tf-primary-workspace>#lawn-a-panel,.simulation-grid.tf-primary-workspace>#lawn-b-panel{grid-column:1/-1!important}
+#tf-playback-strip .tf-strip-time .row{flex-wrap:wrap!important}
+#tf-playback-strip .tf-strip-time button{flex:1 1 22%!important;min-width:65px!important}
+#tf-playback-strip #canopyTimeline{font-size:.83rem!important;padding:10px!important}
+}
+</style></body></html>
