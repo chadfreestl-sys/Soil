@@ -10,7 +10,7 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns .photo-stage canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
  #tf-stacked-lawns .tf-lawn-time{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:8px}
  #tf-stacked-lawns .tf-lawn-time button{min-width:0!important;min-height:42px!important;padding:7px 2px!important;font-size:.78rem!important;font-weight:750;color:#173e2d;background:#fff;border:1px solid #b5cbb8;border-radius:9px}
- #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n @media(max-width:700px){main .tf-homeowner-original-intro{display:none!important}}\n #tf-stacked-lawns .tf-lawn-visual .tf-lawn-time{display:none!important}\n #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}\n #tf-stacked-replay{display:flex!important;align-items:center;flex-wrap:wrap;gap:7px;margin:3px 0 9px;padding:8px;border:1px solid #c5d8c7;border-radius:11px;background:#f4f8f2}\n #tf-stacked-replay .tf-replay-bar{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:7px;width:100%!important}\n #tf-stacked-replay button{min-height:38px!important}\n #tf-stacked-replay input[type=range]{max-width:45vw!important}\n #tf-playback-strip .tf-strip-replay{display:none!important}
+ #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n @media(max-width:700px){main .tf-homeowner-original-intro{display:none!important}}\n #tf-stacked-lawns .tf-lawn-visual .tf-lawn-time{display:none!important}\n #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}\n #tf-stacked-replay{display:flex!important;align-items:center;flex-wrap:wrap;gap:7px;margin:3px 0 9px;padding:8px;border:1px solid #c5d8c7;border-radius:11px;background:#f4f8f2}\n #tf-stacked-replay .tf-replay-bar{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:7px;width:100%!important}\n #tf-stacked-replay button{min-height:38px!important}\n #tf-stacked-replay input[type=range]{max-width:45vw!important}\n #tf-playback-strip .tf-strip-replay{display:none!important}\n @media(max-width:700px){.tf-homeowner-duplicate-hidden{display:none!important}}
  #lawn-a-panel,#lawn-b-panel{width:100%!important;max-width:100%!important;min-width:0!important}
  #lawn-a-panel>.photo-stage,#lawn-b-panel>.photo-stage{display:none!important}
  #lawn-a-panel .tf-paired-toggle,#lawn-b-panel .tf-paired-toggle{display:none!important}
@@ -69,8 +69,22 @@ function mount(){
   }
   view.appendChild(quick);
  }
- // Keep the live replay controls directly beneath the local progression buttons.\n let replayHost=document.getElementById('tf-stacked-replay');\n if(!replayHost){replayHost=document.createElement('div');replayHost.id='tf-stacked-replay';replayHost.setAttribute('aria-label','Replay controls');quick.insertAdjacentElement('afterend',replayHost);}\n const liveReplay=document.querySelector('#tf-playback-strip .tf-strip-replay .tf-replay-bar')||document.querySelector('.tf-replay-bar');\n if(liveReplay&&liveReplay.parentElement!==replayHost)replayHost.appendChild(liveReplay);\n // Keep the canonical playback strip in its original workflow to avoid reparenting conflicts.
+ // Keep the live replay controls directly beneath the local progression buttons.
+ let replayHost=document.getElementById('tf-stacked-replay');
+ if(!replayHost){replayHost=document.createElement('div');replayHost.id='tf-stacked-replay';replayHost.setAttribute('aria-label','Replay controls');quick.insertAdjacentElement('afterend',replayHost);}
+ const liveReplay=document.querySelector('#tf-playback-strip .tf-strip-replay .tf-replay-bar')||document.querySelector('.tf-replay-bar');
+ if(liveReplay&&liveReplay.parentElement!==replayHost)replayHost.appendChild(liveReplay);
+ // Keep the canonical playback strip in its original workflow to avoid reparenting conflicts.
  if(strip.parentElement===view)grid.insertBefore(strip,document.getElementById('lawn-a-panel'));
+ // Collapse only the duplicated full-size Homeowner introduction, not scientific modules.
+ for(const el of document.querySelectorAll('main section,main article,main .card')){
+   if(el===view||el.contains(view)||el.id==='tf-mobile-intro')continue;
+   const heading=el.querySelector('h1,h2,h3');
+   if(heading&&/See what your lawn is telling you/i.test(heading.textContent||''))el.classList.add('tf-homeowner-duplicate-hidden');
+ }
+ // The replay module may finish initializing after this script; mount its real bar once available.
+ if(!liveReplay){let attempts=0;const retry=setInterval(()=>{const bar=document.querySelector('.tf-replay-bar');if(bar){replayHost.appendChild(bar);clearInterval(retry);}else if(++attempts>25)clearInterval(retry);},400);}
+
 
  const sync=()=>{for(const k of ['A','B']){const src=document.getElementById('day'+k),dst=document.getElementById('tf-stack-day-'+k);if(src&&dst)dst.textContent=src.textContent;}};
  sync();setInterval(sync,1300);
