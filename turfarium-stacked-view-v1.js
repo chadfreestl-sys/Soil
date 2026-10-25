@@ -6,6 +6,10 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns .tf-lawn-visual{margin:0 0 3px;padding:9px;background:#f4f8f2;border:1px solid #c5d8c7;border-radius:13px;min-width:0}
  #tf-stacked-lawns .tf-lawn-title{display:flex;justify-content:space-between;color:#173e2d;font-weight:800;font-size:1rem;margin-bottom:6px}
  #tf-stacked-lawns .tf-lawn-visual{position:relative!important}
+ /* Only the original lower-page timeline buttons are redundant on mobile. */
+ #timeline-workflow>.row{display:none!important}
+ #timeline-workflow>.head{display:none!important}
+ #timeline-workflow>#visit{display:none!important}
  #tf-stacked-lawns .tf-lawn-title{position:absolute!important;z-index:12!important;top:18px!important;left:18px!important;right:18px!important;margin:0!important;padding:8px 12px!important;border-radius:10px!important;background:rgba(247,251,244,.92)!important;box-shadow:0 1px 5px rgba(0,0,0,.12)!important;pointer-events:none!important}
  #tf-stacked-lawns .tf-lawn-title span{color:#173e2d!important;text-shadow:none!important}
  #tf-stacked-lawns .photo-stage{display:block!important;position:relative!important;width:100%!important;aspect-ratio:5/3!important;min-height:0!important;height:auto!important;margin:0!important;overflow:hidden!important}
