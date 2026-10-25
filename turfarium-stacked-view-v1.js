@@ -18,6 +18,13 @@ const css=document.createElement('style');css.textContent=`
  .simulation-grid .subtle{font-size:clamp(12px,3.2vw,14px)!important;line-height:1.45!important}
  .simulation-grid .tf-collapse-toggle,
  .simulation-grid details>summary{max-width:100%;overflow-wrap:anywhere}
+
+ /* Lower-dashboard disclosure cards: consistent width, alignment and rhythm. */
+ .tf-lower-disclosure{box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0 0 10px!important;padding:7px!important;border:1px solid #d0ddcf!important;border-radius:16px!important;background:#f8faf5!important;box-shadow:0 3px 10px rgba(25,56,37,.045)!important}
+ .tf-lower-disclosure>summary,.tf-lower-disclosure>.head,.tf-lower-disclosure>.tf-collapse-toggle,.tf-lower-disclosure>.tf-lower-disclosure-inner{width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin:0!important}
+ .tf-lower-disclosure>summary,.tf-lower-disclosure>.tf-collapse-toggle{padding:12px 13px!important;min-height:48px!important;border-radius:11px!important;font-size:15px!important;line-height:1.3!important}
+ .tf-lower-disclosure h2,.tf-lower-disclosure h3{font-size:16px!important;line-height:1.3!important}
+ .tf-lower-disclosure:not([open]){min-height:0!important}
  #tf-stacked-lawns{display:block!important;order:-2000!important;width:100%!important;grid-column:1/-1!important;margin:4px 0 12px!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-replay .tf-history-replay{display:flex!important}\n .simulation-grid.tf-primary-workspace>#profile-control-deck{order:-1999!important}\n .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1998!important}\n #tf-stacked-lawns .tf-lawn-visual:first-child{margin-top:0!important}\n #tf-mobile-intro{display:block;padding:8px 13px;margin:0 0 7px;border:1px solid #cad9c9;border-radius:12px;background:#f3f8ef;color:#204332;font-size:.84rem;line-height:1.35}\n #tf-mobile-intro p{margin:0}\n #tf-mobile-intro details{margin-top:4px}\n #tf-mobile-intro summary{cursor:pointer;font-weight:800;color:#20523b}\n #tf-mobile-intro details p{margin-top:5px}\n main .tf-homeowner-original-intro{display:none!important}
  #tf-stacked-lawns .tf-lawn-visual{margin:0 0 3px;padding:9px;background:#f4f8f2;border:1px solid #c5d8c7;border-radius:13px;min-width:0}
  #tf-stacked-lawns .tf-lawn-title{display:flex;justify-content:space-between;color:#173e2d;font-weight:800;font-size:1rem;margin-bottom:6px}
@@ -201,6 +208,18 @@ function mount(){
  sync();setInterval(sync,1300);
  return true;
 }
-function start(){if(mount())return;let n=0;const timer=setInterval(()=>{if(mount()||++n>30)clearInterval(timer)},350);}
+function polishLowerPanels(){
+ if(!window.matchMedia('(max-width:700px)').matches)return;
+ const terms=/^(?:save state|treatment history|diagnostic lens|five-year progression stress test|evidence & confidence layer)/i;
+ const candidates=[...document.querySelectorAll('summary,button,h2,h3,.tf-collapse-toggle')];
+ for(const el of candidates){
+  if(!terms.test((el.textContent||'').trim()))continue;
+  let panel=el.closest('details,.card,section,.tf-card');
+  if(!panel||panel.id==='tf-stacked-lawns'||panel.closest('#tf-stacked-lawns'))continue;
+  if(panel.querySelectorAll('summary,button').length>12)continue;
+  panel.classList.add('tf-lower-disclosure');
+ }
+}
+function start(){polishLowerPanels();[500,1800,4000].forEach(t=>setTimeout(polishLowerPanels,t));if(mount())return;let n=0;const timer=setInterval(()=>{if(mount()||++n>30)clearInterval(timer)},350);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
