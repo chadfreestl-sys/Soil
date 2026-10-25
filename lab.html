@@ -236,6 +236,27 @@ header.tf-brand-hero .tf-brand-tag{color:#e2f7e6!important;font-size:clamp(9px,1
   }
   main .tf-lower-disclosure>summary>*,main .tf-research-drawer>summary>*{min-width:0}
 }
+</style><style id="tf-mobile-full-row-panels-v2">
+@media(max-width:700px){
+  /* Actual root cause: the old two-column .grid still auto-sizes non-wide cards.
+     Force the dashboard's grid tracks and disclosure cards into one full-width column. */
+  main .grid{grid-template-columns:minmax(0,1fr)!important}
+  main .grid>section.card,main .grid>article.card,main .grid>details,
+  main .grid>.tf-lower-disclosure,main .grid>#tf-research-organizer,
+  main .grid>.tf-research-drawer{
+    grid-column:1/-1!important;width:100%!important;max-width:100%!important;
+    min-width:0!important;justify-self:stretch!important;box-sizing:border-box!important;
+  }
+  main section.card,main article.card,main details.tf-lower-disclosure,
+  main .tf-lower-disclosure{
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    box-sizing:border-box!important;justify-self:stretch!important;
+  }
+  main .tf-lower-disclosure>summary,main .tf-lower-disclosure>.tf-collapse-toggle,
+  main .tf-lower-disclosure>button:first-child{
+    width:100%!important;max-width:100%!important;box-sizing:border-box!important;
+  }
+}
 </style></head><body><main>
 <header class="tf-brand-hero tf-artwork-only" aria-label="Turfarium — Interactive Turf Ecosystem Simulator" style="display:block!important;position:relative!important;width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:8/3!important;padding:0!important;margin:0 0 14px!important;box-sizing:border-box!important;overflow:hidden!important;border:2px solid #729987!important;border-radius:18px!important;background:#163d32 url('turfarium-FIRST-approved-banner.webp?v=7') center/100% 100% no-repeat!important;box-shadow:0 5px 0 #638c79,0 12px 24px #173e332b!important"></header>
 <div class="v8-hero"><strong>✦ NEW · Evidence tiers on modeled outputs · confidence separated from prediction certainty</strong><span>Every major response surface now shows whether it is a mechanistic core, a biological heuristic, or an exploratory hypothesis. Numeric magnitudes remain simulated rather than field-calibrated.</span></div>
