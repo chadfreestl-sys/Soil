@@ -8,6 +8,11 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns .tf-lawn-visual{position:relative!important}
  /* Only the original lower-page timeline buttons are redundant on mobile. */
  #timeline-workflow>.row{display:none!important}
+ /* Hide the secondary unified playback strip in the lower workspace on phones; its canonical buttons stay in DOM for delegated clicks. */
+ .simulation-grid #tf-playback-strip{display:none!important}
+ #tf-stacked-lawns #tf-playback-strip{display:none!important}
+ #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}
+ #tf-stacked-lawns #tf-stacked-replay{display:flex!important}
  #timeline-workflow>.head{display:none!important}
  #timeline-workflow>#visit{display:none!important}
  #tf-stacked-lawns .tf-lawn-title{position:absolute!important;z-index:12!important;top:18px!important;left:18px!important;right:18px!important;margin:0!important;padding:8px 12px!important;border-radius:10px!important;background:rgba(247,251,244,.92)!important;box-shadow:0 1px 5px rgba(0,0,0,.12)!important;pointer-events:none!important}
