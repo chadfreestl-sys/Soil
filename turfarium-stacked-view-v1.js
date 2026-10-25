@@ -2,7 +2,7 @@
 (()=>{'use strict';
 const css=document.createElement('style');css.textContent=`
 @media(max-width:700px){
- #tf-stacked-lawns{display:block!important;order:-2000!important;width:100%!important;grid-column:1/-1!important;margin:4px 0 12px!important}\n .simulation-grid.tf-primary-workspace>#profile-control-deck{order:-1999!important}\n .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1998!important}\n #tf-stacked-lawns .tf-lawn-visual:first-child{margin-top:0!important}\n #tf-mobile-intro{display:block;padding:8px 13px;margin:0 0 7px;border:1px solid #cad9c9;border-radius:12px;background:#f3f8ef;color:#204332;font-size:.84rem;line-height:1.35}\n #tf-mobile-intro p{margin:0}\n #tf-mobile-intro details{margin-top:4px}\n #tf-mobile-intro summary{cursor:pointer;font-weight:800;color:#20523b}\n #tf-mobile-intro details p{margin-top:5px}\n main .tf-homeowner-original-intro{display:none!important}
+ #tf-stacked-lawns{display:block!important;order:-2000!important;width:100%!important;grid-column:1/-1!important;margin:4px 0 12px!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-replay .tf-history-replay{display:flex!important}\n .simulation-grid.tf-primary-workspace>#profile-control-deck{order:-1999!important}\n .simulation-grid.tf-primary-workspace>#tf-playback-strip{order:-1998!important}\n #tf-stacked-lawns .tf-lawn-visual:first-child{margin-top:0!important}\n #tf-mobile-intro{display:block;padding:8px 13px;margin:0 0 7px;border:1px solid #cad9c9;border-radius:12px;background:#f3f8ef;color:#204332;font-size:.84rem;line-height:1.35}\n #tf-mobile-intro p{margin:0}\n #tf-mobile-intro details{margin-top:4px}\n #tf-mobile-intro summary{cursor:pointer;font-weight:800;color:#20523b}\n #tf-mobile-intro details p{margin-top:5px}\n main .tf-homeowner-original-intro{display:none!important}
  #tf-stacked-lawns .tf-lawn-visual{margin:0 0 3px;padding:9px;background:#f4f8f2;border:1px solid #c5d8c7;border-radius:13px;min-width:0}
  #tf-stacked-lawns .tf-lawn-title{display:flex;justify-content:space-between;color:#173e2d;font-weight:800;font-size:1rem;margin-bottom:6px}
  #tf-stacked-lawns .photo-stage{display:block!important;position:relative!important;width:100%!important;aspect-ratio:5/3!important;min-height:0!important;height:auto!important;margin:0!important;overflow:hidden!important}
@@ -22,7 +22,7 @@ function mount(){
  const grid=document.querySelector('.simulation-grid.tf-primary-workspace')||document.querySelector('.simulation-grid');
  const strip=document.getElementById('tf-playback-strip');
  const a=document.querySelector('#lawn-a-panel .photo-stage'),b=document.querySelector('#lawn-b-panel .photo-stage');
- if(!grid||!strip||!a||!b)return false;
+ if(!grid||!a||!b)return false;
  let view=document.getElementById('tf-stacked-lawns');
  if(!view){
   view=document.createElement('section');view.id='tf-stacked-lawns';view.setAttribute('aria-label','Large stacked lawn images and progression');
@@ -53,7 +53,7 @@ function mount(){
  view.style.order='';
  // Place the real, shared progression controls between the two images. 
  const first=view.querySelector('.tf-lawn-visual'); 
- if(strip.parentElement!==view){view.appendChild(strip);} 
+ if(strip&&strip.parentElement!==view){view.appendChild(strip);} 
  // The playback module may re-parent the toolbar later; keep a local, stable mirror. 
  let quick=document.getElementById('tf-stacked-quick-progress');
  if(!quick){
@@ -75,7 +75,7 @@ function mount(){
  const liveReplay=document.querySelector('#tf-playback-strip > .tf-history-replay')||document.querySelector('#tf-playback-strip .tf-strip-replay .tf-replay-bar')||document.querySelector('.tf-replay-bar');
  if(liveReplay&&liveReplay.parentElement!==replayHost)replayHost.appendChild(liveReplay);
  // Keep the canonical playback strip in its original workflow to avoid reparenting conflicts.
- if(strip.parentElement===view)grid.insertBefore(strip,document.getElementById('lawn-a-panel'));
+ if(strip&&strip.parentElement===view)grid.insertBefore(strip,document.getElementById('lawn-a-panel'));
  // Collapse only the duplicated full-size Homeowner introduction, not scientific modules.
  for(const el of document.querySelectorAll('main section,main article,main .card')){
    if(el===view||el.contains(view)||el.id==='tf-mobile-intro')continue;
