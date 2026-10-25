@@ -10,7 +10,7 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns .photo-stage canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
  #tf-stacked-lawns .tf-lawn-time{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:8px}
  #tf-stacked-lawns .tf-lawn-time button{min-width:0!important;min-height:42px!important;padding:7px 2px!important;font-size:.78rem!important;font-weight:750;color:#173e2d;background:#fff;border:1px solid #b5cbb8;border-radius:9px}
- #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n #tf-stacked-lawns .tf-lawn-time{display:none!important}
+ #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n @media(max-width:700px){main .tf-homeowner-original-intro{display:none!important}}\n #tf-stacked-lawns .tf-lawn-visual .tf-lawn-time{display:none!important}\n #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}
  #lawn-a-panel,#lawn-b-panel{width:100%!important;max-width:100%!important;min-width:0!important}
  #lawn-a-panel>.photo-stage,#lawn-b-panel>.photo-stage{display:none!important}
  #lawn-a-panel .tf-paired-toggle,#lawn-b-panel .tf-paired-toggle{display:none!important}
@@ -54,6 +54,24 @@ function mount(){
  // Place the real, shared progression controls between the two images. 
  const first=view.querySelector('.tf-lawn-visual'); 
  if(strip.parentElement!==view){view.appendChild(strip);} 
+ // The playback module may re-parent the toolbar later; keep a local, stable mirror. 
+ let quick=document.getElementById('tf-stacked-quick-progress');
+ if(!quick){
+  quick=document.createElement('div');quick.id='tf-stacked-quick-progress';quick.className='tf-lawn-time';
+  quick.style.cssText='display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:5px 0 2px';
+  for(const label of ['+7 days','+30 days','+90 days','+1 year']){
+   const button=document.createElement('button');button.type='button';button.textContent=label;
+   button.addEventListener('click',()=>{
+    const all=[...document.querySelectorAll('#tf-playback-strip .tf-strip-time button')];
+    const target=all.find(x=>x.textContent.trim().replace(/\\s+/g,'').includes(label.replace(/\\s+/g,'')));
+    if(target)target.click();
+   });quick.appendChild(button);
+  }
+  view.appendChild(quick);
+ }
+ // Keep the canonical playback strip in its original workflow to avoid reparenting conflicts.
+ if(strip.parentElement===view)grid.insertBefore(strip,document.getElementById('lawn-a-panel'));
+
  const sync=()=>{for(const k of ['A','B']){const src=document.getElementById('day'+k),dst=document.getElementById('tf-stack-day-'+k);if(src&&dst)dst.textContent=src.textContent;}};
  sync();setInterval(sync,1300);
  return true;
