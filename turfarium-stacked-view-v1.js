@@ -42,9 +42,16 @@ function mount(){
    card.append(title,stage,controls);view.appendChild(card);
   }
  }
- const intro=document.querySelector('main header'); 
- if(intro&&intro.parentElement){intro.insertAdjacentElement('afterend',view);}else if(view.parentElement!==grid||grid.firstElementChild!==view){grid.insertBefore(view,grid.firstElementChild);} 
- view.style.order='-9999';
+ // Keep the lawn comparison together, positioned roughly six panels below the header.
+ const intro=document.querySelector('main header');
+ const host=intro?.parentElement||grid;
+ const panels=[...host.children].filter(el=>el!==view&&el!==intro&&el.matches?.('section,article,.card,.grid'));
+ const anchor=panels[5];
+ if(anchor){anchor.insertAdjacentElement('afterend',view);}
+ else if(panels.length){panels[panels.length-1].insertAdjacentElement('afterend',view);}
+ else if(intro){intro.insertAdjacentElement('afterend',view);}
+ else if(view.parentElement!==grid){grid.insertBefore(view,grid.firstElementChild);}
+ view.style.order='';
  // Place the real, shared progression controls between the two images. 
  const first=view.querySelector('.tf-lawn-visual'); 
  if(strip.parentElement!==view){view.appendChild(strip);} 
