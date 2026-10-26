@@ -28,7 +28,7 @@ function monthFor(key,snapshot){
  const sel=Number(document.getElementById('startMonth')?.value);
  const start=Number.isInteger(sel)&&sel>=0&&sel<=11?sel:2;
  const days=dayFor(key);
- return (start+Math.floor((days%365)/30.4167))%12;
+ const edges=[0,31,59,90,120,151,181,212,243,273,304,334,365];const within=days%365;const offset=Math.max(0,edges.findIndex((_,i)=>i<12&&within<edges[i+1]));return (start+offset)%12;
 }
 function dayFor(key){
  const d=document.getElementById('day'+key)?.textContent||'';
@@ -217,9 +217,14 @@ async function refresh(key){
  const canopyGrowth=clamp((canopy-20)/75,0,1);
  const rootSupport=clamp((root*.65+oxygen*.35)/100,0,1);
  const stressPenalty=clamp(salt/100,0,1);
+ const grass=String(document.getElementById('grass')?.value||'').toLowerCase();
+ const warmSeason=/zoysia|bermuda|st. augustine|centipede|bahia|buffalo|paspalum/.test(grass);
+ const dormant=warmSeason&&season==='winter';
+ const transition=warmSeason&&(month===2||month===10);
  const seasonalWarmth=season==='summer'?1.025:season==='winter'?.94:1;
- const saturation=clamp((.72+canopyGrowth*.35+n*.0024-stressPenalty*.10)*seasonalWarmth,.65,1.30);
- const brightness=clamp(.88+canopyGrowth*.12+n*.0012-stressPenalty*.05,.82,1.13);
+ const dormancyFactor=dormant?.38:transition?.72:1;
+ const saturation=clamp((.72+canopyGrowth*.35+n*.0024-stressPenalty*.10)*seasonalWarmth*dormancyFactor,.22,1.30);
+ const brightness=clamp((.88+canopyGrowth*.12+n*.0012-stressPenalty*.05)*(dormant?.91:1),.72,1.13);
  const contrast=clamp(1.015+canopyGrowth*.03,1,1.06);
  photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+') contrast('+contrast.toFixed(3)+')','important');
  photo.style.transition='filter 3.8s ease-in-out';
@@ -291,4 +296,6 @@ window.TurfariumVisualState={
 };
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 window.addEventListener('load',boot,{once:true});
+window.addEventListener('turfarium:time-advanced',()=>{refresh('A');refresh('B')});
+document.getElementById('grass')?.addEventListener('change',()=>{refresh('A');refresh('B')});
 })();
