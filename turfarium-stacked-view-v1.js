@@ -57,7 +57,11 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns .photo-stage canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
  #tf-stacked-lawns .tf-lawn-time{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:8px}
  #tf-stacked-lawns .tf-lawn-time button{min-width:0!important;min-height:42px!important;padding:7px 2px!important;font-size:.78rem!important;font-weight:750;color:#173e2d;background:#fff;border:1px solid #b5cbb8;border-radius:9px}
- #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n main .tf-homeowner-original-intro{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-lawn-time{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay-local{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage~.tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}\n #tf-stacked-replay{display:flex!important;align-items:center;flex-wrap:wrap;gap:7px;margin:3px 0 9px;padding:8px;border:1px solid #c5d8c7;border-radius:11px;background:#f4f8f2}\n #tf-stacked-replay .tf-replay-bar{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:7px;width:100%!important}\n #tf-stacked-replay button{min-height:38px!important}\n #tf-stacked-replay input[type=range]{max-width:45vw!important}\n #tf-playback-strip .tf-strip-replay{display:none!important}\n #tf-stacked-replay .tf-history-replay{display:flex!important;margin:0!important;border:0!important;padding:0!important}\n #tf-stacked-replay .tf-replay-note{width:100%}\n.tf-homeowner-duplicate-hidden{display:none!important}
+ #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n main .tf-homeowner-original-intro{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-lawn-time{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay-local{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage~.tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}\n #tf-mobile-what-changed{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;box-sizing:border-box!important;margin:8px 0 12px!important;border:2px solid #b7cbb3!important;border-radius:14px!important;background:#f2f7ef!important;overflow:hidden!important}
+ #tf-mobile-what-changed>summary{display:list-item!important;cursor:pointer!important;padding:15px!important;font-weight:900!important;font-size:17px!important;color:#183e2c!important}
+ #tf-mobile-what-changed .tf-mobile-change-content{padding:0 13px 13px!important;color:#183e2c!important}
+ #tf-mobile-what-changed:not([open]) .tf-mobile-change-content{display:none!important}
+ #tf-stacked-replay{display:flex!important;align-items:center;flex-wrap:wrap;gap:7px;margin:3px 0 9px;padding:8px;border:1px solid #c5d8c7;border-radius:11px;background:#f4f8f2}\n #tf-stacked-replay .tf-replay-bar{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:7px;width:100%!important}\n #tf-stacked-replay button{min-height:38px!important}\n #tf-stacked-replay input[type=range]{max-width:45vw!important}\n #tf-playback-strip .tf-strip-replay{display:none!important}\n #tf-stacked-replay .tf-history-replay{display:flex!important;margin:0!important;border:0!important;padding:0!important}\n #tf-stacked-replay .tf-replay-note{width:100%}\n.tf-homeowner-duplicate-hidden{display:none!important}
  #lawn-a-panel,#lawn-b-panel{width:100%!important;max-width:100%!important;min-width:0!important}
  #lawn-a-panel>.photo-stage,#lawn-b-panel>.photo-stage{display:none!important}\n #lawn-a-panel>.tf-history-replay-local,#lawn-b-panel>.tf-history-replay-local{display:none!important}
  #lawn-a-panel .tf-paired-toggle,#lawn-b-panel .tf-paired-toggle{display:none!important}
@@ -208,6 +212,28 @@ function mount(){
  if(cards.length===2){view.insertBefore(cards[0],view.firstElementChild);cards[0].insertAdjacentElement('afterend',cards[1]);}
  if(quick&&cards[1]&&quick.previousElementSibling!==cards[1])cards[1].insertAdjacentElement('afterend',quick);
  if(replayHost&&quick&&replayHost.previousElementSibling!==quick)quick.insertAdjacentElement('afterend',replayHost);
+ // Independent visible report immediately below Replay; preserve original live report.
+ let changes=document.getElementById('tf-mobile-what-changed');
+ if(!changes){
+  changes=document.createElement('details');
+  changes.id='tf-mobile-what-changed';
+  changes.className='tf-mobile-what-changed';
+  changes.innerHTML='<summary>📊 What Changed <span style="float:right" aria-hidden="true">▸</span></summary><div class="tf-mobile-change-content">Advance time to view the Lawn A and Lawn B comparison.</div>';
+ }
+ if(replayHost&&changes.previousElementSibling!==replayHost)replayHost.insertAdjacentElement('afterend',changes);
+ const syncChanges=()=>{
+  const source=document.getElementById('changeReport');
+  const target=changes.querySelector('.tf-mobile-change-content');
+  if(source&&target&&target.innerHTML!==source.innerHTML)target.innerHTML=source.innerHTML;
+ };
+ syncChanges();
+ if(!changes.dataset.tfSyncBound){
+  changes.dataset.tfSyncBound='1';
+  window.addEventListener('turfarium:time-advanced',syncChanges);
+  const source=document.getElementById('changeReport');
+  if(source)new MutationObserver(syncChanges).observe(source,{subtree:true,childList:true,characterData:true});
+ }
+
  const sync=()=>{for(const k of ['A','B']){const src=document.getElementById('day'+k),dst=document.getElementById('tf-stack-day-'+k);if(src&&dst)dst.textContent=src.textContent;}};
  sync();setInterval(sync,1300);
  return true;
