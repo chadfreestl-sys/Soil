@@ -1237,4 +1237,27 @@ function boot(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
+</script><style id="tf-season-placement-v2-style">
+#tf-season-display{position:static!important;top:auto!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin:5px 0 9px!important;z-index:auto!important}
+@media(max-width:700px){#tf-stacked-lawns>#tf-season-display{display:flex!important}#tf-stacked-quick-progress+#tf-season-display{margin-top:6px!important}}
+</style>
+<script id="tf-season-placement-v2">
+(function(){
+'use strict';
+function place(){
+ const bar=document.getElementById('tf-season-display');
+ if(!bar)return;
+ const mobile=window.matchMedia('(max-width:700px)').matches;
+ const anchor=mobile?document.getElementById('tf-stacked-quick-progress'):
+  document.querySelector('#tf-playback-strip .tf-strip-time')||document.querySelector('#timeline-workflow>.row');
+ if(!anchor)return;
+ if(bar.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',bar);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+else place();
+window.addEventListener('load',place);
+window.addEventListener('resize',place);
+window.addEventListener('turfarium:time-advanced',place);
+[300,1000,2400,4500].forEach(ms=>setTimeout(place,ms));
+})();
 </script></body></html>
