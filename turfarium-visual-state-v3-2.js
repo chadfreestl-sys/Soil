@@ -120,8 +120,14 @@ async function imageFor(index,season){
  return {src:null,kind:'unavailable'};
 }
 function elements(key){
+ // Mobile stacked layout MOVES the actual photo-stage out of its original panel.
+ // Resolve by stable stage identity first, then its original location, then stacked card.
  const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
- const stage=panel?.querySelector('.photo-stage');
+ const stacked=document.getElementById('tf-stacked-lawns');
+ const card=stacked?.querySelector('.tf-lawn-visual:nth-child('+(key==='A'?1:2)+')');
+ let stage=document.querySelector('.photo-stage[data-tf-lawn-key="'+key+'"]')||
+   panel?.querySelector('.photo-stage')||card?.querySelector('.photo-stage');
+ if(stage)stage.dataset.tfLawnKey=key;
  const photo=stage?.querySelector('img.soil-photo:not(.tf-state-photo)');
  return {stage,photo};
 }
@@ -285,7 +291,7 @@ function boot(){
 const css=document.createElement('style');
 css.id='tf-visual-state-v3-style';
 css.textContent='.photo-stage{position:relative}'+
- '#lawn-a-panel .photo-stage>img.tf-state-photo,#lawn-b-panel .photo-stage>img.tf-state-photo{'+
+ '.photo-stage>img.tf-state-photo{'+
  'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;pointer-events:none}'+
  '.tf-visual-indicator{margin:7px 2px 3px;font-size:.72rem;font-weight:800;line-height:1.35;color:#234f37}'+
  '.tf-visual-indicator[data-tf-image-unavailable="1"]{color:#a1382d}'+
