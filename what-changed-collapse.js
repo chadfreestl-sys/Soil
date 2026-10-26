@@ -2,16 +2,19 @@
 (()=>{'use strict';
 function mount(){
  const report=document.getElementById('changeReport');
- if(!report||report.closest('#tf-what-changed-details'))return;
- const details=document.createElement('details');
- details.id='tf-what-changed-details';
- details.className='tf-what-changed-details';
- details.open=false;
- const summary=document.createElement('summary');
- summary.textContent='What Changed';
- summary.setAttribute('aria-label','Expand What Changed report');
- report.parentNode.insertBefore(details,report);
- details.append(summary,report);
+ if(!report)return;
+ let details=document.getElementById('tf-what-changed-details');
+ if(!details){
+  details=document.createElement('details');
+  details.id='tf-what-changed-details';
+  details.className='tf-what-changed-details';
+  details.open=false;
+  const summary=document.createElement('summary');
+  summary.textContent='📊 What Changed';
+  summary.setAttribute('aria-label','Expand What Changed report');
+  report.parentNode.insertBefore(details,report);
+  details.append(summary,report);
+ }
  // Keep the existing report intact, but place its collapsed toggle after replay.
  function place(){
   const item=document.getElementById('tf-what-changed-details');
@@ -21,11 +24,14 @@ function mount(){
    document.querySelector('#tf-playback-strip .tf-history-replay')||document.getElementById('tf-playback-strip');
   if(!replay||!replay.parentNode)return;
   if(item.previousElementSibling!==replay)replay.insertAdjacentElement('afterend',item);
+  item.style.setProperty('display','block','important');
+  item.style.setProperty('visibility','visible','important');
+  item.style.setProperty('opacity','1','important');
  }
  place();
  window.addEventListener('turfarium:time-advanced',place);
  window.addEventListener('resize',place);
- [400,1400,3200].forEach(ms=>setTimeout(place,ms));
+ [400,1400,3200,6500].forEach(ms=>setTimeout(place,ms));
  // Ensure a parent timeline collapse does not hide the independent toggle.
  const timeline=document.getElementById('timeline-workflow');
  if(timeline){
