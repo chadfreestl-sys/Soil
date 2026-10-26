@@ -1180,20 +1180,43 @@ microscope();
  #tf-what-changed-details>summary{padding:13px 15px!important}
 }
 </style>
-<script id="tf-what-changed-placement-v2">
+<script id="tf-what-changed-placement-v3">
 (function(){
+ let busy=false;
  function place(){
-  if(!matchMedia('(max-width:700px)').matches)return;
-  const details=document.getElementById('tf-what-changed-details');
+  if(busy||!window.matchMedia('(max-width:700px)').matches)return;
   const stacked=document.getElementById('tf-stacked-lawns');
-  if(!details||!stacked)return;
-  // The old layout moved this disclosure inside the normally closed Soil Profile.
-  // Keep its existing live report and listeners, but make it an independent visible strip.
-  if(stacked.nextElementSibling!==details)stacked.insertAdjacentElement('afterend',details);
-  details.open=false;
+  const report=document.getElementById('changeReport');
+  if(!stacked||!report||!stacked.parentElement)return;
+  busy=true;
+  try{
+   let drawer=document.getElementById('tf-what-changed-details');
+   if(!drawer){
+    drawer=document.createElement('details');drawer.id='tf-what-changed-details';
+    drawer.className='tf-what-changed-details';
+    const summary=document.createElement('summary');summary.textContent='What Changed';
+    drawer.append(summary);
+   }
+   if(report.parentElement!==drawer)drawer.appendChild(report);
+   const summary=drawer.querySelector(':scope > summary');
+   if(summary)summary.textContent='What Changed';
+   // The old profile deck is normally closed. Move the actual report outside it.
+   if(drawer.parentElement!==stacked.parentElement||drawer.previousElementSibling!==stacked){
+     stacked.insertAdjacentElement('afterend',drawer);
+   }
+   drawer.style.setProperty('display','block','important');
+   drawer.style.setProperty('visibility','visible','important');
+   drawer.style.setProperty('grid-column','1 / -1','important');
+   drawer.style.setProperty('width','100%','important');
+   drawer.style.setProperty('order','-1990','important');
+  }finally{busy=false;}
  }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);else place();
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+ else place();
  window.addEventListener('load',place);
- [350,1100,2500,5000].forEach(ms=>setTimeout(place,ms));
+ [200,600,1300,2600,4500,8000].forEach(ms=>setTimeout(place,ms));
+ const observer=new MutationObserver(()=>{if(!busy)place();});
+ const watch=()=>{if(document.body)observer.observe(document.body,{childList:true,subtree:true});};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watch);else watch();
 })();
 </script></body></html>
