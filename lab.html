@@ -398,7 +398,7 @@ const climates={
  seattle:{label:'Seattle',t:[42,44,47,51,57,62,67,67,62,54,46,42],m:[76,73,70,66,61,53,42,43,53,68,76,78]},
  phoenix:{label:'Phoenix',t:[55,59,66,74,83,93,97,95,89,77,64,55],m:[28,29,25,19,16,15,30,34,26,20,24,28]}
 };
-function monthIndex(d){return (Number($('startMonth').value)+Math.floor((d%365)/30.4167))%12}
+function monthIndex(d){const start=Number($('startMonth').value)||0;const elapsed=Math.max(0,Math.floor(Number(d)||0));const year=Math.floor(elapsed/365);const within=elapsed-year*365;const monthOffset=Math.min(11,Math.floor(within/(365/12)));return ((start+monthOffset)%12+12)%12}
 function seasonLabel(d){return months[monthIndex(d)]+' · Year '+(Math.floor(d/365)+1)}
 function weather(d){const region=climates[$('region').value]||climates.stl,m=monthIndex(d),mode=$('weatherMode').value;
  const mods={normal:[0,0],drought:[5,-20],wet:[-3,18],heat:[11,-16],cool:[-9,2]};const [dt,dm]=mods[mode]||mods.normal;
