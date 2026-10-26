@@ -1180,43 +1180,65 @@ microscope();
  #tf-what-changed-details>summary{padding:13px 15px!important}
 }
 </style>
-<script id="tf-what-changed-placement-v3">
+<style id="tf-what-changed-mobile-v4">
+@media(max-width:700px){
+ #tf-stacked-lawns>#tf-what-changed-details{
+  display:block!important;position:static!important;order:initial!important;
+  width:100%!important;max-width:100%!important;box-sizing:border-box!important;
+  margin:10px 0 6px!important;padding:7px!important;
+  border:1px solid #bfd2c5!important;border-radius:16px!important;
+  background:#f7faf5!important;visibility:visible!important;opacity:1!important;
+ }
+ #tf-stacked-lawns>#tf-what-changed-details>summary{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  width:100%!important;box-sizing:border-box!important;list-style:none!important;
+  padding:14px 16px!important;border-radius:12px!important;background:#eaf2e9!important;
+  color:#174332!important;font-size:16px!important;font-weight:800!important;cursor:pointer!important;
+ }
+ #tf-stacked-lawns>#tf-what-changed-details>summary::-webkit-details-marker{display:none}
+ #tf-stacked-lawns>#tf-what-changed-details>summary:after{content:'▸';margin-left:12px}
+ #tf-stacked-lawns>#tf-what-changed-details[open]>summary:after{content:'▾'}
+}
+</style>
+<script id="tf-what-changed-placement-v4">
 (function(){
- let busy=false;
+ const isMobile=()=>window.matchMedia('(max-width:700px)').matches;
+ let moving=false;
  function place(){
-  if(busy||!window.matchMedia('(max-width:700px)').matches)return;
-  const stacked=document.getElementById('tf-stacked-lawns');
+  if(moving||!isMobile())return;
+  const view=document.getElementById('tf-stacked-lawns');
   const report=document.getElementById('changeReport');
-  if(!stacked||!report||!stacked.parentElement)return;
-  busy=true;
+  if(!view||!report)return;
+  moving=true;
   try{
    let drawer=document.getElementById('tf-what-changed-details');
    if(!drawer){
-    drawer=document.createElement('details');drawer.id='tf-what-changed-details';
+    drawer=document.createElement('details');
+    drawer.id='tf-what-changed-details';
     drawer.className='tf-what-changed-details';
     const summary=document.createElement('summary');summary.textContent='What Changed';
-    drawer.append(summary);
+    drawer.appendChild(summary);
    }
    if(report.parentElement!==drawer)drawer.appendChild(report);
    const summary=drawer.querySelector(':scope > summary');
    if(summary)summary.textContent='What Changed';
-   // The old profile deck is normally closed. Move the actual report outside it.
-   if(drawer.parentElement!==stacked.parentElement||drawer.previousElementSibling!==stacked){
-     stacked.insertAdjacentElement('afterend',drawer);
+   // Keep the original live report directly INSIDE the visible mobile photo/replay stack.
+   // This avoids CSS order rules and the normally collapsed Soil Profile parent.
+   const replay=view.querySelector('#tf-stacked-replay');
+   if(drawer.parentElement!==view|| (replay&&replay.nextElementSibling!==drawer)){
+    if(replay)replay.insertAdjacentElement('afterend',drawer);
+    else view.appendChild(drawer);
    }
-   drawer.style.setProperty('display','block','important');
-   drawer.style.setProperty('visibility','visible','important');
-   drawer.style.setProperty('grid-column','1 / -1','important');
-   drawer.style.setProperty('width','100%','important');
-   drawer.style.setProperty('order','-1990','important');
-  }finally{busy=false;}
+   drawer.style.removeProperty('order');
+  }finally{moving=false;}
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
  else place();
  window.addEventListener('load',place);
- [200,600,1300,2600,4500,8000].forEach(ms=>setTimeout(place,ms));
- const observer=new MutationObserver(()=>{if(!busy)place();});
- const watch=()=>{if(document.body)observer.observe(document.body,{childList:true,subtree:true});};
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watch);else watch();
+ [150,600,1500,3200,6000].forEach(ms=>setTimeout(place,ms));
+ const observer=new MutationObserver(()=>{if(!moving)place();});
+ function watch(){if(document.body)observer.observe(document.body,{childList:true,subtree:true});}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watch);
+ else watch();
 })();
 </script></body></html>
