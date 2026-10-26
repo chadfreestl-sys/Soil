@@ -398,7 +398,7 @@ const climates={
  seattle:{label:'Seattle',t:[42,44,47,51,57,62,67,67,62,54,46,42],m:[76,73,70,66,61,53,42,43,53,68,76,78]},
  phoenix:{label:'Phoenix',t:[55,59,66,74,83,93,97,95,89,77,64,55],m:[28,29,25,19,16,15,30,34,26,20,24,28]}
 };
-function monthIndex(d){const start=Number($('startMonth').value)||0;const elapsed=Math.max(0,Math.floor(Number(d)||0));const year=Math.floor(elapsed/365);const within=elapsed-year*365;const monthOffset=Math.min(11,Math.floor(within/(365/12)));return ((start+monthOffset)%12+12)%12}
+function monthIndex(d){const start=Number($('startMonth').value)||0;const elapsed=Math.max(0,Math.floor(Number(d)||0));const year=Math.floor(elapsed/365);const within=elapsed-year*365;const boundaries=[0,31,59,90,120,151,181,212,243,273,304,334,365];const monthOffset=Math.max(0,boundaries.findIndex((end,i)=>i<12&&within<boundaries[i+1]));return ((start+monthOffset)%12+12)%12}
 function seasonLabel(d){return months[monthIndex(d)]+' · Year '+(Math.floor(d/365)+1)}
 function weather(d){const region=climates[$('region').value]||climates.stl,m=monthIndex(d),mode=$('weatherMode').value;
  const mods={normal:[0,0],drought:[5,-20],wet:[-3,18],heat:[11,-16],cool:[-9,2]};const [dt,dm]=mods[mode]||mods.normal;
@@ -753,10 +753,11 @@ function updateChangeReportV18(start,n,previous){const current={A:snapshotV18(A)
  const dv=current.B.vigor-current.A.vigor;const wetter=current.A.moist>80||current.B.moist>80;
  $('nextActions').textContent=`Next visit: ${wetter?'Check drainage and oxygen stress before adding more water. ':'Review turf condition and soil biology. '}${Math.abs(dv)>.5?`Lawn ${dv>0?'B':'A'} currently leads in modeled vigor by ${Math.abs(dv).toFixed(1)} points. `:'Both lawns have similar modeled vigor. '}You can apply another treatment now or advance time again.`;
 }
-function advance(n){if(day+n>1825){alert('Maximum simulation horizon is 1,825 days.');return}const previous={A:snapshotV18(A),B:snapshotV18(B)},start=day;for(let i=0;i<n;i++){daily(A);daily(B);day++;if(day%7===0)record()}record();log.unshift(`Day ${day} · Advanced ${n} days; review the results and choose whether either lawn needs another treatment.`);$('visit').textContent=`Day ${day}: review the two soil profiles, then apply any next treatment before advancing again.`;render();updateChangeReportV18(start,n,previous)}
-window.TurfariumAdvanceDays=function(days){const n=Number(days);if(![7,30,90,365].includes(n))return false;advance(n);return true;};
+function advance(n){n=Number(n);if(!Number.isInteger(n)||n<=0)return false;if(day+n>1825){alert('Maximum simulation horizon is 1,825 days.');return false}const previous={A:snapshotV18(A),B:snapshotV18(B)},start=day;for(let i=0;i<n;i++){daily(A);daily(B);day++;if(day%7===0&&i!==n-1)record()}record();window.dispatchEvent(new CustomEvent('turfarium:time-advanced',{detail:{from:start,to:day,days:n,season:seasonLabel(day)}}));log.unshift(`Day ${day} · Advanced ${n} days; review the results and choose whether either lawn needs another treatment.`);$('visit').textContent=`Day ${day}: review the two soil profiles, then apply any next treatment before advancing again.`;render();updateChangeReportV18(start,n,previous);return true}
+window.TurfariumAdvanceDays=function(days){const n=Number(days);if(![7,30,90,365].includes(n))return false;return advance(n);};
 function record(){history.push({day,va:env(A).vigor,vb:env(B).vigor,wa:env(A).worms,wb:env(B).worms});if(history.length>350)history.shift();
- const frame={day,A:{...window.TurfariumVisualSnapshot('A')},B:{...window.TurfariumVisualSnapshot('B')}};
+ const snapshot=typeof window.TurfariumVisualSnapshot==='function'?window.TurfariumVisualSnapshot:null;
+ const frame={day,A:{...(snapshot?.('A')||{})},B:{...(snapshot?.('B')||{})}};
  (window.TurfariumRecordedFrames??=[]).push(frame);
  if(window.TurfariumRecordedFrames.length>350)window.TurfariumRecordedFrames.shift();
  window.dispatchEvent(new CustomEvent('turfarium:history-frame',{detail:frame}));
@@ -961,7 +962,7 @@ function applyWithFeedback(key){const s=key==='A'?A:B,t=$('treat'+key).value,btn
 }
 $('applyA').onclick=()=>applyWithFeedback('A');$('applyB').onclick=()=>applyWithFeedback('B');
 $('equalN').onclick=()=>{applyWithFeedbackEqual();log.unshift('Equal modeled mineral nitrogen inputs applied to both lawns (not calibrated to pounds N per 1,000 sq ft).');render()};
-document.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>advance(+b.dataset.step));
+document.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>window.TurfariumAdvanceDays(+b.dataset.step));
 for(const [id,view] of [['comp','cv'],['organic','ov'],['ph','pv']])$(id).oninput=()=>{$(view).textContent=$(id).value;if(id==='ph')updateTurf()};
 for(const key of ['A','B']){for(const id of ['rate','unit','area','spray'])$(id+key).addEventListener('input',()=>doseInfo(key));$('treat'+key).addEventListener('change',()=>refreshProductInfo(key));refreshProductInfo(key)}$('ov').textContent=$('organic').value+'%';updateTurf();reset();
 
@@ -1173,5 +1174,29 @@ microscope();
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();
  window.addEventListener('load',fix);
  [400,1200,2800].forEach(ms=>setTimeout(fix,ms));
+})();
+</script><style id="tf-season-display-style">
+#tf-season-display{position:sticky;top:0;z-index:90;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 14px;margin:8px auto;border:2px solid #9bc49c;border-radius:12px;background:#183d2d;color:#fff;font:700 15px/1.35 system-ui,sans-serif;box-shadow:0 4px 16px #0005}
+#tf-season-display strong{font-size:1.08em;color:#fff}#tf-season-display span{color:#e1f4df}
+</style>
+<script id="tf-season-display-script">
+(function(){
+const names=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const edges=[0,31,59,90,120,151,181,212,243,273,304,334,365];
+function update(){
+ const clock=document.getElementById('time');if(!clock)return;
+ const match=(clock.textContent||'').match(/Day\s+(\d+)\s*\/\s*1,?825/i);
+ if(!match)return;
+ const day=Number(match[1]),start=Number(document.getElementById('startMonth')?.value||0);
+ const within=day%365;let offset=edges.findIndex((_,i)=>i<12&&within<edges[i+1]);if(offset<0)offset=11;
+ const month=(start+offset)%12;
+ const season=month===11||month<2?'Winter':month<5?'Spring':month<8?'Summer':'Fall';
+ const icon={Winter:'❄️',Spring:'🌱',Summer:'☀️',Fall:'🍂'}[season];
+ let bar=document.getElementById('tf-season-display');
+ if(!bar){bar=document.createElement('div');bar.id='tf-season-display';bar.setAttribute('role','status');bar.setAttribute('aria-live','polite');const anchor=document.querySelector('#tf-playback-strip')||document.querySelector('#timeline-workflow')||document.querySelector('main');if(anchor)anchor.parentNode.insertBefore(bar,anchor);else document.body.prepend(bar);}
+ bar.innerHTML='<strong>'+icon+' '+season+'</strong><span>'+names[month]+' · Year '+(Math.floor(day/365)+1)+' · Day '+day+' / 1,825</span>';
+}
+document.addEventListener('DOMContentLoaded',function(){update();const clock=document.getElementById('time');if(clock)new MutationObserver(update).observe(clock,{childList:true,characterData:true,subtree:true});document.getElementById('startMonth')?.addEventListener('change',update);});
+window.addEventListener('turfarium:time-advanced',update);
 })();
 </script></body></html>
