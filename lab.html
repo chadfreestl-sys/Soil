@@ -1174,4 +1174,26 @@ microscope();
  window.addEventListener('load',fix);
  [400,1200,2800].forEach(ms=>setTimeout(fix,ms));
 })();
+</script><style id="tf-what-changed-visible-v2">
+@media(max-width:700px){
+ #tf-what-changed-details{display:block!important;width:100%!important;max-width:100%!important;grid-column:1/-1!important;margin:8px 0 12px!important;box-sizing:border-box!important}
+ #tf-what-changed-details>summary{padding:13px 15px!important}
+}
+</style>
+<script id="tf-what-changed-placement-v2">
+(function(){
+ function place(){
+  if(!matchMedia('(max-width:700px)').matches)return;
+  const details=document.getElementById('tf-what-changed-details');
+  const stacked=document.getElementById('tf-stacked-lawns');
+  if(!details||!stacked)return;
+  // The old layout moved this disclosure inside the normally closed Soil Profile.
+  // Keep its existing live report and listeners, but make it an independent visible strip.
+  if(stacked.nextElementSibling!==details)stacked.insertAdjacentElement('afterend',details);
+  details.open=false;
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);else place();
+ window.addEventListener('load',place);
+ [350,1100,2500,5000].forEach(ms=>setTimeout(place,ms));
+})();
 </script></body></html>
