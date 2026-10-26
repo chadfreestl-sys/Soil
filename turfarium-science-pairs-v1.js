@@ -29,7 +29,7 @@ function setDefault(panel,open){
     return;
   }
   const heading=panel.querySelector(':scope > h1,:scope > h2,:scope > h3,:scope > h4,:scope > .head h2,:scope > .head h3');
-  const title=(heading?.textContent||'Details').trim();
+  const title=(panel.id==='tf-divergence-panel'?'Five-year divergence tracker':(heading?.textContent||'Details')).trim();
   const body=document.createElement('div');body.className='tf-collapse-body';
   while(panel.firstChild)body.appendChild(panel.firstChild);
   const btn=document.createElement('button');btn.type='button';btn.className='tf-collapse-toggle';btn.setAttribute('aria-expanded',String(open));
