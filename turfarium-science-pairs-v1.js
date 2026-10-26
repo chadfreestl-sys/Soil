@@ -71,7 +71,7 @@ function arrange(){
   setDefault(earth,false);
   setDefault(food,false);
   setDefault(seaweed,false);
-  if(graph)setDefault(graph,false);
+  if(graph){setDefault(graph,false);renamePanel(graph,'Five-year divergence tracker');}
   return true;
 }
 const style=document.createElement('style');style.id='tf-science-pairs-style';style.textContent=`
