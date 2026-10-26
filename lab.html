@@ -1174,4 +1174,28 @@ microscope();
  window.addEventListener('load',fix);
  [400,1200,2800].forEach(ms=>setTimeout(fix,ms));
 })();
+</script><style id="tf-season-display-style">
+#tf-season-display{position:sticky;top:0;z-index:90;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 14px;margin:8px auto;border:2px solid #9bc49c;border-radius:12px;background:#183d2d;color:#fff;font:700 15px/1.35 system-ui,sans-serif;box-shadow:0 4px 16px #0005}
+#tf-season-display strong{font-size:1.08em;color:#fff}#tf-season-display span{color:#e1f4df}
+</style>
+<script id="tf-season-display-script">
+(function(){
+const names=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const edges=[0,31,59,90,120,151,181,212,243,273,304,334,365];
+function update(){
+ const clock=document.getElementById('time');if(!clock)return;
+ const match=(clock.textContent||'').match(/Day\s+(\d+)\s*\/\s*1,?825/i);
+ if(!match)return;
+ const day=Number(match[1]),start=Number(document.getElementById('startMonth')?.value||0);
+ const within=day%365;let offset=edges.findIndex((_,i)=>i<12&&within<edges[i+1]);if(offset<0)offset=11;
+ const month=(start+offset)%12;
+ const season=month===11||month<2?'Winter':month<5?'Spring':month<8?'Summer':'Fall';
+ const icon={Winter:'❄️',Spring:'🌱',Summer:'☀️',Fall:'🍂'}[season];
+ let bar=document.getElementById('tf-season-display');
+ if(!bar){bar=document.createElement('div');bar.id='tf-season-display';bar.setAttribute('role','status');bar.setAttribute('aria-live','polite');const anchor=document.querySelector('#tf-playback-strip')||document.querySelector('#timeline-workflow')||document.querySelector('main');if(anchor)anchor.parentNode.insertBefore(bar,anchor);else document.body.prepend(bar);}
+ bar.innerHTML='<strong>'+icon+' '+season+'</strong><span>'+names[month]+' · Year '+(Math.floor(day/365)+1)+' · Day '+day+' / 1,825</span>';
+}
+document.addEventListener('DOMContentLoaded',function(){update();const clock=document.getElementById('time');if(clock)new MutationObserver(update).observe(clock,{childList:true,characterData:true,subtree:true});document.getElementById('startMonth')?.addEventListener('change',update);});
+window.addEventListener('turfarium:time-advanced',update);
+})();
 </script></body></html>
