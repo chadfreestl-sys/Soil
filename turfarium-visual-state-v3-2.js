@@ -195,6 +195,12 @@ async function refresh(key){
  const rawScore=scoreFrom(snapshot);
  const canopyStatus=' · cover '+(Number(snapshot.canopyCover)||0).toFixed(1)+'% · tillers '+(Number(snapshot.tillerDensity)||0).toFixed(1);
  const month=monthFor(key,snapshot),season=SEASONS[month];
+ // Show a verifiable visual clock directly on each lawn, independent of photo loading.
+ let badge=stage.querySelector('.tf-season-on-photo');
+ if(!badge){badge=document.createElement('span');badge.className='tf-season-on-photo';badge.setAttribute('aria-live','polite');stage.appendChild(badge);}
+ const monthName=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][month];
+ badge.textContent=monthName+' · '+season[0].toUpperCase()+season.slice(1)+' · Day '+(snapshot.day??dayFor(key));
+ badge.dataset.season=season;
  // March-start photos should not imply a fully established summer canopy at day zero.
  // Visual-only early-season adjustment fades gradually; underlying vigor is unchanged.
  const elapsed=Math.max(0,Number(snapshot.day??dayFor(key))||0);
@@ -221,10 +227,10 @@ async function refresh(key){
  const warmSeason=/zoysia|bermuda|st. augustine|centipede|bahia|buffalo|paspalum/.test(grass);
  const dormant=warmSeason&&season==='winter';
  const transition=warmSeason&&(month===2||month===10);
- const seasonalWarmth=season==='summer'?1.025:season==='winter'?.94:1;
- const dormancyFactor=dormant?.38:transition?.72:1;
+ const seasonalWarmth=season==='summer'?1.06:season==='winter'?.75:season==='fall'?.91:1;
+ const dormancyFactor=dormant?.38:transition?.72:season==='winter'?.76:season==='fall'?.9:1;
  const saturation=clamp((.72+canopyGrowth*.35+n*.0024-stressPenalty*.10)*seasonalWarmth*dormancyFactor,.22,1.30);
- const brightness=clamp((.88+canopyGrowth*.12+n*.0012-stressPenalty*.05)*(dormant?.91:1),.72,1.13);
+ const brightness=clamp((.88+canopyGrowth*.12+n*.0012-stressPenalty*.05)*(dormant?.86:season==='winter'?.92:1),.72,1.13);
  const contrast=clamp(1.015+canopyGrowth*.03,1,1.06);
  photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+') contrast('+contrast.toFixed(3)+')','important');
  photo.style.transition='filter 3.8s ease-in-out';
@@ -284,6 +290,7 @@ css.textContent='.photo-stage{position:relative}'+
  '.tf-visual-indicator{margin:7px 2px 3px;font-size:.72rem;font-weight:800;line-height:1.35;color:#234f37}'+
  '.tf-visual-indicator[data-tf-image-unavailable="1"]{color:#a1382d}'+
  '@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}';
+css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
  version:'3.8',states:STATES,score,refresh,refreshAll:boot,
