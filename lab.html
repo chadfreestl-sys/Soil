@@ -1221,7 +1221,7 @@ microscope();
    }
    if(report.parentElement!==drawer)drawer.appendChild(report);
    const summary=drawer.querySelector(':scope > summary');
-   if(summary)summary.textContent='What Changed';
+   if(summary&&summary.textContent!=='What Changed')summary.textContent='What Changed';
    // Keep the original live report directly INSIDE the visible mobile photo/replay stack.
    // This avoids CSS order rules and the normally collapsed Soil Profile parent.
    const replay=view.querySelector('#tf-stacked-replay');
@@ -1236,9 +1236,6 @@ microscope();
  else place();
  window.addEventListener('load',place);
  [150,600,1500,3200,6000].forEach(ms=>setTimeout(place,ms));
- const observer=new MutationObserver(()=>{if(!moving)place();});
- function watch(){if(document.body)observer.observe(document.body,{childList:true,subtree:true});}
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watch);
- else watch();
+ // No global DOM observer: it can cause a continuous render loop on mobile.
 })();
 </script></body></html>
