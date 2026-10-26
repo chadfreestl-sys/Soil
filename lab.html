@@ -1057,7 +1057,7 @@ microscope();
 <script defer src="profile-compact-v23-3.js?v=23.7"></script>
 <script defer src="treatment-history-v23-6.js?v=24.0"></script>
 <script defer src="turfarium-details-v24.js?v=24.0"></script>
-<!-- Disabled procedural worm overlay: photographic worms are embedded in the background and cannot be independently animated. --><script defer src="turfarium-living-window.js?v=4.1.0"></script><script defer src="turfarium-clean-photo.js?v=3.9"></script><script defer src="turfarium-visual-state-v3-2.js?v=mobile-stage-29e0dbd"></script><script defer src="turfarium-shared-start-layout-v1.js?v=4.3"></script><script defer src="turfarium-science-pairs-v1.js?v=1.2.2"></script><script defer src="js/food-web.js?v=1.0.0"></script><script defer src="js/food-web-bridge.js?v=1.0.0"></script><script defer src="js/five-year-scenarios.js?v=1.1.0"></script><script defer src="js/five-year-scenario-panel.js?v=1.1.0"></script><script defer src="what-changed-collapse.js?v=below-replay-536b528"></script><script defer src="turfarium-playback-strip.js?v=1.6.7"></script>
+<!-- Disabled procedural worm overlay: photographic worms are embedded in the background and cannot be independently animated. --><script defer src="turfarium-living-window.js?v=4.1.0"></script><script defer src="turfarium-clean-photo.js?v=3.9"></script><script defer src="turfarium-visual-state-v3-2.js?v=mobile-stage-29e0dbd"></script><script defer src="turfarium-shared-start-layout-v1.js?v=4.3"></script><script defer src="turfarium-science-pairs-v1.js?v=1.2.2"></script><script defer src="js/food-web.js?v=1.0.0"></script><script defer src="js/food-web-bridge.js?v=1.0.0"></script><script defer src="js/five-year-scenarios.js?v=1.1.0"></script><script defer src="js/five-year-scenario-panel.js?v=1.1.0"></script><script defer src="what-changed-collapse.js?v=visible-99655d8"></script><script defer src="turfarium-playback-strip.js?v=1.6.7"></script>
 <script defer src="turfarium-history-replay-v1.js?v=1.4.1"></script>
 <script defer src="turfarium-build-status.js?v=25.1.0"></script><script defer src="turfarium-soil-story-visual.js?v=1.0.3"></script><style id="tf-streamline-v25">
 /* One visible progression bar for both lawns; no per-lawn duplicate controls. */
@@ -1270,4 +1270,25 @@ window.addEventListener('turfarium:time-advanced',place);
 #tf-season-display[data-season="spring"] .tf-season-name{color:#c6f79b!important}
 #tf-season-display[data-season="fall"] .tf-season-name{color:#ffcb85!important}
 @media(max-width:420px){#tf-season-display{gap:5px 7px!important;padding:12px 8px!important}#tf-season-display .tf-season-month,#tf-season-display .tf-season-year,#tf-season-display .tf-season-day{padding-left:7px}}
-</style></body></html>
+</style><script id="tf-what-changed-rehome-v2">
+(function(){
+ function place(){
+  const replay=window.matchMedia('(max-width:700px)').matches?
+    document.getElementById('tf-stacked-replay'):
+    document.querySelector('#tf-playback-strip .tf-history-replay')||document.getElementById('tf-playback-strip');
+  const report=document.getElementById('changeReport');
+  if(!replay||!report)return;
+  let wrapper=document.getElementById('tf-what-changed-details');
+  if(!wrapper){
+   wrapper=document.createElement('details');wrapper.id='tf-what-changed-details';wrapper.className='tf-what-changed-details';
+   const heading=document.createElement('summary');heading.textContent='📊 What Changed';wrapper.appendChild(heading);wrapper.appendChild(report);
+  }
+  if(wrapper.previousElementSibling!==replay)replay.insertAdjacentElement('afterend',wrapper);
+  wrapper.style.setProperty('display','block','important');
+  wrapper.style.setProperty('visibility','visible','important');
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);else place();
+ window.addEventListener('load',place);window.addEventListener('turfarium:time-advanced',place);
+ [600,1800,4000,7000].forEach(ms=>setTimeout(place,ms));
+})();
+</script></body></html>
