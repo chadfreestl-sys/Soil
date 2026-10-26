@@ -398,7 +398,7 @@ const climates={
  seattle:{label:'Seattle',t:[42,44,47,51,57,62,67,67,62,54,46,42],m:[76,73,70,66,61,53,42,43,53,68,76,78]},
  phoenix:{label:'Phoenix',t:[55,59,66,74,83,93,97,95,89,77,64,55],m:[28,29,25,19,16,15,30,34,26,20,24,28]}
 };
-function monthIndex(d){const start=Number($('startMonth').value)||0;const elapsed=Math.max(0,Math.floor(Number(d)||0));const year=Math.floor(elapsed/365);const within=elapsed-year*365;const monthOffset=Math.min(11,Math.floor(within/(365/12)));return ((start+monthOffset)%12+12)%12}
+function monthIndex(d){const start=Number($('startMonth').value)||0;const elapsed=Math.max(0,Math.floor(Number(d)||0));const year=Math.floor(elapsed/365);const within=elapsed-year*365;const boundaries=[0,31,59,90,120,151,181,212,243,273,304,334,365];const monthOffset=Math.max(0,boundaries.findIndex((end,i)=>i<12&&within<boundaries[i+1]));return ((start+monthOffset)%12+12)%12}
 function seasonLabel(d){return months[monthIndex(d)]+' · Year '+(Math.floor(d/365)+1)}
 function weather(d){const region=climates[$('region').value]||climates.stl,m=monthIndex(d),mode=$('weatherMode').value;
  const mods={normal:[0,0],drought:[5,-20],wet:[-3,18],heat:[11,-16],cool:[-9,2]};const [dt,dm]=mods[mode]||mods.normal;
@@ -753,7 +753,7 @@ function updateChangeReportV18(start,n,previous){const current={A:snapshotV18(A)
  const dv=current.B.vigor-current.A.vigor;const wetter=current.A.moist>80||current.B.moist>80;
  $('nextActions').textContent=`Next visit: ${wetter?'Check drainage and oxygen stress before adding more water. ':'Review turf condition and soil biology. '}${Math.abs(dv)>.5?`Lawn ${dv>0?'B':'A'} currently leads in modeled vigor by ${Math.abs(dv).toFixed(1)} points. `:'Both lawns have similar modeled vigor. '}You can apply another treatment now or advance time again.`;
 }
-function advance(n){if(day+n>1825){alert('Maximum simulation horizon is 1,825 days.');return}const previous={A:snapshotV18(A),B:snapshotV18(B)},start=day;for(let i=0;i<n;i++){daily(A);daily(B);day++;if(day%7===0)record()}record();log.unshift(`Day ${day} · Advanced ${n} days; review the results and choose whether either lawn needs another treatment.`);$('visit').textContent=`Day ${day}: review the two soil profiles, then apply any next treatment before advancing again.`;render();updateChangeReportV18(start,n,previous)}
+function advance(n){if(day+n>1825){alert('Maximum simulation horizon is 1,825 days.');return}const previous={A:snapshotV18(A),B:snapshotV18(B)},start=day;for(let i=0;i<n;i++){daily(A);daily(B);day++;if(day%7===0&&i!==n-1)record()}record();window.dispatchEvent(new CustomEvent('turfarium:time-advanced',{detail:{from:start,to:day,days:n,season:seasonLabel(day)}}));log.unshift(`Day ${day} · Advanced ${n} days; review the results and choose whether either lawn needs another treatment.`);$('visit').textContent=`Day ${day}: review the two soil profiles, then apply any next treatment before advancing again.`;render();updateChangeReportV18(start,n,previous)}
 window.TurfariumAdvanceDays=function(days){const n=Number(days);if(![7,30,90,365].includes(n))return false;advance(n);return true;};
 function record(){history.push({day,va:env(A).vigor,vb:env(B).vigor,wa:env(A).worms,wb:env(B).worms});if(history.length>350)history.shift();
  const frame={day,A:{...window.TurfariumVisualSnapshot('A')},B:{...window.TurfariumVisualSnapshot('B')}};
