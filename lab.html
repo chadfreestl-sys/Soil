@@ -1195,7 +1195,7 @@ function update(){
  const icon={Winter:'❄️',Spring:'🌱',Summer:'☀️',Fall:'🍂'}[season];
  let bar=document.getElementById('tf-season-display');
  if(!bar){bar=document.createElement('div');bar.id='tf-season-display';bar.setAttribute('role','status');bar.setAttribute('aria-live','polite');const anchor=document.querySelector('#tf-playback-strip')||document.querySelector('#timeline-workflow')||document.querySelector('main');if(anchor)anchor.parentNode.insertBefore(bar,anchor);else document.body.prepend(bar);}
- bar.innerHTML='<strong>'+icon+' '+season+'</strong><span>'+names[month]+' · Year '+(Math.floor(day/365)+1)+' · Day '+day+' / 1,825</span>';
+ bar.dataset.season=season.toLowerCase();bar.innerHTML='<span class="tf-season-icon" aria-hidden="true">'+icon+'</span><strong class="tf-season-name">'+season+'</strong><span class="tf-season-month">'+names[month]+'</span><span class="tf-season-year">Year '+(Math.floor(day/365)+1)+'</span><span class="tf-season-day">Day '+day+' / 1,825</span>';
 }
 document.addEventListener('DOMContentLoaded',function(){update();const clock=document.getElementById('time');if(clock)new MutationObserver(update).observe(clock,{childList:true,characterData:true,subtree:true});document.getElementById('startMonth')?.addEventListener('change',update);});
 window.addEventListener('turfarium:time-advanced',update);
@@ -1260,4 +1260,14 @@ window.addEventListener('resize',place);
 window.addEventListener('turfarium:time-advanced',place);
 [300,1000,2400,4500].forEach(ms=>setTimeout(place,ms));
 })();
-</script></body></html>
+</script><style id="tf-season-legibility-v3">
+#tf-season-display{display:flex!important;align-items:center!important;justify-content:center!important;flex-wrap:wrap!important;gap:7px 10px!important;padding:13px 12px!important;background:#073f27!important;border:2px solid #4e9868!important;border-radius:15px!important;box-shadow:0 3px 12px #10391d55!important;color:#fff!important;text-align:center!important;font-family:system-ui,sans-serif!important;font-size:clamp(14px,3.7vw,19px)!important;font-weight:800!important;line-height:1.4!important}
+#tf-season-display .tf-season-icon{font-size:clamp(22px,6vw,32px)!important;line-height:1!important;color:#fff!important}
+#tf-season-display .tf-season-name{font-size:clamp(20px,5.4vw,29px)!important;font-weight:900!important;color:#ffda48!important;letter-spacing:.1px!important}
+#tf-season-display .tf-season-month,#tf-season-display .tf-season-year,#tf-season-display .tf-season-day{font-size:clamp(13px,3.7vw,18px)!important;font-weight:800!important;color:#fff!important}
+#tf-season-display .tf-season-month,#tf-season-display .tf-season-year,#tf-season-display .tf-season-day{border-left:1px solid #a1c4a9;padding-left:10px}
+#tf-season-display[data-season="winter"] .tf-season-name{color:#c4ebff!important}
+#tf-season-display[data-season="spring"] .tf-season-name{color:#c6f79b!important}
+#tf-season-display[data-season="fall"] .tf-season-name{color:#ffcb85!important}
+@media(max-width:420px){#tf-season-display{gap:5px 7px!important;padding:12px 8px!important}#tf-season-display .tf-season-month,#tf-season-display .tf-season-year,#tf-season-display .tf-season-day{padding-left:7px}}
+</style></body></html>
