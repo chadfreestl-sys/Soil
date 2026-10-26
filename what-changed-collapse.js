@@ -12,6 +12,20 @@ function mount(){
  summary.setAttribute('aria-label','Expand What Changed report');
  report.parentNode.insertBefore(details,report);
  details.append(summary,report);
+ // Keep the existing report intact, but place its collapsed toggle after replay.
+ function place(){
+  const item=document.getElementById('tf-what-changed-details');
+  if(!item)return;
+  const mobile=window.matchMedia('(max-width:700px)').matches;
+  const replay=mobile?document.getElementById('tf-stacked-replay'):
+   document.querySelector('#tf-playback-strip .tf-history-replay')||document.getElementById('tf-playback-strip');
+  if(!replay||!replay.parentNode)return;
+  if(item.previousElementSibling!==replay)replay.insertAdjacentElement('afterend',item);
+ }
+ place();
+ window.addEventListener('turfarium:time-advanced',place);
+ window.addEventListener('resize',place);
+ [400,1400,3200].forEach(ms=>setTimeout(place,ms));
  // Ensure a parent timeline collapse does not hide the independent toggle.
  const timeline=document.getElementById('timeline-workflow');
  if(timeline){
@@ -24,6 +38,8 @@ const style=document.createElement('style');style.textContent=`
  #tf-what-changed-details>summary{cursor:pointer;display:list-item;list-style:revert;list-style-position:inside;padding:15px 18px;font-weight:800;font-size:1.05rem;color:#183e2c;user-select:none}
  #tf-what-changed-details:not([open])>#changeReport{display:none!important}
  #tf-what-changed-details[open]>#changeReport{display:block!important;padding:0 12px 12px;margin:0}
+ #tf-what-changed-details{box-sizing:border-box;width:100%;margin:8px 0 12px!important;grid-column:1/-1}
+ #tf-stacked-lawns>#tf-what-changed-details{background:#f2f7ef!important}
  #tf-what-changed-details>summary:focus-visible{outline:3px solid #3a8060;outline-offset:-3px}
  `;document.head.append(style);
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
