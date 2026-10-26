@@ -1200,4 +1200,41 @@ function update(){
 document.addEventListener('DOMContentLoaded',function(){update();const clock=document.getElementById('time');if(clock)new MutationObserver(update).observe(clock,{childList:true,characterData:true,subtree:true});document.getElementById('startMonth')?.addEventListener('change',update);});
 window.addEventListener('turfarium:time-advanced',update);
 })();
+</script><script id="tf-timeline-recovery-v1">
+(function(){
+'use strict';
+function boot(){
+ const timeline=document.getElementById('timeline-workflow');
+ if(!timeline)return;
+ let status=document.getElementById('tf-timeline-diagnostic');
+ if(!status){status=document.createElement('div');status.id='tf-timeline-diagnostic';status.setAttribute('role','status');status.style.cssText='font:700 13px/1.4 system-ui;color:#173e2d;background:#e8f5e7;border:1px solid #9abb9e;padding:9px;margin:7px 0;border-radius:9px';const target=document.getElementById('tf-stacked-quick-progress')||document.getElementById('tf-playback-strip')||timeline;target.insertAdjacentElement('afterend',status);}
+ const clock=document.getElementById('time');
+ function state(){return (clock?.textContent||'').match(/Day\s+(\d+)/i)?.[1]||'?';}
+ function report(message,failed){status.textContent=message;status.style.background=failed?'#fff1e8':'#e8f5e7';status.style.color=failed?'#852b18':'#173e2d';}
+ report('Timeline ready · day '+state(),false);
+ document.addEventListener('click',function(ev){
+  const btn=ev.target.closest('button');
+  if(!btn)return;
+  const row=btn.closest('#tf-stacked-quick-progress,#timeline-workflow,#tf-playback-strip');
+  if(!row)return;
+  let days=Number(btn.dataset.step);
+  if(![7,30,90,365].includes(days)){
+   const label=(btn.textContent||'').trim();
+   if(!/^\+(7|30|90)\s*(days?|d)\b/i.test(label)&&!/^\+1\s*year\b/i.test(label))return;
+   days=/year/i.test(label)?365:Number(label.match(/\d+/)?.[0]);
+  }
+  if(![7,30,90,365].includes(days))return;
+  ev.preventDefault();ev.stopImmediatePropagation();
+  const before=state();
+  if(typeof window.TurfariumAdvanceDays!=='function'){report('Engine not initialized. The original simulator script failed before controls were connected.',true);return;}
+  let ok=false;
+  try{ok=window.TurfariumAdvanceDays(days)}catch(error){report('Simulation error: '+error.message,true);return;}
+  const after=state();
+  if(ok&&after!==before)report('Advanced '+days+' days · now day '+after,false);
+  else report('Advance did not complete (day '+before+'). '+(ok?'Clock did not refresh.':'Check maximum 1,825-day limit or engine error.'),true);
+ },true);
+ window.addEventListener('error',function(ev){if(status&&state()==='0')report('Startup error: '+(ev.message||'unknown')+' · '+(ev.filename||'').split('/').pop()+':'+ev.lineno,true)});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
 </script></body></html>
