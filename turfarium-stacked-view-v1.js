@@ -176,9 +176,9 @@ function mount(){
    const button=document.createElement('button');button.type='button';button.textContent=label;
    button.addEventListener('click',()=>{
     const all=[...document.querySelectorAll('#tf-playback-strip .tf-strip-time button')];
-    const target=all.find(x=>x.textContent.trim().replace(/\\s+/g,'').includes(label.replace(/\\s+/g,'')));
+    const target=all.find(x=>x.textContent.trim().replace(/\s+/g,'').includes(label.replace(/\s+/g,'')));
     if(typeof window.TurfariumAdvanceDays==='function'){
-     const days=label==='+1 year'?365:Number(label.match(/\\d+/)?.[0]);
+     const days=label==='+1 year'?365:Number(label.match(/\d+/)?.[0]);
      window.TurfariumAdvanceDays(days);
     }else if(target){target.click();}
     else console.warn('[Turfarium] Timeline controls not ready');
