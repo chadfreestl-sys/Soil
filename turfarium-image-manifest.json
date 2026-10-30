@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 1,
+  "description": "Illustrative seasonal canopy-state assets; paths should be validated against deployed files. Independent A/B visual selection uses each lawn's state.",
+  "assets": [
+    {
+      "id": "winter-stressed",
+      "src": "images/seasons/winter/state-01-stressed.webp",
+      "season": "winter",
+      "state": "stressed",
+      "scoreMin": 0,
+      "scoreMax": 15,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "winter-poor",
+      "src": "images/seasons/winter/state-02-poor.webp",
+      "season": "winter",
+      "state": "poor",
+      "scoreMin": 16,
+      "scoreMax": 28,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "winter-fair",
+      "src": "images/seasons/winter/state-03-fair.webp",
+      "season": "winter",
+      "state": "fair",
+      "scoreMin": 29,
+      "scoreMax": 42,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "winter-recovering",
+      "src": "images/seasons/winter/state-04-recovering.webp",
+      "season": "winter",
+      "state": "recovering",
+      "scoreMin": 43,
+      "scoreMax": 56,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "winter-healthy",
+      "src": "images/seasons/winter/state-05-healthy.webp",
+      "season": "winter",
+      "state": "healthy",
+      "scoreMin": 57,
+      "scoreMax": 70,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "winter-very-healthy",
+      "src": "images/seasons/winter/state-06-very-healthy.webp",
+      "season": "winter",
+      "state": "very-healthy",
+      "scoreMin": 71,
+      "scoreMax": 82,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "winter-lush",
+      "src": "images/seasons/winter/state-07-lush.webp",
+      "season": "winter",
+      "state": "lush",
+      "scoreMin": 83,
+      "scoreMax": 92,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "winter-elite",
+      "src": "images/seasons/winter/state-08-elite.webp",
+      "season": "winter",
+      "state": "elite",
+      "scoreMin": 93,
+      "scoreMax": 100,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "spring-stressed",
+      "src": "images/seasons/spring/state-01-stressed.webp",
+      "season": "spring",
+      "state": "stressed",
+      "scoreMin": 0,
+      "scoreMax": 15,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "spring-poor",
+      "src": "images/seasons/spring/state-02-poor.webp",
+      "season": "spring",
+      "state": "poor",
+      "scoreMin": 16,
+      "scoreMax": 28,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "spring-fair",
+      "src": "images/seasons/spring/state-03-fair.webp",
+      "season": "spring",
+      "state": "fair",
+      "scoreMin": 29,
+      "scoreMax": 42,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "spring-recovering",
+      "src": "images/seasons/spring/state-04-recovering.webp",
+      "season": "spring",
+      "state": "recovering",
+      "scoreMin": 43,
+      "scoreMax": 56,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "spring-healthy",
+      "src": "images/seasons/spring/state-05-healthy.webp",
+      "season": "spring",
+      "state": "healthy",
+      "scoreMin": 57,
+      "scoreMax": 70,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "spring-very-healthy",
+      "src": "images/seasons/spring/state-06-very-healthy.webp",
+      "season": "spring",
+      "state": "very-healthy",
+      "scoreMin": 71,
+      "scoreMax": 82,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "spring-lush",
+      "src": "images/seasons/spring/state-07-lush.webp",
+      "season": "spring",
+      "state": "lush",
+      "scoreMin": 83,
+      "scoreMax": 92,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "spring-elite",
+      "src": "images/seasons/spring/state-08-elite.webp",
+      "season": "spring",
+      "state": "elite",
+      "scoreMin": 93,
+      "scoreMax": 100,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "summer-stressed",
+      "src": "images/seasons/summer/state-01-stressed.webp",
+      "season": "summer",
+      "state": "stressed",
+      "scoreMin": 0,
+      "scoreMax": 15,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "summer-poor",
+      "src": "images/seasons/summer/state-02-poor.webp",
+      "season": "summer",
+      "state": "poor",
+      "scoreMin": 16,
+      "scoreMax": 28,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "summer-fair",
+      "src": "images/seasons/summer/state-03-fair.webp",
+      "season": "summer",
+      "state": "fair",
+      "scoreMin": 29,
+      "scoreMax": 42,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "summer-recovering",
+      "src": "images/seasons/summer/state-04-recovering.webp",
+      "season": "summer",
+      "state": "recovering",
+      "scoreMin": 43,
+      "scoreMax": 56,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "summer-healthy",
+      "src": "images/seasons/summer/state-05-healthy.webp",
+      "season": "summer",
+      "state": "healthy",
+      "scoreMin": 57,
+      "scoreMax": 70,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "summer-very-healthy",
+      "src": "images/seasons/summer/state-06-very-healthy.webp",
+      "season": "summer",
+      "state": "very-healthy",
+      "scoreMin": 71,
+      "scoreMax": 82,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "summer-lush",
+      "src": "images/seasons/summer/state-07-lush.webp",
+      "season": "summer",
+      "state": "lush",
+      "scoreMin": 83,
+      "scoreMax": 92,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "summer-elite",
+      "src": "images/seasons/summer/state-08-elite.webp",
+      "season": "summer",
+      "state": "elite",
+      "scoreMin": 93,
+      "scoreMax": 100,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "fall-stressed",
+      "src": "images/seasons/fall/state-01-stressed.webp",
+      "season": "fall",
+      "state": "stressed",
+      "scoreMin": 0,
+      "scoreMax": 15,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "fall-poor",
+      "src": "images/seasons/fall/state-02-poor.webp",
+      "season": "fall",
+      "state": "poor",
+      "scoreMin": 16,
+      "scoreMax": 28,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "fall-fair",
+      "src": "images/seasons/fall/state-03-fair.webp",
+      "season": "fall",
+      "state": "fair",
+      "scoreMin": 29,
+      "scoreMax": 42,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "fall-recovering",
+      "src": "images/seasons/fall/state-04-recovering.webp",
+      "season": "fall",
+      "state": "recovering",
+      "scoreMin": 43,
+      "scoreMax": 56,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "fall-healthy",
+      "src": "images/seasons/fall/state-05-healthy.webp",
+      "season": "fall",
+      "state": "healthy",
+      "scoreMin": 57,
+      "scoreMax": 70,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "fall-very-healthy",
+      "src": "images/seasons/fall/state-06-very-healthy.webp",
+      "season": "fall",
+      "state": "very-healthy",
+      "scoreMin": 71,
+      "scoreMax": 82,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "fall-lush",
+      "src": "images/seasons/fall/state-07-lush.webp",
+      "season": "fall",
+      "state": "lush",
+      "scoreMin": 83,
+      "scoreMax": 92,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    },
+    {
+      "id": "fall-elite",
+      "src": "images/seasons/fall/state-08-elite.webp",
+      "season": "fall",
+      "state": "elite",
+      "scoreMin": 93,
+      "scoreMax": 100,
+      "type": "seasonal-canopy",
+      "illustrative": true
+    }
+  ]
+}
