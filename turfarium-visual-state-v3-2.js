@@ -98,6 +98,23 @@ function scoreFrom(s){
  (100-Number(s.compaction))*.07+(100-Number(s.saltStress))*.04+Number(s.rootMass)*.08;
  return Math.round(clamp(raw,0,100));
 }
+// Condition assessment is separate from canopy score. These are illustrative
+// thresholds for visual metadata, NOT diagnostic thresholds or treatment advice.
+function assessConditions(snapshot){
+ const n=(field)=>{const v=Number(snapshot?.[field]);return Number.isFinite(v)?clamp(v,0,100):null};
+ const disease=n('disease'),oxygen=n('oxygen'),salt=n('saltStress');
+ const roots=n('rootMass'),vigor=n('vigor');
+ const signals=[];
+ if(disease!==null&&disease>=65)signals.push({id:'disease-pressure',severity:disease,source:'disease'});
+ if(oxygen!==null&&oxygen<=30)signals.push({id:'low-root-zone-oxygen',severity:100-oxygen,source:'oxygen'});
+ if(salt!==null&&salt>=65)signals.push({id:'salt-stress',severity:salt,source:'saltStress'});
+ if(roots!==null&&roots<=25)signals.push({id:'low-root-biomass',severity:100-roots,source:'rootMass'});
+ if(vigor!==null&&vigor<=30)signals.push({id:'low-canopy-vigor',severity:100-vigor,source:'vigor'});
+ signals.sort((a,b)=>b.severity-a.severity);
+ return {primary:signals[0]?.id||'general-canopy-state',signals,
+  // No nutrient-specific inference: available metrics cannot diagnose deficiencies.
+  nutrientDiagnosis:'unavailable',confidence:'illustrative'};
+}
 function score(key){return scoreFrom(snapshotFor(key))}
 function stateForScore(n){
  let ix=0;for(let i=0;i<STATES.length;i++)if(n>=STATES[i].min)ix=i;
@@ -216,6 +233,9 @@ async function refresh(key){
  if(!stage||!photo)return;
  const {overlay,indicator}=ensureStage(stage,photo);
  const snapshot=snapshotFor(key);
+ const conditions=assessConditions(snapshot);
+ stage.dataset.tfPrimaryStress=conditions.primary;
+ stage.dataset.tfStressSignals=conditions.signals.map(x=>x.id).join(',');
  const rawScore=scoreFrom(snapshot);
  const canopyStatus=' · cover '+(Number(snapshot.canopyCover)||0).toFixed(1)+'% · tillers '+(Number(snapshot.tillerDensity)||0).toFixed(1);
  const month=monthFor(key,snapshot),season=SEASONS[month];
@@ -318,12 +338,13 @@ css.textContent='.photo-stage{position:relative}'+
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
- version:'3.8',states:STATES,score,refresh,refreshAll:boot,
+ version:'3.9',states:STATES,score,assessConditions,refresh,refreshAll:boot,
  showReplayFrame:(frames)=>{for(const key of ['A','B']){if(!frames?.[key])continue;replaySnapshots.set(key,frames[key]);const stage=elements(key).stage;if(stage){stage.dataset.tfPhotoSignature='';stage.dataset.tfPhotoReady='0';}lastState.delete(key);refresh(key);}},
  endReplay:()=>{replaySnapshots.clear();lastState.clear();refresh('A');refresh('B');},
  getStatus:key=>{const st=elements(key).stage;return st?{
   state:st.dataset.tfVisualState,season:st.dataset.tfVisualSeason,score:st.dataset.tfVisualScore,
-  asset:st.dataset.tfVisualAsset,src:st.dataset.tfVisualSource,ready:st.dataset.tfPhotoReady
+  asset:st.dataset.tfVisualAsset,src:st.dataset.tfVisualSource,ready:st.dataset.tfPhotoReady,
+  primaryStress:st.dataset.tfPrimaryStress,stressSignals:st.dataset.tfStressSignals
  }:null}
 };
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
