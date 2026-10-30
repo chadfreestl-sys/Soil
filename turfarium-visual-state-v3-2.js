@@ -17,6 +17,19 @@ const STATES=[
  {id:'elite',min:93,candidates:['images/file_00000000712881f58d3f5b83c6615429.png']}
 ];
 
+// Optional condition-specific assets are read from a manifest. Missing files
+// never replace a valid seasonal image; fallback is automatic.
+let conditionAssets=[];
+let manifestReady=fetch('turfarium-image-manifest.json',{cache:'no-cache'})
+ .then(r=>{if(!r.ok)throw Error('manifest unavailable');return r.json()})
+ .then(m=>{conditionAssets=Array.isArray(m.assets)?m.assets.filter(a=>a.type==='condition'&&a.src&&a.condition):[]})
+ .catch(()=>{conditionAssets=[]});
+function conditionCandidates(conditions,season){
+ const ids=new Set(conditions.signals.map(s=>s.id));
+ return conditionAssets.filter(a=>ids.has(a.condition)&&(!a.season||a.season===season))
+  .sort((a,b)=>(ids.has(a.condition)?conditions.signals.find(s=>s.id===a.condition)?.severity||0:0)-(ids.has(b.condition)?conditions.signals.find(s=>s.id===b.condition)?.severity||0:0))
+  .reverse();
+}
 const loaded=new Map();
 const MAX_ASSET_CHECKS=24;
 function rememberAsset(url,promise){
@@ -143,7 +156,11 @@ function canLoad(url){
  });
  return rememberAsset(url,result);
 }
-async function imageFor(index,season){
+async function imageFor(index,season,conditions){
+ await manifestReady;
+ for(const asset of conditionCandidates(conditions,season)){
+  if(await canLoad(asset.src))return {src:asset.src,kind:'condition',condition:asset.condition};
+ }
  const local=imageUrl(index,season);
  if(await canLoad(local))return {src:local,kind:'seasonal'};
  // CDN fallback if Cloudflare's asset layer has not finished updating.
@@ -255,7 +272,7 @@ async function refresh(key){
  const previousDay=Number(lastState.get(key)?.day);
  if(Number.isFinite(previousDay)&&elapsed<previousDay)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
- const signature=season+'|'+index;
+ const signature=season+'|'+index+'|'+conditions.primary;
  warmAdjacent(index,season);
  // Continuous, model-linked visual progression even when the photo stays in the
  // same categorical image band. Small increments should be subtle, not dramatic.
@@ -300,7 +317,7 @@ async function refresh(key){
  stage.dataset.tfPhotoSignature=signature;stage.dataset.tfPhotoReady='0';
  lastState.set(key,{index,signature,day:elapsed});
  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · loading…');
- const asset=await imageFor(index,season);
+ const asset=await imageFor(index,season,conditions);
  if(pending.get(key)!==request)return;
  if(!asset.src){
   stage.dataset.tfVisualAsset='unavailable';
@@ -308,6 +325,7 @@ async function refresh(key){
   indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season+' · image unavailable',true);
   return;
  }
+ stage.dataset.tfSelectedCondition=asset.condition||'';
  present(key,stage,photo,overlay,indicator,asset.src,season,index,n,asset.kind,request);
 }
 let observing=false;
@@ -338,13 +356,14 @@ css.textContent='.photo-stage{position:relative}'+
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
- version:'3.9',states:STATES,score,assessConditions,refresh,refreshAll:boot,
+ version:'4.0',states:STATES,score,assessConditions,refresh,refreshAll:boot,
  showReplayFrame:(frames)=>{for(const key of ['A','B']){if(!frames?.[key])continue;replaySnapshots.set(key,frames[key]);const stage=elements(key).stage;if(stage){stage.dataset.tfPhotoSignature='';stage.dataset.tfPhotoReady='0';}lastState.delete(key);refresh(key);}},
  endReplay:()=>{replaySnapshots.clear();lastState.clear();refresh('A');refresh('B');},
  getStatus:key=>{const st=elements(key).stage;return st?{
   state:st.dataset.tfVisualState,season:st.dataset.tfVisualSeason,score:st.dataset.tfVisualScore,
   asset:st.dataset.tfVisualAsset,src:st.dataset.tfVisualSource,ready:st.dataset.tfPhotoReady,
-  primaryStress:st.dataset.tfPrimaryStress,stressSignals:st.dataset.tfStressSignals
+  primaryStress:st.dataset.tfPrimaryStress,stressSignals:st.dataset.tfStressSignals,
+  selectedCondition:st.dataset.tfSelectedCondition
  }:null}
 };
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
