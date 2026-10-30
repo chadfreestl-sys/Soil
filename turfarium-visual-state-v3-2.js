@@ -18,6 +18,25 @@ const STATES=[
 ];
 
 const loaded=new Map();
+const MAX_ASSET_CHECKS=24;
+function rememberAsset(url,promise){
+ loaded.delete(url);loaded.set(url,promise);
+ while(loaded.size>MAX_ASSET_CHECKS)loaded.delete(loaded.keys().next().value);
+ return promise;
+}
+const warmed=new Map();
+function warmPhoto(src){
+ if(!src||warmed.has(src))return;
+ const img=new Image();img.decoding='async';img.src=src;
+ warmed.set(src,img);
+ while(warmed.size>4)warmed.delete(warmed.keys().next().value);
+}
+function warmAdjacent(index,season){
+ const near=[index-1,index+1].filter(i=>i>=0&&i<STATES.length);
+ const task=()=>near.forEach(i=>warmPhoto(imageUrl(i,season)));
+ if('requestIdleCallback' in window)requestIdleCallback(task,{timeout:2500});else setTimeout(task,350);
+}
+
 const lastState=new Map();
 const pending=new Map();
 const replaySnapshots=new Map();
@@ -105,8 +124,7 @@ function canLoad(url){
   image.onerror=()=>resolve(false);
   image.src=url;
  });
- loaded.set(url,result);
- return result;
+ return rememberAsset(url,result);
 }
 async function imageFor(index,season){
  const local=imageUrl(index,season);
@@ -218,6 +236,7 @@ async function refresh(key){
  if(Number.isFinite(previousDay)&&elapsed<previousDay)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
  const signature=season+'|'+index;
+ warmAdjacent(index,season);
  // Continuous, model-linked visual progression even when the photo stays in the
  // same categorical image band. Small increments should be subtle, not dramatic.
  // Canopy appearance follows modeled turf vigor and stress; root status informs
