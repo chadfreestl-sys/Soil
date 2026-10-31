@@ -1,0 +1,128 @@
+{
+  "collection": "Turfarium",
+  "total_planned": 100,
+  "archive_location": "ChatGPT Library /Turfarium/Turfarium_Master_Image_Library_BASE13-19.zip",
+  "note": "BASE1-12 are approval records only, not recovered files. BASE13-19 archive contains PNG and WebP. GitHub does not yet contain image binaries. BASE20 pending.",
+  "images": [
+    {
+      "id": "BASE01",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE02",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE03",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE04",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE05",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE06",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE07",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE08",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE09",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE10",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE11",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE12",
+      "approval": "approved",
+      "asset_status": "original_unrecovered",
+      "title": "Title to recover"
+    },
+    {
+      "id": "BASE13",
+      "approval": "approved",
+      "asset_status": "archived_in_ChatGPT_Library",
+      "title": "Continuing Soil Biological Stress"
+    },
+    {
+      "id": "BASE14",
+      "approval": "approved",
+      "asset_status": "archived_in_ChatGPT_Library",
+      "title": "Weed Competition Following Soil Stress"
+    },
+    {
+      "id": "BASE15",
+      "approval": "approved",
+      "asset_status": "archived_in_ChatGPT_Library",
+      "title": "Uneven Autumn Turf Recovery"
+    },
+    {
+      "id": "BASE16",
+      "approval": "approved",
+      "asset_status": "archived_in_ChatGPT_Library",
+      "title": "Autumn Root Recovery and Soil Biological Rebound"
+    },
+    {
+      "id": "BASE17",
+      "approval": "approved",
+      "asset_status": "archived_in_ChatGPT_Library",
+      "title": "Late Autumn Root Development and Seasonal Slowdown"
+    },
+    {
+      "id": "BASE18",
+      "approval": "approved",
+      "asset_status": "archived_in_ChatGPT_Library",
+      "title": "Early Winter Dormancy and Soil Temperature Transition"
+    },
+    {
+      "id": "BASE19",
+      "approval": "approved",
+      "asset_status": "archived_in_ChatGPT_Library",
+      "title": "Sustained Early-Winter Cooling"
+    },
+    {
+      "id": "BASE20",
+      "approval": "pending",
+      "asset_status": "not_locked",
+      "title": "Sustained Winter Cold and Shallow Soil Freezing"
+    }
+  ]
+}
