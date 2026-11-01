@@ -43,8 +43,14 @@
     {
       "id": "BASE04",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Severe Turf Stress — Compacted Clay Soil, Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "8dc2f6fc6daff07f1554cb8cc52ebfb8190c257d110242f08b2df7d37702eb66",
+      "webp_sha256": "cd7257c1e04f34af12837db855a40ab04e7192f0002768eda9ce84f45303909d"
     },
     {
       "id": "BASE05",
