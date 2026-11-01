@@ -173,8 +173,14 @@
     {
       "id": "BASE15",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Uneven Autumn Turf Recovery"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Uneven Autumn Turf Recovery — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "f743ea10fc40dc4e12c789300fab6ecf64078a1851b1bf7d31941eecf65de245",
+      "webp_sha256": "f497c831d97d40ead910fbdaf76a6ec7f5c8f84db098c86d8052318365472a3d"
     },
     {
       "id": "BASE16",
