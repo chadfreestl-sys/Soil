@@ -185,8 +185,14 @@
     {
       "id": "BASE16",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Autumn Root Recovery and Soil Biological Rebound"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Autumn Root Recovery and Soil Biological Rebound — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "672138ab7ace6fcb48c48c7a05e5635976dcfae53578a4713c093d001874987d",
+      "webp_sha256": "2521f6dd93291e4efccea76e9a490afadb357467402fd26e9a78ea438eee52c6"
     },
     {
       "id": "BASE17",
