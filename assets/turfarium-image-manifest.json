@@ -19,8 +19,14 @@
     {
       "id": "BASE02",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Spring Turf Baseline — Scientific Revision v2",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "7d6102b502c73134da935b3246c13d8779170db10daaef66d0c2dd00154a688a",
+      "webp_sha256": "0107d7cf99b938ab579545ee97a0212df88c1d1670c2604b9e8c784f0e085913"
     },
     {
       "id": "BASE03",
