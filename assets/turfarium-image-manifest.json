@@ -154,6 +154,18 @@
       ],
       "png_sha256": "68df5e73b9114d24b77def3e599648384188399c1c18cdf1d3dc212180fb3d05",
       "webp_sha256": "f4b517d9eb8d33cf6e356f575436d75f65c9732de30380dd32cb5afba220f738"
+    },
+    {
+      "id": "BASE23",
+      "title": "Early Spring Green-Up — Improved Root and Clay Soil Structure",
+      "approval": "approved",
+      "asset_status": "approved_local_GitHub_binary_pending",
+      "dimensions": [
+        1916,
+        821
+      ],
+      "png_sha256": "737ef1da896475218626d96f32e2c4248256571aac9d0c08f21a76a2cc468a4c",
+      "webp_sha256": "5c7d48947351ea095a3e2f44f4272968bd48b352203a9c5390b01bee406d9256"
     }
   ]
 }
