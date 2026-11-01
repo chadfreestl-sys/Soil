@@ -1,0 +1,38 @@
+name: Extract Turfarium BASE21 image
+on:
+  push:
+    paths:
+      - 'Turfarium_BASE21_GitHub_Upload.zip'
+      - '.github/workflows/extract-turfarium-base21.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify and extract BASE21
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          p=Path('Turfarium_BASE21_GitHub_Upload.zip')
+          if not p.exists(): raise SystemExit('Upload the BASE21 ZIP to repository root first')
+          with ZipFile(p) as z:
+              files=[i for i in z.infolist() if not i.is_dir()]
+              expected='assets/turfarium/BASE21/BASE21.webp'
+              if len(files)!=1 or files[0].filename!=expected: raise SystemExit('Unexpected ZIP structure')
+              data=z.read(files[0])
+              if data[:4]!=b'RIFF' or data[8:12]!=b'WEBP': raise SystemExit('Not WebP')
+              target=Path(expected);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+          PY
+      - name: Commit BASE21 asset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/turfarium/BASE21/BASE21.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Add approved Turfarium BASE21 WebP image"
+            git push
+          fi
