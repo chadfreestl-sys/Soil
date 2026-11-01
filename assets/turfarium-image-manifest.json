@@ -142,6 +142,18 @@
       "source_filename": "a_highly_detailed_realistic_macro_cross_section_o.png",
       "png_sha256": "610597ac8503bb1d79052b2bb00fcb15c5ddc8feadc88f7105b1e3f2b2246a89",
       "webp_sha256": "e178ec507023605b004622870ca9ce9467b927666526ae56685c7b48f2197fb7"
+    },
+    {
+      "id": "BASE22",
+      "title": "Winter Recovery — Fine Clay Aggregation",
+      "approval": "approved",
+      "asset_status": "approved_local_GitHub_binary_pending",
+      "dimensions": [
+        1915,
+        821
+      ],
+      "png_sha256": "68df5e73b9114d24b77def3e599648384188399c1c18cdf1d3dc212180fb3d05",
+      "webp_sha256": "f4b517d9eb8d33cf6e356f575436d75f65c9732de30380dd32cb5afba220f738"
     }
   ]
 }
