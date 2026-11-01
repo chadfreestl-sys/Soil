@@ -133,15 +133,15 @@
     {
       "id": "BASE21",
       "approval": "approved",
-      "asset_status": "webp_packaged_awaiting_GitHub_binary_upload",
-      "title": "Sustained Winter Cooling — Improved Soil Structure",
+      "asset_status": "approved_final_revision_local_archive_GitHub_binary_pending",
+      "title": "Sustained Winter Cooling — Aggregated Clay Soil (Final Revision)",
       "dimensions": [
-        1915,
+        1916,
         821
       ],
-      "source_filename": "a_highly_detailed_hyper_realistic_macro_cross_sec.png",
-      "png_sha256": "70c404fd86a3fdb426a9b6c2fe5abab87624db5a7c1327c62bdf7cb53042500e",
-      "webp_sha256": "c632dcc26433797bdc51bdb0d6e343d7b123b094316a81daed54a0a0eeace1fe"
+      "source_filename": "a_highly_detailed_realistic_macro_cross_section_o.png",
+      "png_sha256": "610597ac8503bb1d79052b2bb00fcb15c5ddc8feadc88f7105b1e3f2b2246a89",
+      "webp_sha256": "e178ec507023605b004622870ca9ce9467b927666526ae56685c7b48f2197fb7"
     }
   ]
 }
