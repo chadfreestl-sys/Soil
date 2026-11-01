@@ -67,8 +67,14 @@
     {
       "id": "BASE06",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Waterlogged Soil — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "3617dd8743407526a5fe82a8b21033976e316820b0839b7f81aa9e601766b2e2",
+      "webp_sha256": "927973a2deab848cafa8387de02bb88b43a31524e596cb0a73dccaa0ca2ea28e"
     },
     {
       "id": "BASE07",
