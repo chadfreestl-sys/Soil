@@ -1,0 +1,18 @@
+{
+  "images": [
+    {
+      "id": "base1",
+      "number": 1,
+      "role": "untreated_baseline",
+      "season": "spring",
+      "status": "provisionally_approved_pending_user_final_review",
+      "original": "originals/base1.png",
+      "optimized": "images/base1.webp",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "description": "Untreated St. Louis tall fescue lawn baseline with patchy turf, dandelion, clover, violets, sedge, clay-rich soil and roots."
+    }
+  ]
+}

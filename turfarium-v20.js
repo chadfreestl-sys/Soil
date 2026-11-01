@@ -107,6 +107,20 @@
       document.body.appendChild(layout);
     }
 
+    // Thermal model is loaded in order; the bridge listens for the existing timeline event.
+    if(document.getElementById('timeline-workflow')&&!document.querySelector('script[data-tf-thermal]')){
+      const thermal=document.createElement('script');
+      thermal.src='thermal-dynamics.js?v=1.1';
+      thermal.dataset.tfThermal='true';
+      thermal.onload=()=>{
+        const bridge=document.createElement('script');
+        bridge.src='thermal-timeline-bridge.js?v=1.1';
+        bridge.dataset.tfThermalBridge='true';
+        document.body.appendChild(bridge);
+      };
+      document.body.appendChild(thermal);
+    }
+
     const profile=document.querySelector('.profile-control-deck');
     const profileStrong=profile?.querySelector('.profile-deck-label strong');
     if(profileStrong) profileStrong.textContent='Profile Viewer + Time Advance';

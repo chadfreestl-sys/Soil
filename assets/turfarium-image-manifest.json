@@ -1,0 +1,277 @@
+{
+  "collection": "Turfarium",
+  "total_planned": 100,
+  "archive_location": "ChatGPT working archive: Turfarium_Master_BASE01-20_Verified.zip",
+  "note": "BASE01-20 WebPs verified on main; BASE21 approved, WebP package prepared but binary upload pending. Original PNG archived locally.",
+  "images": [
+    {
+      "id": "BASE01",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Spring Lawn Baseline — Root and Clay Aggregation Revision",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "d23b705586fd745d2711c87aef10729f445d81033689895dbf60c61266f9aa7c",
+      "webp_sha256": "474b60a5fe7e26aaf3fd0e01fac798fa9245efdc1eeec166c56607b6792f56e6"
+    },
+    {
+      "id": "BASE02",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Spring Turf Baseline — Scientific Revision v2",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "7d6102b502c73134da935b3246c13d8779170db10daaef66d0c2dd00154a688a",
+      "webp_sha256": "0107d7cf99b938ab579545ee97a0212df88c1d1670c2604b9e8c784f0e085913"
+    },
+    {
+      "id": "BASE03",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Stressed Turf Baseline — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "ac113448488acf4d406fe7389ce0b694a935fb99a93e72eb2a2415267731ca46",
+      "webp_sha256": "0d57ff3343cf2bcae60f6c7e5c0b2b77b031fa8ddcbb937c14f555c9c9dff9e7"
+    },
+    {
+      "id": "BASE04",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Severe Turf Stress — Compacted Clay Soil, Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "8dc2f6fc6daff07f1554cb8cc52ebfb8190c257d110242f08b2df7d37702eb66",
+      "webp_sha256": "cd7257c1e04f34af12837db855a40ab04e7192f0002768eda9ce84f45303909d"
+    },
+    {
+      "id": "BASE05",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Mixed Stressed Turf — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "1227f284b1bd49951c01211612c1a7c01c3c7b9696d812410db6e18f9176ba75",
+      "webp_sha256": "68c9ba029c74dee78eeec34e374fe1db5630de6a081b886f66bc58c237f1146a"
+    },
+    {
+      "id": "BASE06",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Waterlogged Soil — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "3617dd8743407526a5fe82a8b21033976e316820b0839b7f81aa9e601766b2e2",
+      "webp_sha256": "927973a2deab848cafa8387de02bb88b43a31524e596cb0a73dccaa0ca2ea28e"
+    },
+    {
+      "id": "BASE07",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Prolonged Waterlogging — Saturated Clay Soil, Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "f9d852f6ed8e45910f88f74b5e94c687a3d273002953c07fb183fd0454568f3b",
+      "webp_sha256": "c1e33bb2d96d138ae325ea5f75efc470e5812f7e1639c517d870e2064d7d7298"
+    },
+    {
+      "id": "BASE08",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Early Recovery After Waterlogging — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ]
+    },
+    {
+      "id": "BASE09",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Immediate Mechanical Core Aeration — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "c884c03ec05ecca22408c7bca602e9601c33477be090c978b527847b327c3931",
+      "webp_sha256": "8f0fffaf37005b7592a99922c6b22470bff567a62dc9652fae3de209c8f8738d"
+    },
+    {
+      "id": "BASE10",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Early Post-Core-Aeration Recovery — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "ca1467dfab4b33f4d9d57c7d6905da78220aa04cf3703b5dce4308728099b48c",
+      "webp_sha256": "00283ebdb1a75eed771c469b9062c8aea861011aabe16f2e204597fe3e4a4948"
+    },
+    {
+      "id": "BASE11",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Continued Recovery After Core Aeration — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "cb65a21098d82e5bef123d35b99f9e1d97167c9e1c6e47708cd03eb4586cd24b",
+      "webp_sha256": "17ab5460d266ea4a878794a3e0b32f46e13948c7b8041a5a7ca3fcaab058480b"
+    },
+    {
+      "id": "BASE12",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Early Drought Stress — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "ed67ce4215fbf1d02d39c1649569193fcc226fae4fa833f0495f4977c8ea1d59",
+      "webp_sha256": "963b8137c86926323be329c7c487c73a674cee5e24c26fe4e43b17d0b96d7689"
+    },
+    {
+      "id": "BASE13",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Continuing Soil Biological Stress — Moderate Drought Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "c0896d254615399af969e3a77c6c8e315c68f2472b5c5b52bc8bf18d836b7a19",
+      "webp_sha256": "c4996b36213731f9772edafa5615073475af4db7ef3f0cbbad5500f5d96f3e5a"
+    },
+    {
+      "id": "BASE14",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Weed Competition Following Soil Stress — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "7952875e89998d87e03709c21eb7301181e3ebc9eba583f3adf71de3319a020c",
+      "webp_sha256": "43b4d81c66947a56798b0336201614ae81a835b33b8f415df601c0b2e2579dcb"
+    },
+    {
+      "id": "BASE15",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Uneven Autumn Turf Recovery — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "f743ea10fc40dc4e12c789300fab6ecf64078a1851b1bf7d31941eecf65de245",
+      "webp_sha256": "f497c831d97d40ead910fbdaf76a6ec7f5c8f84db098c86d8052318365472a3d"
+    },
+    {
+      "id": "BASE16",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Autumn Root Recovery and Soil Biological Rebound — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "672138ab7ace6fcb48c48c7a05e5635976dcfae53578a4713c093d001874987d",
+      "webp_sha256": "2521f6dd93291e4efccea76e9a490afadb357467402fd26e9a78ea438eee52c6"
+    },
+    {
+      "id": "BASE17",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Late Autumn Root Development and Seasonal Slowdown — Scientific Revision v2.0",
+      "dimensions": [
+        1915,
+        821
+      ],
+      "png_sha256": "bf24cd40f26c327cfb53fd724232240dcbe00c4a085e75800dbc6a32aae5e7b7",
+      "webp_sha256": "d6d389790821d4410125dbd8229995c2d23f1fed5da59c00e0be29fd2356ec92"
+    },
+    {
+      "id": "BASE18",
+      "approval": "approved",
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Early Winter Dormancy and Soil Temperature Transition — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "0b21ed9b2df3bc77c11ad3cc9d1b20db85af87ce741b5ee228270767d6034400",
+      "webp_sha256": "d76064e242c5634831f94656ae613ddcdafd43b91c79a4673aba4dedee9f1680"
+    },
+    {
+      "id": "BASE19",
+      "approval": "approved",
+      "asset_status": "archived_in_consolidated_zip",
+      "title": "Sustained Early-Winter Cooling"
+    },
+    {
+      "id": "BASE20",
+      "approval": "approved",
+      "asset_status": "archived_in_consolidated_zip",
+      "title": "Early Winter Frost / Active Subsurface Soil",
+      "png_sha256": "be8b9c23574223b3db1d8cfb06404ecc561eead2d7551dbe9884f3278b3efe2d",
+      "dimensions": [
+        1536,
+        658
+      ],
+      "source_filename": "1000006617.png"
+    },
+    {
+      "id": "BASE21",
+      "approval": "approved",
+      "asset_status": "approved_final_revision_local_archive_GitHub_binary_pending",
+      "title": "Sustained Winter Cooling — Aggregated Clay Soil (Final Revision)",
+      "dimensions": [
+        1916,
+        821
+      ],
+      "source_filename": "a_highly_detailed_realistic_macro_cross_section_o.png",
+      "png_sha256": "610597ac8503bb1d79052b2bb00fcb15c5ddc8feadc88f7105b1e3f2b2246a89",
+      "webp_sha256": "e178ec507023605b004622870ca9ce9467b927666526ae56685c7b48f2197fb7"
+    },
+    {
+      "id": "BASE22",
+      "title": "Winter Recovery — Fine Clay Aggregation",
+      "approval": "approved",
+      "asset_status": "approved_local_GitHub_binary_pending",
+      "dimensions": [
+        1915,
+        821
+      ],
+      "png_sha256": "68df5e73b9114d24b77def3e599648384188399c1c18cdf1d3dc212180fb3d05",
+      "webp_sha256": "f4b517d9eb8d33cf6e356f575436d75f65c9732de30380dd32cb5afba220f738"
+    },
+    {
+      "id": "BASE23",
+      "title": "Early Spring Green-Up — Improved Root and Clay Soil Structure",
+      "approval": "approved",
+      "asset_status": "approved_local_GitHub_binary_pending",
+      "dimensions": [
+        1916,
+        821
+      ],
+      "png_sha256": "737ef1da896475218626d96f32e2c4248256571aac9d0c08f21a76a2cc468a4c",
+      "webp_sha256": "5c7d48947351ea095a3e2f44f4272968bd48b352203a9c5390b01bee406d9256"
+    }
+  ]
+}
