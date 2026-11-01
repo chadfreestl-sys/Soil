@@ -1,0 +1,38 @@
+name: Install approved Turfarium BASE23 image
+on:
+  push:
+    paths:
+      - 'Turfarium_BASE23_GitHub_Upload.zip'
+      - '.github/workflows/install-turfarium-base23.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and extract BASE23
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          p=Path('Turfarium_BASE23_GitHub_Upload.zip')
+          if not p.exists(): raise SystemExit('BASE23 ZIP missing')
+          expected='assets/turfarium/BASE23/BASE23.webp'
+          with ZipFile(p) as z:
+            files=[f for f in z.infolist() if not f.is_dir()]
+            if len(files)!=1 or files[0].filename!=expected: raise SystemExit(f'Unexpected ZIP members: {[f.filename for f in files]}')
+            data=z.read(files[0])
+          if data[:4]!=b'RIFF' or data[8:12]!=b'WEBP': raise SystemExit('Invalid WebP')
+          dest=Path(expected);dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(data)
+          PY
+      - name: Commit BASE23 WebP
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/turfarium/BASE23/BASE23.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Add approved Turfarium BASE23 image"
+            git push
+          fi
