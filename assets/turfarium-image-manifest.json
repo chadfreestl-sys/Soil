@@ -149,8 +149,14 @@
     {
       "id": "BASE13",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Continuing Soil Biological Stress"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Continuing Soil Biological Stress — Moderate Drought Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "c0896d254615399af969e3a77c6c8e315c68f2472b5c5b52bc8bf18d836b7a19",
+      "webp_sha256": "c4996b36213731f9772edafa5615073475af4db7ef3f0cbbad5500f5d96f3e5a"
     },
     {
       "id": "BASE14",
