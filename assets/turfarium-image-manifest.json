@@ -79,8 +79,14 @@
     {
       "id": "BASE07",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Prolonged Waterlogging — Saturated Clay Soil, Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "f9d852f6ed8e45910f88f74b5e94c687a3d273002953c07fb183fd0454568f3b",
+      "webp_sha256": "c1e33bb2d96d138ae325ea5f75efc470e5812f7e1639c517d870e2064d7d7298"
     },
     {
       "id": "BASE08",
