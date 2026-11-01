@@ -137,8 +137,14 @@
     {
       "id": "BASE12",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Early Drought Stress — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "ed67ce4215fbf1d02d39c1649569193fcc226fae4fa833f0495f4977c8ea1d59",
+      "webp_sha256": "963b8137c86926323be329c7c487c73a674cee5e24c26fe4e43b17d0b96d7689"
     },
     {
       "id": "BASE13",
