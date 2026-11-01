@@ -1,0 +1,38 @@
+name: Install approved Turfarium BASE22 image
+on:
+  push:
+    paths:
+      - 'Turfarium_BASE22_GitHub_Upload.zip'
+      - '.github/workflows/install-turfarium-base22.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and extract BASE22 WebP
+        run: |
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          from pathlib import Path
+          archive=Path('Turfarium_BASE22_GitHub_Upload.zip')
+          if not archive.exists(): raise SystemExit('BASE22 ZIP missing')
+          expected='assets/turfarium/BASE22/BASE22.webp'
+          with ZipFile(archive) as z:
+            files=[x for x in z.infolist() if not x.is_dir()]
+            if len(files)!=1 or files[0].filename!=expected: raise SystemExit(f'Unexpected ZIP members: {[x.filename for x in files]}')
+            data=z.read(files[0])
+          if data[:4]!=b'RIFF' or data[8:12]!=b'WEBP': raise SystemExit('Invalid WebP')
+          p=Path(expected);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
+          PY
+      - name: Commit approved BASE22 WebP
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/turfarium/BASE22/BASE22.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Add approved Turfarium BASE22 winter recovery image"
+            git push
+          fi
