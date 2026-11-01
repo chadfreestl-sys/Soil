@@ -1,0 +1,48 @@
+name: Extract Turfarium approved WebP assets
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Turfarium_BASE01-20_WebP_Only.zip'
+      - '.github/workflows/extract-turfarium-webp.yml'
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Extract and validate 20 approved WebP images
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          archive=Path('Turfarium_BASE01-20_WebP_Only.zip')
+          if not archive.is_file(): raise SystemExit('ZIP not found')
+          with ZipFile(archive) as z:
+              members=[x for x in z.infolist() if not x.is_dir()]
+              expected={f'assets/turfarium/BASE{i:02d}/BASE{i:02d}.webp' for i in range(1,21)}
+              actual={x.filename for x in members}
+              if actual != expected: raise SystemExit(f'Unexpected ZIP contents: missing={expected-actual}, extra={actual-expected}')
+              for member in members:
+                  data=z.read(member)
+                  if not data.startswith(b'RIFF') or data[8:12]!=b'WEBP':
+                      raise SystemExit(f'Invalid WebP: {member.filename}')
+                  target=Path(member.filename)
+                  target.parent.mkdir(parents=True,exist_ok=True)
+                  target.write_bytes(data)
+          print('Validated and extracted all 20 WebP assets.')
+          PY
+      - name: Commit extracted image assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/turfarium/BASE*/BASE*.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Extract Turfarium BASE01-20 approved WebP images"
+            git push
+          else
+            echo "All WebP files already committed"
+          fi
