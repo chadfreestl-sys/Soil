@@ -49,8 +49,14 @@
     {
       "id": "BASE05",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Mixed Stressed Turf — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "1227f284b1bd49951c01211612c1a7c01c3c7b9696d812410db6e18f9176ba75",
+      "webp_sha256": "68c9ba029c74dee78eeec34e374fe1db5630de6a081b886f66bc58c237f1146a"
     },
     {
       "id": "BASE06",
