@@ -31,8 +31,14 @@
     {
       "id": "BASE03",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Stressed Turf Baseline — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "ac113448488acf4d406fe7389ce0b694a935fb99a93e72eb2a2415267731ca46",
+      "webp_sha256": "0d57ff3343cf2bcae60f6c7e5c0b2b77b031fa8ddcbb937c14f555c9c9dff9e7"
     },
     {
       "id": "BASE04",
