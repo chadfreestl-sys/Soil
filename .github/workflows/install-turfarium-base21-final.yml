@@ -1,0 +1,40 @@
+name: Install final approved BASE21 image
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Turfarium_BASE21_Final_GitHub_Upload.zip'
+      - '.github/workflows/install-turfarium-base21-final.yml'
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract final BASE21 WebP
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib
+          archive=Path('Turfarium_BASE21_Final_GitHub_Upload.zip')
+          if not archive.exists(): raise SystemExit('Final ZIP missing')
+          expected='assets/turfarium/BASE21/BASE21.webp'
+          with ZipFile(archive) as z:
+            members=[i for i in z.infolist() if not i.is_dir()]
+            if len(members)!=1 or members[0].filename!=expected: raise SystemExit(f'Unexpected ZIP contents: {[i.filename for i in members]}')
+            data=z.read(members[0])
+          if data[:4]!=b'RIFF' or data[8:12]!=b'WEBP': raise SystemExit('Invalid WebP')
+          target=Path(expected);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+          print('Final image sha256:',hashlib.sha256(data).hexdigest())
+          PY
+      - name: Commit final approved BASE21
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/turfarium/BASE21/BASE21.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Replace BASE21 with final approved aggregated soil image"
+            git push
+          fi
