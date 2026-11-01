@@ -125,8 +125,14 @@
     {
       "id": "BASE11",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Continued Recovery After Core Aeration — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "cb65a21098d82e5bef123d35b99f9e1d97167c9e1c6e47708cd03eb4586cd24b",
+      "webp_sha256": "17ab5460d266ea4a878794a3e0b32f46e13948c7b8041a5a7ca3fcaab058480b"
     },
     {
       "id": "BASE12",
