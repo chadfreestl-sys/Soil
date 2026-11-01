@@ -113,8 +113,14 @@
     {
       "id": "BASE10",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Early Post-Core-Aeration Recovery — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "ca1467dfab4b33f4d9d57c7d6905da78220aa04cf3703b5dce4308728099b48c",
+      "webp_sha256": "00283ebdb1a75eed771c469b9062c8aea861011aabe16f2e204597fe3e4a4948"
     },
     {
       "id": "BASE11",
