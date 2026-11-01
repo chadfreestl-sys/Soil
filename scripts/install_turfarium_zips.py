@@ -24,6 +24,8 @@ def main():
     parser.add_argument("--install", action="store_true", help="Install only unambiguous packages")
     parser.add_argument("--approved-manifest", type=Path, help="JSON mapping BASE## to approved SHA-256")
     args = parser.parse_args()
+    if args.install and not args.approved_manifest:
+        parser.error("--install requires --approved-manifest with independently verified SHA-256 values")
     candidates = defaultdict(list)
     approvals = json.loads(args.approved_manifest.read_text()) if args.approved_manifest else {}
     errors = []
