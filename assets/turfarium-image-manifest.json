@@ -197,8 +197,14 @@
     {
       "id": "BASE17",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Late Autumn Root Development and Seasonal Slowdown"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Late Autumn Root Development and Seasonal Slowdown — Scientific Revision v2.0",
+      "dimensions": [
+        1915,
+        821
+      ],
+      "png_sha256": "bf24cd40f26c327cfb53fd724232240dcbe00c4a085e75800dbc6a32aae5e7b7",
+      "webp_sha256": "d6d389790821d4410125dbd8229995c2d23f1fed5da59c00e0be29fd2356ec92"
     },
     {
       "id": "BASE18",
