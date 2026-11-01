@@ -101,8 +101,14 @@
     {
       "id": "BASE09",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Immediate Mechanical Core Aeration — Scientific Revision v2.0",
+      "dimensions": [
+        1913,
+        822
+      ],
+      "png_sha256": "c884c03ec05ecca22408c7bca602e9601c33477be090c978b527847b327c3931",
+      "webp_sha256": "8f0fffaf37005b7592a99922c6b22470bff567a62dc9652fae3de209c8f8738d"
     },
     {
       "id": "BASE10",
