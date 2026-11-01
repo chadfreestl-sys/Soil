@@ -1,32 +1,71 @@
 #!/usr/bin/env python3
-"""Install Turfarium BASE WebP images from uploaded ZIPs, retaining ZIPs for audit."""
-import hashlib, io, json, re, zipfile
+"""Audit Turfarium upload ZIPs and stage unambiguous WebP candidates.
+
+Default is DRY RUN. Use --install only after reviewing the JSON report.
+Never deletes originals or upload archives. Conflicting ZIPs require review.
+"""
+import argparse
+import hashlib
+import json
+import re
+import zipfile
+from collections import defaultdict
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]
-packages=sorted(root.glob("Turfarium_BASE*_GitHub_Upload.zip"))+sorted(root.glob("Turfarium_BASE*_Revision_GitHub_Upload.zip"))+sorted(root.glob("Turfarium_BASE*_Final_GitHub_Upload.zip"))
-selected={}
-for pkg in packages:
-    match=re.search(r"BASE(\d{2})",pkg.name,re.I)
-    if not match: continue
-    n=match.group(1)
-    with zipfile.ZipFile(pkg) as z:
-        candidates=[p for p in z.namelist() if Path(p).name.lower()==f"base{n}.webp"]
-        if len(candidates)!=1:
-            print(f"SKIP {pkg.name}: expected exactly one BASE{n}.webp, found {len(candidates)}")
+
+ROOT = Path(__file__).resolve().parents[1]
+RX = re.compile(r"Turfarium_BASE(\d{2})_.*GitHub_Upload\.zip$", re.I)
+WEBP = re.compile(r"BASE(\d{2})\.webp$", re.I)
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--install", action="store_true", help="Install only unambiguous packages")
+    args = parser.parse_args()
+    candidates = defaultdict(list)
+    errors = []
+    for archive in sorted(ROOT.glob("Turfarium_BASE*GitHub_Upload.zip")):
+        match = RX.fullmatch(archive.name)
+        if not match:
+            errors.append({"archive": archive.name, "reason": "unexpected filename"})
             continue
-        data=z.read(candidates[0])
-        if not (len(data)>1000 and data[:4]==b"RIFF" and data[8:12]==b"WEBP"):
-            print(f"SKIP {pkg.name}: invalid WebP")
-            continue
-        selected[n]=(pkg.name,data)
-records=[]
-for n,(pkg,data) in sorted(selected.items()):
-    dest=root/f"assets/turfarium/BASE{n}/BASE{n}.webp"
-    dest.parent.mkdir(parents=True,exist_ok=True)
-    old=hashlib.sha256(dest.read_bytes()).hexdigest() if dest.exists() else None
-    new=hashlib.sha256(data).hexdigest()
-    if old!=new: dest.write_bytes(data)
-    records.append(dict(base=f"BASE{n}",source=pkg,sha256=new,previous_sha256=old,changed=old!=new))
-report=root/"assets/turfarium/zip-install-audit.json"
-report.write_text(json.dumps(records,indent=2)+"\n")
-print(json.dumps(records,indent=2))
+        number = match.group(1)
+        try:
+            with zipfile.ZipFile(archive) as z:
+                matches = [p for p in z.namelist() if WEBP.fullmatch(Path(p).name) and WEBP.fullmatch(Path(p).name).group(1) == number]
+                if len(matches) != 1:
+                    errors.append({"archive": archive.name, "reason": "missing or ambiguous BASE image", "matches": matches})
+                    continue
+                data = z.read(matches[0])
+                if len(data) < 1000 or data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+                    errors.append({"archive": archive.name, "reason": "invalid WebP signature"})
+                    continue
+                candidates[number].append({"archive": archive.name, "entry": matches[0], "sha256": digest(data), "bytes": len(data)})
+        except (OSError, zipfile.BadZipFile, RuntimeError) as exc:
+            errors.append({"archive": archive.name, "reason": str(exc)})
+    report = {"mode": "install" if args.install else "dry-run", "images": [], "errors": errors}
+    for number, options in sorted(candidates.items()):
+        hashes = {item["sha256"] for item in options}
+        target = ROOT / f"assets/turfarium/BASE{number}/BASE{number}.webp"
+        old_hash = digest(target.read_bytes()) if target.exists() else None
+        status = "conflict-review-required" if len(hashes) > 1 else "ready"
+        item = {"base": f"BASE{number}", "target": str(target.relative_to(ROOT)), "existing_sha256": old_hash, "candidates": options, "status": status}
+        if args.install and status == "ready":
+            source = ROOT / options[0]["archive"]
+            with zipfile.ZipFile(source) as z:
+                data = z.read(options[0]["entry"])
+            if old_hash != digest(data):
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+            item["status"] = "installed-and-verified" if digest(target.read_bytes()) == digest(data) else "verification-failed"
+        report["images"].append(item)
+    output = ROOT / "assets/turfarium/zip-install-audit.json"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, indent=2) + "\n")
+    print(json.dumps(report, indent=2))
+    if errors or any(i["status"] in ("conflict-review-required", "verification-failed") for i in report["images"]):
+        raise SystemExit(2)
+
+if __name__ == "__main__":
+    main()
