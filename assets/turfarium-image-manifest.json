@@ -7,8 +7,14 @@
     {
       "id": "BASE01",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Title to recover"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Spring Lawn Baseline — Root and Clay Aggregation Revision",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "d23b705586fd745d2711c87aef10729f445d81033689895dbf60c61266f9aa7c",
+      "webp_sha256": "474b60a5fe7e26aaf3fd0e01fac798fa9245efdc1eeec166c56607b6792f56e6"
     },
     {
       "id": "BASE02",
