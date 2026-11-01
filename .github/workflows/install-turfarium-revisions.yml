@@ -1,0 +1,44 @@
+name: Install approved Turfarium image revisions
+on:
+  push:
+    paths:
+      - 'Turfarium_BASE*_Revision_GitHub_Upload.zip'
+      - '.github/workflows/install-turfarium-revisions.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract and validate approved revision ZIPs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import re
+          archives=sorted(Path('.').glob('Turfarium_BASE*_Revision_GitHub_Upload.zip'))
+          if not archives: raise SystemExit('No revision ZIP archives')
+          for archive in archives:
+              m=re.fullmatch(r'Turfarium_(BASE\d{2,3})_Revision_GitHub_Upload.zip',archive.name)
+              if not m: raise SystemExit('Unexpected archive name: '+archive.name)
+              ident=m.group(1)
+              expected=f'assets/turfarium/{ident}/{ident}.webp'
+              with ZipFile(archive) as z:
+                  members=[x for x in z.infolist() if not x.is_dir()]
+                  if len(members)!=1 or members[0].filename!=expected: raise SystemExit('Unexpected ZIP contents: '+archive.name)
+                  data=z.read(members[0])
+              if data[:4]!=b'RIFF' or data[8:12]!=b'WEBP': raise SystemExit('Invalid WebP: '+archive.name)
+              target=Path(expected);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+              print('Installed',expected)
+          PY
+      - name: Commit approved revisions
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/turfarium/BASE*/BASE*.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Install approved Turfarium image revisions"
+            git push
+          fi
