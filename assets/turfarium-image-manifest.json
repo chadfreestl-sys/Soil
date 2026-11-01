@@ -2,7 +2,7 @@
   "collection": "Turfarium",
   "total_planned": 100,
   "archive_location": "ChatGPT working archive: Turfarium_Master_BASE01-20_Verified.zip",
-  "note": "BASE01-20 approved and present in consolidated local archive. GitHub tracks metadata only; image binaries not yet pushed to GitHub.",
+  "note": "BASE01-20 WebPs verified on main; BASE21 approved, WebP package prepared but binary upload pending. Original PNG archived locally.",
   "images": [
     {
       "id": "BASE01",
@@ -129,6 +129,19 @@
         658
       ],
       "source_filename": "1000006617.png"
+    },
+    {
+      "id": "BASE21",
+      "approval": "approved",
+      "asset_status": "webp_packaged_awaiting_GitHub_binary_upload",
+      "title": "Sustained Winter Cooling — Improved Soil Structure",
+      "dimensions": [
+        1915,
+        821
+      ],
+      "source_filename": "a_highly_detailed_hyper_realistic_macro_cross_sec.png",
+      "png_sha256": "70c404fd86a3fdb426a9b6c2fe5abab87624db5a7c1327c62bdf7cb53042500e",
+      "webp_sha256": "c632dcc26433797bdc51bdb0d6e343d7b123b094316a81daed54a0a0eeace1fe"
     }
   ]
 }
