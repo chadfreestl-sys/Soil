@@ -161,8 +161,14 @@
     {
       "id": "BASE14",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Weed Competition Following Soil Stress"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Weed Competition Following Soil Stress — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "7952875e89998d87e03709c21eb7301181e3ebc9eba583f3adf71de3319a020c",
+      "webp_sha256": "43b4d81c66947a56798b0336201614ae81a835b33b8f415df601c0b2e2579dcb"
     },
     {
       "id": "BASE15",
