@@ -209,8 +209,14 @@
     {
       "id": "BASE18",
       "approval": "approved",
-      "asset_status": "archived_in_consolidated_zip",
-      "title": "Early Winter Dormancy and Soil Temperature Transition"
+      "asset_status": "approved_revision_GitHub_binary_upload_pending",
+      "title": "Early Winter Dormancy and Soil Temperature Transition — Scientific Revision v2.0",
+      "dimensions": [
+        1914,
+        822
+      ],
+      "png_sha256": "0b21ed9b2df3bc77c11ad3cc9d1b20db85af87ce741b5ee228270767d6034400",
+      "webp_sha256": "d76064e242c5634831f94656ae613ddcdafd43b91c79a4673aba4dedee9f1680"
     },
     {
       "id": "BASE19",
