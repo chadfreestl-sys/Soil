@@ -22,8 +22,10 @@ def digest(data):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--install", action="store_true", help="Install only unambiguous packages")
+    parser.add_argument("--approved-manifest", type=Path, help="JSON mapping BASE## to approved SHA-256")
     args = parser.parse_args()
     candidates = defaultdict(list)
+    approvals = json.loads(args.approved_manifest.read_text()) if args.approved_manifest else {}
     errors = []
     for archive in sorted(ROOT.glob("Turfarium_BASE*GitHub_Upload.zip")):
         match = RX.fullmatch(archive.name)
@@ -49,12 +51,18 @@ def main():
         hashes = {item["sha256"] for item in options}
         target = ROOT / f"assets/turfarium/BASE{number}/BASE{number}.webp"
         old_hash = digest(target.read_bytes()) if target.exists() else None
-        status = "conflict-review-required" if len(hashes) > 1 else "ready"
+        approved = approvals.get(f"BASE{number}")
+        status = "conflict-review-required" if len(hashes) > 1 else "unverified-approval"
+        if approved and approved in hashes:
+            status = "ready"
+        elif approved:
+            status = "approved-checksum-not-found"
         item = {"base": f"BASE{number}", "target": str(target.relative_to(ROOT)), "existing_sha256": old_hash, "candidates": options, "status": status}
         if args.install and status == "ready":
-            source = ROOT / options[0]["archive"]
+            selected = next(p for p in options if p["sha256"] == approved)
+            source = ROOT / selected["archive"]
             with zipfile.ZipFile(source) as z:
-                data = z.read(options[0]["entry"])
+                data = z.read(selected["entry"])
             if old_hash != digest(data):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes(data)
@@ -64,7 +72,7 @@ def main():
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
-    if errors or any(i["status"] in ("conflict-review-required", "verification-failed") for i in report["images"]):
+    if errors or any(i["status"] in ("conflict-review-required", "verification-failed", "approved-checksum-not-found") for i in report["images"]):
         raise SystemExit(2)
 
 if __name__ == "__main__":
