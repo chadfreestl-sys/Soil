@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "description": "Conservative inventory seed; unknown entries are intentionally NOT assumed present, approved, or scientifically classified.",
+  "description": "GitHub main-branch tree inventory with explicit scientific manifestation and treatment slots; unknowns remain unclassified; do not enable for production without calibration.",
   "imageCountExpected": 88,
-  "verifiedEntries": 5,
+  "verifiedEntries": 86,
   "policy": {
     "noAutoDeletion": true,
     "noUnverifiedFallback": true,
@@ -15,492 +15,1068 @@
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE01/BASE01.webp",
+      "githubBlobSha": "41b0713999b6c419156baed89002e9ed212b9d79",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 726218,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE02",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE02/BASE02.webp",
+      "githubBlobSha": "55d7072b94feba5c8419ca1bd55aee7cc17505af",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 694280,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE03",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE03/BASE03.webp",
+      "githubBlobSha": "1ddb3b163d244a60950c93ba2db8b438d31935cf",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 747438,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE04",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE04/BASE04.webp",
+      "githubBlobSha": "a73bd95b6f03619a6a9f88dd2a4b366c695c97dc",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 772928,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE05",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE05/BASE05.webp",
+      "githubBlobSha": "6f8700bb5d13cd0513fbc39ebe663d22d5a46e5d",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 741910,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE06",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE06/BASE06.webp",
+      "githubBlobSha": "176649a83a81613a12c82c9c2b04143cc19f6922",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 689080,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE07",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE07/BASE07.webp",
+      "githubBlobSha": "b00eed6d3801c48d7c235871e4a4de2939e9344c",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 597690,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE08",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE08/BASE08.webp",
+      "githubBlobSha": "5df7b56c584842935c6181ebae061f69004cea53",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 439840,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE09",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE09/BASE09.webp",
+      "githubBlobSha": "c4d9154901a6daaad420a4c2ab17e50c92d7070a",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 689762,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE10",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE10/BASE10.webp",
+      "githubBlobSha": "f030dc23228925de0d59608db4b59ed4fe65308a",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 679404,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE11",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE11/BASE11.webp",
+      "githubBlobSha": "7c65212c04293033b1c0fec3cdd588b518525fac",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 701168,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE12",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE12/BASE12.webp",
+      "githubBlobSha": "6b65b6020eb80785443b68ee98bc04f2224ca142",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 651794,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE13",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE13/BASE13.webp",
+      "githubBlobSha": "5567fd2f42fa560e2cdd7ef78c43319fc611f8e9",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 678210,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE14",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE14/BASE14.webp",
+      "githubBlobSha": "f807c070c98b9e83a99ee8e3ebfe045f9eec9ab1",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 684564,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE15",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE15/BASE15.webp",
+      "githubBlobSha": "66f9d5451082ffbc441da344719bdea7e8f02668",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 682102,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE16",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE16/BASE16.webp",
+      "githubBlobSha": "c3ec789f37df07aa3c27a982058c0da43a7424b0",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 697608,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE17",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE17/BASE17.webp",
+      "githubBlobSha": "bdd3cf39e92780b80c4a6b322b1aee9d702950a5",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 640616,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE18",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE18/BASE18.webp",
+      "githubBlobSha": "8e96ea6097852673893731c7077dd7588cfe9a27",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 673816,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE19",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE19/BASE19.webp",
+      "githubBlobSha": "bc887bdcf30f5e3946bd4901708f89fc29fce58e",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 705250,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE20",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE20/BASE20.webp",
+      "githubBlobSha": "4f15a5a182d35379f9bbecefcc1eedcdf63c21e9",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 448316,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE21",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE21/BASE21.webp",
+      "githubBlobSha": "6828b48be591c9e75f6c61f6f5edff8ba9159cbb",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 674742,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE22",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE22/BASE22.webp",
+      "githubBlobSha": "8d144510d294910682a910a1639454a257b23b65",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 670590,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE23",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE23/BASE23.webp",
+      "githubBlobSha": "179d9080ea8336995490549719904766ba78e404",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 686904,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE24",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
+      "status": "missing-from-main",
       "src": null,
       "githubBlobSha": null,
       "approved": null,
       "conditions": null,
-      "notes": "Scenario proposal only: compaction; not historical assignment"
+      "notes": "Proposed replacement only; no source image or original assignment verified",
+      "bytes": null,
+      "fileFormat": null,
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      },
+      "proposedScenario": "Soil compaction and restricted root development"
     },
     {
       "id": "BASE25",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE25/BASE25.webp",
+      "githubBlobSha": "1c93229be9fe4dcc1dd4b4023dfa1ebe2659ea78",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 765526,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE26",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE26/BASE26.webp",
+      "githubBlobSha": "04021b3efabb647065e9c409bf50d286d1de2ea6",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 742998,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE27",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE27/BASE27.webp",
+      "githubBlobSha": "6dfa58f0720c61b1f5ac67502a01d466b10aaf58",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 679200,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE28",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE28/BASE28.webp",
+      "githubBlobSha": "f22d872175bc7a1b2875e1c09178750b5d9152b8",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 667934,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE29",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE29/BASE29.webp",
+      "githubBlobSha": "d39cf6679e85bf589b7d502691a8eb609985d2b8",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 642792,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE30",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE30/BASE30.webp",
+      "githubBlobSha": "0f3c4caa8c02232bf6cdc1ead9783badd0a5fea1",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 641712,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE31",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE31/BASE31.webp",
+      "githubBlobSha": "64be69470522fde8aadc21a40cd6db1d4788e173",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 655880,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE32",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE32/BASE32.webp",
+      "githubBlobSha": "fc11e710210073ec60fc8edd27941fabf0e655b0",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 671878,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE33",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE33/BASE33.webp",
+      "githubBlobSha": "ecf79cef3da48836266ec58005e11d0519c17393",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 619032,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE34",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
+      "status": "missing-from-main",
       "src": null,
       "githubBlobSha": null,
       "approved": null,
       "conditions": null,
-      "notes": "Scenario proposal only: root-zone recovery; not historical assignment"
+      "notes": "Proposed replacement only; no source image or original assignment verified",
+      "bytes": null,
+      "fileFormat": null,
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      },
+      "proposedScenario": "Root-zone recovery and improved soil conditions"
     },
     {
       "id": "BASE35",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE35/BASE35.webp",
+      "githubBlobSha": "d4e02da347e40442705c90d6586409d1af100008",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 655220,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE36",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE36/BASE36.webp",
+      "githubBlobSha": "dc4cfe4f4c2f9590de32697785a757a31793ee43",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 568606,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE37",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE37/BASE37.webp",
+      "githubBlobSha": "428e90fcf4417d10f2bd94742fd16ff0d786729e",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 627560,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE38",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE38/BASE38.webp",
+      "githubBlobSha": "d1234de69edc7eb0e4a457c2c5aafc56ada9a0a7",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 617902,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE39",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE39/BASE39.webp",
+      "githubBlobSha": "3eab74e7f342860d8639590f22afd809323edd8d",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 595246,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE40",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE40/BASE40.webp",
+      "githubBlobSha": "a0b3f77af5861315e779e2a71f95adbcb22a2c2e",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 747882,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE41",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE41/BASE41.webp",
+      "githubBlobSha": "c1a5618a7630830a264ebec8fe40870552624cbb",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 741830,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE42",
@@ -508,275 +1084,615 @@
       "season": "fall",
       "tags": [
         "rainfall",
-        "moist-soil",
         "infiltration"
       ],
       "status": "path-verified",
       "src": "assets/turfarium/BASE42/BASE42.webp",
       "githubBlobSha": "127f3940ca3681ec4ab22d247c8796c6001ccd01",
-      "approved": true,
+      "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 671506,
+      "fileFormat": "webp",
+      "manifestationType": "environment",
+      "manifestation": {
+        "trigger": [
+          "rainfall",
+          "infiltration"
+        ],
+        "visibleExpression": "Requires image-level visual verification",
+        "confidence": "scenario-record"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE43",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE43/BASE43.webp",
+      "githubBlobSha": "c16a4fb7f6d572638f42fb0882b92fbe8fbbfde1",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 680838,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE44",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE44/BASE44.webp",
+      "githubBlobSha": "d3b0c9e3a63790fb481cfaaa0c7cac39e39d9829",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 731786,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE45",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE45/BASE45.webp",
+      "githubBlobSha": "8ba584c7a01369985ff862c0c988624bd8155fd5",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 665322,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE46",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE46/BASE46.webp",
+      "githubBlobSha": "971c83f355889fcf22c4ec2563437d43e1d4b0fb",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 739248,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE47",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE47/BASE47.webp",
+      "githubBlobSha": "2947ce421c746bd9244f222dae9b46d9e97e5579",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 689234,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE48",
-      "title": null,
-      "season": null,
-      "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "title": "Early Winter Dormancy Transition",
+      "season": "winter",
+      "tags": [
+        "cooling",
+        "frost",
+        "dormancy"
+      ],
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE48/BASE48.webp",
+      "githubBlobSha": "abc253bac7b7820e63d4c7c9bbf4146b9579710c",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 691344,
+      "fileFormat": "webp",
+      "manifestationType": "environment",
+      "manifestation": {
+        "trigger": [
+          "cooling",
+          "frost",
+          "dormancy"
+        ],
+        "visibleExpression": "Requires image-level visual verification",
+        "confidence": "scenario-record"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE49",
       "title": "Winter Snow Cover & Reduced Biological Activity",
       "season": "winter",
       "tags": [
-        "snow",
-        "cold",
-        "low-biological-activity"
+        "snow-cover",
+        "reduced-microbial-activity"
       ],
       "status": "path-verified",
       "src": "assets/turfarium/BASE49/BASE49.webp",
       "githubBlobSha": "212c73d86c0d178fe9a2ee810474fd68064781e8",
-      "approved": true,
+      "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 609228,
+      "fileFormat": "webp",
+      "manifestationType": "environment",
+      "manifestation": {
+        "trigger": [
+          "snow-cover",
+          "reduced-microbial-activity"
+        ],
+        "visibleExpression": "Requires image-level visual verification",
+        "confidence": "scenario-record"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE50",
-      "title": null,
-      "season": null,
-      "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "title": "Midwinter Soil Insulation & Root Survival",
+      "season": "winter",
+      "tags": [
+        "snow-insulation",
+        "root-survival"
+      ],
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE50/BASE50.webp",
+      "githubBlobSha": "f0c9d70391936d372bfa3fe3d51ceee7fd28e584",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 718240,
+      "fileFormat": "webp",
+      "manifestationType": "environment",
+      "manifestation": {
+        "trigger": [
+          "snow-insulation",
+          "root-survival"
+        ],
+        "visibleExpression": "Requires image-level visual verification",
+        "confidence": "scenario-record"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE51",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE51/BASE51.webp",
+      "githubBlobSha": "b213b03a27745437aab20506af8fbd54cd6b534f",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 953616,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE52",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE52/BASE52.webp",
+      "githubBlobSha": "679dbf6fbf370c3f55709f2f71ea15f43f8b02be",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 903422,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE53",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE53/BASE53.webp",
+      "githubBlobSha": "fcc2096d021c3393f7798ead8128c435d67e4046",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 863512,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE54",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE54/BASE54.webp",
+      "githubBlobSha": "f6d6500cc9ab1c5ca8eb8d4819e7086b30ab2bce",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 841934,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE55",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE55/BASE55.webp",
+      "githubBlobSha": "67a4555d830f81239725cf855105ba394bdfca7e",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 880470,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE56",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE56/BASE56.webp",
+      "githubBlobSha": "e45115ef7e47393f512c66ecd5797b6afba66549",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 838080,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE57",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE57/BASE57.webp",
+      "githubBlobSha": "b1f3a52d037462d370f41b51fa3c824c98cc957f",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 877482,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE58",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE58/BASE58.webp",
+      "githubBlobSha": "bbd28c99b4aa3ab38026634a73530f114320ad53",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 832816,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE59",
       "title": "Early Spring Soil Warming & Microbial Reactivation",
       "season": "spring",
       "tags": [
-        "soil-warming",
-        "spring-growth",
+        "warming",
         "microbial-reactivation"
       ],
       "status": "path-verified",
       "src": "assets/turfarium/BASE59/BASE59.webp",
       "githubBlobSha": "50cd00ed4c4c937cd619e6edd6b1750fa383af34",
-      "approved": true,
+      "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 617168,
+      "fileFormat": "webp",
+      "manifestationType": "environment",
+      "manifestation": {
+        "trigger": [
+          "warming",
+          "microbial-reactivation"
+        ],
+        "visibleExpression": "Requires image-level visual verification",
+        "confidence": "scenario-record"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE60",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE60/BASE60.webp",
+      "githubBlobSha": "2b53bd3f5cca68c5427253be148fa817ed19b43f",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 672610,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE61",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE61/BASE61.webp",
+      "githubBlobSha": "3f6ae4f272b4fd84cc646d3c65688eb6d6eec312",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 497920,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE62",
-      "title": null,
-      "season": null,
-      "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "title": "Early Summer Heat & Soil Moisture Dynamics",
+      "season": "summer",
+      "tags": [
+        "heat",
+        "moisture-gradient"
+      ],
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE62/BASE62.webp",
+      "githubBlobSha": "941a17a898ff170305c36d7ab2bee1e7a664fada",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 535922,
+      "fileFormat": "webp",
+      "manifestationType": "environment",
+      "manifestation": {
+        "trigger": [
+          "heat",
+          "moisture-gradient"
+        ],
+        "visibleExpression": "Requires image-level visual verification",
+        "confidence": "scenario-record"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE63",
-      "title": null,
-      "season": null,
-      "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "title": "Oscillating Sprinkler Irrigation",
+      "season": "summer",
+      "tags": [
+        "irrigation",
+        "sprinkler"
+      ],
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE63/BASE63.webp",
+      "githubBlobSha": "819245c1d48a796bfcd602215e5bc8d1b877aba2",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 880832,
+      "fileFormat": "webp",
+      "manifestationType": "treatment",
+      "manifestation": {
+        "trigger": [
+          "irrigation",
+          "sprinkler"
+        ],
+        "visibleExpression": "Requires image-level visual verification",
+        "confidence": "scenario-record"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE64",
@@ -789,300 +1705,727 @@
       "status": "path-verified",
       "src": "assets/turfarium/BASE64/BASE64.png",
       "githubBlobSha": "7aaf4c7c25d10c64e9113f663a8f858e17053cec",
-      "approved": true,
+      "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 527689,
+      "fileFormat": "png",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE65",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE65/BASE65.webp",
+      "githubBlobSha": "07d61c56fc8244fc018d1cc834d0caeac9516857",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 844096,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE66",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE66/BASE66.webp",
+      "githubBlobSha": "66867ca827d7e0e84fd4ead2ee3b7f3aab32ec97",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 826882,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE67",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE67/BASE67.webp",
+      "githubBlobSha": "18e40f0944e6cdcc93233f5642fe52159c6c3036",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 878218,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE68",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE68/BASE68.webp",
+      "githubBlobSha": "c8bb892adae9fb826241256e3e79ab9571bb78dd",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 808818,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE69",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE69/BASE69.webp",
+      "githubBlobSha": "9bf0bb5082423eacf7aa6128194697d3a862bd53",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 783850,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE70",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE70/BASE70.webp",
+      "githubBlobSha": "bddd700c54f1ca8b7dacc8d0deecc6edf9c5de07",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 852672,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE71",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE71/BASE71.webp",
+      "githubBlobSha": "d91c385460b832c587f63db43caa553beffd32dd",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 788778,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE72",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE72/BASE72.webp",
+      "githubBlobSha": "0a08e669f0ab8661fe4224494d46b0d6cee7e8cb",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 828414,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE73",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE73/BASE73.webp",
+      "githubBlobSha": "2c4113261b5e9e5a8236db42e6617b58108bbb52",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 793272,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE74",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE74/BASE74.webp",
+      "githubBlobSha": "e2d63b25d449c7bce4898ade04822d6a02937f62",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 829586,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE75",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE75/BASE75.webp",
+      "githubBlobSha": "9b653a57c17c4b55c821452a9927480ee1cbec1e",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 881792,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE76",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE76/BASE76.webp",
+      "githubBlobSha": "f916531fc64997045847852fff58c7bb2d6b414b",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 842844,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE77",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE77/BASE77.webp",
+      "githubBlobSha": "a854734453d20d900d5a9708589c873810deb971",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 880366,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE78",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE78/BASE78.webp",
+      "githubBlobSha": "bb9a8ac61a493a29fdfce5d9456ffdbce676545e",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 902676,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE79",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE79/BASE79.webp",
+      "githubBlobSha": "7c8a24cc0f0c4598c4beeb49a1ed1c6172ac7b67",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 881048,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE80",
-      "title": null,
-      "season": null,
-      "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "title": "Advanced Summer Drought Stress & Turf Dormancy Transition",
+      "season": "summer",
+      "tags": [
+        "drought",
+        "dormancy-transition"
+      ],
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE80/BASE80.webp",
+      "githubBlobSha": "8237db39f93c5fe06b4b226085d990c8a85dd92d",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 969226,
+      "fileFormat": "webp",
+      "manifestationType": "environment",
+      "manifestation": {
+        "trigger": [
+          "drought",
+          "dormancy-transition"
+        ],
+        "visibleExpression": "Requires image-level visual verification",
+        "confidence": "scenario-record"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE81",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE81/BASE81.webp",
+      "githubBlobSha": "6b188e44aa27f7f1de85c3b3ba718ca0844a2937",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 953274,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE82",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE82/BASE82.webp",
+      "githubBlobSha": "1f2fa453f73daed2d196855723a73f399446e40f",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 979786,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE83",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE83/BASE83.webp",
+      "githubBlobSha": "613111628335c6312a4b483631cb37a0ac62dc37",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 989962,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE84",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE84/BASE84.webp",
+      "githubBlobSha": "af10fbbba4a5ed05885f79dc85b8d8ad0c88f63f",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 963648,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE85",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE85/BASE85.webp",
+      "githubBlobSha": "5be0a8a6368af285e063e552b640ad9d4491a105",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 948930,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE86",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE86/BASE86.webp",
+      "githubBlobSha": "7275fa2cd29bb73bca4936648a1fb1198e512270",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 935458,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE87",
       "title": null,
       "season": null,
       "tags": [],
-      "status": "unverified",
-      "src": null,
-      "githubBlobSha": null,
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE87/BASE87.webp",
+      "githubBlobSha": "103c12c5c8a14c57ef7491201077464a86ee03d0",
       "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 946256,
+      "fileFormat": "webp",
+      "manifestationType": null,
+      "manifestation": {
+        "trigger": [],
+        "visibleExpression": null,
+        "confidence": "unclassified"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     },
     {
       "id": "BASE88",
       "title": "Drought Recovery",
       "season": "summer",
       "tags": [
-        "drought-recovery",
-        "rewetting"
+        "rewetting",
+        "drought-recovery"
       ],
       "status": "path-verified",
       "src": "assets/turfarium/BASE88/BASE88.webp",
-      "githubBlobSha": null,
-      "approved": true,
+      "githubBlobSha": "d11c498c34b1143c57d307f5ce4ba641a86ab8bd",
+      "approved": null,
       "conditions": null,
-      "notes": null
+      "notes": null,
+      "bytes": 691138,
+      "fileFormat": "webp",
+      "manifestationType": "environment",
+      "manifestation": {
+        "trigger": [
+          "rewetting",
+          "drought-recovery"
+        ],
+        "visibleExpression": "Requires image-level visual verification",
+        "confidence": "scenario-record"
+      },
+      "treatment": {
+        "material": null,
+        "application": null,
+        "response": null,
+        "confidence": "unclassified"
+      }
     }
-  ]
+  ],
+  "missingEntries": [
+    "BASE24",
+    "BASE34"
+  ],
+  "inventorySource": "main Git tree (recursive)",
+  "extraFiles": [
+    {
+      "path": "assets/turfarium/BASE19/BASE19-1.webp",
+      "sha": "329e9dfcb4c312b2557ba5eaef5a050e20f8ce43",
+      "bytes": 768112,
+      "action": "retain-for-review"
+    },
+    {
+      "path": "assets/turfarium/BASE31/BASE30.webp",
+      "sha": "0f3c4caa8c02232bf6cdc1ead9783badd0a5fea1",
+      "bytes": 641712,
+      "action": "retain-for-review"
+    },
+    {
+      "path": "assets/turfarium/BASE42/BASE41.webp",
+      "sha": "c1a5618a7630830a264ebec8fe40870552624cbb",
+      "bytes": 741830,
+      "action": "retain-for-review"
+    },
+    {
+      "path": "assets/turfarium/BASE50/BASE50-1.webp",
+      "sha": "1862c1cc7315e5108c3458df782062288f26f13f",
+      "bytes": 648808,
+      "action": "retain-for-review"
+    },
+    {
+      "path": "assets/turfarium/BASE50/contact-1.jpg",
+      "sha": "edf9733a0b726ffaf5331e3ef0a413e35f0c8c27",
+      "bytes": 339107,
+      "action": "retain-for-review"
+    },
+    {
+      "path": "assets/turfarium/BASE50/contact.jpg",
+      "sha": "edf9733a0b726ffaf5331e3ef0a413e35f0c8c27",
+      "bytes": 339107,
+      "action": "retain-for-review"
+    },
+    {
+      "path": "assets/turfarium/BASE51/BASE51_sunset_original.webp",
+      "sha": "f787dba56e59e2fe27c6c54c9259b0e2b12232ed",
+      "bytes": 849636,
+      "action": "retain-for-review"
+    },
+    {
+      "path": "assets/turfarium/BASE59/BASE59-1.webp",
+      "sha": "50cd00ed4c4c937cd619e6edd6b1750fa383af34",
+      "bytes": 617168,
+      "action": "retain-for-review"
+    },
+    {
+      "path": "assets/turfarium/BASE60-1.webp",
+      "sha": "2b53bd3f5cca68c5427253be148fa817ed19b43f",
+      "bytes": 672610,
+      "action": "retain-for-review"
+    }
+  ],
+  "summary": {
+    "verifiedCanonicalAssets": 86,
+    "missingCanonicalAssets": 2,
+    "unclassifiedManifestations": 79,
+    "classifiedScenarioRecords": 9,
+    "verifiedTreatmentMappings": 0
+  }
 }
