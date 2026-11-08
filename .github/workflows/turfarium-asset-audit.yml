@@ -1,0 +1,30 @@
+name: Turfarium asset inventory (read-only)
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - audit/visual-engine-performance-2026-11-07
+    paths:
+      - 'scripts/audit-base-library.mjs'
+      - '.github/workflows/turfarium-asset-audit.yml'
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build inventory (missing assets are reported, not fatal)
+        shell: bash
+        run: |
+          node scripts/audit-base-library.mjs . > turfarium-asset-audit.json || code=$?
+          echo "Audit exit status: ${code:-0}"
+          node -e 'const a=require("./turfarium-asset-audit.json");console.log(JSON.stringify({expected:a.expected,foundAtExpectedPaths:a.foundAtExpectedPaths,missing:a.missing,assetCount:a.assetCount,duplicateGroups:a.duplicateGroups.length},null,2))'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: turfarium-asset-inventory
+          path: turfarium-asset-audit.json
+          retention-days: 30
