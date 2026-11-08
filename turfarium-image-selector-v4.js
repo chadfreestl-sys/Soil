@@ -1,6 +1,7 @@
 /* Turfarium image selection v4 (experimental, opt-in; no DOM side effects).
  * A deterministic, synchronous selector. The LLM is never called in a frame loop.
  * This module does not change the active v3 image engine until explicitly wired in.
+ * Safety: only approved, path-verified images with calibrated conditions are selectable.
  */
 (function(global){
 'use strict';
@@ -26,7 +27,7 @@ function distance(a,b){
 }
 function createSelector(manifest,options){
  const records=(Array.isArray(manifest)?manifest:manifest?.images||[])
-  .filter(r=>r&&typeof r.src==='string'&&r.src.length&&r.approved!==false)
+  .filter(r=>r&&typeof r.src==='string'&&r.src.length&&r.approved===true&&r.status==='path-verified'&&r.conditions&&typeof r.conditions==='object'&&Object.keys(r.conditions).length>0)
   .map((r,i)=>({...r,_index:i}));
  const opts=options||{};
  const cache=new Map();
@@ -44,7 +45,7 @@ function createSelector(manifest,options){
   }
   if(!candidates.length)return null;
   const best=candidates[0];
-  const prev=candidates.find(c=>c.record.id===previous?.id||c.record.src===previous?.src);
+  const prev=candidates.find(c=>(previous?.id&&c.record.id===previous.id)||(previous?.src&&c.record.src===previous.src));
   const margin=clamp(opts.hysteresis??0.12,0,1);
   return (prev&&prev.score<=best.score+margin?prev:best).record;
  }
