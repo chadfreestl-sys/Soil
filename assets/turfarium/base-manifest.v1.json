@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "description": "GitHub main-branch tree inventory with explicit scientific manifestation and treatment slots; unknowns remain unclassified; do not enable for production without calibration.",
   "imageCountExpected": 88,
-  "verifiedEntries": 86,
+  "verifiedEntries": 87,
   "policy": {
     "noAutoDeletion": true,
     "noUnverifiedFallback": true,
@@ -610,28 +610,35 @@
     },
     {
       "id": "BASE24",
-      "title": null,
+      "title": "Soil Compaction & Restricted Root Development",
       "season": null,
-      "tags": [],
-      "status": "missing-from-main",
-      "src": null,
-      "githubBlobSha": null,
-      "approved": null,
+      "tags": [
+        "soil-compaction",
+        "restricted-rooting",
+        "dense-clay"
+      ],
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE24/BASE24.webp",
+      "githubBlobSha": "def14323a94ca2c4d4dcea0872fff4319a6e4d45",
+      "approved": true,
       "conditions": null,
-      "notes": "Proposed replacement only; no source image or original assignment verified",
+      "notes": "User locked visual BASE24; canonical file confirmed on main. Quantitative simulation conditions not calibrated.",
       "bytes": null,
       "fileFormat": null,
-      "manifestationType": null,
+      "manifestationType": "environment",
       "manifestation": {
-        "trigger": [],
-        "visibleExpression": null,
-        "confidence": "unclassified"
+        "trigger": [
+          "elevated-compaction",
+          "restricted-macroporosity"
+        ],
+        "visibleExpression": "Dense clay profile, lateral root deflection, predominantly shallow root growth, canopy remaining substantially green.",
+        "confidence": "approved-scenario-not-quantitatively-calibrated"
       },
       "treatment": {
         "material": null,
         "application": null,
-        "response": null,
-        "confidence": "unclassified"
+        "response": "Pretreatment environmental baseline; no treatment is depicted.",
+        "confidence": "scenario-record"
       },
       "proposedScenario": "Soil compaction and restricted root development"
     },
@@ -2361,7 +2368,6 @@
     }
   ],
   "missingEntries": [
-    "BASE24",
     "BASE34"
   ],
   "inventorySource": "main Git tree (recursive)",
@@ -2422,10 +2428,10 @@
     }
   ],
   "summary": {
-    "verifiedCanonicalAssets": 86,
-    "missingCanonicalAssets": 2,
-    "unclassifiedManifestations": 79,
-    "classifiedScenarioRecords": 9,
+    "verifiedCanonicalAssets": 87,
+    "missingCanonicalAssets": 1,
+    "unclassifiedManifestations": 78,
+    "classifiedScenarioRecords": 10,
     "verifiedTreatmentMappings": 0
   }
 }
