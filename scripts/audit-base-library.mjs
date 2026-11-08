@@ -30,7 +30,8 @@ for(const p of assets){
  const name=p.match(/BASE[\s_-]?0?(\d{1,3})/i);
  entries.push({path:p,bytes:data.length,sha256:hash,baseNumber:name?Number(name[1]):null});
 }
-const duplicates=Object.values(Object.groupBy?Object.groupBy(entries,e=>e.sha256):entries.reduce((a,e)=>(a[e.sha256]??=[]).push(e),a),{})).filter(g=>g.length>1);
+const groups=entries.reduce((a,e)=>{(a[e.sha256]??=[]).push(e);return a;},{});
+const duplicates=Object.values(groups).filter(g=>g.length>1);
 const missing=[];
 for(let n=1;n<=88;n++){
  const path=expected(n);
