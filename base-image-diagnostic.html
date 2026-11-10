@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Turfarium BASE Asset Diagnostic</title><style>body{font:16px system-ui;background:#10221a;color:#eff7f0;max-width:950px;margin:30px auto;padding:16px}button{padding:12px;background:#d7edda;border:0;border-radius:7px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#193b2a;padding:16px;border-radius:8px}a{color:#b9e3cc}</style></head><body><h1>Turfarium · 88-image asset diagnostic</h1><p>Read-only diagnostic. Confirms whether this deployed site can fetch each image; it does not assert species or scenario calibration.</p><button id="run">Check all BASE images</button><pre id="result">Ready.</pre><script>
+const output=document.getElementById('result'),button=document.getElementById('run');
+async function check(){button.disabled=true;output.textContent='Loading manifest…';try{
+const res=await fetch('assets/turfarium/base-manifest.v1.json',{cache:'no-store'});if(!res.ok)throw Error('Manifest unavailable on this deployed branch (HTTP '+res.status+').');
+const m=await res.json();const entries=m.images||[];const problems=[];let done=0;
+const queue=[...entries];async function worker(){while(queue.length){const r=queue.shift();try{const resp=await fetch(r.src,{method:'GET',cache:'no-store'});if(!resp.ok)throw Error('HTTP '+resp.status);const type=resp.headers.get('content-type')||'';if(!type.includes('image/')&&!type.includes('octet-stream'))throw Error('unexpected content type '+type);await resp.body?.cancel();}catch(e){problems.push(r.id+': '+e.message);}done++;output.textContent='Checked '+done+'/'+entries.length+'; failed '+problems.length;}}
+await Promise.all(Array.from({length:6},worker));const calibrated=entries.filter(r=>r.approved===true&&r.species&&r.conditions&&Object.keys(r.conditions).length).length;
+output.textContent=JSON.stringify({expected:m.imageCountExpected,manifestEntries:entries.length,reachable:entries.length-problems.length,failed:problems.length,calibratedSelectable:calibrated,problems},null,2);
+}catch(e){output.textContent='ERROR: '+e.message;}finally{button.disabled=false;}}
+button.addEventListener('click',check);
+</script></body></html>
