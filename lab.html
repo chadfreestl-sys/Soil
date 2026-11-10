@@ -544,7 +544,7 @@ const residue=.0009*tr[1]*tempFit*(.3+e.vigor/100);const decomposition=.0012*act
 // Plant physiology v1: illustrative, bounded carbon budget. This replaces automatic root
 // gains with leaf-supported growth; coefficients require field/experimental calibration.
 // mowHeight defaults to 3.5 in until the management UI is wired to this state.
-const height=cl(Number(s.mowHeight)||2.5,.1,6);
+const height=cl(Number(s.mowHeight)||2.5,2.5,4);
 // Discrete mowing: the first cut occurs after the selected interval, not on
 // configuration change. Clipping removal is bounded by the one-third guideline
 // as a stress proxy; leaf-area loss and carbohydrate cost are heuristic.
