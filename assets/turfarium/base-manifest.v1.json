@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "description": "GitHub main-branch tree inventory with explicit scientific manifestation and treatment slots; unknowns remain unclassified; do not enable for production without calibration.",
   "imageCountExpected": 88,
-  "verifiedEntries": 87,
+  "verifiedEntries": 88,
   "policy": {
     "noAutoDeletion": true,
     "noUnverifiedFallback": true,
@@ -878,30 +878,37 @@
     },
     {
       "id": "BASE34",
-      "title": null,
+      "title": "Root-Zone Recovery & Improved Soil Conditions",
       "season": null,
-      "tags": [],
-      "status": "missing-from-main",
-      "src": null,
-      "githubBlobSha": null,
-      "approved": null,
+      "tags": [
+        "root-zone-recovery",
+        "soil-aggregation",
+        "fine-root-development",
+        "recovery"
+      ],
+      "status": "path-verified",
+      "src": "assets/turfarium/BASE34/BASE34.webp",
+      "githubBlobSha": "496218dd4b7e327564560ffa22a6a44238d34f45",
+      "approved": true,
       "conditions": null,
-      "notes": "Proposed replacement only; no source image or original assignment verified",
+      "notes": "User locked BASE34; canonical GitHub file verified on main. Quantitative simulation conditions remain uncalibrated.",
       "bytes": null,
       "fileFormat": null,
-      "manifestationType": null,
+      "manifestationType": "environment",
       "manifestation": {
-        "trigger": [],
-        "visibleExpression": null,
-        "confidence": "unclassified"
+        "trigger": [
+          "gradual-improvement-in-rooting-conditions",
+          "soil-structure-recovery"
+        ],
+        "visibleExpression": "Dense green tall fescue canopy; increased lateral and fine root growth; smaller irregular aggregates and visible pore continuity in the upper clay root zone, with some remaining dense subsoil.",
+        "confidence": "approved-scenario-not-quantitatively-calibrated"
       },
       "treatment": {
         "material": null,
         "application": null,
-        "response": null,
-        "confidence": "unclassified"
-      },
-      "proposedScenario": "Root-zone recovery and improved soil conditions"
+        "response": "Recovery state potentially following appropriate soil management over time; no specific treatment is depicted.",
+        "confidence": "scenario-record"
+      }
     },
     {
       "id": "BASE35",
@@ -2367,9 +2374,7 @@
       }
     }
   ],
-  "missingEntries": [
-    "BASE34"
-  ],
+  "missingEntries": [],
   "inventorySource": "main Git tree (recursive)",
   "extraFiles": [
     {
@@ -2428,10 +2433,10 @@
     }
   ],
   "summary": {
-    "verifiedCanonicalAssets": 87,
-    "missingCanonicalAssets": 1,
-    "unclassifiedManifestations": 78,
-    "classifiedScenarioRecords": 10,
+    "verifiedCanonicalAssets": 88,
+    "missingCanonicalAssets": 0,
+    "unclassifiedManifestations": 77,
+    "classifiedScenarioRecords": 11,
     "verifiedTreatmentMappings": 0
   }
 }
