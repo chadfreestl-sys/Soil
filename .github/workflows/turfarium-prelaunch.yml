@@ -1,0 +1,23 @@
+name: Turfarium prelaunch checks
+on:
+  push:
+    branches: [main, turfarium/image-audit-pretest]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify scientific image files
+        run: node tests/image-library-audit.test.cjs
+      - name: Verify scientific image mapping contract
+        run: node tests/image-mapping-contract.test.cjs
+      - name: Test soil food web progression
+        run: node tests/food-web-progression.test.cjs
+      - name: Test five-year scenarios
+        run: node tests/five-year-scenarios.test.cjs
