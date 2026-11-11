@@ -2,12 +2,12 @@
 (function(){
 'use strict';
 let report=null;
-const status={version:'25.2',loaded:true,received:false,rendered:false,error:null};
+const status={version:'25.3',loaded:true,received:false,rendered:false,error:null};
 window.TurfariumVigorIndicatorStatus=status;
 function locate(key){
  const root=document.getElementById('tf-stacked-lawns');
  const cards=[...(root?.querySelectorAll('.tf-lawn-visual')||[])];
- const card=cards.find(el=>new RegExp('Lawn\\s*'+key+'\\b','i').test(el.textContent.slice(0,120)));
+ const card=cards[key==='A'?0:1];
  const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
  return card||panel||null;
 }
@@ -19,7 +19,8 @@ function draw(){
   for(const key of ['A','B']){
    const card=locate(key);
    if(!card)continue;
-   let box=document.querySelector('[data-tf-response="'+key+'"]');
+   let box=card.querySelector('[data-tf-response="'+key+'"]');
+   if(!box)document.querySelectorAll('[data-tf-response="'+key+'"]').forEach(old=>old.remove());
    if(!box){box=document.createElement('div');box.dataset.tfResponse=key;}
    box.style.cssText='display:block;margin:10px 4px 12px;padding:12px;border:1px solid #b8d6bd;border-radius:12px;background:#e9f3e8;color:#173d2b;font-size:14px;line-height:1.6';
    const v=report[key],change=v.after-v.before;
@@ -30,6 +31,7 @@ function draw(){
    const note=document.createElement('small');note.textContent='Simulated indices; photographs change only at visual thresholds.';box.append(note);
    const stage=card.querySelector('.photo-stage');
    if(stage)stage.insertAdjacentElement('afterend',box);else card.append(box);
+   box.style.setProperty('display','block','important');
    placed++;
   }
   status.rendered=placed===2;status.error=placed===2?null:'Found '+placed+' of 2 lawn cards';
@@ -45,6 +47,7 @@ window.addEventListener('resize',()=>{if(report)setTimeout(draw,150)});
 function init(){
  const root=document.getElementById('tf-stacked-lawns');
  if(root)new MutationObserver(()=>{if(report)requestAnimationFrame(draw)}).observe(root,{childList:true,subtree:false});
+ window.TurfariumVigorIndicatorRedraw=draw;
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
