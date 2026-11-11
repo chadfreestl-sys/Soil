@@ -509,8 +509,8 @@
     },
     {
       "id": "BASE64",
-      "path": "assets/turfarium/BASE64/BASE64.png",
-      "format": "png",
+      "path": "assets/turfarium/BASE64/BASE64.jpg",
+      "format": "jpeg",
       "bytes": 527689,
       "topic": "summer environmental response (subject unverified)",
       "verifiedSubject": false
