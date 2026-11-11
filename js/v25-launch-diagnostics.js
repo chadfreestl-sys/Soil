@@ -13,15 +13,15 @@ function finite(x){return Number.isFinite(num(x));}
 function imageExists(url){return new Promise(resolve=>{const img=new Image();const timer=setTimeout(()=>resolve(false),7000);img.onload=()=>{clearTimeout(timer);resolve(true)};img.onerror=()=>{clearTimeout(timer);resolve(false)};img.src=url;});}
 async function run(){
  results.length=0;
- const clock=document.getElementById('time')?.textContent||'';
+ const clock=document.getElementById('time')?.textContent||document.body.innerText.match(/Day\\s+\\d+\\s*\\/\\s*1,825/)?.[0]||'';
  const dayMatch=clock.match(/Day\s+(\d+)/i);
  const day=dayMatch?Number(dayMatch[1]):NaN;
  check('Simulation day in 0–1825',Number.isInteger(day)&&day>=0&&day<=1825,clock);
  const report=document.getElementById('changePeriod')?.textContent||'';
  const reportMatch=report.match(/Day\s+(\d+)\s*→\s*(\d+)/);
  check('What Changed report matches timeline',day===0||!!(reportMatch&&Number(reportMatch[2])===day),report.slice(0,140));
- const mobile=document.getElementById('tf-live-change-card-v5');
- if(matchMedia('(max-width:700px)').matches)check('Mobile What Changed visible',!!(mobile&&getComputedStyle(mobile).display!=='none'),mobile?.id||'missing');
+ const changeGrid=document.getElementById('changeGrid');
+ if(matchMedia('(max-width:700px)').matches)check('Mobile What Changed report rendered',!!(changeGrid&&changeGrid.getClientRects().length&&changeGrid.textContent.trim()),changeGrid?.id||'missing');
  const panels=['A','B'].map(k=>document.getElementById('lawn-'+k.toLowerCase()+'-panel'));
  check('Both lawn panels exist',panels.every(Boolean),panels.map(Boolean).join('/'));
  const visual=global.TurfariumVisualState;
