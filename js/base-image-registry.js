@@ -7,12 +7,18 @@ const assets=Object.freeze(Array.from({length:88},(_,i)=>{
  const id='BASE'+String(i+1).padStart(2,'0');
  return Object.freeze({id,src:'assets/turfarium/'+id+'/'+id+(id==='BASE64'?'.png':'.webp'),tags:[]});
 }));
-const reviewed=Object.freeze([]); // Add {id,season,state} ONLY after scientific image review.
+const reviewed=Object.freeze([]); // Add {id,season,state,condition?} ONLY after scientific image review.
 const allowedSeasons=new Set(['winter','spring','summer','fall']);
 const allowedStates=new Set(['stressed','poor','fair','recovering','healthy','very-healthy','lush','elite']);
-function lookup(season,state){
- const row=reviewed.find(x=>x.season===season&&x.state===state&&allowedSeasons.has(x.season)&&allowedStates.has(x.state));
+const allowedConditions=new Set(['drought-stress','waterlogging-stress','compaction-stress','recovery']);
+function lookup(season,state,condition=null){
+ if(!allowedSeasons.has(season)||!allowedStates.has(state))return null;
+ // A condition-specific illustration must be explicitly reviewed for that condition.
+ // Never silently substitute a drought image for waterlogging or vice versa.
+ let row=null;
+ if(condition&&allowedConditions.has(condition))row=reviewed.find(x=>x.season===season&&x.state===state&&x.condition===condition);
+ if(!row)row=reviewed.find(x=>x.season===season&&x.state===state&&!x.condition);
  return row?assets.find(x=>x.id===row.id)?.src||null:null;
 }
-window.TurfariumBaseLibrary=Object.freeze({version:'1.0.0',assets,reviewed,lookup,reviewedCount:reviewed.length});
+window.TurfariumBaseLibrary=Object.freeze({version:'1.0.0',assets,reviewed,lookup,reviewedCount:reviewed.length,allowedConditions:Object.freeze([...allowedConditions])});
 })();
