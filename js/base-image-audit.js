@@ -5,7 +5,7 @@
  */
 (()=>{'use strict';
 const root='assets/turfarium/';
-const path=n=>root+'BASE'+String(n).padStart(2,'0')+'/BASE'+String(n).padStart(2,'0')+'.webp';
+const path=n=>{const id='BASE'+String(n).padStart(2,'0');return root+id+'/'+id+(n===64?'.png':'.webp')};
 async function check(n){
  const url=path(n);
  try{
@@ -17,7 +17,8 @@ async function check(n){
    await response.body?.cancel();
   }
   const contentType=response.headers.get('content-type')||'';
-  const ok=response.ok&&/^image\/webp(?:\s*;|$)/i.test(contentType);
+  const expected=n===64?'png':'webp';
+  const ok=response.ok&&new RegExp('^image/'+expected+'(?:\\s*;|$)','i').test(contentType);
   return {id:'BASE'+String(n).padStart(2,'0'),url,ok,status:response.status,contentType,bytes:response.headers.get('content-length')||'',reason:!response.ok?'HTTP error':!ok?'Unexpected content type':'ok'};
  }catch(e){return {id:'BASE'+String(n).padStart(2,'0'),url,ok:false,error:String(e)}}
 }
