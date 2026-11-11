@@ -1,0 +1,711 @@
+{
+  "schemaVersion": 1,
+  "source": "GitHub repository tree",
+  "note": "Asset existence verified from Git tree; visual subjects require human review. Do not map unknown images by ID alone.",
+  "images": [
+    {
+      "id": "BASE01",
+      "path": "assets/turfarium/BASE01/BASE01.webp",
+      "format": "webp",
+      "bytes": 726218,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE02",
+      "path": "assets/turfarium/BASE02/BASE02.webp",
+      "format": "webp",
+      "bytes": 694280,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE03",
+      "path": "assets/turfarium/BASE03/BASE03.webp",
+      "format": "webp",
+      "bytes": 747438,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE04",
+      "path": "assets/turfarium/BASE04/BASE04.webp",
+      "format": "webp",
+      "bytes": 772928,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE05",
+      "path": "assets/turfarium/BASE05/BASE05.webp",
+      "format": "webp",
+      "bytes": 741910,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE06",
+      "path": "assets/turfarium/BASE06/BASE06.webp",
+      "format": "webp",
+      "bytes": 689080,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE07",
+      "path": "assets/turfarium/BASE07/BASE07.webp",
+      "format": "webp",
+      "bytes": 597690,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE08",
+      "path": "assets/turfarium/BASE08/BASE08.webp",
+      "format": "webp",
+      "bytes": 439840,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE09",
+      "path": "assets/turfarium/BASE09/BASE09.webp",
+      "format": "webp",
+      "bytes": 689762,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE10",
+      "path": "assets/turfarium/BASE10/BASE10.webp",
+      "format": "webp",
+      "bytes": 679404,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE11",
+      "path": "assets/turfarium/BASE11/BASE11.webp",
+      "format": "webp",
+      "bytes": 701168,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE12",
+      "path": "assets/turfarium/BASE12/BASE12.webp",
+      "format": "webp",
+      "bytes": 651794,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE13",
+      "path": "assets/turfarium/BASE13/BASE13.webp",
+      "format": "webp",
+      "bytes": 678210,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE14",
+      "path": "assets/turfarium/BASE14/BASE14.webp",
+      "format": "webp",
+      "bytes": 684564,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE15",
+      "path": "assets/turfarium/BASE15/BASE15.webp",
+      "format": "webp",
+      "bytes": 682102,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE16",
+      "path": "assets/turfarium/BASE16/BASE16.webp",
+      "format": "webp",
+      "bytes": 697608,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE17",
+      "path": "assets/turfarium/BASE17/BASE17.webp",
+      "format": "webp",
+      "bytes": 640616,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE18",
+      "path": "assets/turfarium/BASE18/BASE18.webp",
+      "format": "webp",
+      "bytes": 673816,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE19",
+      "path": "assets/turfarium/BASE19/BASE19.webp",
+      "format": "webp",
+      "bytes": 705250,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE20",
+      "path": "assets/turfarium/BASE20/BASE20.webp",
+      "format": "webp",
+      "bytes": 448316,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE21",
+      "path": "assets/turfarium/BASE21/BASE21.webp",
+      "format": "webp",
+      "bytes": 674742,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE22",
+      "path": "assets/turfarium/BASE22/BASE22.webp",
+      "format": "webp",
+      "bytes": 670590,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE23",
+      "path": "assets/turfarium/BASE23/BASE23.webp",
+      "format": "webp",
+      "bytes": 686904,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE24",
+      "path": "assets/turfarium/BASE24/BASE24.webp",
+      "format": "webp",
+      "bytes": 834774,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE25",
+      "path": "assets/turfarium/BASE25/BASE25.webp",
+      "format": "webp",
+      "bytes": 765526,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE26",
+      "path": "assets/turfarium/BASE26/BASE26.webp",
+      "format": "webp",
+      "bytes": 742998,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE27",
+      "path": "assets/turfarium/BASE27/BASE27.webp",
+      "format": "webp",
+      "bytes": 679200,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE28",
+      "path": "assets/turfarium/BASE28/BASE28.webp",
+      "format": "webp",
+      "bytes": 667934,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE29",
+      "path": "assets/turfarium/BASE29/BASE29.webp",
+      "format": "webp",
+      "bytes": 642792,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE30",
+      "path": "assets/turfarium/BASE30/BASE30.webp",
+      "format": "webp",
+      "bytes": 641712,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE31",
+      "path": "assets/turfarium/BASE31/BASE31.webp",
+      "format": "webp",
+      "bytes": 655880,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE32",
+      "path": "assets/turfarium/BASE32/BASE32.webp",
+      "format": "webp",
+      "bytes": 671878,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE33",
+      "path": "assets/turfarium/BASE33/BASE33.webp",
+      "format": "webp",
+      "bytes": 619032,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE34",
+      "path": "assets/turfarium/BASE34/BASE34.webp",
+      "format": "webp",
+      "bytes": 856014,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE35",
+      "path": "assets/turfarium/BASE35/BASE35.webp",
+      "format": "webp",
+      "bytes": 655220,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE36",
+      "path": "assets/turfarium/BASE36/BASE36.webp",
+      "format": "webp",
+      "bytes": 568606,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE37",
+      "path": "assets/turfarium/BASE37/BASE37.webp",
+      "format": "webp",
+      "bytes": 627560,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE38",
+      "path": "assets/turfarium/BASE38/BASE38.webp",
+      "format": "webp",
+      "bytes": 617902,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE39",
+      "path": "assets/turfarium/BASE39/BASE39.webp",
+      "format": "webp",
+      "bytes": 595246,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE40",
+      "path": "assets/turfarium/BASE40/BASE40.webp",
+      "format": "webp",
+      "bytes": 747882,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE41",
+      "path": "assets/turfarium/BASE41/BASE41.webp",
+      "format": "webp",
+      "bytes": 741830,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE42",
+      "path": "assets/turfarium/BASE42/BASE42.webp",
+      "format": "webp",
+      "bytes": 671506,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE43",
+      "path": "assets/turfarium/BASE43/BASE43.webp",
+      "format": "webp",
+      "bytes": 680838,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE44",
+      "path": "assets/turfarium/BASE44/BASE44.webp",
+      "format": "webp",
+      "bytes": 731786,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE45",
+      "path": "assets/turfarium/BASE45/BASE45.webp",
+      "format": "webp",
+      "bytes": 665322,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE46",
+      "path": "assets/turfarium/BASE46/BASE46.webp",
+      "format": "webp",
+      "bytes": 739248,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE47",
+      "path": "assets/turfarium/BASE47/BASE47.webp",
+      "format": "webp",
+      "bytes": 689234,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE48",
+      "path": "assets/turfarium/BASE48/BASE48.webp",
+      "format": "webp",
+      "bytes": 691344,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE49",
+      "path": "assets/turfarium/BASE49/BASE49.webp",
+      "format": "webp",
+      "bytes": 609228,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE50",
+      "path": "assets/turfarium/BASE50/BASE50.webp",
+      "format": "webp",
+      "bytes": 718240,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE51",
+      "path": "assets/turfarium/BASE51/BASE51.webp",
+      "format": "webp",
+      "bytes": 953616,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE52",
+      "path": "assets/turfarium/BASE52/BASE52.webp",
+      "format": "webp",
+      "bytes": 903422,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE53",
+      "path": "assets/turfarium/BASE53/BASE53.webp",
+      "format": "webp",
+      "bytes": 863512,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE54",
+      "path": "assets/turfarium/BASE54/BASE54.webp",
+      "format": "webp",
+      "bytes": 841934,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE55",
+      "path": "assets/turfarium/BASE55/BASE55.webp",
+      "format": "webp",
+      "bytes": 880470,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE56",
+      "path": "assets/turfarium/BASE56/BASE56.webp",
+      "format": "webp",
+      "bytes": 838080,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE57",
+      "path": "assets/turfarium/BASE57/BASE57.webp",
+      "format": "webp",
+      "bytes": 877482,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE58",
+      "path": "assets/turfarium/BASE58/BASE58.webp",
+      "format": "webp",
+      "bytes": 832816,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE59",
+      "path": "assets/turfarium/BASE59/BASE59.webp",
+      "format": "webp",
+      "bytes": 617168,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE60",
+      "path": "assets/turfarium/BASE60/BASE60.webp",
+      "format": "webp",
+      "bytes": 672610,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE61",
+      "path": "assets/turfarium/BASE61/BASE61.webp",
+      "format": "webp",
+      "bytes": 497920,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE62",
+      "path": "assets/turfarium/BASE62/BASE62.webp",
+      "format": "webp",
+      "bytes": 535922,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE63",
+      "path": "assets/turfarium/BASE63/BASE63.webp",
+      "format": "webp",
+      "bytes": 880832,
+      "topic": "oscillating sprinkler irrigation",
+      "verifiedSubject": true
+    },
+    {
+      "id": "BASE64",
+      "path": "assets/turfarium/BASE64/BASE64.png",
+      "format": "png",
+      "bytes": 527689,
+      "topic": "summer environmental response (subject unverified)",
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE65",
+      "path": "assets/turfarium/BASE65/BASE65.webp",
+      "format": "webp",
+      "bytes": 844096,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE66",
+      "path": "assets/turfarium/BASE66/BASE66.webp",
+      "format": "webp",
+      "bytes": 826882,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE67",
+      "path": "assets/turfarium/BASE67/BASE67.webp",
+      "format": "webp",
+      "bytes": 878218,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE68",
+      "path": "assets/turfarium/BASE68/BASE68.webp",
+      "format": "webp",
+      "bytes": 808818,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE69",
+      "path": "assets/turfarium/BASE69/BASE69.webp",
+      "format": "webp",
+      "bytes": 783850,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE70",
+      "path": "assets/turfarium/BASE70/BASE70.webp",
+      "format": "webp",
+      "bytes": 852672,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE71",
+      "path": "assets/turfarium/BASE71/BASE71.webp",
+      "format": "webp",
+      "bytes": 788778,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE72",
+      "path": "assets/turfarium/BASE72/BASE72.webp",
+      "format": "webp",
+      "bytes": 828414,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE73",
+      "path": "assets/turfarium/BASE73/BASE73.webp",
+      "format": "webp",
+      "bytes": 793272,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE74",
+      "path": "assets/turfarium/BASE74/BASE74.webp",
+      "format": "webp",
+      "bytes": 829586,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE75",
+      "path": "assets/turfarium/BASE75/BASE75.webp",
+      "format": "webp",
+      "bytes": 881792,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE76",
+      "path": "assets/turfarium/BASE76/BASE76.webp",
+      "format": "webp",
+      "bytes": 842844,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE77",
+      "path": "assets/turfarium/BASE77/BASE77.webp",
+      "format": "webp",
+      "bytes": 880366,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE78",
+      "path": "assets/turfarium/BASE78/BASE78.webp",
+      "format": "webp",
+      "bytes": 902676,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE79",
+      "path": "assets/turfarium/BASE79/BASE79.webp",
+      "format": "webp",
+      "bytes": 881048,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE80",
+      "path": "assets/turfarium/BASE80/BASE80.webp",
+      "format": "webp",
+      "bytes": 969226,
+      "topic": "advanced summer drought stress and dormancy transition",
+      "verifiedSubject": true
+    },
+    {
+      "id": "BASE81",
+      "path": "assets/turfarium/BASE81/BASE81.webp",
+      "format": "webp",
+      "bytes": 953274,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE82",
+      "path": "assets/turfarium/BASE82/BASE82.webp",
+      "format": "webp",
+      "bytes": 979786,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE83",
+      "path": "assets/turfarium/BASE83/BASE83.webp",
+      "format": "webp",
+      "bytes": 989962,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE84",
+      "path": "assets/turfarium/BASE84/BASE84.webp",
+      "format": "webp",
+      "bytes": 963648,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE85",
+      "path": "assets/turfarium/BASE85/BASE85.webp",
+      "format": "webp",
+      "bytes": 948930,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE86",
+      "path": "assets/turfarium/BASE86/BASE86.webp",
+      "format": "webp",
+      "bytes": 935458,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE87",
+      "path": "assets/turfarium/BASE87/BASE87.webp",
+      "format": "webp",
+      "bytes": 946256,
+      "topic": null,
+      "verifiedSubject": false
+    },
+    {
+      "id": "BASE88",
+      "path": "assets/turfarium/BASE88/BASE88.webp",
+      "format": "webp",
+      "bytes": 691138,
+      "topic": null,
+      "verifiedSubject": false
+    }
+  ]
+}
