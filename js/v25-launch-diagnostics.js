@@ -1,7 +1,7 @@
 /* Turfarium v25 read-only launch diagnostics.
  * Run in browser DevTools after lab.html loads:
  *   const s=document.createElement('script');s.src='js/v25-launch-diagnostics.js';document.body.append(s);
- *   TurfariumLaunchQA.run().then(console.table)
+ *   TurfariumLaunchQA.run()
  * Does not apply treatments, advance time, or change saved data.
  */
 (function(global){
@@ -24,7 +24,7 @@ async function run(){
  if(matchMedia('(max-width:700px)').matches)check('Mobile What Changed visible',!!(mobile&&getComputedStyle(mobile).display!=='none'),mobile?.id||'missing');
  const panels=['A','B'].map(k=>document.getElementById('lawn-'+k.toLowerCase()+'-panel'));
  check('Both lawn panels exist',panels.every(Boolean),panels.map(Boolean).join('/'));
- const visual=global.TurfariumVisualEngine;
+ const visual=global.TurfariumVisualState;
  check('Visual engine exported',!!visual,visual?.version||'missing');
  const scores=['A','B'].map(k=>{try{return visual?.score(k)}catch{return NaN}});
  check('Independent finite visual scores',scores.every(finite),scores.join('/'));
