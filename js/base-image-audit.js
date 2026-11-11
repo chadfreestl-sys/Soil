@@ -10,7 +10,9 @@ async function check(n){
  try{
   let response=await fetch(url,{method:'HEAD',cache:'no-store'});
   if(response.status===405||response.status===501)response=await fetch(url,{method:'GET',headers:{Range:'bytes=0-31'},cache:'no-store'});
-  return {id:'BASE'+String(n).padStart(2,'0'),url,ok:response.ok,status:response.status,contentType:response.headers.get('content-type')||'',bytes:response.headers.get('content-length')||''};
+  const contentType=response.headers.get('content-type')||'';
+  const ok=response.ok&&/^image\/webp(?:\s*;|$)/i.test(contentType);
+  return {id:'BASE'+String(n).padStart(2,'0'),url,ok,status:response.status,contentType,bytes:response.headers.get('content-length')||'',reason:!response.ok?'HTTP error':!ok?'Unexpected content type':'ok'};
  }catch(e){return {id:'BASE'+String(n).padStart(2,'0'),url,ok:false,error:String(e)}}
 }
 async function run({concurrency=6}={}){
