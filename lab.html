@@ -1310,4 +1310,31 @@ window.addEventListener('turfarium:time-advanced',()=>{ensure();setTimeout(ensur
 window.addEventListener('resize',ensure);
 [400,1400,3200].forEach(ms=>setTimeout(ensure,ms));
 })();
+</script><script id="tf-visible-report-v5">
+(function(){
+'use strict';
+function show(){
+ if(!matchMedia('(max-width:700px)').matches)return;
+ const anchor=document.getElementById('tf-stacked-replay');
+ if(!anchor)return;
+ let card=document.getElementById('tf-live-change-card-v5');
+ if(!card){
+  card=document.createElement('section');card.id='tf-live-change-card-v5';
+  card.style.cssText='display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;width:100%!important;box-sizing:border-box!important;margin:12px 0!important;padding:16px!important;border:2px solid #8bbba0!important;border-radius:16px!important;background:#f2f8ef!important;color:#183d2c!important';
+  card.innerHTML='<details open><summary style="font-size:19px;font-weight:800;cursor:pointer">📊 What Changed</summary><div data-tf-live-report style="padding-top:12px">Waiting for simulation report…</div></details>';
+ }
+ if(card.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',card);
+ const original=document.getElementById('changeReport');
+ const body=card.querySelector('[data-tf-live-report]');
+ if(original&&body&&body.innerHTML!==original.innerHTML)body.innerHTML=original.innerHTML;
+ const old=document.getElementById('tf-mobile-what-changed');
+ if(old&&old!==card)old.style.setProperty('display','none','important');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);else show();
+window.addEventListener('turfarium:time-advanced',()=>{show();setTimeout(show,50)});
+window.addEventListener('resize',show);
+[250,900,1800,3500].forEach(ms=>setTimeout(show,ms));
+const sourceWatch=setInterval(()=>{const source=document.getElementById('changeReport');if(!source)return;clearInterval(sourceWatch);new MutationObserver(show).observe(source,{subtree:true,childList:true,characterData:true});show()},350);
+setTimeout(()=>clearInterval(sourceWatch),15000);
+})();
 </script></body></html>
