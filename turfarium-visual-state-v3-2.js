@@ -229,14 +229,12 @@ async function refresh(key){
  const canopyGrowth=clamp((canopy-20)/75,0,1);
  const rootSupport=clamp((root*.65+oxygen*.35)/100,0,1);
  const stressPenalty=clamp(salt/100,0,1);
- const grass=String(document.getElementById('grass')?.value||'').toLowerCase();
- const warmSeason=/zoysia|bermuda|st. augustine|centipede|bahia|buffalo|paspalum/.test(grass);
- const dormant=warmSeason&&season==='winter';
- const transition=warmSeason&&(month===2||month===10);
+ // Turfarium v25 models tall fescue only. Do not apply warm-season dormancy
+ // or transition multipliers to this cool-season species.
  const seasonalWarmth=season==='summer'?1.06:season==='winter'?.75:season==='fall'?.91:1;
- const dormancyFactor=dormant?.38:transition?.72:season==='winter'?.76:season==='fall'?.9:1;
+ const dormancyFactor=season==='winter'?.76:season==='fall'?.9:1;
  const saturation=clamp((.72+canopyGrowth*.35+n*.0024-stressPenalty*.10)*seasonalWarmth*dormancyFactor,.22,1.30);
- const brightness=clamp((.88+canopyGrowth*.12+n*.0012-stressPenalty*.05)*(dormant?.86:season==='winter'?.92:1),.72,1.13);
+ const brightness=clamp((.88+canopyGrowth*.12+n*.0012-stressPenalty*.05)*(season==='winter'?.92:1),.72,1.13);
  const contrast=clamp(1.015+canopyGrowth*.03,1,1.06);
  photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+') contrast('+contrast.toFixed(3)+')','important');
  photo.style.transition='filter 3.8s ease-in-out';
