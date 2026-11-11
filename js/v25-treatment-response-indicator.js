@@ -8,7 +8,7 @@ function parseReport(){
  const cards=['A','B'].map(key=>[...grid.querySelectorAll('.change-lawn')].find(x=>new RegExp('\\bLawn\\s+'+key+'\\b','i').test(x.querySelector('h4')?.textContent||'')));
  if(cards.some(x=>!x))return null;
  const vigor=cards.map(c=>{
-  const line=[...c.querySelectorAll('li')].find(li=>/Turf vigor\s*:/i.test(li.textContent));
+  const line=[...c.querySelectorAll('li')].find(li=>li.querySelector('strong')?.textContent.trim()==='Turf vigor');
   const m=line?.textContent.match(/\(([-\d.]+)\s*→\s*([-\d.]+)\)/);
   return m?{before:Number(m[1]),after:Number(m[2])}:null;
  });
