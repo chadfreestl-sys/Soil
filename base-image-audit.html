@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Turfarium | BASE Asset Audit</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;max-width:960px;margin:30px auto;padding:0 18px;background:#f4f7f2;color:#173727}button{background:#17573b;color:white;border:0;border-radius:8px;padding:12px 18px;font-weight:700;cursor:pointer}button:disabled{opacity:.5}table{border-collapse:collapse;width:100%;margin-top:16px;background:white}td,th{border:1px solid #cbd9ce;padding:7px;text-align:left}th{background:#dceadd}.fail{background:#ffe3de}.pass{background:#e4f4e5}code{overflow-wrap:anywhere}#summary{font-weight:700;margin:14px 0}</style></head>
+<body><h1>Turfarium — BASE01–BASE88 Asset Audit</h1>
+<p>Read-only diagnostic for the development branch. Checks expected asset URLs with HEAD requests (or a small GET fallback). It does not change the simulator, and HTTP availability alone does not prove the image is visually correct.</p>
+<button id="run">Check all 88 images</button><p id="summary" role="status" aria-live="polite">Not yet checked.</p><div id="results"></div>
+<script src="js/base-image-audit.js"></script>
+<script>
+const button=document.getElementById('run'),summary=document.getElementById('summary'),container=document.getElementById('results');
+button.addEventListener('click',async()=>{
+ button.disabled=true;summary.textContent='Checking image paths…';container.replaceChildren();
+ try{
+  const report=await TurfariumAssetAudit.run();
+  summary.textContent=report.passed+' / '+report.total+' available; '+report.failed+' failed.';
+  const table=document.createElement('table'),head=document.createElement('thead'),body=document.createElement('tbody');
+  const hr=document.createElement('tr');
+  for(const title of ['Image','HTTP','Content type','Path']){const th=document.createElement('th');th.textContent=title;hr.append(th)}head.append(hr);
+  for(const item of report.results){
+   const tr=document.createElement('tr');tr.className=item.ok?'pass':'fail';
+   for(const value of [item.id,item.status??item.error??'error',item.contentType,item.url]){const td=document.createElement('td');td.textContent=String(value??'');tr.append(td)}
+   body.append(tr);
+  }
+  table.append(head,body);container.append(table);
+ }catch(error){summary.textContent='Audit error: '+String(error)}
+ finally{button.disabled=false}
+});
+</script></body></html>
