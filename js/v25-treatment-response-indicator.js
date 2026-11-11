@@ -9,19 +9,19 @@ function parseReport(){
  if(cards.some(x=>!x))return null;
  const vigor=cards.map(c=>{
   const line=[...c.querySelectorAll('li')].find(li=>li.querySelector('strong')?.textContent.trim()==='Turf vigor');
-  const m=line?.textContent.match(/\(([-\d.]+)\s*→\s*([-\d.]+)\)/);
+  const m=line?.textContent.match(/\(([0-9.+-]+)\s*[^0-9.+-]+\s*([0-9.+-]+)\)/);
   return m?{before:Number(m[1]),after:Number(m[2])}:null;
  });
  if(vigor.some(v=>!v||!Number.isFinite(v.after)))return null;
  const period=document.getElementById('changePeriod')?.textContent||'';
- const days=period.match(/Day\s+(\d+)\s*→\s*(\d+)/);
+ const days=period.match(/Day\s+(\d+)\s*[^0-9]+\s*(\d+)/i);
  if(!days)return null;
  return {day:Number(days[2]),A:vigor[0],B:vigor[1]};
 }
 function render(){
  const data=parseReport()||last;
  if(!data)return;
- const clock=document.getElementById('tf-season-display')?.textContent||document.body.innerText.slice(0,500);
+ const clock=document.getElementById('tf-season-display')?.textContent||'';
  const clockDay=clock.match(/Day\s+(\d+)/);
  if(clockDay&&Number(clockDay[1])!==data.day)return;
  last=data;
