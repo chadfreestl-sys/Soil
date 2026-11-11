@@ -753,6 +753,19 @@ function updateChangeReportV18(start,n,previous){const current={A:snapshotV18(A)
  $('changePeriod').textContent=`Day ${start} → ${day} (${n} days) · ${seasonLabel(day)} · changes in simulated indices, not field measurements.`;
  $('changeGrid').innerHTML=v18Describe('A',previous.A,current.A)+v18Describe('B',previous.B,current.B);
  const dv=current.B.vigor-current.A.vigor;const wetter=current.A.moist>80||current.B.moist>80;
+ // Explicit treatment-versus-control diagnostics: do not claim a visual response when none was modeled.
+ const recent=(key)=>(treatmentRecords[key]||[]).filter(r=>r.day>=start&&r.day<=day);
+ const names=(key)=>recent(key).map(r=>r.label+(r.rate?' · '+r.rate:'')).join('; ');
+ const aTreat=names('A'),bTreat=names('B');
+ const deltaA=current.A.vigor-previous.A.vigor,deltaB=current.B.vigor-previous.B.vigor;
+ const treatmentSummary=document.createElement('div');
+ treatmentSummary.className='change-lawn';
+ treatmentSummary.setAttribute('data-tf-treatment-comparison','1');
+ const comparison=Math.abs(deltaB-deltaA)<.05
+   ?'No measurable modeled vigor advantage over the control during this interval. The two lawns may still display the same photograph.'
+   :'Difference in modeled vigor change (B minus A): '+(deltaB-deltaA>=0?'+':'')+(deltaB-deltaA).toFixed(2)+' points. Photo stages can remain identical until a category threshold is crossed.';
+ treatmentSummary.innerHTML='<h4>🧪 Treatment vs. control</h4><p><strong>Lawn A inputs:</strong> '+escapeHtml(aTreat||'None recorded this interval')+'</p><p><strong>Lawn B inputs:</strong> '+escapeHtml(bTreat||'None recorded this interval')+'</p><p><strong>Vigor change:</strong> A '+(deltaA>=0?'+':'')+deltaA.toFixed(2)+' · B '+(deltaB>=0?'+':'')+deltaB.toFixed(2)+'</p><p>'+escapeHtml(comparison)+'</p><small>Illustrative model indices; a fertilizer application is not proof of a positive turf response.</small>';
+ $('changeGrid').appendChild(treatmentSummary);
  $('nextActions').textContent=`Next visit: ${wetter?'Check drainage and oxygen stress before adding more water. ':'Review turf condition and soil biology. '}${Math.abs(dv)>.5?`Lawn ${dv>0?'B':'A'} currently leads in modeled vigor by ${Math.abs(dv).toFixed(1)} points. `:'Both lawns have similar modeled vigor. '}You can apply another treatment now or advance time again.`;
 }
 function advance(n){n=Number(n);if(!Number.isInteger(n)||n<=0)return false;if(day+n>1825){alert('Maximum simulation horizon is 1,825 days.');return false}const previous={A:snapshotV18(A),B:snapshotV18(B)},start=day;for(let i=0;i<n;i++){daily(A);daily(B);day++;if(day%7===0&&i!==n-1){try{record()}catch(error){console.warn('[Turfarium] History recording failed',error)}}}try{record()}catch(error){console.warn('[Turfarium] Final history recording failed',error)}log.unshift(`Day ${day} · Advanced ${n} days; review the results and choose whether either lawn needs another treatment.`);$('visit').textContent=`Day ${day}: review the two soil profiles, then apply any next treatment before advancing again.`;render();updateChangeReportV18(start,n,previous);window.dispatchEvent(new CustomEvent('turfarium:time-advanced',{detail:{from:start,to:day,days:n,season:seasonLabel(day)}}));return true}
