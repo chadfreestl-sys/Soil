@@ -108,10 +108,10 @@ function canLoad(url){
  loaded.set(url,result);
  return result;
 }
-async function imageFor(index,season){
+async function imageFor(index,season,condition){
  // Reviewed scientific images take precedence; unreviewed BASE files must not
  // be assigned to a turf condition merely because their filenames exist.
- const reviewed=window.TurfariumBaseLibrary?.lookup(season,STATES[index].id);
+ const reviewed=window.TurfariumBaseLibrary?.lookup(season,STATES[index].id,condition);
  if(reviewed&&await canLoad(reviewed))return {src:reviewed,kind:'base-reviewed'};
  const local=imageUrl(index,season);
  if(await canLoad(local))return {src:local,kind:'seasonal'};
@@ -122,6 +122,16 @@ async function imageFor(index,season){
   if(await canLoad(src))return {src,kind:'classic'};
  }
  return {src:null,kind:'unavailable'};
+}
+// Conservative, visual-only condition classifier. These are proxy thresholds,
+// not field-validated diagnoses; missing metrics never trigger a classification.
+function visualCondition(s){
+ const value=k=>s[k]===null||s[k]===undefined||s[k]===''?null:Number(s[k]);
+ const moisture=value('moisture'),oxygen=value('oxygen'),compaction=value('compaction');
+ if(moisture!==null&&Number.isFinite(moisture)&&moisture<=20)return 'drought-stress';
+ if(moisture!==null&&oxygen!==null&&Number.isFinite(moisture)&&Number.isFinite(oxygen)&&moisture>=85&&oxygen<=25)return 'waterlogging-stress';
+ if(compaction!==null&&Number.isFinite(compaction)&&compaction>=80)return 'compaction-stress';
+ return null;
 }
 function elements(key){
  // Mobile stacked layout MOVES the actual photo-stage out of its original panel.
@@ -221,7 +231,8 @@ async function refresh(key){
  const previousDay=Number(lastState.get(key)?.day);
  if(Number.isFinite(previousDay)&&elapsed<previousDay)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
- const signature=season+'|'+index;
+ const condition=visualCondition(snapshot);
+ const signature=season+'|'+index+'|'+(condition||'general');
  // Continuous, model-linked visual progression even when the photo stays in the
  // same categorical image band. Small increments should be subtle, not dramatic.
  // Canopy appearance follows modeled turf vigor and stress; root status informs
@@ -263,7 +274,7 @@ async function refresh(key){
  stage.dataset.tfPhotoSignature=signature;stage.dataset.tfPhotoReady='0';
  lastState.set(key,{index,signature,day:elapsed});
  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · loading…');
- const asset=await imageFor(index,season);
+ const asset=await imageFor(index,season,condition);
  if(pending.get(key)!==request)return;
  if(!asset.src){
   stage.dataset.tfVisualAsset='unavailable';
@@ -301,7 +312,7 @@ css.textContent='.photo-stage{position:relative}'+
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
- version:'3.8',states:STATES,score,refresh,refreshAll:boot,
+ version:'3.9',states:STATES,score,visualCondition,refresh,refreshAll:boot,
  showReplayFrame:(frames)=>{for(const key of ['A','B']){if(!frames?.[key])continue;replaySnapshots.set(key,frames[key]);const stage=elements(key).stage;if(stage){stage.dataset.tfPhotoSignature='';stage.dataset.tfPhotoReady='0';}lastState.delete(key);refresh(key);}},
  endReplay:()=>{replaySnapshots.clear();lastState.clear();refresh('A');refresh('B');},
  getStatus:key=>{const st=elements(key).stage;return st?{
