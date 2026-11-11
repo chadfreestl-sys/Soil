@@ -1313,9 +1313,15 @@ window.addEventListener('resize',ensure);
 </script><script id="tf-visible-report-v5">
 (function(){
 'use strict';
+let latest=null;
+function currentDay(){
+ const text=document.getElementById('time')?.textContent||'';
+ const m=text.match(/Day\s+(\d+)/i);
+ return m?Number(m[1]):null;
+}
 function show(){
- if(!matchMedia('(max-width:700px)').matches)return;
- const anchor=document.getElementById('tf-stacked-replay');
+ if(!window.matchMedia('(max-width:700px)').matches)return;
+ const anchor=document.getElementById('tf-stacked-replay')||document.getElementById('tf-playback-strip');
  if(!anchor)return;
  let card=document.getElementById('tf-live-change-card-v5');
  if(!card){
@@ -1324,14 +1330,44 @@ function show(){
   card.innerHTML='<details open><summary style="font-size:19px;font-weight:800;cursor:pointer">📊 What Changed</summary><div data-tf-live-report style="padding-top:12px">Waiting for simulation report…</div></details>';
  }
  if(card.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',card);
- const original=document.getElementById('changeReport');
  const body=card.querySelector('[data-tf-live-report]');
- if(original&&body&&body.innerHTML!==original.innerHTML)body.innerHTML=original.innerHTML;
+ const original=document.getElementById('changeReport');
+ const day=currentDay();
+ const sourcePeriod=document.getElementById('changePeriod')?.textContent||'';
+ const sourceGrid=document.getElementById('changeGrid')?.innerHTML||'';
+ const sourceNext=document.getElementById('nextActions')?.textContent||'';
+ const sourceIsCurrent=day===0||day===null||new RegExp('(?:→|to)\\s*'+day+'\\b').test(sourcePeriod);
+ if(body){
+  if(latest&&day===latest.to){
+   const html='<h3>📊 What changed since the last advance?</h3><p class="subtle"></p><div class="change-grid"></div><div class="next-actions"></div>';
+   if(body.dataset.reportDay!==String(day)||body.dataset.reportPeriod!==latest.period){
+    body.innerHTML=html;
+    body.querySelector('.subtle').textContent=latest.period;
+    body.querySelector('.change-grid').innerHTML=latest.grid;
+    body.querySelector('.next-actions').textContent=latest.next;
+    body.dataset.reportDay=String(day);body.dataset.reportPeriod=latest.period;
+   }
+  }else if(sourceIsCurrent&&original){
+   if(body.dataset.reportDay!==String(day)||body.dataset.reportPeriod!==sourcePeriod){
+    body.innerHTML=original.innerHTML;body.dataset.reportDay=String(day);body.dataset.reportPeriod=sourcePeriod;
+   }
+  }else{
+   body.textContent='Report synchronization pending for Day '+day+'. The simulation advanced, but its before-and-after report has not been confirmed. Do not interpret the Day 0 placeholder as current results.';
+   body.dataset.reportDay='pending';body.dataset.reportPeriod='';
+  }
+ }
  const old=document.getElementById('tf-mobile-what-changed');
- if(old&&old!==card)old.style.setProperty('display','none','important');
+ if(old)old.style.setProperty('display','none','important');
+}
+function onAdvance(event){
+ const d=event.detail||{};
+ if(Number.isFinite(Number(d.to))&&d.changeReport&&typeof d.changeReport.grid==='string'){
+  latest={to:Number(d.to),period:String(d.changeReport.period||''),grid:d.changeReport.grid,next:String(d.changeReport.next||'')};
+ }else{latest=null;}
+ show();setTimeout(show,50);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);else show();
-window.addEventListener('turfarium:time-advanced',()=>{show();setTimeout(show,50)});
+window.addEventListener('turfarium:time-advanced',onAdvance);
 window.addEventListener('resize',show);
 [250,900,1800,3500].forEach(ms=>setTimeout(show,ms));
 const sourceWatch=setInterval(()=>{const source=document.getElementById('changeReport');if(!source)return;clearInterval(sourceWatch);new MutationObserver(show).observe(source,{subtree:true,childList:true,characterData:true});show()},350);
