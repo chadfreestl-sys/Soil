@@ -48,7 +48,7 @@ window.addEventListener('turfarium:time-advanced',()=>{setTimeout(render,0);setT
 window.addEventListener('turfarium:history-frame',()=>setTimeout(render,100));
 window.addEventListener('resize',()=>setTimeout(render,200));
 const observer=new MutationObserver(()=>{if(last)requestAnimationFrame(render)});
-function watch(){const root=document.getElementById('tf-stacked-lawns');if(root)observer.observe(root,{childList:true,subtree:true});}
+function watch(){const root=document.getElementById('tf-stacked-lawns');if(root)observer.observe(root,{childList:true,subtree:false});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watch);else watch();
 [1200,2500,5000].forEach(ms=>setTimeout(render,ms));
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(render,600));else setTimeout(render,600);
