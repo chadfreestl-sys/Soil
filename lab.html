@@ -768,7 +768,7 @@ function updateChangeReportV18(start,n,previous){const current={A:snapshotV18(A)
  $('changeGrid').appendChild(treatmentSummary);
  $('nextActions').textContent=`Next visit: ${wetter?'Check drainage and oxygen stress before adding more water. ':'Review turf condition and soil biology. '}${Math.abs(dv)>.5?`Lawn ${dv>0?'B':'A'} currently leads in modeled vigor by ${Math.abs(dv).toFixed(1)} points. `:'Both lawns have similar modeled vigor. '}You can apply another treatment now or advance time again.`;
 }
-function advance(n){n=Number(n);if(!Number.isInteger(n)||n<=0)return false;if(day+n>1825){alert('Maximum simulation horizon is 1,825 days.');return false}const previous={A:snapshotV18(A),B:snapshotV18(B)},start=day;for(let i=0;i<n;i++){daily(A);daily(B);day++;if(day%7===0&&i!==n-1){try{record()}catch(error){console.warn('[Turfarium] History recording failed',error)}}}try{record()}catch(error){console.warn('[Turfarium] Final history recording failed',error)}log.unshift(`Day ${day} · Advanced ${n} days; review the results and choose whether either lawn needs another treatment.`);$('visit').textContent=`Day ${day}: review the two soil profiles, then apply any next treatment before advancing again.`;render();updateChangeReportV18(start,n,previous);window.dispatchEvent(new CustomEvent('turfarium:time-advanced',{detail:{from:start,to:day,days:n,season:seasonLabel(day)}}));return true}
+function advance(n){n=Number(n);if(!Number.isInteger(n)||n<=0)return false;if(day+n>1825){alert('Maximum simulation horizon is 1,825 days.');return false}const previous={A:snapshotV18(A),B:snapshotV18(B)},start=day;for(let i=0;i<n;i++){daily(A);daily(B);day++;if(day%7===0&&i!==n-1){try{record()}catch(error){console.warn('[Turfarium] History recording failed',error)}}}try{record()}catch(error){console.warn('[Turfarium] Final history recording failed',error)}log.unshift(`Day ${day} · Advanced ${n} days; review the results and choose whether either lawn needs another treatment.`);$('visit').textContent=`Day ${day}: review the two soil profiles, then apply any next treatment before advancing again.`;render();updateChangeReportV18(start,n,previous);window.dispatchEvent(new CustomEvent('turfarium:time-advanced',{detail:{from:start,to:day,days:n,season:seasonLabel(day),changeReport:{period:$('changePeriod').textContent,grid:$('changeGrid').innerHTML,next:$('nextActions').textContent}}}));return true}
 window.TurfariumAdvanceDays=function(days){const n=Number(days);if(![7,30,90,365].includes(n))return false;try{return advance(n)}catch(error){console.error('[Turfarium] Timeline advance failed',error);const msg=document.getElementById('visit');if(msg)msg.textContent='Timeline error: '+error.message+' — please report this message.';return false}};
 function record(){history.push({day,va:env(A).vigor,vb:env(B).vigor,wa:env(A).worms,wb:env(B).worms});if(history.length>350)history.shift();
  const snapshot=typeof window.TurfariumVisualSnapshot==='function'?window.TurfariumVisualSnapshot:null;
@@ -1285,25 +1285,32 @@ window.addEventListener('turfarium:time-advanced',place);
 #tf-season-display[data-season="spring"] .tf-season-name{color:#c6f79b!important}
 #tf-season-display[data-season="fall"] .tf-season-name{color:#ffcb85!important}
 @media(max-width:420px){#tf-season-display{gap:5px 7px!important;padding:12px 8px!important}#tf-season-display .tf-season-month,#tf-season-display .tf-season-year,#tf-season-display .tf-season-day{padding-left:7px}}
-</style><script id="tf-what-changed-rehome-v2">
+</style><script id="tf-what-changed-rehome-v3">
 (function(){
- function place(){
-  const replay=window.matchMedia('(max-width:700px)').matches?
-    document.getElementById('tf-stacked-replay'):
-    document.querySelector('#tf-playback-strip .tf-history-replay')||document.getElementById('tf-playback-strip');
-  const report=document.getElementById('changeReport');
-  if(!replay||!report)return;
-  let wrapper=document.getElementById('tf-what-changed-details');
-  if(!wrapper){
-   wrapper=document.createElement('details');wrapper.id='tf-what-changed-details';wrapper.className='tf-what-changed-details';
-   const heading=document.createElement('summary');heading.textContent='📊 What Changed';wrapper.appendChild(heading);wrapper.appendChild(report);
-  }
-  if(wrapper.previousElementSibling!==replay)replay.insertAdjacentElement('afterend',wrapper);
-  wrapper.style.setProperty('display','block','important');
-  wrapper.style.setProperty('visibility','visible','important');
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);else place();
- window.addEventListener('load',place);window.addEventListener('turfarium:time-advanced',place);
- [600,1800,4000,7000].forEach(ms=>setTimeout(place,ms));
+'use strict';
+function mount(){
+ const replay=window.matchMedia('(max-width:700px)').matches?
+   document.getElementById('tf-stacked-replay'):
+   document.querySelector('#tf-playback-strip .tf-history-replay')||document.getElementById('tf-playback-strip');
+ const source=document.getElementById('changeReport');
+ if(!replay||!source)return;
+ // Keep the single authoritative report; the stacked-view mirror must not display stale duplicate content.
+ const mirror=document.getElementById('tf-mobile-what-changed');
+ if(mirror){mirror.hidden=true;mirror.style.setProperty('display','none','important');}
+ let wrapper=document.getElementById('tf-what-changed-details');
+ if(!wrapper){wrapper=document.createElement('details');wrapper.id='tf-what-changed-details';wrapper.className='tf-what-changed-details';const summary=document.createElement('summary');summary.textContent='📊 What Changed';wrapper.append(summary,source);}
+ if(wrapper.previousElementSibling!==replay)replay.insertAdjacentElement('afterend',wrapper);
+ wrapper.style.setProperty('display','block','important');
+ wrapper.style.setProperty('visibility','visible','important');
+}
+function sync(ev){
+ const data=ev?.detail?.changeReport;
+ if(data){const period=document.getElementById('changePeriod'),grid=document.getElementById('changeGrid'),next=document.getElementById('nextActions');if(period)period.textContent=data.period;if(grid)grid.innerHTML=data.grid;if(next)next.textContent=data.next;}
+ mount();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+window.addEventListener('turfarium:time-advanced',sync);
+window.addEventListener('resize',mount);
+[300,1200,3000].forEach(ms=>setTimeout(mount,ms));
 })();
 </script></body></html>
