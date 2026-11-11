@@ -109,6 +109,10 @@ function canLoad(url){
  return result;
 }
 async function imageFor(index,season){
+ // Reviewed scientific images take precedence; unreviewed BASE files must not
+ // be assigned to a turf condition merely because their filenames exist.
+ const reviewed=window.TurfariumBaseLibrary?.lookup(season,STATES[index].id);
+ if(reviewed&&await canLoad(reviewed))return {src:reviewed,kind:'base-reviewed'};
  const local=imageUrl(index,season);
  if(await canLoad(local))return {src:local,kind:'seasonal'};
  // CDN fallback if Cloudflare's asset layer has not finished updating.
