@@ -1,6 +1,6 @@
 /* Turfarium build and non-invasive dashboard diagnostics. */
 (()=>{'use strict';
-const BUILD='25.0.0';
+const BUILD='25.1.0';
 const style=document.createElement('style');
 style.textContent='#tf-build-status{position:fixed;right:10px;bottom:10px;z-index:9999;background:#173e2d;color:#fff;border:1px solid #9cbda9;border-radius:9px;padding:5px 9px;font:600 11px/1.3 system-ui,sans-serif;box-shadow:0 2px 9px #0003;opacity:.88}#tf-build-status[data-health="issues"]{background:#70471d}';
 document.head.appendChild(style);

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Turfarium — Rhizosphere Learning Lab</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#18382b;background:#f3f7f0}body{max-width:1050px;margin:auto;padding:20px}h1{margin-bottom:4px}p{line-height:1.5}.layout{display:grid;grid-template-columns:minmax(250px,350px) 1fr;gap:18px}@media(max-width:750px){.layout{grid-template-columns:1fr}}.card{background:white;border:1px solid #cbdccf;border-radius:14px;padding:20px;margin:12px 0}label{display:block;margin:18px 0}label span{display:flex;justify-content:space-between;font-weight:650}input{width:100%;accent-color:#276b46}button{border:0;border-radius:8px;padding:11px 15px;background:#1b6240;color:white;font-weight:700;cursor:pointer}button.secondary{background:#4c6557}.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.metric{background:#eef5ec;border-radius:10px;padding:12px}.metric strong{display:block;font-size:22px}.metric small{display:block}#message{font-weight:650}.caution{border-left:4px solid #a56d19;padding:8px 12px;background:#fff7e6}a{color:#175d3b}
+</style></head><body>
+<h1>Rhizosphere Learning Lab</h1>
+<p>Explore how temperature, water, oxygen, and organic inputs can influence modeled soil food-web activity beneath tall fescue. This is a separate educational sandbox; it does not modify either lawn in the main simulator.</p>
+<p class="caution"><strong>Scientific boundary:</strong> These are relative activity indices (0–100), not organism counts, laboratory measurements, or calibrated predictions. Adjusting a slider illustrates model assumptions, not a guaranteed treatment outcome.</p>
+<div class="layout"><section class="card" aria-label="Environment controls"><h2>Root-zone conditions</h2>
+<label><span>Temperature <output id="temperatureF-value">68°F</output></span><input id="temperatureF" type="range" min="30" max="100" value="68"></label>
+<label><span>Moisture index <output id="moisture-value">55</output></span><input id="moisture" type="range" min="0" max="100" value="55"></label>
+<label><span>Oxygen index <output id="oxygen-value">70</output></span><input id="oxygen" type="range" min="0" max="100" value="70"></label>
+<label><span>Organic input index <output id="organicInputs-value">0</output></span><input id="organicInputs" type="range" min="0" max="100" value="0"></label>
+<button id="advance">Advance 30 days</button> <button id="reset" class="secondary">Reset</button><p id="clock" aria-live="polite">Day 0</p></section>
+<section class="card"><h2>Modeled food-web activity</h2><div id="metrics" class="metrics" aria-live="polite"></div><h3>What the model is illustrating</h3><p id="message"></p><p>In actual soil, water and oxygen are coupled through pore structure and drainage. These controls are deliberately independent to let learners isolate each variable; not every combination is physically realistic.</p></section></div>
+<section class="card"><h2>Questions to investigate</h2><p>What changes when moisture increases but oxygen remains low? How does organic input affect modeled bacteria and fungi? Why might a compacted, saturated root zone respond differently from a well-drained one?</p><p><a href="lab.html">Return to the main Turfarium simulator</a></p></section>
+<script src="js/food-web.js"></script><script>
+(()=>{'use strict';const engine=window.TurfariumFoodWeb;
+const ids=['temperatureF','moisture','oxygen','organicInputs'];
+const names=[['bacteria','Bacteria'],['fungi','Fungi'],['protozoa','Protozoa'],['nematodesBacterial','Bacterial-feeding nematodes'],['nematodesFungal','Fungal-feeding nematodes'],['nematodesPlant','Plant-feeding nematodes'],['nematodesPredator','Predatory nematodes'],['earthworms','Earthworms'],['microarthropods','Microarthropods'],['aggregation','Aggregation proxy']];
+let state=engine.baseline(),day=0;
+const env=()=>Object.fromEntries(ids.map(id=>[id,Number(document.getElementById(id).value)]));
+function render(){const e=env();ids.forEach(id=>document.getElementById(id+'-value').textContent=e[id]+(id==='temperatureF'?'°F':''));document.getElementById('clock').textContent='Day '+day;
+const host=document.getElementById('metrics');host.replaceChildren();
+for(const [key,label] of names){const el=document.createElement('div');el.className='metric';const title=document.createElement('small');title.textContent=label;const val=document.createElement('strong');val.textContent=Number(state[key]).toFixed(1);el.append(title,val);host.append(el)}
+const notes=[];if(e.oxygen<30)notes.push('Low oxygen constrains the model habitat factor.');if(e.moisture<25)notes.push('Dry conditions reduce modeled habitat suitability.');if(e.moisture>85)notes.push('High moisture can coincide with oxygen limitation in poorly drained soils.');if(e.organicInputs>65)notes.push('Added organic inputs increase the model food term, but response still depends on habitat.');if(!notes.length)notes.push('Compare a single environmental change at a time to isolate its modeled effect.');document.getElementById('message').textContent=notes.join(' ')}
+ids.forEach(id=>document.getElementById(id).addEventListener('input',render));
+document.getElementById('advance').addEventListener('click',()=>{state=engine.advance(state,{...env(),pH:6.3,clippings:50,rootExudates:45,disturbance:0},30);day+=30;render()});
+document.getElementById('reset').addEventListener('click',()=>{state=engine.baseline();day=0;for(const [id,value] of Object.entries({temperatureF:68,moisture:55,oxygen:70,organicInputs:0}))document.getElementById(id).value=value;render()});render();
+})();
+</script></body></html>
