@@ -14,10 +14,10 @@ The model uses 15-day integration steps. Stress can suppress green canopy before
 43/43 automated assertions passed for six 1,825-day sandbox scenarios. Tests include numeric bounds, determinism, survival nonincrease, and directional stress/recovery comparisons.
 
 ## Critical distinction
-The main interactive Lawn A/B engine in `lab.html` **does not yet use this new crown-survival/dormancy subsystem**. Its existing canopy, root, and carbohydrate state remains independent. Do not describe the sandbox physiology as implemented in the main engine.
+The main interactive Lawn A/B engine in `lab.html` now has **a separate conceptual integration** of `crownSurvival`, `dormancyIndex`, and `severeStressDays`, initialized in `make()` and updated in `daily()`. The live model does not share the scenario engine's coefficients, and cross-engine agreement has NOT been demonstrated. Snapshot and canopy readout expose the new state. Browser testing, state migration, persistence and stress/recovery trajectory validation are still outstanding.
 
 ## Remaining launch blockers
-1. Integrate and verify crown survival/dormancy in interactive Lawn A/B state and persistence without breaking existing history/replay.
+1. Verify crown survival/dormancy in interactive Lawn A/B state and persistence without breaking existing history/replay; inspect canopy recovery dynamics and ensure no unintended cap/lock-in.
 2. Run complete interactive treatment, timeline, reset, save/restore, and replay browser tests on preview deployment.
 3. Scientifically approve and map BASE imagery; currently no reviewed runtime mappings.
 4. Audit treatment dose units, evidence tiers, boundary behavior, seasonality and soil biological response against reliable field research.
