@@ -5,8 +5,8 @@ let last=null;
 function parseReport(){
  const grid=document.getElementById('changeGrid');
  if(!grid)return null;
- const cards=[...grid.querySelectorAll('.change-lawn')].filter(x=>!x.hasAttribute('data-tf-treatment-comparison')).slice(0,2);
- if(cards.length!==2)return null;
+ const cards=['A','B'].map(key=>[...grid.querySelectorAll('.change-lawn')].find(x=>x.querySelector('h4')?.textContent.trim()==='Lawn '+key));
+ if(cards.some(x=>!x))return null;
  const vigor=cards.map(c=>{
   const line=[...c.querySelectorAll('li')].find(li=>/Turf vigor:/i.test(li.textContent));
   const m=line?.textContent.match(/\(([-\d.]+)\s*→\s*([-\d.]+)\)/);
@@ -27,12 +27,16 @@ function render(){
  last=data;
  const diff=(data.B.after-data.B.before)-(data.A.after-data.A.before);
  for(const key of ['A','B']){
-  const stage=document.querySelector('.photo-stage[data-tf-lawn-key="'+key+'"]')||document.getElementById('lawn-'+key.toLowerCase()+'-panel')?.querySelector('.photo-stage');
+  const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
+  const stacked=document.getElementById('tf-stacked-lawns');
+  const card=[...(stacked?.querySelectorAll('.tf-lawn-visual')||[])].find(x=>new RegExp('Lawn\\s*'+key+'\\b','i').test(x.textContent.slice(0,100)));
+  const stage=document.querySelector('.photo-stage[data-tf-lawn-key="'+key+'"]')||panel?.querySelector('.photo-stage')||card?.querySelector('.photo-stage');
   if(!stage)continue;
-  const host=stage.closest('.tf-lawn-visual')||stage.parentElement;
+  const host=stage.closest('.tf-lawn-visual')||panel||stage.parentElement;
   if(!host)continue;
-  let box=host.querySelector('[data-tf-response="'+key+'"]');
+  let box=document.querySelector('[data-tf-response="'+key+'"]');
   if(!box){box=document.createElement('div');box.dataset.tfResponse=key;box.style.cssText='margin:8px 4px 12px;padding:10px 12px;border-radius:12px;background:#e9f3e8;color:#173d2b;font-size:14px;line-height:1.55;border:1px solid #c1d8c5';stage.insertAdjacentElement('afterend',box);}
+  if(box.previousElementSibling!==stage)stage.insertAdjacentElement('afterend',box);
   const v=data[key];box.replaceChildren();
   const title=document.createElement('strong');title.textContent='Modeled turf vigor: '+v.after.toFixed(1)+' / 100';box.append(title);
   const sub=document.createElement('div');sub.textContent='Change since last advance: '+(v.after-v.before>=0?'+':'')+(v.after-v.before).toFixed(1)+' points';box.append(sub);
@@ -42,5 +46,10 @@ function render(){
 }
 window.addEventListener('turfarium:time-advanced',()=>{setTimeout(render,0);setTimeout(render,200)});
 window.addEventListener('turfarium:history-frame',()=>setTimeout(render,100));
+window.addEventListener('resize',()=>setTimeout(render,200));
+const observer=new MutationObserver(()=>{if(last)requestAnimationFrame(render)});
+function watch(){const root=document.getElementById('tf-stacked-lawns');if(root)observer.observe(root,{childList:true,subtree:true});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watch);else watch();
+[1200,2500,5000].forEach(ms=>setTimeout(render,ms));
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(render,600));else setTimeout(render,600);
 })();
