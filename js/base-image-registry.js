@@ -18,7 +18,8 @@ const allowedConditions=new Set(['drought-stress','waterlogging-stress','compact
 const validIds=new Set(assets.map(x=>x.id));
 const seen=new Set();
 if(rawManifest!==undefined){
- if(!rawManifest||rawManifest.schema!=='turfarium-base-approved-v1'||rawManifest.scientificSignoff!==true||!Array.isArray(rawManifest.entries))errors.push('Missing explicit scientific signoff or invalid approved manifest schema');
+ if(!rawManifest||rawManifest.schema!=='turfarium-base-approved-v1'||!Array.isArray(rawManifest.entries))errors.push('Invalid approved manifest schema');
+ else if(rawManifest.scientificSignoff!==true){if(rawManifest.entries.length)errors.push('Unsigned mappings cannot be activated');}
  else for(const row of rawManifest.entries){
   if(!row||!validIds.has(row.id)||!allowedSeasons.has(row.season)||!allowedStates.has(row.state)||(row.condition!==undefined&&!allowedConditions.has(row.condition))){errors.push('Invalid mapping row');continue}
   const key=[row.season,row.state,row.condition||'general'].join('|');
