@@ -1296,7 +1296,7 @@ function mount(){
  if(!replay||!source)return;
  // Keep the single authoritative report; the stacked-view mirror must not display stale duplicate content.
  const mirror=document.getElementById('tf-mobile-what-changed');
- if(mirror)mirror.hidden=true;
+ if(mirror){mirror.hidden=true;mirror.style.setProperty('display','none','important');}
  let wrapper=document.getElementById('tf-what-changed-details');
  if(!wrapper){wrapper=document.createElement('details');wrapper.id='tf-what-changed-details';wrapper.className='tf-what-changed-details';const summary=document.createElement('summary');summary.textContent='📊 What Changed';wrapper.append(summary,source);}
  if(wrapper.previousElementSibling!==replay)replay.insertAdjacentElement('afterend',wrapper);
