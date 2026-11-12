@@ -5,7 +5,7 @@
 (()=>{'use strict';
 const names=['stressed','poor','fair','recovering','healthy','very-healthy','lush','elite'];
 const paths=[];
-for(let i=1;i<=88;i++){const id='BASE'+String(i).padStart(2,'0');paths.push({kind:'BASE',path:'../assets/turfarium/'+id+'/'+id+'.webp'});}
+for(let i=1;i<=88;i++){const id='BASE'+String(i).padStart(2,'0');paths.push({kind:'BASE',path:'../assets/turfarium/'+id+'/'+id+(id==='BASE64'?'.jpg':'.webp')});}
 for(const season of ['winter','spring','summer','fall'])for(let i=0;i<names.length;i++)paths.push({kind:'seasonal',path:'../images/seasons/'+season+'/state-'+String(i+1).padStart(2,'0')+'-'+names[i]+'.webp'});
 async function probe(entry){
  try{
