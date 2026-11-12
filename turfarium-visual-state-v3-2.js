@@ -143,13 +143,21 @@ function ensureStage(stage,photo){
    transition:'opacity 2.4s ease-in-out',pointerEvents:'none'});
   photo.insertAdjacentElement('afterend',overlay);
  }
+ // The mobile layout moves the photo-stage, leaving its original caption behind.
+ // Reattach that same caption rather than creating a second, stale indicator.
  let indicator=stage.nextElementSibling;
  if(!indicator?.classList.contains('tf-visual-indicator')){
-  indicator=document.createElement('div');
+  const key=stage.dataset.tfLawnKey;
+  const original=document.getElementById('lawn-'+String(key||'').toLowerCase()+'-panel');
+  indicator=original?.querySelector('.tf-visual-indicator')||document.createElement('div');
   indicator.className='tf-visual-indicator';
   indicator.title='Illustrative image selected from the live turf ecosystem state.';
   stage.insertAdjacentElement('afterend',indicator);
  }
+ // Any detached legacy captions are not authoritative and must not be displayed.
+ const key=stage.dataset.tfLawnKey;
+ const original=document.getElementById('lawn-'+String(key||'').toLowerCase()+'-panel');
+ original?.querySelectorAll('.tf-visual-indicator').forEach(el=>{if(el!==indicator)el.remove()});
  return {overlay,indicator};
 }
 function indicatorText(indicator,text,error=false){
