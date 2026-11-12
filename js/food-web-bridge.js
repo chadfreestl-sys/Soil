@@ -27,7 +27,7 @@ function render(key){
  let state=prev?.state||model.baseline();
  if(prev&&d<prev.day){state=model.baseline();records.delete(key)}
  if(!prev||d!==prev.day){
-  const elapsed=prev?Math.max(0,d-prev.day):0;
+  // On first render, reconstruct from the day-zero baseline to the displayed day.\n  // This avoids showing baseline biology for a lawn opened at a later checkpoint.\n  const elapsed=prev&&d>=prev.day?Math.max(0,d-prev.day):Math.max(0,d);
   // Run in bounded monthly intervals to avoid unrealistic single-step jumps.
   let remaining=Math.min(elapsed,365*5);
   while(remaining>0){const step=Math.min(30,remaining);state=model.advance(state,environment(key),step);remaining-=step}
@@ -58,5 +58,6 @@ const style=document.createElement('style');style.textContent='.tf-food-web{marg
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 window.addEventListener('load',boot,{once:true});
  document.getElementById('startMonth')?.addEventListener('change',()=>{records.clear();boot()});
+window.addEventListener('turfarium:scenario-restored',()=>{records.clear();boot();});
 window.TurfariumFoodWebBridge={refresh:boot,get:key=>records.get(key)?.state||null};
 })();
