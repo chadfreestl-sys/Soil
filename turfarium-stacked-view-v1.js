@@ -75,7 +75,7 @@ function dedupePhotoCaptions(){
  for(const card of root.querySelectorAll('.tf-lawn-visual')){
   const captions=[...card.querySelectorAll('.tf-visual-indicator')];
   if(captions.length<2)continue;
-  const winner=captions.find(el=>/\\bindex\\s+\\d+\\b/i.test(el.textContent||''))||captions.find(el=>!/loading/i.test(el.textContent||''))||captions[0];
+  const winner=captions.find(el=>/\bindex\s+\d+\b/i.test(el.textContent||''))||captions.find(el=>!/loading/i.test(el.textContent||''))||captions[0];
   for(const el of captions)if(el!==winner)el.remove();
  }
 }
