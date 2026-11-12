@@ -294,6 +294,7 @@ async function refresh(key){
  present(key,stage,photo,overlay,indicator,asset.src,season,index,n,asset.kind,request);
 }
 let observing=false;
+let visualClockTimer=null;
 function boot(){
  if(!observing){
   observing=true;
@@ -305,6 +306,19 @@ function boot(){
       {subtree:true,childList:true,characterData:true});
    }
   }
+  // Keep caption and season synchronized even when host updates state without mutating observed KPI nodes.
+  // A slow clock is sufficient; refresh() avoids image reloads when the stage is unchanged.
+  if(!visualClockTimer)visualClockTimer=setInterval(()=>{
+   if(document.hidden)return;
+   for(const key of ['A','B']){
+    const stage=elements(key).stage;
+    if(!stage)continue;
+    const snapshot=snapshotFor(key);
+    const season=SEASONS[monthFor(key,snapshot)];
+    const day=String(snapshot.day??dayFor(key));
+    if(stage.dataset.tfVisualDay!==day||stage.dataset.tfVisualSeason!==season)refresh(key);
+   }
+  },1500);
   const month=document.getElementById('startMonth');
   if(month)month.addEventListener('change',()=>{refresh('A');refresh('B')});
  }
