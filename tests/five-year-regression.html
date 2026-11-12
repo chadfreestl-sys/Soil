@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Turfarium five-year regression</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem;background:#f6f8f5;color:#172b22}pre{white-space:pre-wrap;background:#e8efe9;padding:1rem;border-radius:8px}.pass{color:#17683a}.fail{color:#a21d24}</style></head>
+<body><h1>Turfarium — five-year regression</h1><p>Runs offline after the repository scripts load. These are computational smoke tests, not field validation or a production-browser test.</p><p id="status" role="status">Running…</p><pre id="results"></pre>
+<script src="../js/food-web.js"></script><script src="../js/five-year-scenarios.js"></script>
+<script>
+(()=>{'use strict';
+const log=[],check=(condition,message)=>{log.push((condition?'PASS ':'FAIL ')+message);if(!condition)throw Error(message)};
+const F=window.TurfariumFoodWeb,S=window.TurfariumFiveYearScenarios;
+try{
+check(!!F&&!!S,'Food-web and five-year modules loaded');
+const base=F.baseline(),snapshot=JSON.stringify(base);
+const names=['conventional','biological','stressed'];
+for(const name of names){
+ const rows=S.run(name);
+ check(rows.length===7,name+' has seven checkpoints');
+ check(rows[0].day===0&&rows.at(-1).day===1825,name+' reaches day 1,825');
+ check(rows.every((r,i)=>i===0||r.day>rows[i-1].day),name+' days strictly increase');
+ for(const row of rows){
+  for(const [key,value] of Object.entries({...row.food,roots:row.roots,canopy:row.canopy})){
+   check(Number.isFinite(value)&&value>=0&&value<=100,name+' day '+row.day+' '+key+' bounded');
+  }
+ }
+ check(JSON.stringify(rows)===JSON.stringify(S.run(name)),name+' deterministic replay');
+}
+check(JSON.stringify(base)===snapshot,'Baseline not mutated');
+const a=F.baseline(),b=F.baseline();F.advance(a,{moisture:10},30);
+check(JSON.stringify(a)===JSON.stringify(b),'Food-web advance does not mutate input');
+const report=S.compare();
+check(report.checkpoints.at(-1)===1825,'Comparison exposes full horizon');
+check(['conventional','biological','stressed'].every(k=>report[k].length===7),'Comparison contains three scenarios');
+document.getElementById('status').textContent='All computational smoke tests passed';document.getElementById('status').className='pass';
+}catch(err){log.push('ERROR '+String(err));document.getElementById('status').textContent='Regression failed';document.getElementById('status').className='fail';}
+document.getElementById('results').textContent=log.join('\n');
+})();
+</script></body></html>
