@@ -25,7 +25,9 @@ function record(frame){
 }
 window.addEventListener('turfarium:history-frame',e=>record(e.detail));
 window.addEventListener('turfarium:scenario-restored',()=>{
- stop(true);
+ stop(false);
+ viewing=false;
+ window.TurfariumVisualState?.endReplay?.();
  frames.length=0;
  // A saved scenario carries live A/B state, not its original visual replay frames.
  // Do not show photographs from the previously active experiment as its history.
