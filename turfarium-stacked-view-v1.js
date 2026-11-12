@@ -69,6 +69,22 @@ const css=document.createElement('style');css.textContent=`
 }
 @media(min-width:701px){#tf-stacked-lawns{display:none!important}}
 `;document.head.appendChild(css);
+// Remove duplicate legacy stage captions without altering visual-state calculations.
+function dedupePhotoCaptions(){
+ const root=document.getElementById('tf-stacked-lawns');if(!root)return;
+ for(const card of root.querySelectorAll('.tf-lawn-visual')){
+  const captions=[...card.querySelectorAll('.tf-visual-indicator')];
+  if(captions.length<2)continue;
+  const winner=captions.find(el=>/\\bindex\\s+\\d+\\b/i.test(el.textContent||''))||captions.find(el=>!/loading/i.test(el.textContent||''))||captions[0];
+  for(const el of captions)if(el!==winner)el.remove();
+ }
+}
+function observePhotoCaptions(){
+ const root=document.getElementById('tf-stacked-lawns');if(!root)return;
+ let queued=false;
+ new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;dedupePhotoCaptions()})}).observe(root,{childList:true,subtree:true,characterData:true});
+ dedupePhotoCaptions();
+}
 function mount(){
  const grid=document.querySelector('.simulation-grid.tf-primary-workspace')||document.querySelector('.simulation-grid');
  const strip=document.getElementById('tf-playback-strip');
@@ -250,6 +266,6 @@ function polishLowerPanels(){
   panel.classList.add('tf-lower-disclosure');
  }
 }
-function start(){polishLowerPanels();[500,1800,4000].forEach(t=>setTimeout(polishLowerPanels,t));if(mount())return;let n=0;const timer=setInterval(()=>{if(mount()||++n>30)clearInterval(timer)},350);}
+function start(){polishLowerPanels();[500,1800,4000].forEach(t=>setTimeout(polishLowerPanels,t));if(mount()){observePhotoCaptions();return;}let n=0;const timer=setInterval(()=>{if(mount()){observePhotoCaptions();clearInterval(timer)}else if(++n>30)clearInterval(timer)},350);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
