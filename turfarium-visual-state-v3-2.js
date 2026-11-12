@@ -177,6 +177,13 @@ function present(key,stage,photo,overlay,indicator,url,season,index,n,kind,reque
   stage.dataset.tfVisualAsset=kind;
   stage.dataset.tfVisualSource=url;
   stage.dataset.tfPhotoReady='1';
+  // An older image load must never overwrite the caption of a newer season.
+  // The on-photo badge is updated synchronously when the clock advances.
+  const liveSeason=stage.querySelector('.tf-season-on-photo')?.dataset.season;
+  if(liveSeason&&liveSeason!==season){
+   requestAnimationFrame(()=>refresh(key));
+   return;
+  }
   indicatorText(indicator,display+(kind==='classic'?' · classic fallback':''));
   notify(stage,key,url,season,index,n);
   // Reveal new image by fading OUT the previous one.
@@ -269,6 +276,11 @@ async function refresh(key){
  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · loading…');
  const asset=await imageFor(index,season);
  if(pending.get(key)!==request)return;
+ // A later clock update may have changed the season during asset resolution.
+ if(stage.querySelector('.tf-season-on-photo')?.dataset.season!==season){
+  requestAnimationFrame(()=>refresh(key));
+  return;
+ }
  if(!asset.src){
   stage.dataset.tfVisualAsset='unavailable';
   stage.dataset.tfPhotoReady='0';
