@@ -14,7 +14,9 @@ async function probe(entry){
   const controller=new AbortController();
   const response=await fetch(entry.path,{method:'GET',headers:{Range:'bytes=0-0'},signal:controller.signal,cache:'no-store'});
   controller.abort();
-  return {...entry,ok:response.ok,status:response.status};
+  const type=(response.headers.get('content-type')||'').toLowerCase();
+  const imageType=type.startsWith('image/');
+  return {...entry,ok:response.ok&&imageType,status:response.status+' ('+(type||'unknown content type')+')'};
  }catch(error){return {...entry,ok:false,status:String(error)};}
 }
 async function run(){
