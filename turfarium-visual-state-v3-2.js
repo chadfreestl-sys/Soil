@@ -98,15 +98,19 @@ function imageUrl(index,season){
  return 'images/seasons/'+season+'/state-'+String(index+1).padStart(2,'0')+'-'+STATES[index].id+'.webp';
 }
 function canLoad(url){
- if(loaded.has(url))return loaded.get(url);
- const result=new Promise(resolve=>{
+ // Cache successes indefinitely, but retry failed CDN assets after a cooldown.
+ // A transient 404/network failure must not permanently hide a seasonal image.
+ const cached=loaded.get(url);
+ if(cached&&(!cached.failedAt||Date.now()-cached.failedAt<60000))return cached.promise;
+ const entry={promise:null,failedAt:0};
+ entry.promise=new Promise(resolve=>{
   const image=new Image();
   image.onload=()=>resolve(true);
   image.onerror=()=>resolve(false);
   image.src=url;
- });
- loaded.set(url,result);
- return result;
+ }).then(ok=>{if(!ok)entry.failedAt=Date.now();return ok});
+ loaded.set(url,entry);
+ return entry.promise;
 }
 async function imageFor(index,season){
  const local=imageUrl(index,season);
@@ -174,16 +178,16 @@ function present(key,stage,photo,overlay,indicator,url,season,index,n,kind,reque
  const already=photo.getAttribute('src')===url||photo.src===url;
  const done=()=>{
   if(pending.get(key)!==request)return;
-  stage.dataset.tfVisualAsset=kind;
-  stage.dataset.tfVisualSource=url;
-  stage.dataset.tfPhotoReady='1';
-  // An older image load must never overwrite the caption of a newer season.
-  // The on-photo badge is updated synchronously when the clock advances.
+  // Reject stale completion before publishing readiness or source metadata.
+  // Otherwise a prior-season load can briefly appear ready to other modules.
   const liveSeason=stage.querySelector('.tf-season-on-photo')?.dataset.season;
   if(liveSeason&&liveSeason!==season){
    requestAnimationFrame(()=>refresh(key));
    return;
   }
+  stage.dataset.tfVisualAsset=kind;
+  stage.dataset.tfVisualSource=url;
+  stage.dataset.tfPhotoReady='1';
   indicatorText(indicator,display+(kind==='classic'?' · classic fallback':''));
   notify(stage,key,url,season,index,n);
   // Reveal new image by fading OUT the previous one.
