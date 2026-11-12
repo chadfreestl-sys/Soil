@@ -98,15 +98,19 @@ function imageUrl(index,season){
  return 'images/seasons/'+season+'/state-'+String(index+1).padStart(2,'0')+'-'+STATES[index].id+'.webp';
 }
 function canLoad(url){
- if(loaded.has(url))return loaded.get(url);
- const result=new Promise(resolve=>{
+ // Cache successes indefinitely, but retry failed CDN assets after a cooldown.
+ // A transient 404/network failure must not permanently hide a seasonal image.
+ const cached=loaded.get(url);
+ if(cached&&(!cached.failedAt||Date.now()-cached.failedAt<60000))return cached.promise;
+ const entry={promise:null,failedAt:0};
+ entry.promise=new Promise(resolve=>{
   const image=new Image();
   image.onload=()=>resolve(true);
   image.onerror=()=>resolve(false);
   image.src=url;
- });
- loaded.set(url,result);
- return result;
+ }).then(ok=>{if(!ok)entry.failedAt=Date.now();return ok});
+ loaded.set(url,entry);
+ return entry.promise;
 }
 async function imageFor(index,season){
  const local=imageUrl(index,season);
