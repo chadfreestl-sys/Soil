@@ -58,5 +58,6 @@ const style=document.createElement('style');style.textContent='.tf-food-web{marg
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 window.addEventListener('load',boot,{once:true});
  document.getElementById('startMonth')?.addEventListener('change',()=>{records.clear();boot()});
+window.addEventListener('turfarium:scenario-restored',()=>{records.clear();boot();});
 window.TurfariumFoodWebBridge={refresh:boot,get:key=>records.get(key)?.state||null};
 })();
