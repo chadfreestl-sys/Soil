@@ -174,16 +174,16 @@ function present(key,stage,photo,overlay,indicator,url,season,index,n,kind,reque
  const already=photo.getAttribute('src')===url||photo.src===url;
  const done=()=>{
   if(pending.get(key)!==request)return;
-  stage.dataset.tfVisualAsset=kind;
-  stage.dataset.tfVisualSource=url;
-  stage.dataset.tfPhotoReady='1';
-  // An older image load must never overwrite the caption of a newer season.
-  // The on-photo badge is updated synchronously when the clock advances.
+  // Reject stale completion before publishing readiness or source metadata.
+  // Otherwise a prior-season load can briefly appear ready to other modules.
   const liveSeason=stage.querySelector('.tf-season-on-photo')?.dataset.season;
   if(liveSeason&&liveSeason!==season){
    requestAnimationFrame(()=>refresh(key));
    return;
   }
+  stage.dataset.tfVisualAsset=kind;
+  stage.dataset.tfVisualSource=url;
+  stage.dataset.tfPhotoReady='1';
   indicatorText(indicator,display+(kind==='classic'?' · classic fallback':''));
   notify(stage,key,url,season,index,n);
   // Reveal new image by fading OUT the previous one.
