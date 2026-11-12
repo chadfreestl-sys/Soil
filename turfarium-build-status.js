@@ -2,7 +2,7 @@
 (()=>{'use strict';
 const BUILD='25.0.0';
 const style=document.createElement('style');
-style.textContent='#tf-build-status{position:fixed;right:10px;bottom:10px;z-index:9999;background:#173e2d;color:#fff;border:1px solid #9cbda9;border-radius:9px;padding:5px 9px;font:600 11px/1.3 system-ui,sans-serif;box-shadow:0 2px 9px #0003;opacity:.88}#tf-build-status[data-health="issues"]{background:#70471d}';
+style.textContent='#tf-build-status[hidden]{display:none!important}#tf-build-status{position:fixed;right:10px;bottom:10px;z-index:9999;background:#173e2d;color:#fff;border:1px solid #9cbda9;border-radius:9px;padding:5px 9px;font:600 11px/1.3 system-ui,sans-serif;box-shadow:0 2px 9px #0003;opacity:.88}#tf-build-status[data-health="issues"]{background:#70471d}';
 document.head.appendChild(style);
 function check(){
  const grid=document.querySelector('.simulation-grid');
@@ -20,6 +20,8 @@ function check(){
  result.canopyVisible=canopyVisible;
  const healthy=!missing.length&&!wrong&&canopyVisible;
  badge.dataset.health=healthy?'ok':'issues';
+ // Diagnostics remain accessible in window.TurfariumBuildStatus; avoid a persistent mobile overlay.
+ badge.hidden=window.matchMedia('(max-width: 767px)').matches;
  badge.textContent='Turfarium v'+BUILD+(healthy?' ✓':' · check layout');
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(check,1800),{once:true});else setTimeout(check,1800);
