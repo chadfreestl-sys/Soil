@@ -24,6 +24,19 @@ function record(frame){
  update();
 }
 window.addEventListener('turfarium:history-frame',e=>record(e.detail));
+window.addEventListener('turfarium:scenario-restored',()=>{
+ stop(true);
+ frames.length=0;
+ // A saved scenario carries live A/B state, not its original visual replay frames.
+ // Do not show photographs from the previously active experiment as its history.
+ if(typeof window.TurfariumVisualSnapshot==='function'){
+  try{
+   const A=window.TurfariumVisualSnapshot('A'),B=window.TurfariumVisualSnapshot('B');
+   if(A&&B)record({day:Number(A.day)||0,A,B});
+  }catch(error){console.warn('[Turfarium replay] Restored frame unavailable',error);}
+ }
+ update();
+});
 function captureInitial(){
  const buffered=window.TurfariumRecordedFrames;
  if(Array.isArray(buffered)&&buffered.length){for(const frame of buffered)record(frame);return;}
