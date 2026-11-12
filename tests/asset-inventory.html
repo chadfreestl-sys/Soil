@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Turfarium asset inventory audit</title><style>body{font:16px/1.5 system-ui,sans-serif;max-width:950px;margin:2rem auto;padding:0 1rem}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eef3ee;padding:1rem}button{padding:.65rem 1rem}</style></head><body>
+<h1>Turfarium asset inventory audit</h1><p>Checks all 88 approved BASE paths and all 32 seasonal photo paths on the same host as this page. No files are changed. A successful request confirms reachability, not scientific accuracy or that the simulator actually selects the image.</p><button id="run">Run asset audit</button><p id="status" role="status">Ready.</p><pre id="results"></pre>
+<script>
+(()=>{'use strict';
+const names=['stressed','poor','fair','recovering','healthy','very-healthy','lush','elite'];
+const paths=[];
+for(let i=1;i<=88;i++){const id='BASE'+String(i).padStart(2,'0');paths.push({kind:'BASE',path:'../assets/turfarium/'+id+'/'+id+'.webp'});}
+for(const season of ['winter','spring','summer','fall'])for(let i=0;i<names.length;i++)paths.push({kind:'seasonal',path:'../images/seasons/'+season+'/state-'+String(i+1).padStart(2,'0')+'-'+names[i]+'.webp'});
+async function probe(entry){
+ try{
+  // GET with Range is used because some static hosts reject HEAD or omit it.
+  // Abort after headers so large photos are not downloaded by the audit.
+  const controller=new AbortController();
+  const response=await fetch(entry.path,{method:'GET',headers:{Range:'bytes=0-0'},signal:controller.signal,cache:'no-store'});
+  controller.abort();
+  return {...entry,ok:response.ok,status:response.status};
+ }catch(error){return {...entry,ok:false,status:String(error)};}
+}
+async function run(){
+ const button=document.getElementById('run'),status=document.getElementById('status'),out=document.getElementById('results');
+ button.disabled=true;let cursor=0,done=0;const results=[];
+ async function worker(){while(cursor<paths.length){const entry=paths[cursor++],result=await probe(entry);results.push(result);done++;status.textContent='Checked '+done+' / '+paths.length;}}
+ await Promise.all(Array.from({length:6},worker));
+ const missing=results.filter(x=>!x.ok),base=results.filter(x=>x.kind==='BASE'),seasonal=results.filter(x=>x.kind==='seasonal');
+ status.textContent='BASE '+base.filter(x=>x.ok).length+'/88; seasonal '+seasonal.filter(x=>x.ok).length+'/32; failures '+missing.length;
+ out.textContent=missing.length?missing.map(x=>x.kind+' '+x.path+' → '+x.status).join('\n'):'All 120 expected paths responded successfully.';
+ button.disabled=false;
+}
+document.getElementById('run').addEventListener('click',run);
+})();
+</script></body></html>
