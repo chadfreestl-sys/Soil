@@ -319,6 +319,26 @@ function boot(){
     if(stage.dataset.tfVisualDay!==day||stage.dataset.tfVisualSeason!==season)refresh(key);
    }
   },1500);
+  // Reconcile visible caption against the authoritative clock badge, including
+  // asynchronous photo completions and third-party mobile DOM relocation.
+  if(!window.TurfariumCaptionSyncTimer)window.TurfariumCaptionSyncTimer=setInterval(()=>{
+   if(document.hidden)return;
+   for(const key of ['A','B']){
+    const {stage,photo}=elements(key);if(!stage||!photo)continue;
+    const badge=stage.querySelector('.tf-season-on-photo');
+    const indicator=stage.nextElementSibling;
+    if(!badge||!indicator?.classList.contains('tf-visual-indicator'))continue;
+    const season=badge.dataset.season;
+    const shown=indicator.textContent||'';
+    const seasonLabel=season?.charAt(0).toUpperCase()+season?.slice(1);
+    if(seasonLabel&&shown.startsWith('Photo stage:')&&!shown.includes(' · '+seasonLabel+' · ')){
+     const score=stage.dataset.tfVisualScore||'?';
+     const state=stage.dataset.tfVisualState||'unknown';
+     indicatorText(indicator,'Photo stage: '+state.replace(/-/g,' ')+' · '+seasonLabel+' · visual index '+score);
+     refresh(key);
+    }
+   }
+  },1200);
   const month=document.getElementById('startMonth');
   if(month)month.addEventListener('change',()=>{refresh('A');refresh('B')});
  }
