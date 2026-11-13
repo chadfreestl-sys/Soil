@@ -978,7 +978,7 @@ function brewApply(){const b=brewEvaluate();if(!b)return;const key=$('brewTarget
  // Weak, bounded and uncertain soil response. Does not create verified beneficial species.
  const effect=cl(b.activity/100*.8,0,.8);
  s.labileC=cl(s.labileC+effect*1.5);s.microbialC=cl(s.microbialC+effect*.65);s.effects.push({type:'tea',power:effect});
- treatmentRecords[key].unshift({day,type:'tea',label:'Worm tea · '+b.hours+'h brew',month:months[monthIndex(day)],rate:'6 fl oz finished tea / gal carrier water',carrier:'1 gal / 1,000 ft²',batch:b.water+' gal brewed'});
+ treatmentRecords[key].unshift({day,type:'tea',label:'Worm tea · '+b.hours+'h brew',month:months[monthIndex(day)],rate:b.water+' gal brewed batch',note:'Suggested dilution: 6 fl oz finished tea per gal carrier; application volume not metered by brew lab'});
  log.unshift(`Day ${day} · Lawn ${key}: modeled worm tea batch (${b.hours}h, ${b.water} gal, oxygen index ${b.oxygen.toFixed(0)}) applied. No microbial safety or efficacy implied.`);render();$('brewStatus').textContent='✓ Brew recorded on Lawn '+key+'. Compare with the other lawn after advancing time.';
 }
 $('saveCustom').addEventListener('click',saveCustom);
