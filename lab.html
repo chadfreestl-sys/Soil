@@ -503,7 +503,7 @@ window.TurfariumVisualSnapshot=function(key){
  const site=key==='B'?B:A;
  if(!site)return null;
  const e=env(site);
- return {day,month:monthIndex(day),vigor:e.vigor,biology:e.good,worms:e.worms,
+ return {day,month:monthIndex(day),vigor:e.vigor,biology:e.good,worms:e.worms,moisture:site.moist,soilTempF:site.temp,waterInput:site.waterInput,
    disease:e.bad,oxygen:e.oxygen,structure:site.structure,compaction:site.comp,
    saltStress:site.salts,rootMass:site.rootMass,leafArea:site.leafArea,carbReserve:site.carbReserve,tillerDensity:site.tillerDensity,canopyCover:site.canopyCover,canopyHeight:site.canopyHeight,lateralSpread:site.lateralSpread,mowHeight:site.mowHeight,mowEvents:site.mowEvents,lastClippingFraction:site.lastClippingFraction};
 };
@@ -1400,5 +1400,5 @@ window.addEventListener('resize',show);
 const sourceWatch=setInterval(()=>{const source=document.getElementById('changeReport');if(!source)return;clearInterval(sourceWatch);new MutationObserver(show).observe(source,{subtree:true,childList:true,characterData:true});show()},350);
 setTimeout(()=>clearInterval(sourceWatch),15000);
 })();
-</script><script defer src="js/v25-treatment-response-indicator.js?v=25.3"></script>
+</script><script defer src="js/v25-treatment-response-indicator.js?v=25.3"></script><script defer src="js/v25-scientific-reference-mapping.js?v=25.1"></script>
 </body></html>
