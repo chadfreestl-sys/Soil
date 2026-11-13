@@ -978,8 +978,11 @@ function brewApply(){const b=brewEvaluate();if(!b)return;const key=$('brewTarget
  // Weak, bounded and uncertain soil response. Does not create verified beneficial species.
  const effect=cl(b.activity/100*.8,0,.8);
  s.labileC=cl(s.labileC+effect*1.5);s.microbialC=cl(s.microbialC+effect*.65);s.effects.push({type:'tea',power:effect});
- treatmentRecords[key].unshift({day,type:'tea',label:'Worm tea · '+b.hours+'h brew',month:months[monthIndex(day)],rate:b.water+' gal brewed batch',note:'Suggested dilution: 6 fl oz finished tea per gal carrier; application volume not metered by brew lab'});
- log.unshift(`Day ${day} · Lawn ${key}: modeled worm tea batch (${b.hours}h, ${b.water} gal, oxygen index ${b.oxygen.toFixed(0)}) applied. No microbial safety or efficacy implied.`);render();$('brewStatus').textContent='✓ Brew recorded on Lawn '+key+'. Compare with the other lawn after advancing time.';
+ // Record an explicit illustrative field dose, independent of the brew batch size.
+ const area=rateSpec(key).area,carrierPerK=1,teaPerGal=6;
+ const carrierGal=area/1000*carrierPerK,teaFlOz=carrierGal*teaPerGal;
+ treatmentRecords[key].unshift({day,type:'tea',label:'Worm tea · '+b.hours+'h brew',month:months[monthIndex(day)],rate:teaPerGal+' fl oz finished tea / gal carrier',area,carrier:carrierGal.toFixed(2)+' gal',teaFlOz:teaFlOz.toFixed(2),batch:b.water+' gal brewed',note:'Illustrative dilution and volume; no batch inventory is deducted.'});
+ log.unshift(`Day ${day} · Lawn ${key}: modeled worm tea (${b.hours}h, ${teaFlOz.toFixed(2)} fl oz finished tea in ${carrierGal.toFixed(2)} gal carrier over ${area} ft²; oxygen index ${b.oxygen.toFixed(0)}) applied. No microbial safety or efficacy implied.`);render();$('brewStatus').textContent='✓ Brew recorded on Lawn '+key+'. Compare with the other lawn after advancing time.';
 }
 $('saveCustom').addEventListener('click',saveCustom);
 $('clearCustom').addEventListener('click',()=>{if(!confirm('Clear all saved custom formulations in this browser?'))return;for(const k of Object.keys(customProfiles)){delete customProfiles[k];delete treatments[k]}saveCustomProfiles();refreshCustomMenus();$('customStatus').textContent='Custom formulations cleared.'});
