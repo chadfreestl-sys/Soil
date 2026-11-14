@@ -1,0 +1,33 @@
+name: Install latest approved BASE23 revision
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/install-base23-latest.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and replace BASE23
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          src=Path('BASE23-1.webp')
+          dst=Path('assets/turfarium/BASE23/BASE23.webp')
+          assert src.is_file() and dst.is_file(), 'Source or destination missing'
+          data=src.read_bytes()
+          assert len(data)>10000 and data[:4]==b'RIFF' and data[8:12]==b'WEBP', 'Invalid WebP'
+          dst.write_bytes(data)
+          print('BASE23 installed:',len(data),'bytes')
+          PY
+      - name: Commit updated image
+        run: |
+          if git diff --quiet -- assets/turfarium/BASE23/BASE23.webp; then echo 'Already identical'; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/turfarium/BASE23/BASE23.webp
+          git commit -m "Replace BASE23 with final approved revision"
+          git push origin HEAD:main
