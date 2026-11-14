@@ -1,0 +1,33 @@
+name: Install approved BASE37 rainy revision
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/install-base37-latest.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and replace BASE37
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          src=Path('BASE37-1.webp')
+          dst=Path('assets/turfarium/BASE37/BASE37.webp')
+          assert src.is_file() and dst.is_file(), 'Missing source or destination'
+          data=src.read_bytes()
+          assert len(data)>10000 and data[:4]==b'RIFF' and data[8:12]==b'WEBP', 'Invalid WebP'
+          dst.write_bytes(data)
+          print('Installed BASE37:',len(data),'bytes')
+          PY
+      - name: Commit updated BASE37
+        run: |
+          if git diff --quiet -- assets/turfarium/BASE37/BASE37.webp; then echo 'Already identical'; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/turfarium/BASE37/BASE37.webp
+          git commit -m "Install approved rainy BASE37 scientific image"
+          git push origin HEAD:main
