@@ -1,0 +1,34 @@
+name: Install approved BASE01 image
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/install-approved-base01.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and install BASE01
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          src=Path('BASE01-1.webp')
+          dst=Path('assets/turfarium/BASE01/BASE01.webp')
+          assert src.is_file(), 'Uploaded BASE01-1.webp missing'
+          assert dst.is_file(), 'Existing BASE01 missing'
+          data=src.read_bytes()
+          assert len(data)>10000 and data[:4]==b'RIFF' and data[8:12]==b'WEBP', 'Invalid WebP'
+          dst.write_bytes(data)
+          print('Installed',src,'to',dst,'bytes',len(data))
+          PY
+      - name: Commit updated image
+        run: |
+          if git diff --quiet -- assets/turfarium/BASE01/BASE01.webp; then echo 'Already identical'; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/turfarium/BASE01/BASE01.webp
+          git commit -m "Install newly approved BASE01 image"
+          git push origin HEAD:main
