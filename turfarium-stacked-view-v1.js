@@ -97,8 +97,10 @@ function ensureProgression(view,afterCard){
 }
 
 function placeLiveProgression(parts){
- const time=document.querySelector('#tf-playback-strip .tf-strip-time');
+ const time=parts.advance.querySelector('.tf-strip-time')||document.querySelector('#tf-playback-strip .tf-strip-time');
  if(time&&time.parentElement!==parts.advance)parts.advance.appendChild(time);
+ const steps=document.querySelector('#profile-control-deck .profile-step-row')||document.querySelector('.profile-step-row');
+ if(time&&steps&&steps.parentElement!==time)time.appendChild(steps);
  const season=byId('tf-season-display');
  if(season&&season.parentElement!==parts.station)parts.advance.insertAdjacentElement('afterend',season);
  const liveReplay=document.querySelector('#tf-playback-strip > .tf-history-replay')||document.querySelector('#tf-playback-strip .tf-replay-bar')||document.querySelector('.tf-history-replay:not(.tf-history-replay-local)')||document.querySelector('.tf-replay-bar');
@@ -168,6 +170,7 @@ function syncDays(){
 }
 
 let layoutParts=null;
+let remountQueued=false;
 function mount(){
  if(!mobileQuery.matches)return false;
  const grid=document.querySelector('.simulation-grid.tf-primary-workspace')||document.querySelector('.simulation-grid');
@@ -205,4 +208,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 window.addEventListener('load',start,{once:true});
 window.addEventListener('turfarium:time-advanced',()=>{syncDays();if(layoutParts)placeLiveProgression(layoutParts);});
 mobileQuery.addEventListener?.('change',event=>{if(event.matches)start();});
+new MutationObserver(records=>{
+ if(!mobileQuery.matches||remountQueued)return;
+ const moved=records.some(record=>[...record.addedNodes].some(node=>node.nodeType===1&&(
+  node.matches?.('.profile-step-row,.tf-replay-bar,#tf-season-display,#tf-what-changed-details')||
+  node.querySelector?.('.profile-step-row,.tf-replay-bar,#tf-season-display,#tf-what-changed-details')
+ )));
+ if(!moved)return;
+ remountQueued=true;
+ requestAnimationFrame(()=>{remountQueued=false;mount();});
+}).observe(document.documentElement,{childList:true,subtree:true});
 })();
