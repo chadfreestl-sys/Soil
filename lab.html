@@ -1377,7 +1377,7 @@ function show(){
  if(!card){
   card=document.createElement('section');card.id='tf-live-change-card-v5';
   card.style.cssText='display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;width:100%!important;box-sizing:border-box!important;margin:12px 0!important;padding:16px!important;border:2px solid #8bbba0!important;border-radius:16px!important;background:#f2f8ef!important;color:#183d2c!important';
-  card.innerHTML='<details open><summary style="font-size:19px;font-weight:800;cursor:pointer">📊 What Changed</summary><div data-tf-live-report style="padding-top:12px">Waiting for simulation report…</div></details>';
+  card.innerHTML='<details><summary style="font-size:19px;font-weight:800;cursor:pointer">📊 What Changed</summary><div data-tf-live-report style="padding-top:12px">Waiting for simulation report…</div></details>';
  }
  if(card.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',card);
  const body=card.querySelector('[data-tf-live-report]');
