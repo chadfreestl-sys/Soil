@@ -113,9 +113,9 @@ function placeLiveProgression(parts){
  if(season&&season.parentElement!==parts.station)parts.advance.insertAdjacentElement('afterend',season);
  const liveReplay=document.querySelector('#tf-playback-strip > .tf-history-replay')||document.querySelector('#tf-playback-strip .tf-replay-bar')||document.querySelector('.tf-history-replay:not(.tf-history-replay-local)')||document.querySelector('.tf-replay-bar');
  if(liveReplay&&!parts.replay.contains(liveReplay))parts.replay.appendChild(liveReplay);
- parts.station.appendChild(parts.advance);
- if(season)parts.station.appendChild(season);
- parts.station.appendChild(parts.replay);
+ if(parts.advance.parentElement!==parts.station)parts.station.prepend(parts.advance);
+ if(season&&season.parentElement!==parts.station)parts.station.appendChild(season);
+ if(parts.replay.parentElement!==parts.station)parts.station.appendChild(parts.replay);
 }
 
 function treatmentNodes(key){
@@ -234,7 +234,14 @@ function mount(){
  if(cardB.previousElementSibling!==progression.station)progression.station.insertAdjacentElement('afterend',cardB);
  const dock=ensureTreatments(view,cardB);
  const changes=ensureWhatChanged(view,dock);
- view.append(cardA,progression.station,cardB,dock,changes);
+ // Never reappend already-mounted drawers: DOM moves dismiss native Android select menus.
+ const ordered=[cardA,progression.station,cardB,dock,changes];
+ for(let i=0;i<ordered.length;i++){
+  const node=ordered[i];
+  if(node.parentElement!==view||node.previousElementSibling!==(i?ordered[i-1]:null)){
+   view.insertBefore(node,i?ordered[i-1].nextSibling:view.firstChild);
+  }
+ }
  placeLiveProgression(progression);
  syncDays();
  hidePhotoDiagnostics();
