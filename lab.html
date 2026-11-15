@@ -772,8 +772,18 @@ function updateChangeReportV18(start,n,previous){const current={A:snapshotV18(A)
  $('changeGrid').innerHTML=v18Describe('A',previous.A,current.A)+v18Describe('B',previous.B,current.B);
  const dv=current.B.vigor-current.A.vigor;const wetter=current.A.moist>80||current.B.moist>80;
  // Explicit treatment-versus-control diagnostics: do not claim a visual response when none was modeled.
- const recent=(key)=>(treatmentRecords[key]||[]).filter(r=>r.day>=start&&r.day<=day);
- const names=(key)=>recent(key).map(r=>r.label+(r.rate?' · '+r.rate:'')).join('; ');
+ // Application records persist across advances. A report must distinguish
+ // inputs in the current window from older inputs still in the treatment history.
+ const recent=(key)=>(treatmentRecords[key]||[]).filter(r=>r.day>=start&&r.day<day);
+ const allRecords=(key)=>(treatmentRecords[key]||[]);
+ const describe=(r)=>'Day '+r.day+': '+(r.label||r.type)+(r.rate?' · '+r.rate:'');
+ const names=(key)=>{
+  const inWindow=recent(key);
+  if(inWindow.length)return inWindow.map(describe).join('; ');
+  const earlier=allRecords(key).filter(r=>r.day<start);
+  if(earlier.length)return 'No new applications this interval. Earlier recorded: '+earlier.slice(0,3).map(describe).join('; ');
+  return 'No applications recorded';
+ };
  const aTreat=names('A'),bTreat=names('B');
  const deltaA=current.A.vigor-previous.A.vigor,deltaB=current.B.vigor-previous.B.vigor;
  const treatmentSummary=document.createElement('div');
@@ -782,7 +792,7 @@ function updateChangeReportV18(start,n,previous){const current={A:snapshotV18(A)
  const comparison=Math.abs(deltaB-deltaA)<.05
    ?'No measurable modeled vigor advantage over the control during this interval. The two lawns may still display the same photograph.'
    :'Difference in modeled vigor change (B minus A): '+(deltaB-deltaA>=0?'+':'')+(deltaB-deltaA).toFixed(2)+' points. Photo stages can remain identical until a category threshold is crossed.';
- treatmentSummary.innerHTML='<h4>🧪 Treatment vs. control</h4><p><strong>Lawn A inputs:</strong> '+escapeHtml(aTreat||'None recorded this interval')+'</p><p><strong>Lawn B inputs:</strong> '+escapeHtml(bTreat||'None recorded this interval')+'</p><p><strong>Vigor change:</strong> A '+(deltaA>=0?'+':'')+deltaA.toFixed(2)+' · B '+(deltaB>=0?'+':'')+deltaB.toFixed(2)+'</p><p>'+escapeHtml(comparison)+'</p><small>Illustrative model indices; a fertilizer application is not proof of a positive turf response.</small>';
+ treatmentSummary.innerHTML='<h4>🧪 Treatment vs. control</h4><p><strong>Lawn A inputs:</strong> '+escapeHtml(aTreat)+'</p><p><strong>Lawn B inputs:</strong> '+escapeHtml(bTreat)+'</p><p><strong>Vigor change:</strong> A '+(deltaA>=0?'+':'')+deltaA.toFixed(2)+' · B '+(deltaB>=0?'+':'')+deltaB.toFixed(2)+'</p><p>'+escapeHtml(comparison)+'</p><small>Illustrative model indices; a fertilizer application is not proof of a positive turf response.</small>';
  $('changeGrid').appendChild(treatmentSummary);
  $('nextActions').textContent=`Next visit: ${wetter?'Check drainage and oxygen stress before adding more water. ':'Review turf condition and soil biology. '}${Math.abs(dv)>.5?`Lawn ${dv>0?'B':'A'} currently leads in modeled vigor by ${Math.abs(dv).toFixed(1)} points. `:'Both lawns have similar modeled vigor. '}You can apply another treatment now or advance time again.`;
 }
