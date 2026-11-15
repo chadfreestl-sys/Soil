@@ -1166,6 +1166,8 @@ microscope();
 @media(min-width:701px){.tf-paired-toggle{display:none!important}}
 </style><script id="tf-compare-mobile-script-v25-1">
 (function(){
+ // Retired: turfarium-stacked-view-v1.js is the only mobile layout owner.
+ return;
  function mount(){
   const canopy=document.getElementById('canopyTimeline');
   if(canopy&&!canopy.dataset.compactReady){
@@ -1218,7 +1220,7 @@ microscope();
  #lawn-a-panel.tf-paired-compact .photo-stage,#lawn-b-panel.tf-paired-compact .photo-stage{display:block!important}
  #lawn-a-panel .tf-paired-toggle,#lawn-b-panel .tf-paired-toggle{display:none!important}
 }
-</style><script defer src="turfarium-stacked-view-v1.js?v=f957764-phase3"></script><script src="turfarium-mobile-module-organizer-v1.js?v=1.2.0"></script>
+</style><script defer src="turfarium-stacked-view-v1.js?v=phase3-authority-1"></script><script src="turfarium-mobile-module-organizer-v1.js?v=1.2.0"></script>
 <link rel="stylesheet" href="forest-slate-final.css?v=2.1.0"><link rel="stylesheet" href="turfarium-brand-hero.css?v=2.0.1"><script id="tf-divergence-title-fix-v1">
 /* Rename the actual mobile disclosure label, including labels created after load. */
 (function(){
@@ -1268,6 +1270,8 @@ window.addEventListener('turfarium:time-advanced',update);
 </script><script id="tf-timeline-recovery-v1">
 (function(){
 'use strict';
+// Retired diagnostic interceptor: original data-step handlers remain authoritative.
+return;
 function boot(){
  const timeline=document.getElementById('timeline-workflow');
  if(!timeline)return;
@@ -1338,6 +1342,8 @@ window.addEventListener('turfarium:time-advanced',place);
 </style><script id="tf-what-changed-mobile-v4">
 (function(){
 'use strict';
+// Retired: the authoritative mobile layout owns the single What Changed drawer.
+return;
 function ensure(){
  if(!window.matchMedia('(max-width:700px)').matches)return;
  const replay=document.getElementById('tf-stacked-replay')||document.getElementById('tf-playback-strip');
@@ -1363,6 +1369,8 @@ window.addEventListener('resize',ensure);
 </script><script id="tf-visible-report-v5">
 (function(){
 'use strict';
+// Retired duplicate report card: the authoritative drawer mirrors changeReport.
+return;
 let latest=null;
 function currentDay(){
  const text=document.getElementById('time')?.textContent||'';
