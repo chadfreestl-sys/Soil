@@ -14,11 +14,11 @@ function environment(key){
  const month=Number(document.getElementById('startMonth')?.value||2);
  const seasonMonth=(month+Math.floor(day(key)/30.44))%12;
  const seasonalTemperature=[37,41,51,62,71,79,84,82,74,62,49,40][seasonMonth];
- return {temperatureF:Number.isFinite(snapshot.temperatureF)?snapshot.temperatureF:seasonalTemperature,
+ return {temperatureF:Number.isFinite(snapshot.soilTempF)?snapshot.soilTempF:seasonalTemperature,
  moisture:Number.isFinite(snapshot.moisture)?snapshot.moisture:55,
  oxygen:Number.isFinite(snapshot.oxygen)?snapshot.oxygen:65,
  pH:Number.isFinite(snapshot.pH)?snapshot.pH:6.3,
- rootExudates:number(key,'Turf vigor',55),clippings:50,organicInputs:0,
+ rootExudates:Number.isFinite(snapshot.rootMass)?Math.max(0,Math.min(100,snapshot.rootMass)):number(key,'Turf vigor',55),clippings:Number.isFinite(snapshot.lastClippingFraction)?Math.max(0,Math.min(100,snapshot.lastClippingFraction*100)):50,organicInputs:0,
  disturbance:Number.isFinite(snapshot.disturbance)?snapshot.disturbance:0};
 }
 function render(key){
