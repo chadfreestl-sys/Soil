@@ -115,7 +115,7 @@ function mount(){
    if(view.previousElementSibling!==intro&&view.previousElementSibling?.id!=='tf-mobile-intro')intro.insertAdjacentElement('afterend',view);
  }else if(view.parentElement!==grid){grid.insertBefore(view,grid.firstElementChild);}
  let compact=document.getElementById('tf-mobile-intro');
- if(!compact){compact=document.createElement('section');compact.id='tf-mobile-intro';compact.innerHTML='<p><strong>Explore your living lawn.</strong> Compare turf, roots and soil as weather, mowing and treatments change over time.</p><details><summary>How Turfarium works</summary><p>Start with two comparable lawns, apply different management choices, then advance time to explore modeled responses. Results are educational scenarios, not field-tested predictions.</p></details>';}
+ if(!compact){compact=document.createElement('section');compact.id='tf-mobile-intro';compact.innerHTML='<p><strong>Compare two lawns.</strong> Treat, advance time and see what changes.</p><details><summary>How Turfarium works</summary><p>Start with two comparable lawns, apply different management choices, then advance time to explore modeled responses. Results are educational scenarios, not field-tested predictions.</p></details>';}
  if(view.parentElement&&view.previousElementSibling!==compact)view.parentElement.insertBefore(compact,view);
  // Research sections are inserted by other scripts, sometimes after this mount.
  // Move their full top-level cards before the comparison, without moving the simulation workspace.
@@ -226,8 +226,11 @@ function mount(){
  // Position the two images consecutively; shared progression and replay follow both.
  const cards=[...view.querySelectorAll(':scope > .tf-lawn-visual')];
  if(cards.length===2){view.insertBefore(cards[0],view.firstElementChild);cards[0].insertAdjacentElement('afterend',cards[1]);}
- if(quick&&cards[1]&&quick.previousElementSibling!==cards[1])cards[1].insertAdjacentElement('afterend',quick);
+ // Keep the single shared progression/replay station between both lawn photographs.
+ // Move existing live nodes; do not duplicate simulation controls or listeners.
+ if(quick&&cards[0]&&quick.previousElementSibling!==cards[0])cards[0].insertAdjacentElement('afterend',quick);
  if(replayHost&&quick&&replayHost.previousElementSibling!==quick)quick.insertAdjacentElement('afterend',replayHost);
+ if(cards[1]&&replayHost&&cards[1].previousElementSibling!==replayHost)replayHost.insertAdjacentElement('afterend',cards[1]);
  // Independent visible report immediately below Replay; preserve original live report.
  let changes=document.getElementById('tf-mobile-what-changed');
  if(!changes){
