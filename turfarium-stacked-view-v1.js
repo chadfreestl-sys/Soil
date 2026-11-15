@@ -7,6 +7,8 @@ css.textContent=`
 @media(max-width:700px){
   /* Only the compact introduction belongs above the comparison on phones. */
   .mode-shell.tf-mode-hero-v3,.visual-intro{display:none!important}
+  /* Hide the older homeowner hero without suppressing the compact comparison. */
+  .mode-shell:not(#tf-mobile-intro){display:none!important}
   #tf-mobile-intro{display:block!important;width:100%!important;box-sizing:border-box!important;margin:0 0 8px!important;padding:9px 12px!important;border:1px solid #cad9c9!important;border-radius:12px!important;background:#f3f8ef!important;color:#204332!important;font-size:13px!important;line-height:1.35!important}
   #tf-mobile-intro p{margin:0!important}#tf-mobile-intro details{margin-top:4px!important}#tf-mobile-intro summary{cursor:pointer!important;font-weight:800!important;color:#20523b!important}
 
@@ -43,6 +45,7 @@ css.textContent=`
   #tf-mobile-treatments{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:7px!important;margin:0!important}
   .tf-mobile-treatment{display:block!important;width:100%!important;margin:0!important;border:1px solid #b7cbb3!important;border-radius:12px!important;background:#f2f7ef!important;overflow:hidden!important}
   .tf-mobile-treatment>summary{display:list-item!important;padding:12px 13px!important;cursor:pointer!important;color:#183e2c!important;font-size:15px!important;font-weight:850!important;line-height:1.3!important}
+  .tf-mobile-treatment:not([open])>.tf-mobile-treatment-body{display:none!important}
   .tf-mobile-treatment-body{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:8px!important;padding:9px 11px 12px!important}
   .tf-mobile-treatment-body>*{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0!important}
   .tf-mobile-treatment-body .row{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:7px!important}
@@ -139,6 +142,8 @@ function ensureTreatments(view,afterCard){
   }
   const body=drawer.querySelector('.tf-mobile-treatment-body');
   for(const node of treatmentNodes(key))if(node.parentElement!==body)body.appendChild(node);
+  // Keep drawers usable even when another module temporarily relocates a live control.
+  drawer.hidden=false;
   if(drawer.parentElement!==dock)dock.appendChild(drawer);
  }
  return dock;
@@ -172,8 +177,11 @@ function syncDays(){
 
 let layoutParts=null;
 let remountQueued=false;
+let mounting=false;
 function mount(){
- if(!mobileQuery.matches)return false;
+ if(!mobileQuery.matches||mounting)return false;
+ mounting=true;
+ try{
  const grid=document.querySelector('.simulation-grid.tf-primary-workspace')||document.querySelector('.simulation-grid');
  const panelA=byId('lawn-a-panel'),panelB=byId('lawn-b-panel');
  const stageA=document.querySelector('.photo-stage[data-tf-lawn-key="A"]')||panelA?.querySelector('.photo-stage');
@@ -195,6 +203,7 @@ function mount(){
  syncDays();
  layoutParts=progression;
  return true;
+ }finally{mounting=false;}
 }
 
 function start(){
@@ -212,8 +221,8 @@ mobileQuery.addEventListener?.('change',event=>{if(event.matches)start();});
 new MutationObserver(records=>{
  if(!mobileQuery.matches||remountQueued)return;
  const moved=records.some(record=>[...record.addedNodes].some(node=>node.nodeType===1&&(
-  node.matches?.('.profile-step-row,.tf-replay-bar,#tf-season-display,#tf-what-changed-details')||
-  node.querySelector?.('.profile-step-row,.tf-replay-bar,#tf-season-display,#tf-what-changed-details')
+  node.matches?.('.profile-step-row,.tf-replay-bar,.tf-history-replay,#tf-season-display,#tf-what-changed-details,#treatA,#treatB,#tf-mobile-treatments,#tf-mobile-progression')||
+  node.querySelector?.('.profile-step-row,.tf-replay-bar,.tf-history-replay,#tf-season-display,#tf-what-changed-details,#treatA,#treatB,#tf-mobile-treatments,#tf-mobile-progression')
  )));
  if(!moved)return;
  remountQueued=true;
