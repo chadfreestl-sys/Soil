@@ -24,9 +24,13 @@ function calc(panel){
  const om=clamp(read(panel,['Soil organic matter','Organic matter','SOM'],3),0,15),ph=clamp(read(panel,['Soil pH','pH'],6.4),4,9),ec=clamp(read(panel,['EC proxy','EC'],.7),0,6),root=clamp(read(panel,['Root depth'],12),0,40);
  const moistureFit=clamp(100-Math.abs(moist-58)*1.65),phFit=clamp(100-Math.abs(ph-6.5)*24),saltFit=clamp(100-ec*13),structure=clamp(100-comp);
  const habitat=clamp(vigor*.19+bio*.19+oxygen*.14+moistureFit*.12+structure*.11+phFit*.08+saltFit*.05+clamp(om/6*100)*.07+clamp(root/24*100)*.05);
- const microbial=clamp(bio*.33+oxygen*.15+moistureFit*.16+phFit*.10+clamp(om/5*100)*.16+vigor*.10);
- const fungal=clamp(microbial*.52+clamp(om/5*100)*.22+structure*.13+clamp(root/22*100)*.13);
- const bacterial=clamp(microbial*.60+moistureFit*.17+phFit*.11+vigor*.12);
+ // Decomposer guilds are owned by the core soil model, not recalculated from DOM text.
+ const key=panel.id==='lawn-b-panel'?'B':'A';
+ const snapshot=window.TurfariumVisualSnapshot?.(key);
+ const guilds=snapshot?.soilGood;
+ const bacterial=Array.isArray(guilds)&&Number.isFinite(guilds[0])?clamp(guilds[0]):clamp(bio);
+ const fungal=Array.isArray(guilds)&&Number.isFinite(guilds[1])?clamp(guilds[1]):clamp(bio);
+ const microbial=clamp((bacterial+fungal)/2);
  const meso=clamp(microbial*.36+fungal*.22+moistureFit*.16+habitat*.18+structure*.08);
  const macro=clamp(habitat*.36+worms*.34+clamp(om/5*100)*.12+moistureFit*.10+structure*.08);
  const springtails=clamp(meso*.62+fungal*.24+moistureFit*.14),mites=clamp(meso*.58+microbial*.22+habitat*.20);

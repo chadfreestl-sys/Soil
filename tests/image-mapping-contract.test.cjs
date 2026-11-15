@@ -37,3 +37,17 @@ const unverified=entries.filter(e=>!e.verifiedSubject).map(e=>e.id);
 console.log('PASS: 88 BASE mappings, 32 seasonal image files, WebP signatures, and lab visual-engine inclusion.');
 console.log('AUDIT: '+unverified.length+' BASE subjects remain unverified in manifest; image-to-condition visual accuracy not certified.');
 console.log('AUDIT: BASE manifest is not consumed by the active seasonal image engine; seasonal engine uses 32 state photographs.');
+
+const stateThresholds=[0,16,29,43,57,71,83,93];
+for(let i=1;i<stateThresholds.length;i++)assert(stateThresholds[i]>stateThresholds[i-1],'state thresholds must ascend');
+const activeStateIds=[...engine.matchAll(/\{id:'([^']+)',min:(\d+),candidates:/g)].map(m=>({id:m[1],min:Number(m[2])}));
+assert.deepEqual(activeStateIds,states.map((id,i)=>({id,min:stateThresholds[i]})),'active photo states must match the verified 32-image naming contract');
+assert(engine.includes('window.TurfariumVisualSnapshot?.(key)'),'visuals must read authoritative lawn snapshots');
+assert(engine.includes('replaySnapshots.set(key,frames[key])'),'replay must use saved frames for each lawn');
+assert(engine.includes('replaySnapshots.clear()'),'returning live must clear replay snapshots');
+assert(engine.includes("if(pending.get(key)!==request)return"),'async image completion must reject obsolete requests');
+assert(engine.includes("stage.dataset.tfPhotoReady='0'"),'photo load status must support an unavailable state');
+assert(engine.includes('photo.src=url'),'selected photo must replace actual visible photo, not merely a hidden overlay');
+const baseUI=lab.includes('id="tf-scientific-library"');
+assert.equal(baseUI,false,'internal BASE library must not appear in homeowner lab');
+console.log('PASS: Seasonal state IDs and thresholds match all 32 assets; replay, stale-load, and homeowner-display contracts present.');
