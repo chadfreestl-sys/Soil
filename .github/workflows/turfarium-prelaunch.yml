@@ -1,7 +1,7 @@
 name: Turfarium prelaunch checks
 on:
   push:
-    branches: [main, turfarium/image-audit-pretest]
+    branches: [main, turfarium/image-audit-pretest, 'audit/ecosystem-integration-v25']
   pull_request:
     branches: [main]
   workflow_dispatch:
