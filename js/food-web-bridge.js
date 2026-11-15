@@ -14,7 +14,7 @@ function environment(key){
  const month=Number(document.getElementById('startMonth')?.value||2);
  const seasonMonth=(month+Math.floor(day(key)/30.44))%12;
  const seasonalTemperature=[37,41,51,62,71,79,84,82,74,62,49,40][seasonMonth];
- return {temperatureF:Number.isFinite(snapshot.temperatureF)?snapshot.temperatureF:seasonalTemperature,
+ return {temperatureF:Number.isFinite(snapshot.soilTempF)?snapshot.soilTempF:seasonalTemperature,
  moisture:Number.isFinite(snapshot.moisture)?snapshot.moisture:55,
  oxygen:Number.isFinite(snapshot.oxygen)?snapshot.oxygen:65,
  pH:Number.isFinite(snapshot.soilPH)?snapshot.soilPH:6.3,
@@ -41,7 +41,7 @@ function render(key){
  }
  const host=document.getElementById('lawn-'+key.toLowerCase()+'-panel');if(!host)return;
  let box=host.querySelector('.tf-food-web');
- if(!box){box=document.createElement('details');box.className='tf-food-web';box.innerHTML='<summary>Living soil food web · exploratory model</summary><div class="tf-food-grid"></div><small>Relative activity indices (0–100), not measured populations. Uses seasonal temperature estimates and available lawn metrics; treatment-specific calibration is still in development.</small>';host.appendChild(box)}
+ if(!box){box=document.createElement('details');box.className='tf-food-web';box.innerHTML='<summary>Living soil food web · exploratory model</summary><div class="tf-food-grid"></div><small>Relative indices (0–100), not measured populations. Soil chemistry comes from the main lawn model; prior-day conditions are approximated and treatment-response calibration is still in development.</small>';host.appendChild(box)}
  const labels={earthwormActivity:'Earthworm activity',microbialBiomass:'Microbial biomass proxy',bacteria:'Bacteria',fungi:'Fungi',protozoa:'Protozoa',nematodesBacterial:'Bacterial-feeding nematodes',nematodesFungal:'Fungal-feeding nematodes',nematodesPlant:'Plant-feeding nematodes',nematodesPredator:'Predatory nematodes',earthworms:'Earthworms',microarthropods:'Microarthropods'};
  box.querySelector('.tf-food-grid').replaceChildren(...Object.entries(labels).map(([k,label])=>{
   const el=document.createElement('div');el.className='tf-food-item';
