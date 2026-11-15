@@ -132,21 +132,6 @@ function treatmentNodes(key){
 
 // Native Android select menus can be interrupted when a live row is reparented.
 // Preserve the selected material and avoid moving an active selector.
-function stabilizeMaterialSelect(key){
- const select=byId('treat'+key);
- if(!select||select.dataset.tfMobileSelectBound)return;
- select.dataset.tfMobileSelectBound='1';
- select.addEventListener('change',()=>{
-  select.dataset.tfChosenMaterial=select.value;
-  select.dispatchEvent(new Event('input',{bubbles:true}));
- },{passive:true});
- select.addEventListener('pointerdown',()=>{select.dataset.tfSelecting='1';});
- select.addEventListener('touchstart',()=>{select.dataset.tfSelecting='1';},{passive:true});
- select.addEventListener('focus',()=>{select.dataset.tfSelecting='1';});
- select.addEventListener('change',()=>{delete select.dataset.tfSelecting;});
- select.addEventListener('blur',()=>{setTimeout(()=>{delete select.dataset.tfSelecting;},350);});
-}
-
 function ensureTreatments(view,afterCard){
  let dock=byId('tf-mobile-treatments');
  if(!dock){dock=document.createElement('section');dock.id='tf-mobile-treatments';dock.setAttribute('aria-label','Lawn treatment controls');}
@@ -162,11 +147,14 @@ function ensureTreatments(view,afterCard){
    drawer.append(summary,body);
   }
   const body=drawer.querySelector('.tf-mobile-treatment-body');
-  const select=byId('treat'+key);
-  stabilizeMaterialSelect(key);
-  // Reparent only on initial setup; moving an open native menu cancels its selection.
-  if(!select?.dataset.tfSelecting){
-   for(const node of treatmentNodes(key))if(node.parentElement!==body)body.appendChild(node);
+  // Mount original controls once. Repeated DOM moves cancel Android's native
+  // material picker and can interrupt the original treatment handlers.
+  if(!drawer.dataset.tfControlsMounted){
+   const nodes=treatmentNodes(key);
+   if(nodes.length){
+    for(const node of nodes)body.appendChild(node);
+    drawer.dataset.tfControlsMounted='1';
+   }
   }
   // Keep drawers usable even when another module temporarily relocates a live control.
   drawer.hidden=false;
@@ -271,8 +259,8 @@ mobileQuery.addEventListener?.('change',event=>{if(event.matches)start();});
 new MutationObserver(records=>{
  if(!mobileQuery.matches||remountQueued)return;
  const moved=records.some(record=>[...record.addedNodes].some(node=>node.nodeType===1&&(
-  node.matches?.('.profile-step-row,.tf-replay-bar,.tf-history-replay,#tf-season-display,#tf-what-changed-details,#treatA,#treatB,#tf-mobile-treatments,#tf-mobile-progression')||
-  node.querySelector?.('.profile-step-row,.tf-replay-bar,.tf-history-replay,#tf-season-display,#tf-what-changed-details,#treatA,#treatB,#tf-mobile-treatments,#tf-mobile-progression')
+  node.matches?.('.profile-step-row,.tf-replay-bar,.tf-history-replay,#tf-season-display,#tf-what-changed-details')||
+  node.querySelector?.('.profile-step-row,.tf-replay-bar,.tf-history-replay,#tf-season-display,#tf-what-changed-details')
  )));
  if(!moved)return;
  remountQueued=true;
