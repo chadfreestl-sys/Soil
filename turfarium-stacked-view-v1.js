@@ -130,6 +130,20 @@ function treatmentNodes(key){
  return [row,rate,product,feedback].filter(Boolean);
 }
 
+// Native Android select menus can be interrupted when a live row is reparented.
+// Preserve the selected material and avoid moving an active selector.
+function stabilizeMaterialSelect(key){
+ const select=byId('treat'+key);
+ if(!select||select.dataset.tfMobileSelectBound)return;
+ select.dataset.tfMobileSelectBound='1';
+ select.addEventListener('change',()=>{
+  select.dataset.tfChosenMaterial=select.value;
+  select.dispatchEvent(new Event('input',{bubbles:true}));
+ },{passive:true});
+ select.addEventListener('focus',()=>{select.dataset.tfSelecting='1';});
+ select.addEventListener('blur',()=>{delete select.dataset.tfSelecting;});
+}
+
 function ensureTreatments(view,afterCard){
  let dock=byId('tf-mobile-treatments');
  if(!dock){dock=document.createElement('section');dock.id='tf-mobile-treatments';dock.setAttribute('aria-label','Lawn treatment controls');}
@@ -145,7 +159,12 @@ function ensureTreatments(view,afterCard){
    drawer.append(summary,body);
   }
   const body=drawer.querySelector('.tf-mobile-treatment-body');
-  for(const node of treatmentNodes(key))if(node.parentElement!==body)body.appendChild(node);
+  const select=byId('treat'+key);
+  stabilizeMaterialSelect(key);
+  // Reparent only on initial setup; moving an open native menu cancels its selection.
+  if(!select?.dataset.tfSelecting){
+   for(const node of treatmentNodes(key))if(node.parentElement!==body)body.appendChild(node);
+  }
   // Keep drawers usable even when another module temporarily relocates a live control.
   drawer.hidden=false;
   if(drawer.parentElement!==dock)dock.appendChild(drawer);
@@ -167,7 +186,15 @@ function ensureWhatChanged(view,dock){
  if(source&&!panel.dataset.tfReportBound){
   panel.dataset.tfReportBound='1';
   new MutationObserver(sync).observe(source,{subtree:true,childList:true,characterData:true});
-  window.addEventListener('turfarium:time-advanced',sync);
+  window.addEventListener('turfarium:time-advanced',event=>{
+   const report=event.detail?.changeReport;
+   if(report&&target){
+    target.innerHTML='<h3>What changed since the last advance?</h3><p class="subtle"></p><div class="change-grid"></div><div class="next-actions"></div>';
+    target.querySelector('.subtle').textContent=report.period||'';
+    target.querySelector('.change-grid').innerHTML=report.grid||'';
+    target.querySelector('.next-actions').textContent=report.next||'';
+   }else sync();
+  });
  }
  return panel;
 }
