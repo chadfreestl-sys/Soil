@@ -22,6 +22,14 @@ function mount(){
   const mobile=window.matchMedia('(max-width:700px)').matches;
   const replay=mobile?document.getElementById('tf-stacked-replay'):
    document.querySelector('#tf-playback-strip .tf-history-replay')||document.getElementById('tf-playback-strip');
+  // The Phase 3 mobile drawer mirrors the live report. Keep this original
+  // report in the hidden desktop strip as its data source instead of creating
+  // a second visible What Changed disclosure between replay and Lawn B.
+  if(mobile&&document.getElementById('tf-stacked-lawns')){
+   const legacyHost=document.querySelector('#tf-playback-strip .tf-strip-changes');
+   if(legacyHost&&item.parentElement!==legacyHost)legacyHost.appendChild(item);
+   return;
+  }
   if(!replay||!replay.parentNode)return;
   if(item.previousElementSibling!==replay)replay.insertAdjacentElement('afterend',item);
   item.style.setProperty('display','block','important');

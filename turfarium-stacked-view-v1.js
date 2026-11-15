@@ -31,6 +31,7 @@ css.textContent=`
   #tf-stacked-quick-progress .row{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;width:100%!important;margin:0!important;padding:0!important}
   #tf-stacked-quick-progress button{width:100%!important;min-width:0!important;min-height:42px!important;margin:0!important;padding:7px 2px!important;border:1px solid #9fbda7!important;border-radius:9px!important;background:#fff!important;color:#173e2d!important;font-size:12px!important;font-weight:800!important;white-space:normal!important}
   #tf-mobile-progression>#tf-season-display{position:static!important;display:flex!important;width:100%!important;max-width:100%!important;margin:0!important;padding:10px 8px!important;box-sizing:border-box!important;z-index:auto!important}
+  #tf-stacked-lawns #tf-what-changed-details{display:none!important}
   #tf-stacked-replay{display:block!important;margin:0!important;padding:7px!important;border:1px solid #c5d8c7!important;border-radius:10px!important;background:#fff!important}
   #tf-stacked-replay:empty{display:none!important}
   #tf-stacked-replay .tf-history-replay,#tf-stacked-replay .tf-replay-bar{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:6px!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important}
