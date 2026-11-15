@@ -61,7 +61,7 @@
   // Phase 3 owns the phone DOM after it has mounted. The desktop strip must
   // bootstrap first so Phase 3 can adopt its live controls, but later legacy
   // retries must not pull those controls back or query emptied strip slots.
-  if(window.matchMedia('(max-width:700px)').matches&&document.getElementById('tf-stacked-lawns'))return;
+  if(window.matchMedia('(max-width:700px)').matches&&document.getElementById('tf-stacked-lawns')&&strip)return;
   const grid=document.querySelector('.simulation-grid'),a=document.getElementById('lawn-a-panel');
   if(!grid||!a)return;
   if(!strip){strip=document.createElement('section');strip.id='tf-playback-strip';strip.className='card wide';
