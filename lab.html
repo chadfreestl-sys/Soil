@@ -1430,4 +1430,38 @@ const sourceWatch=setInterval(()=>{const source=document.getElementById('changeR
 setTimeout(()=>clearInterval(sourceWatch),15000);
 })();
 </script><script defer src="js/v25-treatment-response-indicator.js?v=25.3"></script><script defer src="js/v25-scientific-reference-mapping.js?v=25.1"></script>
+<style id="tf-workspace-layout-v26">
+/* Paired comparison first, with one shared clock directly below both lawns. */
+.simulation-grid.tf-primary-workspace{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;align-items:start!important}
+.simulation-grid.tf-primary-workspace>#lawn-a-panel,.simulation-grid.tf-primary-workspace>#lawn-b-panel{grid-column:auto!important;width:auto!important;min-width:0!important;max-width:none!important;flex:initial!important;order:0!important}
+.simulation-grid.tf-primary-workspace>#timeline-workflow{grid-column:1/-1!important;order:1!important}
+.simulation-grid.tf-primary-workspace>.wide:not(#timeline-workflow){grid-column:1/-1!important;order:2!important}
+#timeline-workflow .head{align-items:center;flex-wrap:wrap;gap:8px}
+#timeline-workflow [data-step]{min-height:46px}
+#timeline-workflow #changeReport{margin-top:12px}
+@media(max-width:700px){
+.simulation-grid.tf-primary-workspace{grid-template-columns:minmax(0,1fr)!important;gap:9px!important}
+.simulation-grid.tf-primary-workspace>#lawn-a-panel,.simulation-grid.tf-primary-workspace>#lawn-b-panel{grid-column:1/-1!important;width:100%!important}
+#timeline-workflow .row{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#timeline-workflow .head #time{font-weight:800}
+}
+</style>
+<script id="tf-workspace-layout-v26">
+/* Move existing nodes, never clone simulation controls or create a second clock. */
+(()=>{'use strict';
+function arrange(){
+ const grid=document.querySelector('.simulation-grid');
+ const a=document.getElementById('lawn-a-panel'),b=document.getElementById('lawn-b-panel');
+ const timeline=document.getElementById('timeline-workflow');
+ if(!grid||!a||!b||!timeline)return;
+ grid.classList.add('tf-primary-workspace');
+ if(a.parentElement!==grid||b.parentElement!==grid||timeline.parentElement!==grid)return;
+ if(grid.firstElementChild!==a)grid.insertBefore(a,grid.firstElementChild);
+ if(a.nextElementSibling!==b)grid.insertBefore(b,a.nextElementSibling);
+ if(b.nextElementSibling!==timeline)grid.insertBefore(timeline,b.nextElementSibling);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrange);else arrange();
+window.addEventListener('load',arrange,{once:true});
+})();
+</script>
 </body></html>
