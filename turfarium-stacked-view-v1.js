@@ -57,7 +57,17 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns .photo-stage canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
  #tf-stacked-lawns .tf-lawn-time{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:8px}
  #tf-stacked-lawns .tf-lawn-time button{min-width:0!important;min-height:42px!important;padding:7px 2px!important;font-size:.78rem!important;font-weight:750;color:#173e2d;background:#fff;border:1px solid #b5cbb8;border-radius:9px}
- #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n main .tf-homeowner-original-intro{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-lawn-time{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay-local{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage~.tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}\n #tf-mobile-treatments{display:grid;gap:7px;margin:8px 0;width:100%}\n .tf-mobile-treatment{border:1px solid #b7cbb3;border-radius:12px;background:#f2f7ef;overflow:hidden}\n .tf-mobile-treatment>summary{padding:11px 13px;font-size:15px;font-weight:800;color:#183e2c;cursor:pointer}\n .tf-mobile-treatment-body{padding:9px 12px 12px}\n .tf-mobile-treatment-body .row{display:flex;flex-wrap:wrap;gap:8px}\n .tf-mobile-treatment-body select{min-width:0;max-width:100%}\n #tf-mobile-what-changed{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;box-sizing:border-box!important;margin:8px 0 12px!important;border:2px solid #b7cbb3!important;border-radius:14px!important;background:#f2f7ef!important;overflow:hidden!important}
+ #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n main .tf-homeowner-original-intro{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-lawn-time{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay-local{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage~.tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}\n #tf-stacked-lawns{display:flex!important;flex-direction:column!important;align-items:stretch!important}
+ #tf-stacked-lawns>.tf-lawn-visual:first-child{order:10!important}
+ #tf-stacked-lawns>#tf-stacked-quick-progress{order:20!important}
+ #tf-stacked-lawns>#tf-stacked-replay{order:30!important}
+ #tf-stacked-lawns>.tf-lawn-visual:nth-of-type(2){order:40!important}
+ #tf-stacked-lawns>#tf-mobile-treatments{order:50!important}
+ #tf-stacked-lawns>#tf-mobile-what-changed{order:60!important}
+ #tf-stacked-lawns>#tf-playback-strip{order:90!important}
+ #tf-mobile-treatments:not(:empty){display:grid!important}
+ #tf-mobile-treatments .tf-mobile-treatment{display:block!important}
+ #tf-mobile-treatments{display:grid;gap:7px;margin:8px 0;width:100%}\n .tf-mobile-treatment{border:1px solid #b7cbb3;border-radius:12px;background:#f2f7ef;overflow:hidden}\n .tf-mobile-treatment>summary{padding:11px 13px;font-size:15px;font-weight:800;color:#183e2c;cursor:pointer}\n .tf-mobile-treatment-body{padding:9px 12px 12px}\n .tf-mobile-treatment-body .row{display:flex;flex-wrap:wrap;gap:8px}\n .tf-mobile-treatment-body select{min-width:0;max-width:100%}\n #tf-mobile-what-changed{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;box-sizing:border-box!important;margin:8px 0 12px!important;border:2px solid #b7cbb3!important;border-radius:14px!important;background:#f2f7ef!important;overflow:hidden!important}
  #tf-mobile-what-changed>summary{display:list-item!important;cursor:pointer!important;padding:15px!important;font-weight:900!important;font-size:17px!important;color:#183e2c!important}
  #tf-mobile-what-changed .tf-mobile-change-content{padding:0 13px 13px!important;color:#183e2c!important}
  #tf-mobile-what-changed:not([open]) .tf-mobile-change-content{display:none!important}
@@ -263,7 +273,29 @@ function mount(){
   }
   treatmentDock.appendChild(drawer);
  }
- if(treatmentDock.children.length&&cards[1])cards[1].insertAdjacentElement('afterend',treatmentDock);
+ // Retry after other modules have constructed or moved the treatment inputs.
+ function ensureTreatmentDrawers(){
+  for(const key of ['A','B']){
+   if(document.getElementById('tf-mobile-treatment-'+key))continue;
+   const select=document.getElementById('treat'+key),feedback=document.getElementById('feedback'+key);
+   if(!select||!feedback)continue;
+   const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
+   const parent=select.closest('.row')?.parentElement;
+   if(!parent||!parent.contains(feedback))continue;
+   const siblings=[...parent.children],first=siblings.findIndex(el=>el.contains(select)),last=siblings.findIndex(el=>el.contains(feedback));
+   if(first<0||last<first)continue;
+   const drawer=document.createElement('details');drawer.id='tf-mobile-treatment-'+key;drawer.className='tf-mobile-treatment';
+   const summary=document.createElement('summary');summary.textContent='🌱 Lawn '+key+' · Treatments';
+   const body=document.createElement('div');body.className='tf-mobile-treatment-body';
+   let from=first;if(from>0&&siblings[from-1].tagName==='LABEL')from--;
+   for(const el of siblings.slice(from,last+1))body.appendChild(el);
+   drawer.append(summary,body);treatmentDock.appendChild(drawer);
+  }
+  if(cards[1]&&treatmentDock.parentElement!==view)cards[1].insertAdjacentElement('afterend',treatmentDock);
+ }
+ ensureTreatmentDrawers();
+ [400,1200,2600,5000].forEach(ms=>setTimeout(ensureTreatmentDrawers,ms));
+
  // Other modules inject the full homeowner hero after initial mount.
  // Hide only that duplicate standalone card, never a parent of the live simulator.
  function hideDuplicateHomeownerIntro(){
