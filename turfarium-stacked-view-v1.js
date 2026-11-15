@@ -97,7 +97,8 @@ function ensureProgression(view,afterCard){
 }
 
 function placeLiveProgression(parts){
- const time=parts.advance.querySelector('.tf-strip-time')||document.querySelector('#tf-playback-strip .tf-strip-time');
+ let time=parts.advance.querySelector('.tf-strip-time')||document.querySelector('#tf-playback-strip .tf-strip-time');
+ if(!time){time=document.createElement('div');time.className='tf-strip-time';}
  if(time&&time.parentElement!==parts.advance)parts.advance.appendChild(time);
  const steps=document.querySelector('#profile-control-deck .profile-step-row')||document.querySelector('.profile-step-row');
  if(time&&steps&&steps.parentElement!==time)time.appendChild(steps);
