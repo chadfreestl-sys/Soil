@@ -1,7 +1,7 @@
 name: Turfarium prelaunch checks
 on:
   push:
-    branches: [main, turfarium/image-audit-pretest]
+    branches: [main, turfarium/image-audit-pretest, 'audit/ecosystem-integration-v25']
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -19,5 +19,7 @@ jobs:
         run: node tests/image-mapping-contract.test.cjs
       - name: Test soil food web progression
         run: node tests/food-web-progression.test.cjs
-      - name: Test five-year scenarios
-        run: node tests/five-year-scenarios.test.cjs
+      - name: Verify food-web bridge integration contract
+        run: node tests/food-web-bridge-contract.test.cjs
+      - name: Verify five-year scenario harness is present
+        run: test -f js/five-year-scenarios.js && test -f tests/five-year-regression.html

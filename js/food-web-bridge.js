@@ -1,6 +1,7 @@
 /* Turfarium food web bridge v1. Relative biological activity, not organism counts. */
 (()=>{'use strict';
 const keys=['A','B'],records=new Map();
+// The food web is an illustrative derived layer; never use its output as an input to itself.
 function number(key,label,fallback){
  const root=document.getElementById('kpi'+key);
  const node=[...(root?.querySelectorAll('.kpi')||[])].find(n=>(n.querySelector('span')?.textContent||'').includes(label));
@@ -9,16 +10,15 @@ function number(key,label,fallback){
 }
 function day(key){return Number((document.getElementById('day'+key)?.textContent||'0').match(/\d+/)?.[0]||0)}
 function environment(key){
- const biology=number(key,'Beneficial guilds',40);
  const snapshot=window.TurfariumVisualSnapshot?.(key)||{};
  const month=Number(document.getElementById('startMonth')?.value||2);
  const seasonMonth=(month+Math.floor(day(key)/30.44))%12;
  const seasonalTemperature=[37,41,51,62,71,79,84,82,74,62,49,40][seasonMonth];
- return {temperatureF:Number.isFinite(snapshot.temperatureF)?snapshot.temperatureF:seasonalTemperature,
+ return {temperatureF:Number.isFinite(snapshot.soilTempF)?snapshot.soilTempF:seasonalTemperature,
  moisture:Number.isFinite(snapshot.moisture)?snapshot.moisture:55,
  oxygen:Number.isFinite(snapshot.oxygen)?snapshot.oxygen:65,
  pH:Number.isFinite(snapshot.pH)?snapshot.pH:6.3,
- rootExudates:number(key,'Turf vigor',55),clippings:50,organicInputs:biology*.35,
+ rootExudates:Number.isFinite(snapshot.rootMass)?Math.max(0,Math.min(100,snapshot.rootMass)):number(key,'Turf vigor',55),clippings:Number.isFinite(snapshot.lastClippingFraction)?Math.max(0,Math.min(100,snapshot.lastClippingFraction*100)):50,organicInputs:0,
  disturbance:Number.isFinite(snapshot.disturbance)?snapshot.disturbance:0};
 }
 function render(key){
@@ -61,5 +61,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 window.addEventListener('load',boot,{once:true});
  document.getElementById('startMonth')?.addEventListener('change',()=>{records.clear();boot()});
 window.addEventListener('turfarium:scenario-restored',()=>{records.clear();boot();});
+window.addEventListener('turfarium:time-advanced',()=>{for(const key of keys)render(key);});
 window.TurfariumFoodWebBridge={refresh:boot,get:key=>records.get(key)?.state||null};
 })();
