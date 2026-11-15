@@ -50,6 +50,10 @@ css.textContent=`
   .tf-mobile-treatment-body>*{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0!important}
   .tf-mobile-treatment-body .row{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:7px!important}
   .tf-mobile-treatment-body select,.tf-mobile-treatment-body input,.tf-mobile-treatment-body button{width:100%!important;max-width:100%!important;min-width:0!important}
+  /* Android native material menus must remain interactive and above neighboring layers. */
+  .tf-mobile-treatment[open]{position:relative!important;z-index:30!important;overflow:visible!important}
+  .tf-mobile-treatment[open] .tf-mobile-treatment-body{position:relative!important;z-index:31!important;pointer-events:auto!important}
+  .tf-mobile-treatment-body select{display:block!important;position:relative!important;z-index:32!important;pointer-events:auto!important;touch-action:manipulation!important;opacity:1!important;visibility:visible!important;appearance:auto!important;-webkit-appearance:menulist!important;min-height:46px!important;background:#fff!important;color:#173e2d!important}
   .tf-mobile-treatment-body .rate-grid{grid-template-columns:minmax(0,1fr)!important}
 
   #tf-mobile-what-changed{display:block!important;width:100%!important;margin:0!important;border:1px solid #b7cbb3!important;border-radius:12px!important;background:#f2f7ef!important;overflow:hidden!important}
