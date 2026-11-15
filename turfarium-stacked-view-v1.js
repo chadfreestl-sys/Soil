@@ -140,8 +140,11 @@ function stabilizeMaterialSelect(key){
   select.dataset.tfChosenMaterial=select.value;
   select.dispatchEvent(new Event('input',{bubbles:true}));
  },{passive:true});
+ select.addEventListener('pointerdown',()=>{select.dataset.tfSelecting='1';});
+ select.addEventListener('touchstart',()=>{select.dataset.tfSelecting='1';},{passive:true});
  select.addEventListener('focus',()=>{select.dataset.tfSelecting='1';});
- select.addEventListener('blur',()=>{delete select.dataset.tfSelecting;});
+ select.addEventListener('change',()=>{delete select.dataset.tfSelecting;});
+ select.addEventListener('blur',()=>{setTimeout(()=>{delete select.dataset.tfSelecting;},350);});
 }
 
 function ensureTreatments(view,afterCard){
