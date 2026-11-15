@@ -14,10 +14,10 @@ function environment(key){
  const month=Number(document.getElementById('startMonth')?.value||2);
  const seasonMonth=(month+Math.floor(day(key)/30.44))%12;
  const seasonalTemperature=[37,41,51,62,71,79,84,82,74,62,49,40][seasonMonth];
- return {temperatureF:Number.isFinite(snapshot.temperatureF)?snapshot.temperatureF:seasonalTemperature,
+ return {temperatureF:Number.isFinite(snapshot.soilTempF)?snapshot.soilTempF:seasonalTemperature,
  moisture:Number.isFinite(snapshot.moisture)?snapshot.moisture:55,
  oxygen:Number.isFinite(snapshot.oxygen)?snapshot.oxygen:65,
- pH:Number.isFinite(snapshot.pH)?snapshot.pH:6.3,
+ pH:Number.isFinite(snapshot.soilPH)?snapshot.soilPH:6.3,
  rootExudates:number(key,'Turf vigor',55),clippings:50,organicInputs:biology*.35,
  disturbance:Number.isFinite(snapshot.disturbance)?snapshot.disturbance:0};
 }
@@ -35,10 +35,14 @@ function render(key){
   while(remaining>0){const step=Math.min(30,remaining);state=model.advance(state,environment(key),step);remaining-=step}
   records.set(key,{day:d,state});
  }
+ // The main lawn engine owns decomposer and earthworm activity indices. Do not display conflicting independent estimates.
+ const canonical=window.TurfariumVisualSnapshot?.(key)||{};
+ if(Array.isArray(canonical.soilGood)){state.bacteria=canonical.soilGood[0];state.fungi=canonical.soilGood[1];state.protozoa=canonical.soilGood[2];}
+ if(Array.isArray(canonical.soilWorms))state.earthworms=canonical.soilWorms.reduce((a,b)=>a+b,0)/canonical.soilWorms.length;
  const host=document.getElementById('lawn-'+key.toLowerCase()+'-panel');if(!host)return;
  let box=host.querySelector('.tf-food-web');
- if(!box){box=document.createElement('details');box.className='tf-food-web';box.innerHTML='<summary>Living soil food web · exploratory model</summary><div class="tf-food-grid"></div><small>Relative activity indices (0–100), not measured populations. Uses seasonal temperature estimates and available lawn metrics; treatment-specific calibration is still in development.</small>';host.appendChild(box)}
- const labels={bacteria:'Bacteria',fungi:'Fungi',protozoa:'Protozoa',nematodesBacterial:'Bacterial-feeding nematodes',nematodesFungal:'Fungal-feeding nematodes',nematodesPlant:'Plant-feeding nematodes',nematodesPredator:'Predatory nematodes',earthworms:'Earthworms',microarthropods:'Microarthropods'};
+ if(!box){box=document.createElement('details');box.className='tf-food-web';box.innerHTML='<summary>Food-web detail · linked to main soil model</summary><div class="tf-food-grid"></div><small>Bacteria, fungi, protozoa and earthworm activity use the main simulator values. Other guilds remain exploratory relative indices, not measured organism counts.</small>';host.appendChild(box)}
+ const labels={bacteria:'Bacteria',fungi:'Fungi',protozoa:'Protozoa',nematodesBacterial:'Bacterial-feeding nematodes',nematodesFungal:'Fungal-feeding nematodes',nematodesPlant:'Plant-feeding nematodes',nematodesPredator:'Predatory nematodes',earthworms:'Earthworm activity (main model)',microarthropods:'Microarthropods'};
  box.querySelector('.tf-food-grid').replaceChildren(...Object.entries(labels).map(([k,label])=>{
   const el=document.createElement('div');el.className='tf-food-item';
   const val=Math.round(state[k]);el.innerHTML='<span></span><b></b><div class="tf-food-track"><i></i></div>';
