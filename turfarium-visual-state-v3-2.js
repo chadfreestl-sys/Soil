@@ -164,6 +164,11 @@ function ensureStage(stage,photo){
  original?.querySelectorAll('.tf-visual-indicator').forEach(el=>{if(el!==indicator)el.remove()});
  return {overlay,indicator};
 }
+// Status remains available to the visual engine but is not homeowner-facing UI.
+const statusStyle=document.createElement('style');
+statusStyle.id='tf-hide-photo-diagnostics';
+statusStyle.textContent='.tf-visual-indicator{display:none!important}';
+document.head.appendChild(statusStyle);
 function indicatorText(indicator,text,error=false){
  indicator.textContent=text;indicator.dataset.tfImageUnavailable=error?'1':'0';
 }
