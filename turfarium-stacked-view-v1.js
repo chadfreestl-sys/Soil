@@ -57,7 +57,7 @@ const css=document.createElement('style');css.textContent=`
  #tf-stacked-lawns .photo-stage canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
  #tf-stacked-lawns .tf-lawn-time{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:8px}
  #tf-stacked-lawns .tf-lawn-time button{min-width:0!important;min-height:42px!important;padding:7px 2px!important;font-size:.78rem!important;font-weight:750;color:#173e2d;background:#fff;border:1px solid #b5cbb8;border-radius:9px}
- #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n main .tf-homeowner-original-intro{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-lawn-time{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay-local{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage~.tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}\n #tf-mobile-what-changed{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;box-sizing:border-box!important;margin:8px 0 12px!important;border:2px solid #b7cbb3!important;border-radius:14px!important;background:#f2f7ef!important;overflow:hidden!important}
+ #tf-stacked-lawns #tf-playback-strip{display:block!important;margin:3px 0 7px!important;padding:7px!important;width:100%!important;box-sizing:border-box!important}\n #tf-stacked-lawns #tf-playback-strip .tf-strip-time{display:flex!important}\n main .tf-homeowner-original-intro{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-lawn-time{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage{display:block!important}\n #tf-stacked-lawns .tf-lawn-visual .tf-history-replay-local{display:none!important}\n #tf-stacked-lawns .tf-lawn-visual .photo-stage~.tf-history-replay{display:none!important}\n #tf-stacked-lawns #tf-stacked-quick-progress{display:grid!important}\n #tf-mobile-treatments{display:grid;gap:7px;margin:8px 0;width:100%}\n .tf-mobile-treatment{border:1px solid #b7cbb3;border-radius:12px;background:#f2f7ef;overflow:hidden}\n .tf-mobile-treatment>summary{padding:11px 13px;font-size:15px;font-weight:800;color:#183e2c;cursor:pointer}\n .tf-mobile-treatment-body{padding:9px 12px 12px}\n .tf-mobile-treatment-body .row{display:flex;flex-wrap:wrap;gap:8px}\n .tf-mobile-treatment-body select{min-width:0;max-width:100%}\n #tf-mobile-what-changed{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;box-sizing:border-box!important;margin:8px 0 12px!important;border:2px solid #b7cbb3!important;border-radius:14px!important;background:#f2f7ef!important;overflow:hidden!important}
  #tf-mobile-what-changed>summary{display:list-item!important;cursor:pointer!important;padding:15px!important;font-weight:900!important;font-size:17px!important;color:#183e2c!important}
  #tf-mobile-what-changed .tf-mobile-change-content{padding:0 13px 13px!important;color:#183e2c!important}
  #tf-mobile-what-changed:not([open]) .tf-mobile-change-content{display:none!important}
@@ -231,6 +231,34 @@ function mount(){
  if(quick&&cards[0]&&quick.previousElementSibling!==cards[0])cards[0].insertAdjacentElement('afterend',quick);
  if(replayHost&&quick&&replayHost.previousElementSibling!==quick)quick.insertAdjacentElement('afterend',replayHost);
  if(cards[1]&&replayHost&&cards[1].previousElementSibling!==replayHost)replayHost.insertAdjacentElement('afterend',cards[1]);
+ // Keep live treatment inputs together in compact, initially collapsed mobile drawers.
+ // Moving existing DOM nodes preserves application handlers, rate calculations and state.
+ let treatmentDock=document.getElementById('tf-mobile-treatments');
+ if(!treatmentDock){
+  treatmentDock=document.createElement('div');treatmentDock.id='tf-mobile-treatments';
+  treatmentDock.setAttribute('aria-label','Lawn treatment controls');
+ }
+ for(const key of ['A','B']){
+  const panel=document.getElementById('lawn-'+key.toLowerCase()+'-panel');
+  if(!panel)continue;
+  let drawer=document.getElementById('tf-mobile-treatment-'+key);
+  if(!drawer){
+   const label=[...panel.children].find(el=>el.tagName==='LABEL'&&/Apply to Lawn/.test(el.textContent||''));
+   const feedback=document.getElementById('feedback'+key);
+   if(!label||!feedback||label.parentElement!==panel||feedback.parentElement!==panel)continue;
+   const nodes=[];let cursor=label;
+   while(cursor){const next=cursor.nextElementSibling;nodes.push(cursor);if(cursor===feedback)break;cursor=next;}
+   if(nodes[nodes.length-1]!==feedback)continue;
+   drawer=document.createElement('details');drawer.id='tf-mobile-treatment-'+key;drawer.className='tf-mobile-treatment';
+   const summary=document.createElement('summary');summary.textContent='🌱 Lawn '+key+' · Treatments';
+   drawer.appendChild(summary);
+   const body=document.createElement('div');body.className='tf-mobile-treatment-body';
+   for(const node of nodes)body.appendChild(node);
+   drawer.appendChild(body);
+  }
+  treatmentDock.appendChild(drawer);
+ }
+ if(treatmentDock.children.length&&cards[1])cards[1].insertAdjacentElement('afterend',treatmentDock);
  // Independent visible report immediately below Replay; preserve original live report.
  let changes=document.getElementById('tf-mobile-what-changed');
  if(!changes){
@@ -239,7 +267,8 @@ function mount(){
   changes.className='tf-mobile-what-changed';
   changes.innerHTML='<summary>📊 What Changed <span style="float:right" aria-hidden="true">▸</span></summary><div class="tf-mobile-change-content">Advance time to view the Lawn A and Lawn B comparison.</div>';
  }
- if(replayHost&&changes.previousElementSibling!==replayHost)replayHost.insertAdjacentElement('afterend',changes);
+ if(treatmentDock.children.length&&changes.previousElementSibling!==treatmentDock)treatmentDock.insertAdjacentElement('afterend',changes);
+ else if(!treatmentDock.children.length&&replayHost&&changes.previousElementSibling!==replayHost)replayHost.insertAdjacentElement('afterend',changes);
  const syncChanges=()=>{
   const source=document.getElementById('changeReport');
   const target=changes.querySelector('.tf-mobile-change-content');
