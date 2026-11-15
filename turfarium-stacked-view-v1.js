@@ -55,6 +55,14 @@ css.textContent=`
   .tf-mobile-treatment[open] .tf-mobile-treatment-body{position:relative!important;z-index:31!important;pointer-events:auto!important}
   .tf-mobile-treatment-body select{display:block!important;position:relative!important;z-index:32!important;pointer-events:auto!important;touch-action:manipulation!important;opacity:1!important;visibility:visible!important;appearance:auto!important;-webkit-appearance:menulist!important;min-height:46px!important;background:#fff!important;color:#173e2d!important}
   .tf-mobile-treatment-body .rate-grid{grid-template-columns:minmax(0,1fr)!important}
+  /* Stable tap-based picker avoids Android native select popup cancellation. */
+  .tf-mobile-treatment-body select[id^="treat"]{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+  .tf-material-picker{display:block!important;width:100%!important}
+  .tf-material-picker>summary{display:list-item!important;cursor:pointer!important;padding:12px!important;background:#fff!important;color:#173e2d!important;border:1px solid #9fbda7!important;border-radius:9px!important;font-weight:800!important}
+  .tf-material-options{max-height:310px!important;overflow-y:auto!important;background:#fff!important;border:1px solid #9fbda7!important;border-radius:9px!important;padding:5px!important}
+  .tf-material-options button{display:block!important;width:100%!important;min-height:44px!important;margin:2px 0!important;text-align:left!important;background:#fff!important;color:#173e2d!important;border:0!important;border-bottom:1px solid #ddd!important}
+  .tf-material-options button[aria-pressed="true"]{background:#d7ead9!important;font-weight:900!important}
+
 
   #tf-mobile-what-changed{display:block!important;width:100%!important;margin:0!important;border:1px solid #b7cbb3!important;border-radius:12px!important;background:#f2f7ef!important;overflow:hidden!important}
   #tf-mobile-what-changed>summary{display:list-item!important;padding:13px!important;cursor:pointer!important;color:#183e2c!important;font-size:16px!important;font-weight:900!important;line-height:1.3!important}
@@ -132,6 +140,53 @@ function treatmentNodes(key){
 
 // Native Android select menus can be interrupted when a live row is reparented.
 // Preserve the selected material and avoid moving an active selector.
+// Tap-based mobile material picker. Original <select> and application listeners
+// remain authoritative; choosing an option updates the real input and fires change.
+function ensureMaterialPicker(key,body){
+ const select=byId('treat'+key);
+ if(!select||!body)return;
+ let picker=byId('tf-material-picker-'+key);
+ if(!picker){
+  picker=document.createElement('details');
+  picker.id='tf-material-picker-'+key;
+  picker.className='tf-material-picker';
+  const summary=document.createElement('summary');
+  summary.textContent='Choose material';
+  const options=document.createElement('div');
+  options.className='tf-material-options';
+  picker.append(summary,options);
+  select.insertAdjacentElement('afterend',picker);
+ }
+ const summary=picker.querySelector('summary');
+ const options=picker.querySelector('.tf-material-options');
+ const render=()=>{
+  const selected=select.selectedOptions[0];
+  summary.textContent='Material: '+(selected?.textContent?.trim()||'Choose material');
+  options.replaceChildren();
+  for(const option of select.options){
+   if(option.disabled||option.value==='customPlaceholder')continue;
+   const button=document.createElement('button');
+   button.type='button';
+   button.textContent=option.textContent;
+   button.dataset.value=option.value;
+   button.setAttribute('aria-pressed',String(select.value===option.value));
+   button.addEventListener('click',()=>{
+    select.value=option.value;
+    select.dispatchEvent(new Event('change',{bubbles:true}));
+    picker.open=false;
+    render();
+   });
+   options.appendChild(button);
+  }
+ };
+ if(!picker.dataset.tfPickerBound){
+  picker.dataset.tfPickerBound='1';
+  picker.addEventListener('toggle',()=>{if(picker.open)render();});
+  select.addEventListener('change',render);
+ }
+ render();
+}
+
 function ensureTreatments(view,afterCard){
  let dock=byId('tf-mobile-treatments');
  if(!dock){dock=document.createElement('section');dock.id='tf-mobile-treatments';dock.setAttribute('aria-label','Lawn treatment controls');}
@@ -156,6 +211,7 @@ function ensureTreatments(view,afterCard){
     drawer.dataset.tfControlsMounted='1';
    }
   }
+  ensureMaterialPicker(key,body);
   // Keep drawers usable even when another module temporarily relocates a live control.
   drawer.hidden=false;
   if(drawer.parentElement!==dock)dock.appendChild(drawer);
