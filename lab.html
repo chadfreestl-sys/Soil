@@ -1464,4 +1464,84 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 window.addEventListener('load',arrange,{once:true});
 })();
 </script>
+<style id="tf-focused-workspace-v26">
+/* The visual comparison stays ahead of controls; the detailed instruments are optional. */
+.simulation-grid.tf-primary-workspace{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.simulation-grid.tf-primary-workspace>#lawn-a-panel,.simulation-grid.tf-primary-workspace>#lawn-b-panel{order:0!important;grid-column:auto!important;min-width:0!important;width:auto!important}
+.simulation-grid.tf-primary-workspace>#tf-playback-strip{order:1!important;grid-column:1/-1!important;margin:0!important}
+.simulation-grid.tf-primary-workspace>#timeline-workflow{order:2!important;grid-column:1/-1!important}
+.simulation-grid.tf-primary-workspace>#tf-save-drawer,.simulation-grid.tf-primary-workspace>#scenario-memory{order:3!important;grid-column:1/-1!important}
+.simulation-grid.tf-primary-workspace>.tf-history-standalone{order:4!important;grid-column:auto!important}
+.simulation-grid.tf-primary-workspace>.wide:not(#timeline-workflow):not(#tf-playback-strip){order:5!important;grid-column:1/-1!important}
+#lawn-a-panel .tf-lawn-instruments,#lawn-b-panel .tf-lawn-instruments{margin-top:10px;border:1px solid #55766a;border-radius:12px;overflow:hidden}
+.tf-lawn-instruments>summary{cursor:pointer;padding:12px;font-weight:800;min-height:44px;list-style-position:inside;background:#183c35;color:#e7f5e8}
+.tf-lawn-instruments[open]>.tf-instruments-body{padding:10px}
+#tf-playback-strip>.tf-history-replay{display:flex!important}
+#tf-playback-strip .tf-strip-replay{display:none!important}
+#tf-playback-strip .tf-strip-row{align-items:center}
+#tf-playback-strip .tf-strip-time{flex:1 1 100%!important}
+#tf-playback-strip .tf-strip-time .row{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:7px!important}
+#tf-playback-strip .tf-strip-time button{min-height:44px!important}
+#tf-playback-strip .tf-history-replay{margin-top:8px!important}
+#tf-playback-strip .tf-strip-label{font-size:1rem!important;font-weight:800!important}
+#tf-playback-strip #canopyTimeline{display:none!important}
+@media(max-width:700px){
+.simulation-grid.tf-primary-workspace{grid-template-columns:minmax(0,1fr)!important;gap:9px!important}
+.simulation-grid.tf-primary-workspace>#lawn-a-panel,.simulation-grid.tf-primary-workspace>#lawn-b-panel{grid-column:1/-1!important;width:100%!important}
+#tf-playback-strip>.tf-history-replay{display:flex!important}
+#tf-playback-strip .tf-strip-time .row{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#tf-playback-strip .tf-strip-time button{min-height:44px!important}
+}
+</style>
+<script id="tf-focused-workspace-v26">
+(()=>{'use strict';
+let busy=false;
+function apply(){
+ if(busy)return;busy=true;
+ try{
+ const grid=document.querySelector('.simulation-grid');
+ const a=document.getElementById('lawn-a-panel'),b=document.getElementById('lawn-b-panel');
+ const strip=document.getElementById('tf-playback-strip');
+ if(!grid||!a||!b)return;
+ grid.classList.add('tf-primary-workspace');
+ // Keep the actual interactive lawn nodes intact; only relocate their siblings.
+ if(grid.firstElementChild!==a)grid.insertBefore(a,grid.firstElementChild);
+ if(a.nextElementSibling!==b)grid.insertBefore(b,a.nextElementSibling);
+ if(strip&&strip.parentElement===grid&&b.nextElementSibling!==strip)grid.insertBefore(strip,b.nextElementSibling);
+ for(const panel of [a,b]){
+  let details=panel.querySelector(':scope > .tf-lawn-instruments');
+  if(!details){
+   details=document.createElement('details');details.className='tf-lawn-instruments';
+   details.innerHTML='<summary>⚙️ Treatments & detailed measurements</summary><div class="tf-instruments-body"></div>';
+   panel.appendChild(details);
+  }
+  const body=details.querySelector('.tf-instruments-body');
+  const children=[...panel.children];
+  const photo=panel.querySelector(':scope > .photo-stage');
+  const kpis=panel.querySelector(':scope > .kpis');
+  // Keep header, photograph, KPI summary and biological activity visible.
+  for(const child of children){
+   if(child===details||child===photo||child===kpis||child.classList.contains('head')||child.classList.contains('tf-bio-panel'))continue;
+   if(child.parentElement===panel)body.appendChild(child);
+  }
+ }
+ const time=document.getElementById('time');
+ if(strip&&time){
+  let status=strip.querySelector('#tf-shared-season-date');
+  if(!status){status=document.createElement('div');status.id='tf-shared-season-date';status.setAttribute('aria-live','polite');status.style.cssText='font-weight:800;padding:6px 2px;color:#193d2c';strip.insertBefore(status,strip.firstChild);}
+  if(status.textContent!==time.textContent)status.textContent=time.textContent;
+ }
+ }finally{busy=false;}
+}
+function schedule(){requestAnimationFrame(apply);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();
+window.addEventListener('load',schedule);
+window.addEventListener('turfarium:time-advanced',schedule);
+window.addEventListener('turfarium:scenario-restored',schedule);
+[300,1000,2200,4000].forEach(ms=>setTimeout(schedule,ms));
+const observer=new MutationObserver(records=>{if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&(n.id==='tf-playback-strip'||n.id==='tf-shared-season-date'))))schedule();});
+observer.observe(document.documentElement,{childList:true,subtree:true});
+const clock=document.getElementById('time');if(clock)new MutationObserver(schedule).observe(clock,{childList:true,characterData:true,subtree:true});
+})();
+</script>
 </body></html>
