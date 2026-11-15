@@ -109,7 +109,10 @@ function placeLiveProgression(parts){
 
 function treatmentNodes(key){
  const select=byId('treat'+key),feedback=byId('feedback'+key);
- if(!select||!feedback)return [];
+ // The treatment-layout helper removes the initial "Ready to apply" feedback
+ // node as redundant copy. The selector row is the required live anchor;
+ // feedback remains optional so that cleanup cannot suppress the whole drawer.
+ if(!select)return [];
  const row=select.closest('.row');
  const rate=byId('rate'+key)?.closest('.rate-studio');
  const product=byId('productInfo'+key);
