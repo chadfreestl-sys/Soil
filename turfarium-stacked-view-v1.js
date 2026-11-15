@@ -135,7 +135,10 @@ function treatmentNodes(key){
  const row=select.closest('.row');
  const rate=byId('rate'+key)?.closest('.rate-studio');
  const product=byId('productInfo'+key);
- return [row,rate,product,feedback].filter(Boolean);
+ const history=byId('history'+key)?.closest('.recent-applications');
+ // Keep the original live treatment-history widget alongside Apply Treatment.
+ // Previously it was left behind in the hidden desktop panel.
+ return [row,rate,product,feedback,history].filter(Boolean);
 }
 
 // Native Android select menus can be interrupted when a live row is reparented.
