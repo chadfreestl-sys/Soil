@@ -199,6 +199,20 @@ function ensureWhatChanged(view,dock){
  return panel;
 }
 
+// Photo-stage status is internal visual-engine diagnostics, not homeowner content.
+// Remove only leaf-level status lines, preserving the photo and vigor summary.
+function hidePhotoDiagnostics(){
+ const view=byId('tf-stacked-lawns');if(!view)return;
+ const walker=document.createTreeWalker(view,NodeFilter.SHOW_TEXT);
+ const matches=[];let node;
+ while((node=walker.nextNode())){
+  if(!/^\\s*Photo stage:\\s*/i.test(node.textContent||''))continue;
+  const el=node.parentElement;
+  if(el&&el.children.length===0)matches.push(el);
+ }
+ for(const el of matches)el.style.setProperty('display','none','important');
+}
+
 function syncDays(){
  for(const key of ['A','B']){
   const source=byId('day'+key),target=byId('tf-stack-day-'+key);
@@ -232,6 +246,7 @@ function mount(){
  view.append(cardA,progression.station,cardB,dock,changes);
  placeLiveProgression(progression);
  syncDays();
+ hidePhotoDiagnostics();
  layoutParts=progression;
  return true;
  }finally{mounting=false;}
@@ -247,7 +262,8 @@ function start(){
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 window.addEventListener('load',start,{once:true});
-window.addEventListener('turfarium:time-advanced',()=>{syncDays();if(layoutParts)placeLiveProgression(layoutParts);});
+window.addEventListener('turfarium:time-advanced',()=>{syncDays();if(layoutParts)placeLiveProgression(layoutParts);hidePhotoDiagnostics();});
+new MutationObserver(()=>{if(mobileQuery.matches)hidePhotoDiagnostics();}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
 mobileQuery.addEventListener?.('change',event=>{if(event.matches)start();});
 new MutationObserver(records=>{
  if(!mobileQuery.matches||remountQueued)return;
