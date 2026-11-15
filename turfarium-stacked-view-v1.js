@@ -243,22 +243,38 @@ function mount(){
   if(!panel)continue;
   let drawer=document.getElementById('tf-mobile-treatment-'+key);
   if(!drawer){
-   const label=[...panel.children].find(el=>el.tagName==='LABEL'&&/Apply to Lawn/.test(el.textContent||''));
+   // Find the actual treatment selector and move its whole contiguous input group.
+   // Labels may be wrapped or enhanced by other modules, so do not require a direct-child label.
+   const select=document.getElementById('treat'+key);
    const feedback=document.getElementById('feedback'+key);
-   if(!label||!feedback||label.parentElement!==panel||feedback.parentElement!==panel)continue;
-   const nodes=[];let cursor=label;
-   while(cursor){const next=cursor.nextElementSibling;nodes.push(cursor);if(cursor===feedback)break;cursor=next;}
-   if(nodes[nodes.length-1]!==feedback)continue;
+   if(!select||!feedback||!panel.contains(select)||!panel.contains(feedback))continue;
+   const first=[...panel.children].find(node=>node===select||node.contains(select));
+   const last=[...panel.children].find(node=>node===feedback||node.contains(feedback));
+   if(!first||!last)continue;
+   const siblings=[...panel.children],i=siblings.indexOf(first),j=siblings.indexOf(last);
+   if(i<0||j<i)continue;
    drawer=document.createElement('details');drawer.id='tf-mobile-treatment-'+key;drawer.className='tf-mobile-treatment';
    const summary=document.createElement('summary');summary.textContent='🌱 Lawn '+key+' · Treatments';
-   drawer.appendChild(summary);
    const body=document.createElement('div');body.className='tf-mobile-treatment-body';
-   for(const node of nodes)body.appendChild(node);
-   drawer.appendChild(body);
+   // Include the adjacent label when it is a separate sibling.
+   const from=i>0&&siblings[i-1].tagName==='LABEL'?i-1:i;
+   for(const node of siblings.slice(from,j+1))body.appendChild(node);
+   drawer.append(summary,body);
   }
   treatmentDock.appendChild(drawer);
  }
  if(treatmentDock.children.length&&cards[1])cards[1].insertAdjacentElement('afterend',treatmentDock);
+ // Other modules inject the full homeowner hero after initial mount.
+ // Hide only that duplicate standalone card, never a parent of the live simulator.
+ function hideDuplicateHomeownerIntro(){
+  for(const heading of document.querySelectorAll('main h1,main h2,main h3,main h4')){
+   if(!/See what your lawn is telling you/i.test(heading.textContent||''))continue;
+   const card=heading.closest('section,article,.card,.tf-card')||heading.parentElement;
+   if(card&&card!==view&&!card.contains(view)&&!card.contains(treatmentDock))card.classList.add('tf-homeowner-duplicate-hidden');
+  }
+ }
+ hideDuplicateHomeownerIntro();
+ [500,1500,3500].forEach(ms=>setTimeout(hideDuplicateHomeownerIntro,ms));
  // Independent visible report immediately below Replay; preserve original live report.
  let changes=document.getElementById('tf-mobile-what-changed');
  if(!changes){
