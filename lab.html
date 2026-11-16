@@ -644,9 +644,16 @@ const lateralGain=.055*lateralPotential*growthOpportunity*gap;
 s.lateralSpread=cl(s.lateralSpread+lateralGain-.012*(1-stressFit),0,100);
 // Bunch-type turf cannot recover extensive bare cover through tillering
 // alone; canopy densification and actual area colonization are distinct.
-const baseCover=habit.stolon+habit.rhizome<.1?65:55;
-const coverTarget=cl(baseCover+s.tillerDensity*.12+s.lateralSpread*.25,40,96);
-s.canopyCover=cl(s.canopyCover+(coverTarget-s.canopyCover)*(.0015*growthOpportunity+.0008*lateralPotential*growthOpportunity),30,96);
+// Ground occupation is distinct from leaf density. For bunch-type tall fescue,
+// tiller recruitment can gradually fill small within-clump gaps, but does not
+// produce the lateral spread of rhizomatous or stoloniferous grasses.
+// Anchor to each lawn's initial occupied area, not a shared fixed 65% target.
+const initialCover=cl(Number(s.initialCover) || 65,30,96);
+const initialTillers=cl(Number(s.initialTillers) || 42,5,100);
+const withinClumpFill=cl((s.tillerDensity-initialTillers)*.18,-6,7);
+const leafFill=cl((s.leafArea-58)*.035,-2,2);
+const coverTarget=cl(initialCover+withinClumpFill+leafFill+s.lateralSpread*.25,30,96);
+s.canopyCover=cl(s.canopyCover+(coverTarget-s.canopyCover)*(.009*growthOpportunity+.001*lateralPotential*growthOpportunity),30,96);
 const rootGrowth=.09*growthOpportunity*aeration*(1+s.seaweedRootResponse*.02);
 const rootLoss=.018+.032*(1-stressFit)+.014*(1-leafRetention);
 s.rootMass=cl(s.rootMass+rootGrowth-rootLoss,5,100);
