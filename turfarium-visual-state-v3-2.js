@@ -283,6 +283,38 @@ async function refresh(key){
  const canopyTintStrength=clamp(.025+canopySignal*.19+moistureSignal*.045-stressPenalty*.08,0,.25);
  canopyLayer.style.background='linear-gradient(to bottom,rgba(37,108,37,'+canopyTintStrength.toFixed(3)+') 0%,rgba(48,118,43,'+(canopyTintStrength*.67).toFixed(3)+') 24%,transparent 43%)';
  canopyLayer.dataset.tfCanopyResponse=canopyHealth.toFixed(1);
+ // Keep the base scientific photograph intact while showing continuous,
+ // independently modeled canopy and soil-moisture differences. These are
+ // illustrative visual treatments, not newly simulated roots or organisms.
+ let canopyOptics=stage.querySelector('.tf-canopy-optics');
+ if(!canopyOptics){
+  canopyOptics=document.createElement('div');
+  canopyOptics.className='tf-canopy-optics';
+  canopyOptics.setAttribute('aria-hidden','true');
+  stage.appendChild(canopyOptics);
+ }
+ const greenSignal=clamp((canopyHealth-35)/65,0,1);
+ const opticsSaturation=clamp(.70+greenSignal*.80-moistureStress*.15-stressPenalty*.14,.56,1.55);
+ const opticsBrightness=clamp(.86+greenSignal*.23-moistureStress*.10,.72,1.13);
+ canopyOptics.style.backdropFilter='saturate('+opticsSaturation.toFixed(3)+') brightness('+opticsBrightness.toFixed(3)+')';
+ canopyOptics.style.webkitBackdropFilter=canopyOptics.style.backdropFilter;
+ canopyOptics.dataset.tfCanopyIndex=canopyHealth.toFixed(1);
+ let soilOptics=stage.querySelector('.tf-soil-moisture-optics');
+ if(!soilOptics){
+  soilOptics=document.createElement('div');
+  soilOptics.className='tf-soil-moisture-optics';
+  soilOptics.setAttribute('aria-hidden','true');
+  stage.appendChild(soilOptics);
+ }
+ const soilMoisture=clamp(Number(snapshot.moisture??35),0,100);
+ // Dry soil becomes slightly lighter; moist soil slightly darker. The mask
+ // excludes most of the canopy and never changes root shapes.
+ const soilShade=clamp((soilMoisture-45)/55,-.60,.60);
+ soilOptics.style.background=soilShade>=0
+  ?'rgba(15,18,12,'+(soilShade*.14).toFixed(3)+')'
+  :'rgba(201,172,122,'+(-soilShade*.12).toFixed(3)+')';
+ soilOptics.dataset.tfMoistureIndex=soilMoisture.toFixed(1);
+
 
  photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+') contrast('+contrast.toFixed(3)+')','important');
  photo.style.transition='filter 3.8s ease-in-out';
@@ -382,10 +414,12 @@ css.textContent='.photo-stage{position:relative}'+
  '.tf-visual-indicator[data-tf-image-unavailable="1"]{color:#a1382d}'+
  '@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}';
 css.textContent+=' .photo-stage>.tf-canopy-response{position:absolute;inset:0;z-index:4;pointer-events:none;transition:background 2.5s ease-out}';
+css.textContent+=' .photo-stage>.tf-canopy-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);transition:backdrop-filter 2.5s ease-out}';
+css.textContent+=' .photo-stage>.tf-soil-moisture-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);transition:background 2.5s ease-out}';
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
- version:'3.9',states:STATES,score,refresh,refreshAll:boot,
+ version:'3.10',states:STATES,score,refresh,refreshAll:boot,
  showReplayFrame:(frames)=>{for(const key of ['A','B']){if(!frames?.[key])continue;replaySnapshots.set(key,frames[key]);const stage=elements(key).stage;if(stage){stage.dataset.tfPhotoSignature='';stage.dataset.tfPhotoReady='0';}lastState.delete(key);refresh(key);}},
  endReplay:()=>{replaySnapshots.clear();lastState.clear();refresh('A');refresh('B');},
  getStatus:key=>{const st=elements(key).stage;return st?{
