@@ -76,10 +76,10 @@ function scoreFrom(s){
   // color grading. Moisture is a conceptual 0-100 index, not VWC: only
   // pronounced dry conditions reduce the visual score. Preserve canopy
   // structure and avoid assigning treatment-specific bonuses.
-  const moisture=Number(s.moisture);
+  const moisture=s.moisture==null?NaN:Number(s.moisture);
   const dryPenalty=Number.isFinite(moisture)
    ?clamp((38-moisture)*.70,0,16):0;
-  const heat=Number(s.soilTempF);
+  const heat=s.soilTempF==null?NaN:Number(s.soilTempF);
   const heatPenalty=Number.isFinite(heat)&&moisture<38
    ?clamp((heat-85)*.12,0,3):0;
   return Math.round(clamp(cover*.52+tillers*.24+leaves*.12+color*.12-dryPenalty-heatPenalty,0,100));
@@ -100,7 +100,9 @@ function stateWithHysteresis(key,target,n){
  const previous=old.index;
  if(previous===target)return target;
  const margin=2;
- if(target>previous&&n<STATES[Math.min(previous+1,7)].min+margin)return previous;
+ // Only delay a transition across its immediately adjacent boundary.
+ // A large drought/recovery jump must never be trapped in an obsolete band.
+ if(target>previous&&n<STATES[previous+1].min+margin)return previous;
  if(target<previous&&n>=STATES[previous].min-margin)return previous;
  return target;
 }
@@ -354,7 +356,7 @@ async function refresh(key){
   }
  }else if(comparison)comparison.remove();
 
- if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature){
+ if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature&&photo.getAttribute('src')===stage.dataset.tfVisualSource){
   lastState.set(key,{index,signature,day:elapsed});
   indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+n+(establishmentOffset?' · early-spring canopy adjustment':'')+canopyStatus);
   return;
@@ -445,7 +447,9 @@ css.textContent+=' .photo-stage>.tf-visual-comparison{position:absolute;right:9p
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
- version:'3.10',states:STATES,score,refresh,refreshAll:boot,
+ version:'3.11',states:STATES,score,refresh,refreshAll:boot,
+ diagnose:(key)=>{const snapshot=snapshotFor(key);const raw=scoreFrom(snapshot);const day=Number(snapshot.day??dayFor(key))||0;const month=monthFor(key,snapshot);const offset=month>=2&&month<=4?Math.round(16*Math.max(0,1-day/90)):0;const adjusted=clamp(raw-offset,0,100);const index=stateForScore(adjusted);return {key,day,season:SEASONS[month],rawScore:raw,adjustedScore:adjusted,unhysterizedState:STATES[index].id,expectedAsset:imageUrl(index,SEASONS[month]),snapshot,rendered:window.TurfariumVisualState.getStatus(key)};},
+ compare:()=>({A:window.TurfariumVisualState.diagnose('A'),B:window.TurfariumVisualState.diagnose('B')}),
  showReplayFrame:(frames)=>{for(const key of ['A','B']){if(!frames?.[key])continue;replaySnapshots.set(key,frames[key]);const stage=elements(key).stage;if(stage){stage.dataset.tfPhotoSignature='';stage.dataset.tfPhotoReady='0';}lastState.delete(key);refresh(key);}},
  endReplay:()=>{replaySnapshots.clear();lastState.clear();refresh('A');refresh('B');},
  getStatus:key=>{const st=elements(key).stage;return st?{
