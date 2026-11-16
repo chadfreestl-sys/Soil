@@ -24,7 +24,8 @@ for(const key of ['A','B']){
   const vigor=clamp(read('Turf vigor',65),0,100),biology=clamp(read('Beneficial guilds',35),0,100),earthworms=clamp(read('Earthworm activity',33),0,100),health=vigor/100,soil=biology/100,activity=earthworms/100,day=dayNow();
   // Structural-looking visual change is intentionally slow: expression ramps over months, while color/activity may respond sooner.
   const age=clamp(day/180,0,1),longAge=clamp(day/540,0,1),healthy=clamp((vigor-50)/50,0,1),stressed=clamp((50-vigor)/50,0,1),bioGain=clamp((biology-35)/65,0,1);
-  photo.style.setProperty('filter',`saturate(${(.79+health*.37).toFixed(3)}) brightness(${(.89+health*.15).toFixed(3)}) contrast(${(.98+soil*.07).toFixed(3)})`,'important');
+  // The seasonal visual engine exclusively owns photographic color grading.
+  // This motion layer must not overwrite its per-lawn filter on every KPI update.
   tint.style.background=`linear-gradient(to bottom,rgba(116,101,45,${((1-health)*.085).toFixed(3)}) 0%,transparent 34%,rgba(33,21,13,${((1-soil)*.08).toFixed(3)}) 100%)`;
   // Canopy becomes visually denser only when time has passed AND turf vigor supports it; stressed turf goes the opposite direction.
   const canopyOpacity=clamp(age*(healthy*.34-stressed*.12)+longAge*healthy*.10,0,.42);canopy.style.opacity=canopyOpacity.toFixed(3);canopy.style.transform=`scaleY(${(1+age*healthy*.035).toFixed(4)}) translateY(${(-age*healthy*.45).toFixed(2)}px)`;canopy.style.filter=`saturate(${(1.02+healthy*.16).toFixed(2)}) brightness(${(.98+healthy*.07).toFixed(2)})`;
