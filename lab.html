@@ -624,7 +624,13 @@ const available=assimilation-maintenance;
 s.plantEnergyBalance=available;
 s.carbReserve=cl(s.carbReserve+available*.32-.025*Math.max(0,60-s.carbReserve)/60,5,100);
 const carbonFactor=cl((s.carbReserve-12)/58,0,1);
-const growthOpportunity=stressFit*carbonFactor;
+// Physiological vigor alone is not a canopy-cover measurement. Link the
+// existing plant-available N proxy to slow leaf/tiller/root development,
+// while retaining temperature, water, oxygen, salinity and carbon limits.
+// Bounded response avoids turning each fertilizer visit into an instant photo swap.
+// This is a conceptual response, not a field-calibrated fertilizer curve.
+const nitrogenGrowthFactor=cl(.82+.22*(cl(Number(s.n)||0,0,100)/35),.82,1.08);
+const growthOpportunity=cl(stressFit*carbonFactor*nitrogenGrowthFactor,0,1);
 const habit=turfGrowthHabit[s.grass]||turfGrowthHabit['Tall fescue'];
 const leafTarget=cl(22+65*leafRetention*growthOpportunity,15,94);
 s.leafArea=cl(s.leafArea+(leafTarget-s.leafArea)*.018*habit.regrowth,5,100);
