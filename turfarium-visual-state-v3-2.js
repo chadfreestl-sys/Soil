@@ -72,7 +72,17 @@ function scoreFrom(s){
   const tillers=clamp(Number(s.tillerDensity),0,100);
   const leaves=clamp(Number(s.leafArea)||0,0,100);
   const color=clamp(Number(s.vigor)||0,0,100);
-  return Math.round(clamp(cover*.52+tillers*.24+leaves*.12+color*.12,0,100));
+  // Visible drought stress must affect the photographic category as well as
+  // color grading. Moisture is a conceptual 0-100 index, not VWC: only
+  // pronounced dry conditions reduce the visual score. Preserve canopy
+  // structure and avoid assigning treatment-specific bonuses.
+  const moisture=Number(s.moisture);
+  const dryPenalty=Number.isFinite(moisture)
+   ?clamp((38-moisture)*.70,0,16):0;
+  const heat=Number(s.soilTempF);
+  const heatPenalty=Number.isFinite(heat)&&moisture<38
+   ?clamp((heat-85)*.12,0,3):0;
+  return Math.round(clamp(cover*.52+tillers*.24+leaves*.12+color*.12-dryPenalty-heatPenalty,0,100));
  }
  const raw=Number(s.vigor)*.33+Number(s.biology)*.12+Number(s.worms)*.06+
  (100-Number(s.disease))*.10+Number(s.oxygen)*.10+Number(s.structure)*.10+
