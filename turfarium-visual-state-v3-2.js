@@ -257,9 +257,17 @@ async function refresh(key){
  // or transition multipliers to this cool-season species.
  const seasonalWarmth=season==='summer'?1.06:season==='winter'?.75:season==='fall'?.91:1;
  const dormancyFactor=season==='winter'?.76:season==='fall'?.9:1;
- const saturation=clamp((.72+canopyGrowth*.35+n*.0024-stressPenalty*.10)*seasonalWarmth*dormancyFactor,.22,1.30);
- const brightness=clamp((.88+canopyGrowth*.12+n*.0012-stressPenalty*.05)*(season==='winter'?.92:1),.72,1.13);
- const contrast=clamp(1.015+canopyGrowth*.03,1,1.06);
+ // Continuous per-lawn appearance: discrete photo assets may share a state,
+ // but the live photograph must still reflect independently modeled canopy vigor.
+ // Keep adjustments restrained: treatments do not automatically imply greener turf.
+ const cover=clamp(Number(snapshot.canopyCover)||0,0,100);
+ const tillers=clamp(Number(snapshot.tillerDensity)||0,0,100);
+ const leafArea=clamp(Number(snapshot.leafArea)||0,0,100);
+ const canopyHealth=clamp(canopy*.58+cover*.22+tillers*.12+leafArea*.08,0,100);
+ const moistureStress=clamp((35-(Number(snapshot.moisture)||35))/35,0,1);
+ const saturation=clamp((.57+canopyHealth*.0082-stressPenalty*.12-moistureStress*.12)*seasonalWarmth*dormancyFactor,.32,1.34);
+ const brightness=clamp((.78+canopyHealth*.0038-stressPenalty*.06-moistureStress*.06)*(season==='winter'?.92:1),.70,1.16);
+ const contrast=clamp(.97+canopyHealth*.001, .95,1.09);
  photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+') contrast('+contrast.toFixed(3)+')','important');
  photo.style.transition='filter 3.8s ease-in-out';
  stage.dataset.tfVisualFilter='saturation '+saturation.toFixed(2)+'; brightness '+brightness.toFixed(2);
