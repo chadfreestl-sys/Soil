@@ -238,10 +238,10 @@ async function refresh(key){
  const establishmentOffset=earlySpring?Math.round(16*Math.max(0,1-elapsed/90)):0;
  const n=clamp(rawScore-establishmentOffset,0,100);
  // A restart or backward replay must not retain the later photograph's state.
- const previousDay=Number(lastState.get(key)?.day);
- if(Number.isFinite(previousDay)&&elapsed<previousDay)lastState.delete(key);
+ const previousState=lastState.get(key);
+ if(previousState&&elapsed<previousState.day)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
- const signature=season+'|'+index;
+ const signature=season+'|'+index; // Same signature across lawns is valid when their modeled visual categories match.
  // Continuous, model-linked visual progression even when the photo stays in the
  // same categorical image band. Small increments should be subtle, not dramatic.
  // Canopy appearance follows modeled turf vigor and stress; root status informs
@@ -440,6 +440,8 @@ window.TurfariumVisualState={
  endReplay:()=>{replaySnapshots.clear();lastState.clear();refresh('A');refresh('B');},
  getStatus:key=>{const st=elements(key).stage;return st?{
   state:st.dataset.tfVisualState,season:st.dataset.tfVisualSeason,score:st.dataset.tfVisualScore,
+  rawScore:st.dataset.tfVisualRawScore,day:st.dataset.tfVisualDay,
+  snapshot:(()=>{const s=snapshotFor(key);return {vigor:s.vigor,canopyCover:s.canopyCover,tillerDensity:s.tillerDensity,leafArea:s.leafArea,rootMass:s.rootMass,moisture:s.moisture,saltStress:s.saltStress}})(),
   asset:st.dataset.tfVisualAsset,src:st.dataset.tfVisualSource,ready:st.dataset.tfPhotoReady
  }:null}
 };
