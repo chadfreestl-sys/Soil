@@ -329,6 +329,21 @@ async function refresh(key){
  stage.dataset.tfLastRenderedScore=String(n);
  stage.dataset.tfLastRenderedDay=String(Number(snapshot.day??dayFor(key))||0);
  stage.dataset.tfVisualProgress='score '+n+' / canopy '+Math.round(canopy)+' / root support '+Math.round(rootSupport*100);
+ // When discrete photo assets coincide, display the independently modeled
+ // comparison rather than artificially inventing different roots or organisms.
+ let comparison=stage.querySelector('.tf-visual-comparison');
+ if(key==='B'){
+  if(!comparison){comparison=document.createElement('span');comparison.className='tf-visual-comparison';comparison.setAttribute('aria-live','polite');stage.appendChild(comparison);}
+  const a=snapshotFor('A'),delta=Number(snapshot.vigor)-Number(a?.vigor);
+  const aCover=Number(a?.canopyCover),bCover=Number(snapshot.canopyCover);
+  const coverDelta=Number.isFinite(aCover)&&Number.isFinite(bCover)?bCover-aCover:NaN;
+  comparison.hidden=!Number.isFinite(delta);
+  if(Number.isFinite(delta)){
+   comparison.textContent='B vs A: '+(delta>=0?'+':'')+delta.toFixed(1)+' vigor'+(Number.isFinite(coverDelta)?' · '+(coverDelta>=0?'+':'')+coverDelta.toFixed(1)+'% cover':'');
+   comparison.dataset.tfDifference=delta.toFixed(2);
+  }
+ }else if(comparison)comparison.remove();
+
  if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature){
   lastState.set(key,{index,signature,day:elapsed});
   indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · visual index '+n+(establishmentOffset?' · early-spring canopy adjustment':'')+canopyStatus);
@@ -416,6 +431,7 @@ css.textContent='.photo-stage{position:relative}'+
 css.textContent+=' .photo-stage>.tf-canopy-response{position:absolute;inset:0;z-index:4;pointer-events:none;transition:background 2.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-canopy-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);transition:backdrop-filter 2.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-soil-moisture-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);transition:background 2.5s ease-out}';
+css.textContent+=' .photo-stage>.tf-visual-comparison{position:absolute;right:9px;bottom:9px;z-index:31;pointer-events:none;max-width:68%;padding:5px 8px;border-radius:7px;background:rgba(19,54,40,.9);color:#fff;font:700 11px/1.3 system-ui,sans-serif;text-align:right;box-shadow:0 2px 6px #0005}';
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
