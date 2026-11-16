@@ -268,6 +268,22 @@ async function refresh(key){
  const saturation=clamp((.57+canopyHealth*.0082-stressPenalty*.12-moistureStress*.12)*seasonalWarmth*dormancyFactor,.32,1.34);
  const brightness=clamp((.78+canopyHealth*.0038-stressPenalty*.06-moistureStress*.06)*(season==='winter'?.92:1),.70,1.16);
  const contrast=clamp(.97+canopyHealth*.001, .95,1.09);
+ // A separate canopy-only layer makes the continuous modeled response visible
+ // without recoloring soil or inventing new root/earthworm positions.
+ // Its strength follows the absolute per-lawn plant state, not treatment labels.
+ let canopyLayer=stage.querySelector('.tf-canopy-response');
+ if(!canopyLayer){
+  canopyLayer=document.createElement('div');
+  canopyLayer.className='tf-canopy-response';
+  canopyLayer.setAttribute('aria-hidden','true');
+  stage.appendChild(canopyLayer);
+ }
+ const canopySignal=clamp((canopyHealth-45)/45,0,1);
+ const moistureSignal=clamp((Number(snapshot.moisture)||35)/100,0,1);
+ const canopyTintStrength=clamp(.025+canopySignal*.19+moistureSignal*.045-stressPenalty*.08,0,.25);
+ canopyLayer.style.background='linear-gradient(to bottom,rgba(37,108,37,'+canopyTintStrength.toFixed(3)+') 0%,rgba(48,118,43,'+(canopyTintStrength*.67).toFixed(3)+') 24%,transparent 43%)';
+ canopyLayer.dataset.tfCanopyResponse=canopyHealth.toFixed(1);
+
  photo.style.setProperty('filter','saturate('+saturation.toFixed(3)+') brightness('+brightness.toFixed(3)+') contrast('+contrast.toFixed(3)+')','important');
  photo.style.transition='filter 3.8s ease-in-out';
  stage.dataset.tfVisualFilter='saturation '+saturation.toFixed(2)+'; brightness '+brightness.toFixed(2);
@@ -365,10 +381,11 @@ css.textContent='.photo-stage{position:relative}'+
  '.tf-visual-indicator{margin:7px 2px 3px;font-size:.72rem;font-weight:800;line-height:1.35;color:#234f37}'+
  '.tf-visual-indicator[data-tf-image-unavailable="1"]{color:#a1382d}'+
  '@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}';
+css.textContent+=' .photo-stage>.tf-canopy-response{position:absolute;inset:0;z-index:4;pointer-events:none;transition:background 2.5s ease-out}';
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
- version:'3.8',states:STATES,score,refresh,refreshAll:boot,
+ version:'3.9',states:STATES,score,refresh,refreshAll:boot,
  showReplayFrame:(frames)=>{for(const key of ['A','B']){if(!frames?.[key])continue;replaySnapshots.set(key,frames[key]);const stage=elements(key).stage;if(stage){stage.dataset.tfPhotoSignature='';stage.dataset.tfPhotoReady='0';}lastState.delete(key);refresh(key);}},
  endReplay:()=>{replaySnapshots.clear();lastState.clear();refresh('A');refresh('B');},
  getStatus:key=>{const st=elements(key).stage;return st?{
