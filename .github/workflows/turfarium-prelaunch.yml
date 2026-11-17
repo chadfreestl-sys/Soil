@@ -23,3 +23,6 @@ jobs:
         run: node tests/five-year-scenarios.test.cjs
       - name: Verify live nitrogen mass balance
         run: node tests/phase4-live-nitrogen.test.cjs
+
+      - name: Verify low-dose organic amendment response
+        run: node tests/organic-amendment-dose.test.cjs
