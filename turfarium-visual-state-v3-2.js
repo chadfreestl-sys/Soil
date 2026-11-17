@@ -161,8 +161,8 @@ function ensureStage(stage,photo){
  }
  // The mobile layout moves the photo-stage, leaving its original caption behind.
  // Reattach that same caption rather than creating a second, stale indicator.
- let indicator=stage.nextElementSibling;
- if(!indicator?.classList.contains('tf-visual-indicator')){
+ let indicator=stage.parentElement?.querySelector(':scope > .tf-visual-indicator');
+ if(!indicator){
   const key=stage.dataset.tfLawnKey;
   const original=document.getElementById('lawn-'+String(key||'').toLowerCase()+'-panel');
   indicator=original?.querySelector('.tf-visual-indicator')||document.createElement('div');
@@ -368,8 +368,8 @@ async function refresh(key){
  }else if(comparison)comparison.remove();
  // Move both captions into a dedicated strip beneath the photo, never over turf.
  // Re-run on refresh because the stacked mobile layout can move photo-stage.
- let strip=stage.nextElementSibling;
- if(!strip?.classList.contains('tf-photo-stat-strip')){
+ let strip=stage.parentElement?.querySelector(':scope > .tf-photo-stat-strip');
+ if(!strip){
   strip=document.createElement('div');
   strip.className='tf-photo-stat-strip';
   stage.insertAdjacentElement('afterend',strip);
@@ -434,10 +434,10 @@ function boot(){
     // Re-render after treatment/undo even if the clock did not advance.
     // Also keep the relative A/B tint synchronized after either lawn changes.
     const peer=snapshotFor(key==='A'?'B':'A');
-    const delta=clamp((Number(snapshot.vigor)||0)-(Number(peer?.vigor)||0),-12,12).toFixed(2);
-    const tint=stage.querySelector('.tf-canopy-response')?.dataset.tfRelativeVigor;
+    // Independent photo optics no longer use peer-relative tint.
+    // Do not refresh forever comparing the retired tint field with peer vigor.
     if(stage.dataset.tfVisualDay!==day||stage.dataset.tfVisualSeason!==season||
-       stage.dataset.tfCanopyVigor!==vigor||tint!==delta)refresh(key);
+       stage.dataset.tfCanopyVigor!==vigor)refresh(key);
    }
   },1500);
   // Reconcile visible caption against the authoritative clock badge, including
@@ -447,8 +447,8 @@ function boot(){
    for(const key of ['A','B']){
     const {stage,photo}=elements(key);if(!stage||!photo)continue;
     const badge=(stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'));
-    const indicator=stage.nextElementSibling;
-    if(!badge||!indicator?.classList.contains('tf-visual-indicator'))continue;
+    const indicator=stage.parentElement?.querySelector(':scope > .tf-visual-indicator');
+    if(!badge||!indicator)continue;
     const season=badge.dataset.season;
     const shown=indicator.textContent||'';
     const seasonLabel=season?.charAt(0).toUpperCase()+season?.slice(1);
