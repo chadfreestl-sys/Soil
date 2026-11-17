@@ -629,13 +629,21 @@ const carbonFactor=cl((s.carbReserve-12)/58,0,1);
 // while retaining temperature, water, oxygen, salinity and carbon limits.
 // Bounded response avoids turning each fertilizer visit into an instant photo swap.
 // This is a conceptual response, not a field-calibrated fertilizer curve.
-const nitrogenGrowthFactor=cl(.82+.22*(cl(Number(s.n)||0,0,100)/35),.82,1.08);
+// Use the actual mineral-N pools, not only the rounded display proxy.
+// The bounded, saturating response preserves a low-N limitation and
+// diminishing returns; no treatment directly creates canopy or roots.
+const availableMineralN=Math.max(0,(Number(s.no3)||0)+(Number(s.nh4)||0));
+const nitrogenSufficiency=cl(availableMineralN/(availableMineralN+14),0,1);
+const nitrogenGrowthFactor=.70+.55*nitrogenSufficiency;
 const growthOpportunity=cl(stressFit*carbonFactor*nitrogenGrowthFactor,0,1);
 const habit=turfGrowthHabit[s.grass]||turfGrowthHabit['Tall fescue'];
 const leafTarget=cl(22+65*leafRetention*growthOpportunity,15,94);
 s.leafArea=cl(s.leafArea+(leafTarget-s.leafArea)*.018*habit.regrowth,5,100);
 const tillerTarget=cl(25+55*growthOpportunity*leafRetention,12,88);
-s.tillerDensity=cl(s.tillerDensity+(tillerTarget-s.tillerDensity)*.012*habit.tiller*growthOpportunity,5,100);
+// Nutrient sufficiency affects recruitment of new tillers gradually, not
+// existing ground occupation. Keep response limited by growing conditions.
+const tillerRecruitment=.012*habit.tiller*growthOpportunity*(.65+.70*nitrogenSufficiency);
+s.tillerDensity=cl(s.tillerDensity+(tillerTarget-s.tillerDensity)*tillerRecruitment,5,100);
 // Lateral expansion is separate from tillering and cannot create cover
 // without available gaps, energy and a suitable growing season.
 const gap=cl((100-s.canopyCover)/100,0,1);
@@ -658,7 +666,7 @@ const initialLeaves=Number.isFinite(Number(s.initialLeafArea))?Number(s.initialL
 const leafFill=cl((s.leafArea-initialLeaves)*.12,-4,4);
 const coverTarget=cl(initialCover+withinClumpFill+leafFill+s.lateralSpread*.25,30,96);
 s.canopyCover=cl(s.canopyCover+(coverTarget-s.canopyCover)*(.035*growthOpportunity+.001*lateralPotential*growthOpportunity),30,96);
-const rootGrowth=.09*growthOpportunity*aeration*(1+s.seaweedRootResponse*.02);
+const rootGrowth=.09*growthOpportunity*aeration*(.8+.3*nitrogenSufficiency)*(1+s.seaweedRootResponse*.02);
 const rootLoss=.018+.032*(1-stressFit)+.014*(1-leafRetention);
 s.rootMass=cl(s.rootMass+rootGrowth-rootLoss,5,100);
 s.rootDepth=cl(s.rootDepth+.013*growthOpportunity*aeration*(1-s.rootDepth/tr[0])-.002*(1-stressFit),2,tr[0]);
