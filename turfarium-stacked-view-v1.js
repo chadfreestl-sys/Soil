@@ -16,9 +16,9 @@ css.textContent=`
   .simulation-grid.tf-primary-workspace>#lawn-a-panel,.simulation-grid.tf-primary-workspace>#lawn-b-panel,
   .simulation-grid.tf-primary-workspace>#tf-playback-strip,.simulation-grid.tf-primary-workspace>#timeline-workflow{display:none!important}
 
-  #tf-stacked-lawns{display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;max-width:100%!important;min-width:0!important;grid-column:1/-1!important;margin:0 0 12px!important;gap:8px!important}
+  #tf-stacked-lawns{overflow-anchor:none!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;max-width:100%!important;min-width:0!important;grid-column:1/-1!important;margin:0 0 12px!important;gap:8px!important}
   #tf-stacked-lawns>*{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
-  #tf-stacked-lawns .tf-lawn-visual{display:block!important;margin:0!important;padding:8px!important;border:1px solid #c5d8c7!important;border-radius:13px!important;background:#f4f8f2!important}
+  #tf-stacked-lawns .tf-lawn-visual{min-height:0!important;height:auto!important;overflow-anchor:none!important;display:block!important;margin:0!important;padding:8px!important;border:1px solid #c5d8c7!important;border-radius:13px!important;background:#f4f8f2!important}
   #tf-stacked-lawns .tf-lawn-title{position:static!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin:0 0 6px!important;padding:1px 3px!important;background:transparent!important;border:0!important;box-shadow:none!important;color:#173e2d!important;font-size:15px!important;font-weight:850!important;line-height:1.25!important;pointer-events:auto!important}
   #tf-stacked-lawns .tf-lawn-title span{color:#173e2d!important;text-shadow:none!important}
   #tf-stacked-lawns .photo-stage{display:block!important;position:relative!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:21/9!important;margin:0!important;overflow:hidden!important}
