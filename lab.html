@@ -488,6 +488,18 @@ function refreshProductInfo(key){
  doseInfo(key);
 }
 function make(){const om=val('organic',.5,10,3),bd=val('bulk',.7,2.1,1.45);return {comp:cl((bd-.85)/1.05*100),carbon:cl(om/10*100),om,bulk:bd,ec:val('ec',0,20,.6),no3:val('nitrate',0,300,12),nh4:val('ammonium',0,200,5),p:val('psoil',0,500,20),k:val('ksoil',0,1000,120),cec:val('cec',1,60,14),texture:$('texture').value,ph:val('ph',4.5,8.5,6.3),moist:49,n:24,salts:12,good:[18,16,13,12,11],bad:[54,50,47],worms:[12,19,13],structure:20,effects:[],grass:$('grass').value,temp:68,rootDepth:9,thatch:.28,rootMass:25,leafArea:50,carbReserve:55,tillerDensity:38,canopyCover:50,initialCover:50,initialTillers:38,initialLeafArea:50,initialRootMass:25,canopyHeight:val('mowHeight',.1,6,2.5),lateralSpread:0,mowHeight:val('mowHeight',.1,6,2.5),mowInterval:7,lastMowDay:0,mowEvents:0,lastClippingFraction:0,plantEnergyBalance:0,organicN:om*1100,labileC:cl(om*7,2,75),microbialC:cl(om*4,2,60),grazing:25,seaweedSignal:0,seaweedRootResponse:0,seaweedStressBuffer:0,cycle:{mineral:0,nitrified:0,uptake:0,leached:0},soilMoistMemory:49,oxygenReserve:38,drainageIndex:35,anaerobicStress:0,competition:40,waterInput:0}}
+// Phase 4 diagnostic bridge: immutable scalar snapshots for A/B comparisons.
+// These indices are conceptual, not laboratory measurements or predictions.
+window.TurfariumScienceSnapshot=function(){
+ const snapshot=s=>({
+  day, mineralN:Number(s.no3)+Number(s.nh4), nitrate:Number(s.no3), ammonium:Number(s.nh4),
+  organicN:Number(s.organicN), nitrogenCycle:{...s.cycle},
+  soilMoistureIndex:Number(s.moist), soilEC:Number(s.ec), organicMatter:Number(s.om),
+  canopyCover:Number(s.canopyCover), tillerDensity:Number(s.tillerDensity),
+  leafArea:Number(s.leafArea), rootMass:Number(s.rootMass), vigor:env(s).vigor
+ });
+ return {day,A:snapshot(A),B:snapshot(B)};
+};
 function avg(x){return x.reduce((a,b)=>a+b,0)/x.length}
 function env(s){const oxygen=cl(s.oxygenReserve),heat=cl(100-Math.max(0,Math.abs(s.temp-(turf[s.grass]||turf['Tall fescue']).t)-12)*2.7),wet=cl(100-Math.abs(s.moist-58)*1.5),phFit=cl(100-Math.max(0,(turf[s.grass]||turf['Tall fescue']).lo-s.ph,s.ph-(turf[s.grass]||turf['Tall fescue']).hi)*38),saltStress=cl((s.salts-24)*1.4);
 const good=avg(s.good),bad=avg(s.bad),worms=avg(s.worms),vigor=cl(17+good*.3-bad*.22+oxygen*.12+heat*.15+wet*.12+s.n*.14+phFit*.08-saltStress*.18);
@@ -537,7 +549,16 @@ s.grazing=cl(s.grazing+(.06*active*s.good[0]/65-.03*s.grazing/35),0,100);
 const omBefore=s.om;
 const mineralization=Math.min(s.organicN,.012*active*(.3+s.om/3));s.organicN=Math.max(0,s.organicN-mineralization);s.nh4+=mineralization;s.cycle.mineral+=mineralization;
 const nitrification=Math.min(s.nh4,.06*active*s.nh4);s.nh4-=nitrification;s.no3+=nitrification;s.cycle.nitrified+=nitrification;
-const demand=.075*tempFit*tr[2];const uptake=Math.min(demand,Math.max(0,s.no3+s.nh4));const takeNo3=Math.min(s.no3,uptake*.8);s.no3-=takeNo3;s.nh4=Math.max(0,s.nh4-(uptake-takeNo3));s.cycle.uptake+=uptake;
+// Phase 4: account for actual uptake from both mineral-N pools. Prefer
+// nitrate, then fill remaining demand with ammonium. Previously the 80%
+// nitrate cap could report uptake that never left either pool when NH4 was low.
+const demand=.075*tempFit*tr[2];
+const requestedUptake=Math.min(demand,Math.max(0,s.no3+s.nh4));
+const takeNo3=Math.min(s.no3,requestedUptake);
+const takeNh4=Math.min(s.nh4,Math.max(0,requestedUptake-takeNo3));
+s.no3=Math.max(0,s.no3-takeNo3);
+s.nh4=Math.max(0,s.nh4-takeNh4);
+s.cycle.uptake+=takeNo3+takeNh4;
 const drainage=cl((s.moist-73)/35,0,1);const leach=Math.min(s.no3,s.no3*.003*drainage);s.no3-=leach;s.cycle.leached+=leach;
 s.ec=cl(s.ec*.9996+.00005*(s.no3+s.nh4)-.0007*drainage,0,20);
 s.om=cl(s.om-.000025*active,.1,15);
