@@ -377,6 +377,8 @@ async function refresh(key){
  const seasonBadge=(stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'));
  if(seasonBadge)strip.appendChild(seasonBadge);
  if(comparison&&key==='B')strip.appendChild(comparison);
+ // Force captions outside the photograph even when another script reattaches them.
+ for(const node of [...stage.querySelectorAll('.tf-season-on-photo,.tf-visual-comparison')])strip.appendChild(node);
  // Existing caption and the stat strip both remain attached to the moved stage.
 
 
@@ -475,6 +477,7 @@ css.textContent+=' .photo-stage>.tf-canopy-response{position:absolute;inset:0;z-
 css.textContent+=' .photo-stage>.tf-canopy-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);transition:backdrop-filter 2.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-soil-moisture-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);transition:background 2.5s ease-out}';
 css.textContent+=' .tf-photo-stat-strip{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 10px;margin:7px 2px 4px;color:#214b37;font:700 12px/1.45 system-ui,sans-serif} .tf-photo-stat-strip>.tf-visual-comparison,.tf-photo-stat-strip>.tf-season-on-photo{position:static!important;inset:auto!important;max-width:100%;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:inherit!important;box-shadow:none!important;text-align:left!important;font:inherit!important;pointer-events:auto!important}';
+css.textContent+=' .photo-stage>.tf-season-on-photo,.photo-stage>.tf-visual-comparison{display:none!important}';
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
