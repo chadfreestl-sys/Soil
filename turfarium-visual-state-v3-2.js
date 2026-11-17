@@ -355,9 +355,13 @@ async function refresh(key){
   const a=snapshotFor('A'),delta=Number(snapshot.vigor)-Number(a?.vigor);
   const aCover=Number(a?.canopyCover),bCover=Number(snapshot.canopyCover);
   const coverDelta=Number.isFinite(aCover)&&Number.isFinite(bCover)?bCover-aCover:NaN;
+  const aTillers=Number(a?.tillerDensity),bTillers=Number(snapshot.tillerDensity);
+  const tillerDelta=Number.isFinite(aTillers)&&Number.isFinite(bTillers)?bTillers-aTillers:NaN;
+  const aRoots=Number(a?.rootMass),bRoots=Number(snapshot.rootMass);
+  const rootDelta=Number.isFinite(aRoots)&&Number.isFinite(bRoots)?bRoots-aRoots:NaN;
   comparison.hidden=!Number.isFinite(delta);
   if(Number.isFinite(delta)){
-   comparison.textContent='B vs A: '+(delta>=0?'+':'')+delta.toFixed(1)+' vigor'+(Number.isFinite(coverDelta)?' · '+(coverDelta>=0?'+':'')+coverDelta.toFixed(1)+'% cover':'');
+   comparison.textContent='B vs A: '+(delta>=0?'+':'')+delta.toFixed(1)+' vigor'+(Number.isFinite(coverDelta)?' · '+(coverDelta>=0?'+':'')+coverDelta.toFixed(2)+' pts cover':'')+(Number.isFinite(tillerDelta)?' · '+(tillerDelta>=0?'+':'')+tillerDelta.toFixed(1)+' tillers':'')+(Number.isFinite(rootDelta)?' · '+(rootDelta>=0?'+':'')+rootDelta.toFixed(1)+' roots':'');
    comparison.dataset.tfDifference=delta.toFixed(2);
   }
  }else if(comparison)comparison.remove();
