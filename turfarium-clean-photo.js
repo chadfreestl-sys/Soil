@@ -1,13 +1,7 @@
 /* Force the current clean soil photo after legacy layout scripts run, then load current living motion + biology + environmental drift + weather + treatment layout + default month + shared-start layout + visual state layers once. */
 (()=>{'use strict';
-const image='file_00000000f35481f5a24a1191fdf2adf5.png?v=clean-4';
-function apply(){
- for(const id of ['lawn-a-panel','lawn-b-panel']){
-  const stage=document.querySelector('#'+id+' .photo-stage');if(!stage||stage.dataset.tfVisualEngine==='v2')continue;
-  const el=stage.querySelector(':scope > img.soil-photo:not(.tf-state-photo)');if(!el)continue;
-  if(el.getAttribute('src')!==image)el.setAttribute('src',image);el.removeAttribute('srcset');
- }
-}
+// Image selection is exclusively owned by turfarium-visual-state-v3-2.js.
+function apply(){} // Retained as a compatibility no-op for existing loader wiring.
 function inject(){
  if(!document.querySelector('script[src*="turfarium-living-window.js"]')){document.querySelectorAll('.tf-photo-motion,.tf-soil-lens').forEach(el=>el.remove());document.getElementById('tf-photo-motion-style')?.remove();const s=document.createElement('script');s.dataset.tfMotionLoader='1';s.src='turfarium-living-window.js?v=4.1.0';document.body.appendChild(s);}
  if(!document.getElementById('tf-bio-A')&&!document.querySelector('script[src*="turfarium-biology-v1.js"]')){const s=document.createElement('script');s.dataset.tfBioLoader='1';s.src='turfarium-biology-v1.js?v=1.1.0';document.body.appendChild(s);}

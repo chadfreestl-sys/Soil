@@ -27,12 +27,12 @@ for(const key of ['A','B']){
   // The seasonal visual engine exclusively owns photographic color grading.
   // This motion layer must not overwrite its per-lawn filter on every KPI update.
   tint.style.background=`linear-gradient(to bottom,rgba(116,101,45,${((1-health)*.085).toFixed(3)}) 0%,transparent 34%,rgba(33,21,13,${((1-soil)*.08).toFixed(3)}) 100%)`;
-  // Canopy becomes visually denser only when time has passed AND turf vigor supports it; stressed turf goes the opposite direction.
-  const canopyOpacity=clamp(age*(healthy*.34-stressed*.12)+longAge*healthy*.10,0,.42);canopy.style.opacity=canopyOpacity.toFixed(3);canopy.style.transform=`scaleY(${(1+age*healthy*.035).toFixed(4)}) translateY(${(-age*healthy*.45).toFixed(2)}px)`;canopy.style.filter=`saturate(${(1.02+healthy*.16).toFixed(2)}) brightness(${(.98+healthy*.07).toFixed(2)})`;
-  // Existing roots/aggregates are emphasized or muted rather than drawing synthetic white roots.
-  rootState.style.opacity=clamp(age*(bioGain*.20+healthy*.08),0,.27).toFixed(3);rootState.style.filter=`contrast(${(1.02+age*bioGain*.16).toFixed(2)}) brightness(${(.98+age*bioGain*.05).toFixed(2)}) saturate(${(.96+bioGain*.10).toFixed(2)})`;
-  // Stress develops progressively with time; this makes declining lawns visibly diverge without inventing new objects.
-  stress.style.opacity=clamp(age*stressed*.72,0,.48).toFixed(3);stress.style.background=`linear-gradient(to bottom,rgba(151,126,53,${(.11+stressed*.16).toFixed(3)}) 0 36%,transparent 47%,rgba(72,49,31,${(.04+stressed*.09).toFixed(3)}) 100%)`;
+  // The seasonal photo engine alone owns appearance. This layer supplies motion only.
+  // Never imply additional canopy coverage or root biomass by duplicating the photograph.
+  canopy.style.opacity='0';
+  rootState.style.opacity='0';
+  stress.style.opacity='0';
+  tint.style.background='none';
   grass.style.setProperty('--tf-grass-duration',(desktop?9.2-health*3.0:11.5-health*4).toFixed(2)+'s');grass.style.setProperty('--tf-grass-opacity',(desktop?0.15+health*.22:0.10+health*.18).toFixed(2));
   worms.forEach((w,i)=>{w.live.style.setProperty('--tf-worm-duration',(desktop?11.2-activity*6.0+i*.48:13.5-activity*7.5+i*.63).toFixed(2)+'s');const visible=reduced?0:clamp((earthworms-8)/34,0,1);w.cover.style.opacity=(visible*.96).toFixed(2);w.live.style.opacity=visible.toFixed(2);w.live.style.animationPlayState=earthworms<9?'paused':'running'});
   stage.dataset.tfVisualVigor=Math.round(vigor);stage.dataset.tfWormActivity=Math.round(earthworms);stage.dataset.tfDay=day;stage.dataset.tfMotionCondition=stressed>.35?'stressed':healthy>.35?'improving':'stable';
