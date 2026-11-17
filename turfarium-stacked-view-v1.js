@@ -258,7 +258,7 @@ function hidePhotoDiagnostics(){
  while((node=walker.nextNode())){
   if(!/^\\s*Photo stage:\\s*/i.test(node.textContent||''))continue;
   const el=node.parentElement;
-  if(el&&el.children.length===0)matches.push(el);
+  if(el&&el.children.length===0&&el.style.display!=='none')matches.push(el);
  }
  for(const el of matches)el.style.setProperty('display','none','important');
 }
@@ -266,7 +266,7 @@ function hidePhotoDiagnostics(){
 function syncDays(){
  for(const key of ['A','B']){
   const source=byId('day'+key),target=byId('tf-stack-day-'+key);
-  if(source&&target)target.textContent=source.textContent;
+  if(source&&target&&target.textContent!==source.textContent)target.textContent=source.textContent;
  }
 }
 
@@ -320,7 +320,9 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 window.addEventListener('load',start,{once:true});
 window.addEventListener('turfarium:time-advanced',()=>{syncDays();if(layoutParts)placeLiveProgression(layoutParts);hidePhotoDiagnostics();});
-new MutationObserver(()=>{if(mobileQuery.matches)hidePhotoDiagnostics();}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+// Do not observe every text mutation in the entire document. The visual engine
+// updates captions frequently; a global observer creates needless DOM churn.
+
 mobileQuery.addEventListener?.('change',event=>{if(event.matches)start();});
 new MutationObserver(records=>{
  if(!mobileQuery.matches||remountQueued)return;
