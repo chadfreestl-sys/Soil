@@ -296,15 +296,10 @@ async function refresh(key){
  // Express *small* independent physiological differences as canopy-only color,
  // without fabricating ground cover, roots, organisms, or new photo assets.
  const canopyTintStrength=clamp(.025+canopySignal*.19+moistureSignal*.045-stressPenalty*.08,0,.25);
- const other=key==='A'?snapshotFor('B'):snapshotFor('A');
- const relativeVigor=clamp((Number(snapshot.vigor)||0)-(Number(other?.vigor)||0),-12,12);
- // A/B differences of 1-3 points previously altered filter values by less
- // than 1%, making distinct trajectories visually indistinguishable.
- // Cap this comparative cue so it cannot imply major turf recovery.
- const relativeTint=clamp(relativeVigor*.012,-.11,.11);
- const visibleTint=clamp(canopyTintStrength+relativeTint,0,.32);
+ // Absolute physiological state only: the neighboring lawn cannot alter this lawn's appearance.
+ const visibleTint=clamp(canopyTintStrength,0,.20);
  canopyLayer.style.background='linear-gradient(to bottom,rgba(37,108,37,'+visibleTint.toFixed(3)+') 0%,rgba(48,118,43,'+(visibleTint*.67).toFixed(3)+') 24%,transparent 43%)';
- canopyLayer.dataset.tfRelativeVigor=relativeVigor.toFixed(2);
+ canopyLayer.dataset.tfRelativeVigor='not-used';
  canopyLayer.dataset.tfCanopyResponse=canopyHealth.toFixed(1);
  // Keep the base scientific photograph intact while showing continuous,
  // independently modeled canopy and soil-moisture differences. These are
