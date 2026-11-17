@@ -21,3 +21,5 @@ jobs:
         run: node tests/food-web-progression.test.cjs
       - name: Test five-year scenarios
         run: node tests/five-year-scenarios.test.cjs
+      - name: Verify live nitrogen mass balance
+        run: node tests/phase4-live-nitrogen.test.cjs
