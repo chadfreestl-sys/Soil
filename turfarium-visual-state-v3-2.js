@@ -366,6 +366,19 @@ async function refresh(key){
    comparison.dataset.tfDifference=delta.toFixed(2);
   }
  }else if(comparison)comparison.remove();
+ // Move both captions into a dedicated strip beneath the photo, never over turf.
+ // Re-run on refresh because the stacked mobile layout can move photo-stage.
+ let strip=stage.nextElementSibling;
+ if(!strip?.classList.contains('tf-photo-stat-strip')){
+  strip=document.createElement('div');
+  strip.className='tf-photo-stat-strip';
+  stage.insertAdjacentElement('afterend',strip);
+ }
+ const seasonBadge=stage.querySelector('.tf-season-on-photo');
+ if(seasonBadge)strip.appendChild(seasonBadge);
+ if(comparison&&key==='B')strip.appendChild(comparison);
+ // Existing caption and the stat strip both remain attached to the moved stage.
+
 
  if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature&&photo.getAttribute('src')===stage.dataset.tfVisualSource){
   lastState.set(key,{index,signature,day:elapsed});
@@ -461,7 +474,7 @@ css.textContent='.photo-stage{position:relative}'+
 css.textContent+=' .photo-stage>.tf-canopy-response{position:absolute;inset:0;z-index:4;pointer-events:none;transition:background 2.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-canopy-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);transition:backdrop-filter 2.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-soil-moisture-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);transition:background 2.5s ease-out}';
-css.textContent+=' .photo-stage>.tf-visual-comparison{position:absolute;right:8px;top:8px;bottom:auto;z-index:31;pointer-events:none;max-width:calc(100% - 16px);padding:5px 8px;border-radius:7px;background:rgba(19,54,40,.9);color:#fff;font:700 10px/1.35 system-ui,sans-serif;text-align:right;box-shadow:0 2px 6px #0005}';
+css.textContent+=' .tf-photo-stat-strip{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 10px;margin:7px 2px 4px;color:#214b37;font:700 12px/1.45 system-ui,sans-serif} .tf-photo-stat-strip>.tf-visual-comparison,.tf-photo-stat-strip>.tf-season-on-photo{position:static!important;inset:auto!important;max-width:100%;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:inherit!important;box-shadow:none!important;text-align:left!important;font:inherit!important;pointer-events:auto!important}';
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
