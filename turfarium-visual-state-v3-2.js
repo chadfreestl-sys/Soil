@@ -197,7 +197,7 @@ function present(key,stage,photo,overlay,indicator,url,season,index,n,kind,reque
   if(pending.get(key)!==request)return;
   // Reject stale completion before publishing readiness or source metadata.
   // Otherwise a prior-season load can briefly appear ready to other modules.
-  const liveSeason=stage.querySelector('.tf-season-on-photo')?.dataset.season;
+  const liveSeason=(stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'))?.dataset.season;
   if(liveSeason&&liveSeason!==season){
    requestAnimationFrame(()=>refresh(key));
    return;
@@ -238,7 +238,7 @@ async function refresh(key){
  const canopyStatus=' · cover '+(Number(snapshot.canopyCover)||0).toFixed(1)+'% · tillers '+(Number(snapshot.tillerDensity)||0).toFixed(1);
  const month=monthFor(key,snapshot),season=SEASONS[month];
  // Show a verifiable visual clock directly on each lawn, independent of photo loading.
- let badge=stage.querySelector('.tf-season-on-photo');
+ let badge=(stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'));
  if(!badge){badge=document.createElement('span');badge.className='tf-season-on-photo';badge.setAttribute('aria-live','polite');stage.appendChild(badge);}
  const monthName=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][month];
  badge.textContent=monthName+' · '+season[0].toUpperCase()+season.slice(1)+' · Day '+(snapshot.day??dayFor(key));
@@ -349,7 +349,7 @@ async function refresh(key){
  stage.dataset.tfVisualProgress='score '+n+' / canopy '+Math.round(canopy)+' / root support '+Math.round(rootSupport*100);
  // When discrete photo assets coincide, display the independently modeled
  // comparison rather than artificially inventing different roots or organisms.
- let comparison=stage.querySelector('.tf-visual-comparison');
+ let comparison=(stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-visual-comparison')||stage.querySelector('.tf-visual-comparison'));
  if(key==='B'){
   if(!comparison){comparison=document.createElement('span');comparison.className='tf-visual-comparison';comparison.setAttribute('aria-live','polite');stage.appendChild(comparison);}
   const a=snapshotFor('A'),delta=Number(snapshot.vigor)-Number(a?.vigor);
@@ -366,6 +366,19 @@ async function refresh(key){
    comparison.dataset.tfDifference=delta.toFixed(2);
   }
  }else if(comparison)comparison.remove();
+ // Move both captions into a dedicated strip beneath the photo, never over turf.
+ // Re-run on refresh because the stacked mobile layout can move photo-stage.
+ let strip=stage.nextElementSibling;
+ if(!strip?.classList.contains('tf-photo-stat-strip')){
+  strip=document.createElement('div');
+  strip.className='tf-photo-stat-strip';
+  stage.insertAdjacentElement('afterend',strip);
+ }
+ const seasonBadge=(stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'));
+ if(seasonBadge)strip.appendChild(seasonBadge);
+ if(comparison&&key==='B')strip.appendChild(comparison);
+ // Existing caption and the stat strip both remain attached to the moved stage.
+
 
  if(stage.dataset.tfPhotoSignature===signature&&stage.dataset.tfPhotoReady==='1'&&lastState.get(key)?.signature===signature&&photo.getAttribute('src')===stage.dataset.tfVisualSource){
   lastState.set(key,{index,signature,day:elapsed});
@@ -380,7 +393,7 @@ async function refresh(key){
  const asset=await imageFor(index,season);
  if(pending.get(key)!==request)return;
  // A later clock update may have changed the season during asset resolution.
- if(stage.querySelector('.tf-season-on-photo')?.dataset.season!==season){
+ if((stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'))?.dataset.season!==season){
   requestAnimationFrame(()=>refresh(key));
   return;
  }
@@ -431,7 +444,7 @@ function boot(){
    if(document.hidden)return;
    for(const key of ['A','B']){
     const {stage,photo}=elements(key);if(!stage||!photo)continue;
-    const badge=stage.querySelector('.tf-season-on-photo');
+    const badge=(stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'));
     const indicator=stage.nextElementSibling;
     if(!badge||!indicator?.classList.contains('tf-visual-indicator'))continue;
     const season=badge.dataset.season;
@@ -461,7 +474,7 @@ css.textContent='.photo-stage{position:relative}'+
 css.textContent+=' .photo-stage>.tf-canopy-response{position:absolute;inset:0;z-index:4;pointer-events:none;transition:background 2.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-canopy-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);transition:backdrop-filter 2.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-soil-moisture-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);transition:background 2.5s ease-out}';
-css.textContent+=' .photo-stage>.tf-visual-comparison{position:absolute;right:8px;top:8px;bottom:auto;z-index:31;pointer-events:none;max-width:calc(100% - 16px);padding:5px 8px;border-radius:7px;background:rgba(19,54,40,.9);color:#fff;font:700 10px/1.35 system-ui,sans-serif;text-align:right;box-shadow:0 2px 6px #0005}';
+css.textContent+=' .tf-photo-stat-strip{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 10px;margin:7px 2px 4px;color:#214b37;font:700 12px/1.45 system-ui,sans-serif} .tf-photo-stat-strip>.tf-visual-comparison,.tf-photo-stat-strip>.tf-season-on-photo{position:static!important;inset:auto!important;max-width:100%;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:inherit!important;box-shadow:none!important;text-align:left!important;font:inherit!important;pointer-events:auto!important}';
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
