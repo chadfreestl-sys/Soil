@@ -7,11 +7,12 @@
   };
   const allowed=new Set(Object.keys(MODES));
   const params=new URLSearchParams(location.search);
-  let mode=(params.get('mode')||localStorage.getItem('lslAudienceMode')||'professional').toLowerCase();
-  if(!allowed.has(mode)) mode='professional';
+  let mode=(params.get('mode')||localStorage.getItem('lslAudienceMode')||'homeowner').toLowerCase();
+  if(!allowed.has(mode)) mode='homeowner';
   localStorage.setItem('lslAudienceMode',mode);
   document.documentElement.dataset.audience=mode;
 
+  // Presentation tiers only: public beta previews, NOT a purchase gate or security boundary.
   const sectionRules={
     homeowner:{hide:['Living ecosystem microscope','Custom product formulation studio','Worm Tea Brewing Lab','Soil lab & nutrient cycling','Experiment activity','Brew Microscope Observation Log','Evidence & Confidence Layer']},
     technician:{hide:['Worm Tea Brewing Lab','Brew Microscope Observation Log','Evidence & Confidence Layer']},
@@ -61,15 +62,15 @@
   if(header){
     const shell=document.createElement('div');
     shell.className='mode-shell';
-    shell.innerHTML=`<div class="mode-copy"><span class="mode-kicker">Audience mode · same simulation engine</span><strong>${info.label} — ${info.verb}</strong><p>${info.desc}</p><div class="audience-mode-note"><strong>Mode changes presentation, not the underlying ecosystem equations.</strong> Confidence information remains available without dominating the workspace.</div></div><div class="mode-actions"><span class="mode-pill">${info.label}</span><a class="mode-change" href="./">Change audience</a></div>`;
+    shell.innerHTML=`<div class="mode-copy"><span class="mode-kicker">Audience mode · same simulation engine</span><strong>${info.label} — ${info.verb}</strong><p>${info.desc}</p><div class="audience-mode-note"><strong>Beta preview: mode changes presentation, not the underlying ecosystem equations. Paid editions are not yet released.</strong> Confidence information remains available without dominating the workspace.</div></div><div class="mode-actions"><span class="mode-pill">${info.label}</span><a class="mode-change" href="./">Change audience</a></div>`;
     header.insertAdjacentElement('afterend',shell);
   }
 
   const badge=document.querySelector('.build-badge');
-  if(badge) badge.textContent='v19.5.1 · AUDIENCE MODES';
+  if(badge) badge.textContent='TURFARIUM · BETA';
   const topBadge=document.querySelector('header .badge');
-  if(topBadge) topBadge.textContent=`v19.5.1 · ${info.label}`;
-  document.title=`Turfarium v19.5.1 | ${info.label} Mode`;
+  if(topBadge) topBadge.textContent=`BETA · ${info.label}`;
+  document.title=`Turfarium Beta | ${info.label} Mode`;
 
   const hints={
     homeowner:{'Shared starting conditions':'Start with what you know about the lawn. You can leave advanced values alone and compare management choices visually.','⏱ Simulation time':'Try one change at a time, advance the clock, then inspect the lawn and root-zone response.'},
