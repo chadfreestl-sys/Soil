@@ -1,0 +1,35 @@
+name: Build Gumroad editions
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/build_gumroad_editions.py'
+      - '.github/workflows/gumroad-editions.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build three ZIP packages
+        run: python3 scripts/build_gumroad_editions.py
+      - name: Validate packages
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          for edition in ('homeowner','technician','professional'):
+              path=Path('dist')/f'Turfarium-{edition}-beta.zip'
+              assert path.exists(), path
+              with ZipFile(path) as z:
+                  assert z.testzip() is None
+                  for required in ('Turfarium/lab.html','Turfarium/audience-modes.js','Turfarium/START-HERE.html'):
+                      assert required in z.namelist(), (edition,required)
+          print('All three packages passed ZIP integrity and required-file checks')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Turfarium-Gumroad-beta-editions
+          path: dist/*.zip
+          retention-days: 30
