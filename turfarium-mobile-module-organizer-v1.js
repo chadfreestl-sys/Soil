@@ -35,7 +35,10 @@ function organize(){
  const collected=groups.map(group=>({...group,nodes:group.terms.map(findCard).filter(Boolean)}));
  const first=collected.flatMap(g=>g.nodes)[0];
  if(!first)return;
- if(!host.isConnected)first.before(host);
+ // Put advanced research navigation at the very bottom of the mobile page.
+ // Never insert before a moving source card; that can trigger scroll jumps.
+ const main=document.querySelector('main')||document.body;
+ if(host.parentElement!==main||host!==main.lastElementChild)main.appendChild(host);
  for(const group of collected){
    let drawer=document.getElementById('tf-research-'+group.id);
    if(!drawer){
@@ -48,6 +51,7 @@ function organize(){
    for(const node of group.nodes)if(node.parentElement!==body)body.appendChild(node);
    drawer.hidden=body.children.length===0;
  }
+  // Only the research grouping belongs at the bottom; simulation controls stay in place.
   // Keep the independent Lawn A/B history widgets together inside Records.
  const records=document.querySelector('#tf-research-records .tf-research-body');
  if(records){
