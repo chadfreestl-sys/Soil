@@ -90,8 +90,11 @@ function place(){
     if(profile&&profile!==scenario&&profile!==shared&&!profile.contains(stack)){
       if(!profile.id)profile.id='tf-setup-soil-profile';
       if(profile.parentElement!==stack)stack.appendChild(profile);
-      if(profile.matches('details')&&!profile.dataset.tfSetupDefaultClosed){
-        profile.open=false;
+      if(!profile.dataset.tfSetupDefaultClosed){
+        // Soil Profile can be a generated card containing an inner details.
+        // Close the actual profile drawer, not just a possible outer wrapper.
+        const drawer=profile.matches('details')?profile:profile.querySelector('details');
+        if(drawer)drawer.open=false;
         profile.dataset.tfSetupDefaultClosed='1';
       }
     }
