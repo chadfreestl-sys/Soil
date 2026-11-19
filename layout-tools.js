@@ -210,8 +210,8 @@
   };
 
   const titleForPanel=panel=>{
-    if(panel===lawnA)return 'Lawn A';
-    if(panel===lawnB)return 'Lawn B';
+    if(panel===lawnA)return 'Lawn A — Conventional';
+    if(panel===lawnB)return 'Lawn B — Biological';
     if(panel===deck)return 'Soil Profile';
     if(panel===timeline)return 'What Changed';
     if(panel.id==='scenario-onboarding')return 'Scenario Quick Start';
