@@ -230,7 +230,7 @@
   };
 
   const collapseStorageKey=panel=>`turfarium-collapse-v${VERSION}:${keyForPanel(panel)}`;
-  const defaultOpenPanel=panel=>panel===lawnA||panel===lawnB||panel===deck||panel===findManagementPanel()||panel.id==='scenario-memory'||panel.classList.contains('tf-replay-bar');
+  const defaultOpenPanel=panel=>((panel===lawnA||panel===lawnB) ? !window.matchMedia('(max-width:700px)').matches : panel===deck||panel===findManagementPanel()||panel.id==='scenario-memory'||panel.classList.contains('tf-replay-bar'));
 
   const setCollapsed=(panel,collapsed,save=true)=>{
     const button=panel.querySelector(':scope > .tf-collapse-toggle');
@@ -241,7 +241,7 @@
     const chevron=button.querySelector('.tf-collapse-chevron');
     if(chevron)chevron.textContent=collapsed?'▸':'▾';
     body.hidden=collapsed;
-    if(save){
+    if(save && panel!==lawnA && panel!==lawnB){
       try{sessionStorage.setItem(collapseStorageKey(panel),collapsed?'1':'0');}catch(_){ }
     }
   };
@@ -267,7 +267,7 @@
     let collapsed=(panel.id==='experiment-controls'||panel===timeline)?true:!defaultOpenPanel(panel);
     try{
       const saved=sessionStorage.getItem(collapseStorageKey(panel));
-      if(panel.id!=='experiment-controls' && panel!==timeline && (saved==='1'||saved==='0'))collapsed=saved==='1';
+      if(panel!==lawnA && panel!==lawnB && panel.id!=='experiment-controls' && panel!==timeline && (saved==='1'||saved==='0'))collapsed=saved==='1';
     }catch(_){ }
     setCollapsed(panel,collapsed,false);
     button.addEventListener('click',()=>setCollapsed(panel,!panel.classList.contains('tf-panel-collapsed')));
