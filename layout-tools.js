@@ -51,6 +51,8 @@
       }
       #lawn-a-panel .photo-stage,#lawn-b-panel .photo-stage{border:1px solid #8ca99a!important;box-shadow:0 4px 14px rgba(16,55,35,.12)!important}
       #lawn-a-panel .tf-collapse-title,#lawn-b-panel .tf-collapse-title{font-weight:900!important}
+      /* Defensive containment for food-web details appended after accordion initialization. */
+      #lawn-a-panel.tf-panel-collapsed > .tf-food-web,#lawn-b-panel.tf-panel-collapsed > .tf-food-web{display:none!important}
       #lawn-a-panel button,#lawn-b-panel button{cursor:pointer}
     `;
     document.head.appendChild(polish);
