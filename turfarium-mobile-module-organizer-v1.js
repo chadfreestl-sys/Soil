@@ -40,6 +40,21 @@ css.textContent=`@media(max-width:700px){
 #tf-science-card-grid>section.card,#tf-science-card-grid>article.card{width:100%!important;max-width:100%!important;min-width:0!important;grid-column:1/-1!important;margin:0!important}
 #tf-science-card-grid .tf-collapse-toggle,#tf-science-card-grid summary{font-size:15px!important;line-height:1.35!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
 
+/* Refined mobile research hub: consistent rhythm, color, and touch targets. */
+#tf-research-organizer{gap:10px!important;margin:16px 0 0!important;padding:14px!important;border:1px solid #c4d9cf!important;border-radius:22px!important;background:linear-gradient(165deg,#f7faf5,#e9f2ec)!important;box-shadow:0 10px 28px #173e2c12!important}
+.tf-research-drawer{margin:0!important;padding:5px!important;border:1px solid #c7d9d0!important;border-radius:16px!important;background:#fffefa!important;box-shadow:0 2px 8px #123b2b0b!important;overflow:hidden!important}
+.tf-research-drawer>summary{min-height:66px!important;border-radius:12px!important;padding:14px 12px!important;font-size:15px!important;letter-spacing:.01em!important;color:#fff!important;box-shadow:inset 0 1px #ffffff30!important}
+#tf-research-records>summary{background:linear-gradient(110deg,#254f6d,#1e415c)!important}
+#tf-research-ecology>summary{background:linear-gradient(110deg,#08785f,#075944)!important}
+#tf-research-experiments>summary{background:linear-gradient(110deg,#aa5a2e,#88451f)!important}
+.tf-research-drawer>summary .tf-drawer-label{font-size:15px!important;font-weight:850!important;line-height:1.3!important}
+.tf-research-drawer>summary .tf-drawer-icon{font-size:21px!important}
+.tf-research-drawer>summary:focus-visible{outline:3px solid #e4c778!important;outline-offset:-4px!important}
+.tf-research-body{padding:10px 4px 4px!important;gap:9px!important}
+.tf-research-body>section.card,.tf-research-body>article.card{border-radius:13px!important;padding:8px!important;background:#f8faf7!important;box-shadow:none!important}
+.tf-research-body .tf-collapse-toggle,.tf-research-body summary{min-height:52px!important;font-size:15px!important;font-weight:750!important;white-space:normal!important;text-overflow:clip!important}
+#tf-science-card-grid{display:contents!important}
+
 }`;
 document.head.appendChild(css);
 const groups=[
@@ -127,28 +142,24 @@ function organize(){
     });
   }
 
-  // Consolidate remaining standalone science cards into a compact mobile grid.
-  // Move original elements only; never clone or recreate scientific controls.
-  const scienceTitles=['Soil lab & nutrient cycling','Worm Tea Brewing Lab',
-    'Custom product formulation studio','Turf Species Response',
-    'Earthworm Ecology Module','Linked soil food web','Seaweed Response Lab',
-    'Five-year divergence tracker'];
-  let scienceGrid=document.getElementById('tf-science-card-grid');
-  if(!scienceGrid){
-    scienceGrid=document.createElement('section');
-    scienceGrid.id='tf-science-card-grid';
-    scienceGrid.setAttribute('aria-label','Additional science modules');
+  // Consolidate older standalone science cards into their existing research
+  // drawers. Never create a second grid or leave a half-width orphan.
+  const titleOf=card=>[...card.querySelectorAll(
+    ':scope > .tf-collapse-toggle .tf-collapse-title,:scope > .head h2,:scope > h2,'+
+    ':scope > .tf-collapse-body > .head h2,:scope > .tf-collapse-body > h2,'+
+    ':scope > details > summary'
+  )].map(el=>el.textContent.trim().toLowerCase()).join(' ');
+  for(const group of groups){
+    const body=document.querySelector('#tf-research-'+group.id+' > .tf-research-body');
+    if(!body)continue;
+    const cards=[...document.querySelectorAll('section.card,article.card')].filter(card=>
+      !card.closest('#tf-research-organizer,#tf-stacked-lawns') &&
+      group.terms.some(term=>titleOf(card).includes(term.toLowerCase())));
+    for(const card of cards)body.appendChild(card);
   }
-  const cardTitle=card=>[...card.querySelectorAll(':scope > .tf-collapse-toggle .tf-collapse-title,:scope > .head h2,:scope > h2,:scope > .tf-collapse-body > .head h2,:scope > .tf-collapse-body > h2')]
-    .map(el=>el.textContent.trim().toLowerCase()).join(' ');
-  const standalone=[...document.querySelectorAll('section.card,article.card')].filter(card=>
-    !card.closest('#tf-research-organizer,#tf-science-card-grid,#tf-stacked-lawns') &&
-    scienceTitles.some(title=>cardTitle(card).includes(title.toLowerCase())));
-  if(standalone.length){
-    const anchor=document.getElementById('evidence-layer');
-    if(anchor?.parentElement && scienceGrid.parentElement!==anchor.parentElement)anchor.insertAdjacentElement('afterend',scienceGrid);
-    for(const card of standalone)scienceGrid.appendChild(card);
-  }
+  // Older two-column host is no longer part of the layout.
+  const oldGrid=document.getElementById('tf-science-card-grid');
+  if(oldGrid && !oldGrid.children.length)oldGrid.remove();
   // Preserve the confidence module in the main document.
   const confidence=document.getElementById('evidence-layer');
   if(confidence && confidence.parentElement!==main)main.appendChild(confidence);
@@ -180,7 +191,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.02</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.03</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
