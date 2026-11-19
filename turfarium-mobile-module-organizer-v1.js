@@ -81,7 +81,7 @@ function organize(){
   // Scientific microscope belongs after the research drawers, at the end of the page.
   // Move its existing node only when necessary; retain all controls and listeners.
   const microscope=document.getElementById('microscope-lab');
-  if(microscope && microscope.parentElement===main && microscope!==main.lastElementChild)main.appendChild(microscope);
+  // Keep microscope in place until its final position is resolved below.
   // Single native disclosure owns all microscope content; do not clone the live canvas or controls.
   if(microscope && !microscope.querySelector(':scope > #tf-microscope-disclosure')){
     const disclosure=document.createElement('details');
@@ -112,9 +112,14 @@ function organize(){
      if(panel && panel!==host && !panel.contains(host) && !panel.closest('#tf-stacked-lawns') && !records.contains(panel))records.prepend(panel);
    }
  }
- // Run after research/history organization so the microscope is the last panel.
- if(microscope && microscope.parentElement!==main)main.appendChild(microscope);
- if(microscope && microscope!==main.lastElementChild)main.appendChild(microscope);
+ // Place the existing microscope immediately above Brew Microscope Observation Log.
+ // Only move if necessary; do not recreate its canvas or reset disclosure state.
+ const brewLog=findCard('Brew Microscope Observation Log');
+ if(microscope && brewLog && microscope!==brewLog && !microscope.contains(brewLog)){
+   if(microscope.parentElement!==brewLog.parentElement || microscope.nextElementSibling!==brewLog){
+     brewLog.parentElement.insertBefore(microscope,brewLog);
+   }
+ }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',organize,{once:true});else organize();
 [700,1800,3500].forEach(ms=>setTimeout(organize,ms));
