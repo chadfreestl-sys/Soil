@@ -39,6 +39,10 @@ function getShared(){
   return panel;
 }
 function topAnchor(){
+  // On phones the comparison imagery is the header visual. Keep setup immediately below it.
+  if(window.matchMedia('(max-width:700px)').matches){
+    return document.getElementById('tf-stacked-lawns')||document.querySelector('.mode-shell')||document.querySelector('header');
+  }
   return document.querySelector('.mode-shell')||document.querySelector('header');
 }
 function place(){
@@ -57,6 +61,16 @@ function place(){
   }
   if(scenario.parentElement!==stack||stack.firstElementChild!==scenario)stack.prepend(scenario);
   if(shared.parentElement!==stack||scenario.nextElementSibling!==shared)scenario.insertAdjacentElement('afterend',shared);
+  // Keep the existing live soil-profile selector (and its event listeners) intact.
+  // Only relocate the enclosing card on mobile; no controls are cloned.
+  if(window.matchMedia('(max-width:700px)').matches){
+    const selector=document.getElementById('viewMode');
+    const profile=selector?.closest('section.card,.card');
+    if(profile&&profile!==scenario&&profile!==shared&&profile.parentElement!==stack){
+      profile.id=profile.id||'tf-setup-soil-profile';
+      shared.insertAdjacentElement('afterend',profile);
+    }
+  }
   for(const el of [scenario,shared]){
     el.style.removeProperty('order');
     el.style.removeProperty('grid-column');
@@ -75,6 +89,11 @@ style.textContent=`
 #tf-top-start-stack{display:block!important;width:100%!important;max-width:none!important;margin:14px 0 16px!important}
 #tf-top-start-stack>#scenario-onboarding,#tf-top-start-stack>#shared-starting-conditions{display:block!important;width:100%!important;max-width:none!important;margin:0 0 12px!important}
 #tf-top-start-stack>#shared-starting-conditions{margin-bottom:0!important}
+@media(max-width:700px){
+ #tf-top-start-stack{border:1px solid #c9d9cb!important;border-radius:16px!important;background:#f5f8f1!important;padding:10px!important;margin:10px 0 14px!important}
+ #tf-top-start-stack>#scenario-onboarding,#tf-top-start-stack>#shared-starting-conditions,#tf-top-start-stack>#tf-setup-soil-profile{margin:0 0 7px!important;border-radius:11px!important;box-shadow:none!important}
+ #tf-top-start-stack>#tf-setup-soil-profile{margin-bottom:0!important}
+}
 `;
 
 const closedStyle=document.createElement('style');
