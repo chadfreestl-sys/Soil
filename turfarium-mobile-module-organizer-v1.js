@@ -18,7 +18,7 @@ css.textContent=`@media(max-width:700px){
 }`;
 document.head.appendChild(css);
 const groups=[
- {id:'records',title:'📋 Records & diagnostics',terms:['Diagnostic Lens','Five-year progression stress test','Evidence & Confidence Layer']},
+ {id:'records',title:'📋 Records & diagnostics',terms:['Diagnostic Lens','Five-year progression stress test']},
  {id:'ecology',title:'🌱 Ecosystem research',terms:['Turf Species Response','Earthworm Ecology Module','Linked soil food web','Seaweed Response Lab']},
  {id:'experiments',title:'🧪 Experiment tools',terms:['Custom product formulation studio','Worm Tea Brewing Lab','Soil lab & nutrient cycling','Experiment activity']}
 ];
@@ -54,24 +54,29 @@ function organize(){
    for(const node of group.nodes)if(node.parentElement!==body)body.appendChild(node);
    drawer.hidden=body.children.length===0;
  }
-  // The orphan 60px blank tile below Diagnostics has no usable content.
-  // Limit cleanup to empty, non-interactive mobile workspace siblings; never touch inputs.
+  // Remove only the visually blank, non-interactive 40–95px tile beneath Diagnostics.
+  // The old selector missed it because it had a wrapper or an ID.
   const diagnostic=document.getElementById('diagnostic-lens');
-  const diagnosticBottom=diagnostic?.getBoundingClientRect().bottom;
-  if(Number.isFinite(diagnosticBottom)){
-    for(const el of document.querySelectorAll('main > *, main .simulation-grid > *')){
-      if(el.id || el.matches('button,input,select,textarea,details,summary') || el.querySelector('button,input,select,textarea,a,details,canvas,svg,img'))continue;
-      if(el.textContent.trim() || el.children.length)continue;
-      const rect=el.getBoundingClientRect();
-      if(rect.width>=40 && rect.width<=95 && rect.height>=40 && rect.height<=95 && rect.top>=diagnosticBottom-8){
-        el.classList.add('tf-orphan-blank-mobile-tile');
-      }
+  if(diagnostic){
+    const bottom=diagnostic.getBoundingClientRect().bottom;
+    for(const el of document.querySelectorAll('main *')){
+      if(el===diagnostic||diagnostic.contains(el)||el.closest('#tf-research-organizer,#microscope-lab,#evidence-layer'))continue;
+      const r=el.getBoundingClientRect();
+      if(r.width<40||r.width>95||r.height<40||r.height>95||r.top<bottom-8||r.top>bottom+230||r.left>110)continue;
+      if(el.textContent.trim()||el.matches('button,a,input,select,textarea,summary,details,[role="button"],[tabindex]')||el.querySelector('button,a,input,select,textarea,summary,details,[role="button"],[tabindex],canvas,svg,img,video'))continue;
+      // Only hide the outermost matching blank tile, never a populated parent.
+      if(el.parentElement?.classList.contains('tf-orphan-blank-mobile-tile'))continue;
+      el.classList.add('tf-orphan-blank-mobile-tile');
     }
   }
   // Scientific microscope belongs after the research drawers, at the end of the page.
   // Move its existing node only when necessary; retain all controls and listeners.
   const microscope=document.getElementById('microscope-lab');
   if(microscope && microscope.parentElement===main && microscope!==main.lastElementChild)main.appendChild(microscope);
+  // Confidence is the final scientific reference panel, after the microscope.
+  const confidence=document.getElementById('evidence-layer');
+  if(confidence && confidence.parentElement!==main)main.appendChild(confidence);
+  if(confidence && confidence!==main.lastElementChild)main.appendChild(confidence);
   // Only the research grouping belongs at the bottom; simulation controls stay in place.
   // Keep the independent Lawn A/B history widgets together inside Records.
  const records=document.querySelector('#tf-research-records .tf-research-body');
