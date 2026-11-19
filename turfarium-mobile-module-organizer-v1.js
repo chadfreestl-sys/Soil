@@ -172,6 +172,8 @@ function organize(){
      if(panel && panel!==host && !panel.contains(host) && !panel.closest('#tf-stacked-lawns') && !records.contains(panel))records.prepend(panel);
    }
  }
+ const recordsDrawer=document.getElementById('tf-research-records');
+ if(recordsDrawer)recordsDrawer.hidden=!records?.children.length;
  // Place the existing microscope immediately above Brew Microscope Observation Log.
  // Only move if necessary; do not recreate its canvas or reset disclosure state.
  const brewLog=findCard('Brew Microscope Observation Log');
