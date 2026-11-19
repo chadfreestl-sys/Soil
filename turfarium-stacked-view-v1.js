@@ -269,6 +269,10 @@ function ensureWhatChanged(view,dock){
  // Place the report after the two collapsed lawn statistics panels, outside the photo/treatment stack.
  const lawnB=byId('lawn-b-panel');
  if(lawnB && (panel.parentElement!==lawnB.parentElement || panel.previousElementSibling!==lawnB))lawnB.insertAdjacentElement('afterend',panel);
+ // Keep the independent five-year research sandbox immediately below What Changed.
+ // Move its existing section, never recreate the table or change simulator state.
+ const fiveYear=byId('tf-scenario-lab');
+ if(fiveYear && panel.nextElementSibling!==fiveYear)panel.insertAdjacentElement('afterend',fiveYear);
  const source=byId('changeReport'),target=panel.querySelector('.tf-mobile-change-content');
  const sync=()=>{if(source&&target&&target.innerHTML!==source.innerHTML)target.innerHTML=source.innerHTML;};
  sync();
