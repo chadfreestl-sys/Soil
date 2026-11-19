@@ -66,13 +66,28 @@ function place(){
   }
   // Insert once, then move only if a different layout module actually displaced it.
   if(stack.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',stack);
+  if(!stack.querySelector(':scope > .tf-setup-heading')){
+    const heading=document.createElement('div');
+    heading.className='tf-setup-heading';
+    heading.innerHTML='<div class="tf-setup-heading-icon" aria-hidden="true">⚙</div><div><h2>Set up your simulation</h2><p>Choose a scenario, set your baseline and explore the soil.</p></div>';
+    stack.prepend(heading);
+  }
   if(scenario.parentElement!==stack)stack.appendChild(scenario);
   if(shared.parentElement!==stack)stack.appendChild(shared);
+  // Keep the compact setup cards in a predictable order without remounting them.
+  if(scenario.previousElementSibling!==stack.querySelector(':scope > .tf-setup-heading')){
+    stack.querySelector(':scope > .tf-setup-heading')?.insertAdjacentElement('afterend',scenario);
+  }
+  if(shared.previousElementSibling!==scenario)scenario.insertAdjacentElement('afterend',shared);
   if(window.matchMedia('(max-width:700px)').matches){
     const profile=findProfile();
     if(profile&&profile!==scenario&&profile!==shared&&!profile.contains(stack)){
       if(!profile.id)profile.id='tf-setup-soil-profile';
       if(profile.parentElement!==stack)stack.appendChild(profile);
+      if(profile.matches('details')&&!profile.dataset.tfSetupDefaultClosed){
+        profile.open=false;
+        profile.dataset.tfSetupDefaultClosed='1';
+      }
     }
   }
   for(const el of [scenario,shared]){
@@ -139,6 +154,46 @@ const compact=document.createElement('style');compact.id='tf-compact-baseline-v4
 `;
 document.head.appendChild(compact);
 document.head.appendChild(style);
+const polish=document.createElement('style');
+polish.id='tf-mobile-setup-polish-v1';
+polish.textContent=`
+@media(max-width:700px){
+ #tf-top-start-stack{
+   display:flex!important;flex-direction:column!important;gap:0!important;
+   padding:12px!important;margin:12px 0 16px!important;
+   border:1px solid #c3d7c8!important;border-radius:19px!important;
+   background:linear-gradient(155deg,#f9fcf7 0%,#edf5eb 100%)!important;
+   box-shadow:0 7px 22px rgba(25,66,45,.08)!important;
+ }
+ #tf-top-start-stack>.tf-setup-heading{display:flex!important;align-items:center!important;gap:11px!important;padding:3px 5px 12px!important;margin:0 0 4px!important;border-bottom:1px solid #d7e4d8!important}
+ #tf-top-start-stack .tf-setup-heading-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;background:#dcecdf;color:#195137;border-radius:12px;font-size:23px}
+ #tf-top-start-stack .tf-setup-heading h2{font-size:17px!important;line-height:1.2!important;letter-spacing:-.02em!important;margin:0 0 3px!important;color:#173f2d!important}
+ #tf-top-start-stack .tf-setup-heading p{font-size:12px!important;line-height:1.35!important;margin:0!important;color:#5c7864!important}
+ #tf-top-start-stack>#scenario-onboarding,
+ #tf-top-start-stack>#shared-starting-conditions,
+ #tf-top-start-stack>#tf-setup-soil-profile,
+ #tf-top-start-stack>details:has(#viewMode),
+ #tf-top-start-stack>section:has(#viewMode){
+   border:0!important;border-bottom:1px solid #dce8dd!important;
+   background:transparent!important;box-shadow:none!important;
+   padding:5px 2px!important;margin:0!important;border-radius:0!important;
+ }
+ #tf-top-start-stack>:last-child{border-bottom:0!important}
+ #tf-top-start-stack #scenario-onboarding .scenario-head,
+ #tf-top-start-stack #shared-starting-conditions>.head{margin:0!important}
+ #tf-top-start-stack #scenario-onboarding summary,
+ #tf-top-start-stack #shared-starting-conditions>.head,
+ #tf-top-start-stack #tf-setup-soil-profile>summary{
+   min-height:47px!important;border:0!important;border-radius:10px!important;
+   background:#e7f1e6!important;box-shadow:none!important;
+   padding:11px 13px!important;color:#1d4b34!important;
+ }
+ #tf-top-start-stack #scenario-onboarding summary:hover,
+ #tf-top-start-stack #tf-setup-soil-profile>summary:hover{background:#dcebdc!important}
+ #tf-top-start-stack #viewMode{margin:6px 0!important}
+}
+`;
+document.head.appendChild(polish);
 let queued=false;
 const run=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;place();});};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
