@@ -99,10 +99,9 @@ function organize(){
     });
   }
 
-  // Confidence is the final scientific reference panel, after the microscope.
+  // Keep confidence above the microscope; the microscope is the final page panel.
   const confidence=document.getElementById('evidence-layer');
   if(confidence && confidence.parentElement!==main)main.appendChild(confidence);
-  if(confidence && confidence!==main.lastElementChild)main.appendChild(confidence);
   // Only the research grouping belongs at the bottom; simulation controls stay in place.
   // Keep the independent Lawn A/B history widgets together inside Records.
  const records=document.querySelector('#tf-research-records .tf-research-body');
@@ -113,6 +112,9 @@ function organize(){
      if(panel && panel!==host && !panel.contains(host) && !panel.closest('#tf-stacked-lawns') && !records.contains(panel))records.prepend(panel);
    }
  }
+ // Run after research/history organization so the microscope is the last panel.
+ if(microscope && microscope.parentElement!==main)main.appendChild(microscope);
+ if(microscope && microscope!==main.lastElementChild)main.appendChild(microscope);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',organize,{once:true});else organize();
 [700,1800,3500].forEach(ms=>setTimeout(organize,ms));
