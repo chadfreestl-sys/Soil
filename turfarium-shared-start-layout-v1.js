@@ -84,6 +84,23 @@ function place(){
     heading.innerHTML='<div class="tf-setup-heading-icon" aria-hidden="true">⚙</div><div><h2>Set up your simulation</h2><p>Choose a scenario, set your baseline and explore the soil.</p></div>';
     stack.prepend(heading);
   }
+  // Keep all setup controls mounted; only collapse their common mobile container.
+  if(window.matchMedia('(max-width:700px)').matches && !stack.dataset.tfSetupAccordion){
+    stack.dataset.tfSetupAccordion='1';
+    stack.classList.add('tf-setup-all-collapsed');
+    const heading=stack.querySelector(':scope > .tf-setup-heading');
+    const toggle=document.createElement('button');
+    toggle.type='button';
+    toggle.className='tf-setup-all-toggle';
+    toggle.setAttribute('aria-expanded','false');
+    toggle.innerHTML='<span>Set up your simulation</span><span class="tf-setup-all-chevron" aria-hidden="true">▸</span>';
+    heading?.replaceChildren(toggle);
+    toggle.addEventListener('click',()=>{
+      const collapsed=stack.classList.toggle('tf-setup-all-collapsed');
+      toggle.setAttribute('aria-expanded',String(!collapsed));
+      toggle.querySelector('.tf-setup-all-chevron').textContent=collapsed?'▸':'▾';
+    });
+  }
   if(scenario.parentElement!==stack)stack.appendChild(scenario);
   if(shared.parentElement!==stack)stack.appendChild(shared);
   // Keep the compact setup cards in a predictable order without remounting them.
@@ -177,6 +194,11 @@ polish.textContent=`
    background:linear-gradient(155deg,#f9fcf7 0%,#edf5eb 100%)!important;
    box-shadow:0 7px 22px rgba(25,66,45,.08)!important;
  }
+ #tf-top-start-stack.tf-setup-all-collapsed>:not(.tf-setup-heading){display:none!important}
+ #tf-top-start-stack.tf-setup-all-collapsed{padding:9px 12px!important;margin-bottom:10px!important}
+ #tf-top-start-stack .tf-setup-all-toggle{width:100%!important;display:flex!important;justify-content:space-between!important;align-items:center!important;gap:12px!important;border:0!important;background:transparent!important;color:#173f2d!important;font:inherit!important;font-size:17px!important;font-weight:850!important;text-align:left!important;min-height:38px!important;padding:3px 5px!important;cursor:pointer!important}
+ #tf-top-start-stack .tf-setup-all-chevron{font-size:18px!important}
+ #tf-top-start-stack.tf-setup-all-collapsed>.tf-setup-heading{border-bottom:0!important;padding-bottom:0!important;margin-bottom:0!important}
  #tf-top-start-stack>.tf-setup-heading{display:flex!important;align-items:center!important;gap:11px!important;padding:3px 5px 12px!important;margin:0 0 4px!important;border-bottom:1px solid #d7e4d8!important}
  #tf-top-start-stack .tf-setup-heading-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;background:#dcecdf;color:#195137;border-radius:12px;font-size:23px}
  #tf-top-start-stack .tf-setup-heading h2{font-size:17px!important;line-height:1.2!important;letter-spacing:-.02em!important;margin:0 0 3px!important;color:#173f2d!important}
