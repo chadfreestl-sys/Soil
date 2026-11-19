@@ -64,13 +64,19 @@ function place(){
     stack.className='tf-top-start-stack';
     stack.setAttribute('aria-label','Simulation setup');
   }
-  // Insert once, then move only if a different layout module actually displaced it.
-  if(stack.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',stack);
-  // On phones the comparison introduction belongs above setup, immediately
-  // below the banner. Move the existing live element, never duplicate it.
+  // Stable order on phones: header -> comparison intro -> setup.
+  // IMPORTANT: do not test stack.previousElementSibling against header after
+  // inserting the intro; that causes a perpetual DOM move / scroll bounce.
   if(window.matchMedia('(max-width:700px)').matches){
     const intro=document.getElementById('tf-mobile-intro');
-    if(intro&&intro.nextElementSibling!==stack)stack.insertAdjacentElement('beforebegin',intro);
+    if(intro){
+      if(intro.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',intro);
+      if(stack.previousElementSibling!==intro)intro.insertAdjacentElement('afterend',stack);
+    }else if(stack.previousElementSibling!==anchor){
+      anchor.insertAdjacentElement('afterend',stack);
+    }
+  }else if(stack.previousElementSibling!==anchor){
+    anchor.insertAdjacentElement('afterend',stack);
   }
   if(!stack.querySelector(':scope > .tf-setup-heading')){
     const heading=document.createElement('div');
@@ -205,12 +211,7 @@ const run=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=fa
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
 window.addEventListener('load',run,{once:true});
 // Watch only relevant structural additions, avoiding a full-document mutation feedback loop.
-const mo=new MutationObserver(records=>{
-  if(records.some(record=>[...record.addedNodes].some(node=>node.nodeType===1&&(
-    node.matches?.('#tf-stacked-lawns,#scenario-onboarding,#shared-starting-conditions,#tf-top-start-stack')||
-    node.querySelector?.('#tf-stacked-lawns,#scenario-onboarding,#shared-starting-conditions')
-  ))))run();
-});
-mo.observe(document.body||document.documentElement,{childList:true,subtree:true});
+// Other scripts mount the comparison asynchronously; the scheduled placement
+// retries below handle this without a whole-document observer feedback loop.
 [50,150,300,600,1000,1800,3000,5000,8000,12000].forEach(ms=>setTimeout(run,ms));
 })();
