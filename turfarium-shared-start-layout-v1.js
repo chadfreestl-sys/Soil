@@ -66,6 +66,12 @@ function place(){
   }
   // Insert once, then move only if a different layout module actually displaced it.
   if(stack.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',stack);
+  // On phones the comparison introduction belongs above setup, immediately
+  // below the banner. Move the existing live element, never duplicate it.
+  if(window.matchMedia('(max-width:700px)').matches){
+    const intro=document.getElementById('tf-mobile-intro');
+    if(intro&&intro.nextElementSibling!==stack)stack.insertAdjacentElement('beforebegin',intro);
+  }
   if(!stack.querySelector(':scope > .tf-setup-heading')){
     const heading=document.createElement('div');
     heading.className='tf-setup-heading';
