@@ -103,7 +103,7 @@ function ensureLawnCard(view,key,stage){
  if(!card){
   card=document.createElement('section');card.id='tf-mobile-lawn-'+key.toLowerCase();card.className='tf-lawn-visual';
   const title=document.createElement('div');title.className='tf-lawn-title';
-  title.innerHTML='<span>Lawn '+key+'</span><span id="tf-stack-day-'+key+'">Day 0</span>';
+  title.innerHTML='<span>Lawn '+key+' · '+(key==='A'?'Conventional':'Biological')+'</span><span id="tf-stack-day-'+key+'">Day 0</span>';
   card.appendChild(title);
  }
  if(stage.parentElement!==card)card.appendChild(stage);
@@ -212,7 +212,7 @@ function ensureTreatments(view,afterCard){
   if(!drawer){
    drawer=document.createElement('details');drawer.id='tf-mobile-treatment-'+key;drawer.className='tf-mobile-treatment';
    drawer.open=false;
-   const summary=document.createElement('summary');summary.textContent='Lawn '+key+' Treatments';
+   const summary=document.createElement('summary');summary.textContent='Lawn '+key+' · '+(key==='A'?'Conventional':'Biological')+' Treatments';
    const body=document.createElement('div');body.className='tf-mobile-treatment-body';
    const label=document.createElement('strong');label.textContent='Apply a treatment to Lawn '+key;body.appendChild(label);
    drawer.append(summary,body);
