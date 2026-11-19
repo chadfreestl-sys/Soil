@@ -88,7 +88,14 @@ function ensureCompactIntro(view){
   intro=document.createElement('section');intro.id='tf-mobile-intro';
   intro.innerHTML='<p><strong>Compare two lawns.</strong> Treat, advance time and see what changes.</p><details><summary>How Turfarium works</summary><p>Apply different management choices to Lawn A and Lawn B, then advance the shared clock to compare modeled responses.</p></details>';
  }
- if(view.parentElement&&intro.nextElementSibling!==view)view.parentElement.insertBefore(intro,view);
+ // The setup layout owns the top-level order: header -> intro -> setup -> lawns.
+ // Do not repeatedly pull intro back in front of the lawn view during remounts.
+ const setup=byId('tf-top-start-stack');
+ if(setup&&setup.isConnected){
+  if(intro.nextElementSibling!==setup)setup.insertAdjacentElement('beforebegin',intro);
+ }else if(view.parentElement&&!intro.isConnected){
+  view.parentElement.insertBefore(intro,view);
+ }
 }
 
 function ensureLawnCard(view,key,stage){
