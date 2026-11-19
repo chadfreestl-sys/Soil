@@ -3,6 +3,13 @@
 const css=document.createElement('style');
 css.textContent=`@media(max-width:700px){
 .tf-orphan-blank-mobile-tile{display:none!important}
+#tf-root-physics-disclosure>summary{list-style:none!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;min-height:52px!important;padding:13px 15px!important;border:1px solid #d4dfd3!important;border-radius:12px!important;background:#f4f3e9!important;color:#194532!important;font-weight:850!important;cursor:pointer!important}
+#tf-root-physics-disclosure>summary::-webkit-details-marker{display:none}
+#tf-root-physics-disclosure>summary::after{content:'▸';flex:none}
+#tf-root-physics-disclosure[open]>summary::after{content:'▾'}
+#tf-root-physics-disclosure:not([open])>.tf-root-physics-body{display:none!important}
+.tf-root-physics-body{padding:13px 3px 3px!important}
+
 #microscope-lab{grid-column:1/-1!important;width:100%!important;max-width:100%!important;margin:12px 0 20px!important}
 #microscope-lab .head{align-items:flex-start!important}
 #microscope-lab{padding:9px!important}
@@ -63,6 +70,25 @@ function organize(){
    for(const node of group.nodes)if(node.parentElement!==body)body.appendChild(node);
    drawer.hidden=body.children.length===0;
  }
+  // Root-zone physics starts closed on mobile; keep the original live readouts mounted.
+  const physics=document.getElementById('physicsPanel')?.closest('section.card');
+  if(physics && !physics.querySelector(':scope > #tf-root-physics-disclosure')){
+    const heading=physics.querySelector(':scope > h2');
+    const disclosure=document.createElement('details');
+    disclosure.id='tf-root-physics-disclosure';
+    const summary=document.createElement('summary');
+    summary.textContent=heading?.textContent.trim()||'Root-zone physics · drainage & oxygen';
+    const body=document.createElement('div');
+    body.className='tf-root-physics-body';
+    while(physics.firstChild){
+      const node=physics.firstChild;
+      if(node===heading){node.remove();continue;}
+      body.appendChild(node);
+    }
+    disclosure.append(summary,body);
+    physics.appendChild(disclosure);
+    disclosure.open=false;
+  }
   // Remove only the visually blank, non-interactive 40–95px tile beneath Diagnostics.
   // The old selector missed it because it had a wrapper or an ID.
   const diagnostic=document.getElementById('diagnostic-lens');
