@@ -42,7 +42,7 @@ function findCard(term){
  const query=term.toLowerCase();
  return candidates.find(el=>{
    if(el.closest('#tf-research-organizer,#tf-stacked-lawns,#tf-mowing-dialog'))return false;
-   const title=el.querySelector(':scope > h2,:scope > h3,:scope > summary,:scope > .head h2,:scope > .head h3');
+   const title=el.querySelector(':scope > h2,:scope > h3,:scope > summary,:scope > .head h2,:scope > .head h3,:scope > .tf-collapse-toggle .tf-collapse-title');
    return title&&title.textContent.trim().toLowerCase().includes(query);
  });
 }
@@ -140,7 +140,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.0.95</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.0.97</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
