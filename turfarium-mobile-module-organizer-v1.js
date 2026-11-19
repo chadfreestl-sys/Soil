@@ -58,28 +58,32 @@ css.textContent=`@media(max-width:700px){
 }`;
 document.head.appendChild(css);
 const groups=[
- {id:'records',title:'📋 Records & diagnostics',terms:['Diagnostic Lens','Five-year progression stress test']},
+ {id:'records',title:'📋 Records & diagnostics',terms:[]},
  {id:'ecology',title:'🌱 Ecosystem research',terms:['Turf Species Response','Earthworm Ecology Module','Linked soil food web','Seaweed Response Lab']},
  {id:'experiments',title:'🧪 Experiment tools',terms:['Custom product formulation studio','Worm Tea Brewing Lab','Soil lab & nutrient cycling','Experiment activity']}
 ];
 function findCard(term){
  const query=term.toLowerCase();
- // layout-tools wraps original headings inside .tf-collapse-body and inserts
- // a new direct toggle. Match the *outer card*, never move its inner details.
- const cards=[...document.querySelectorAll('section.card,article.card')];
- return cards.find(card=>{
-   if(card.closest('#tf-research-organizer,#tf-stacked-lawns,#tf-mowing-dialog'))return false;
-   const headings=card.querySelectorAll(':scope > h2,:scope > h3,:scope > .head h2,:scope > .head h3,:scope > .tf-collapse-toggle .tf-collapse-title,:scope > .tf-collapse-body > .head h2,:scope > .tf-collapse-body > h2,:scope > .tf-collapse-body > .head h3');
-   return [...headings].some(heading=>heading.textContent.trim().toLowerCase().includes(query));
- });
+ // The legacy accordion wrapper uses BUTTON headings and nested .tf-collapse-body.
+ // Find the visible control first, then take its complete original card.
+ const headings=document.querySelectorAll(
+   'section.card .tf-collapse-toggle,article.card .tf-collapse-toggle,'+
+   'section.card h2,article.card h2,section.card h3,article.card h3,'+
+   'section.card > details > summary,article.card > details > summary'
+ );
+ for(const heading of headings){
+   if(!heading.textContent.trim().toLowerCase().includes(query))continue;
+   const card=heading.closest('section.card,article.card');
+   if(card && !card.closest('#tf-research-organizer,#tf-stacked-lawns,#tf-mowing-dialog'))return card;
+ }
+ return null;
 }
 function organize(){
  if(!matchMedia('(max-width:700px)').matches)return;
  let host=document.getElementById('tf-research-organizer');
  if(!host){host=document.createElement('section');host.id='tf-research-organizer';host.style.cssText='width:100%;min-width:0;grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr);gap:8px';}
  const collected=groups.map(group=>({...group,nodes:group.terms.map(findCard).filter(Boolean)}));
- const first=collected.flatMap(g=>g.nodes)[0];
- if(!first)return;
+ // Keep the three category drawers visible even when modules mount late.
  // Put advanced research navigation at the very bottom of the mobile page.
  // Never insert before a moving source card; that can trigger scroll jumps.
  const main=document.querySelector('main')||document.body;
@@ -142,22 +146,17 @@ function organize(){
     });
   }
 
-  // Consolidate older standalone science cards into their existing research
-  // drawers. Never create a second grid or leave a half-width orphan.
-  const titleOf=card=>[...card.querySelectorAll(
-    ':scope > .tf-collapse-toggle .tf-collapse-title,:scope > .head h2,:scope > h2,'+
-    ':scope > .tf-collapse-body > .head h2,:scope > .tf-collapse-body > h2,'+
-    ':scope > details > summary'
-  )].map(el=>el.textContent.trim().toLowerCase()).join(' ');
+  // Resolve the original legacy cards using their accordion buttons.
+  // Moving the card preserves every input, canvas, and event listener.
   for(const group of groups){
     const body=document.querySelector('#tf-research-'+group.id+' > .tf-research-body');
     if(!body)continue;
-    const cards=[...document.querySelectorAll('section.card,article.card')].filter(card=>
-      !card.closest('#tf-research-organizer,#tf-stacked-lawns') &&
-      group.terms.some(term=>titleOf(card).includes(term.toLowerCase())));
-    for(const card of cards)body.appendChild(card);
+    for(const term of group.terms){
+      const card=findCard(term);
+      if(card && card.parentElement!==body)body.appendChild(card);
+    }
   }
-  // Older two-column host is no longer part of the layout.
+  // Remove only the abandoned empty wrapper from the failed two-column experiment.
   const oldGrid=document.getElementById('tf-science-card-grid');
   if(oldGrid && !oldGrid.children.length)oldGrid.remove();
   // Preserve the confidence module in the main document.
@@ -173,6 +172,8 @@ function organize(){
      if(panel && panel!==host && !panel.contains(host) && !panel.closest('#tf-stacked-lawns') && !records.contains(panel))records.prepend(panel);
    }
  }
+ const recordsDrawer=document.getElementById('tf-research-records');
+ if(recordsDrawer)recordsDrawer.hidden=!records?.children.length;
  // Place the existing microscope immediately above Brew Microscope Observation Log.
  // Only move if necessary; do not recreate its canvas or reset disclosure state.
  const brewLog=findCard('Brew Microscope Observation Log');
@@ -191,7 +192,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.03</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.04</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
@@ -200,4 +201,20 @@ function boot(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 // One late pass after layout-tools has wrapped headings. No repeating timers.
 window.addEventListener('load',()=>requestAnimationFrame(organize),{once:true});
+// Some scientific cards are mounted asynchronously. Observe briefly and only
+// rerun after a newly mounted card appears; ignore our own drawer moves.
+let pending=false;
+const observer=new MutationObserver(records=>{
+ if(pending || !matchMedia('(max-width:700px)').matches)return;
+ const added=records.some(record=>[...record.addedNodes].some(node=>
+   node.nodeType===1 && !node.closest?.('#tf-research-organizer') &&
+   (node.matches?.('section.card,article.card') || node.querySelector?.('section.card,article.card'))));
+ if(!added)return;
+ pending=true;
+ requestAnimationFrame(()=>{pending=false;organize();});
+});
+if(document.readyState==='loading'){
+ document.addEventListener('DOMContentLoaded',()=>observer.observe(document.body,{childList:true,subtree:true}),{once:true});
+}else observer.observe(document.body,{childList:true,subtree:true});
+setTimeout(()=>observer.disconnect(),4500);
 })();
