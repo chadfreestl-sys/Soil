@@ -159,9 +159,12 @@ function organize(){
   // Remove only the abandoned empty wrapper from the failed two-column experiment.
   const oldGrid=document.getElementById('tf-science-card-grid');
   if(oldGrid && !oldGrid.children.length)oldGrid.remove();
-  // Preserve the confidence module in the main document.
+  // Confidence belongs before the research navigation, never after the footer.
   const confidence=document.getElementById('evidence-layer');
-  if(confidence && confidence.parentElement!==main)main.appendChild(confidence);
+  if(confidence && confidence!==host &&
+     (confidence.parentElement!==main || confidence.nextElementSibling!==host)){
+    main.insertBefore(confidence,host);
+  }
   // Only the research grouping belongs at the bottom; simulation controls stay in place.
   // Keep the independent Lawn A/B history widgets together inside Records.
  const records=document.querySelector('#tf-research-records .tf-research-body');
@@ -182,6 +185,9 @@ function organize(){
      brewLog.parentElement.insertBefore(microscope,brewLog);
    }
  }
+ // The build stamp is a true footer, not a separator in the scientific modules.
+ const footer=document.getElementById('tf-build-footer');
+ if(footer && footer.parentElement===main && footer!==main.lastElementChild)main.appendChild(footer);
 }
 // Mount once. Re-running layout timers moved live nodes while Android users interacted.
 function boot(){
@@ -192,11 +198,13 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.04</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.05</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
  }
+ // A late-mounted scientific card must never end up beneath the footer.
+ if(footer!==main.lastElementChild)main.appendChild(footer);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 // One late pass after layout-tools has wrapped headings. No repeating timers.
