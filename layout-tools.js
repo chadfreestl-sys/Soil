@@ -381,7 +381,9 @@
     if(memory){
       memory.style.setProperty('grid-column','1 / -1','important');
       memory.style.setProperty('order','-997','important');
-      if(memory.parentElement!==grid||memory.previousElementSibling!==lawnB)lawnB.insertAdjacentElement('afterend',memory);
+      const mobileChanges=window.matchMedia('(max-width:700px)').matches?byId('tf-mobile-what-changed'):null;
+      const saveAnchor=mobileChanges?.parentElement===grid?mobileChanges:lawnB;
+      if(memory.parentElement!==grid||memory.previousElementSibling!==saveAnchor)saveAnchor.insertAdjacentElement('afterend',memory);
     }
     const changesSlot=deck.querySelector('.profile-changes-slot');
     const report=byId('tf-what-changed-details')||byId('changeReport');
