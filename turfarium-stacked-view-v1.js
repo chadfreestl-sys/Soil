@@ -70,7 +70,7 @@ css.textContent=`
   .tf-material-options button[aria-pressed="true"]{background:#d7ead9!important;font-weight:900!important}
 
 
-  #tf-mobile-what-changed{display:block!important;width:100%!important;margin:0!important;border:1px solid #b7cbb3!important;border-radius:12px!important;background:#f2f7ef!important;overflow:hidden!important}
+  #tf-mobile-what-changed{grid-column:1/-1!important;order:-997!important;display:block!important;width:100%!important;margin:0!important;border:1px solid #b7cbb3!important;border-radius:12px!important;background:#f2f7ef!important;overflow:hidden!important}
   #tf-mobile-what-changed>summary{display:list-item!important;padding:13px!important;cursor:pointer!important;color:#183e2c!important;font-size:16px!important;font-weight:900!important;line-height:1.3!important}
   #tf-mobile-what-changed .tf-mobile-change-content{padding:0 12px 12px!important;color:#183e2c!important}
   #tf-mobile-what-changed:not([open]) .tf-mobile-change-content{display:none!important}
@@ -242,7 +242,9 @@ function ensureWhatChanged(view,dock){
   panel.open=false;
   panel.innerHTML='<summary>What Changed</summary><div class="tf-mobile-change-content"></div>';
  }
- if(panel.parentElement!==view)dock.insertAdjacentElement('afterend',panel);
+ // Place the report after the two collapsed lawn statistics panels, outside the photo/treatment stack.
+ const lawnB=byId('lawn-b-panel');
+ if(lawnB && (panel.parentElement!==lawnB.parentElement || panel.previousElementSibling!==lawnB))lawnB.insertAdjacentElement('afterend',panel);
  const source=byId('changeReport'),target=panel.querySelector('.tf-mobile-change-content');
  const sync=()=>{if(source&&target&&target.innerHTML!==source.innerHTML)target.innerHTML=source.innerHTML;};
  sync();
@@ -307,7 +309,7 @@ function mount(){
  const dock=ensureTreatments(view,cardB);
  const changes=ensureWhatChanged(view,dock);
  // Never reappend already-mounted drawers: DOM moves dismiss native Android select menus.
- const ordered=[cardA,progression.station,cardB,dock,changes];
+ const ordered=[cardA,progression.station,cardB,dock];
  for(let i=0;i<ordered.length;i++){
   const node=ordered[i];
   if(node.parentElement!==view||node.previousElementSibling!==(i?ordered[i-1]:null)){
