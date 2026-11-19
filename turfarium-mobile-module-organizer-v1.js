@@ -2,6 +2,7 @@
 (()=>{'use strict';
 const css=document.createElement('style');
 css.textContent=`@media(max-width:700px){
+.tf-orphan-blank-mobile-tile{display:none!important}
 #microscope-lab{grid-column:1/-1!important;width:100%!important;max-width:100%!important;margin:12px 0 20px!important}
 #microscope-lab .head{align-items:flex-start!important}
 .tf-research-drawer{grid-column:1/-1!important;display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0 0 10px!important;padding:8px!important;border:1px solid #cad9ca!important;border-radius:16px!important;background:#f8faf5!important;box-shadow:0 3px 12px #173c2510!important}
@@ -53,6 +54,20 @@ function organize(){
    for(const node of group.nodes)if(node.parentElement!==body)body.appendChild(node);
    drawer.hidden=body.children.length===0;
  }
+  // The orphan 60px blank tile below Diagnostics has no usable content.
+  // Limit cleanup to empty, non-interactive mobile workspace siblings; never touch inputs.
+  const diagnostic=document.getElementById('diagnostic-lens');
+  const diagnosticBottom=diagnostic?.getBoundingClientRect().bottom;
+  if(Number.isFinite(diagnosticBottom)){
+    for(const el of document.querySelectorAll('main > *, main .simulation-grid > *')){
+      if(el.id || el.matches('button,input,select,textarea,details,summary') || el.querySelector('button,input,select,textarea,a,details,canvas,svg,img'))continue;
+      if(el.textContent.trim() || el.children.length)continue;
+      const rect=el.getBoundingClientRect();
+      if(rect.width>=40 && rect.width<=95 && rect.height>=40 && rect.height<=95 && rect.top>=diagnosticBottom-8){
+        el.classList.add('tf-orphan-blank-mobile-tile');
+      }
+    }
+  }
   // Scientific microscope belongs after the research drawers, at the end of the page.
   // Move its existing node only when necessary; retain all controls and listeners.
   const microscope=document.getElementById('microscope-lab');
