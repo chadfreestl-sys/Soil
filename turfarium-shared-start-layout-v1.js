@@ -40,7 +40,9 @@ function getShared(){
 }
 function topAnchor(){
   if(window.matchMedia('(max-width:700px)').matches){
-    return document.getElementById('tf-stacked-lawns')||document.querySelector('main>header')||document.querySelector('header');
+    // Place the consolidated setup directly beneath the Turfarium banner,
+    // before the mobile comparison introduction and lawn images.
+    return document.querySelector('main>header')||document.querySelector('header');
   }
   return document.querySelector('.mode-shell')||document.querySelector('header');
 }
