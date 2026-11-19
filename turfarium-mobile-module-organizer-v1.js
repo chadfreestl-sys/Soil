@@ -5,6 +5,15 @@ css.textContent=`@media(max-width:700px){
 .tf-orphan-blank-mobile-tile{display:none!important}
 #microscope-lab{grid-column:1/-1!important;width:100%!important;max-width:100%!important;margin:12px 0 20px!important}
 #microscope-lab .head{align-items:flex-start!important}
+#microscope-lab{padding:9px!important}
+#tf-microscope-disclosure{display:block!important;width:100%!important}
+#tf-microscope-disclosure>summary{list-style:none!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;min-height:52px!important;padding:13px 15px!important;border:1px solid #c8dacd!important;border-radius:12px!important;background:#eaf3e9!important;color:#194532!important;font-size:17px!important;font-weight:850!important;cursor:pointer!important}
+#tf-microscope-disclosure>summary::-webkit-details-marker{display:none}
+#tf-microscope-disclosure>summary::after{content:'▸';font-size:17px!important}
+#tf-microscope-disclosure[open]>summary::after{content:'▾'}
+#tf-microscope-disclosure:not([open])>.tf-microscope-disclosure-body{display:none!important}
+.tf-microscope-disclosure-body{min-width:0!important;padding:12px 3px 3px!important}
+
 .tf-research-drawer{grid-column:1/-1!important;display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0 0 10px!important;padding:8px!important;border:1px solid #cad9ca!important;border-radius:16px!important;background:#f8faf5!important;box-shadow:0 3px 12px #173c2510!important}
 .tf-research-drawer>summary{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;cursor:pointer!important;list-style:none!important;padding:13px 12px!important;margin:0!important;background:#eaf3e9!important;border-radius:11px!important;font-size:16px!important;font-weight:800!important;line-height:1.3!important;color:#194532!important}
 .tf-research-drawer>summary::-webkit-details-marker{display:none}
@@ -73,6 +82,23 @@ function organize(){
   // Move its existing node only when necessary; retain all controls and listeners.
   const microscope=document.getElementById('microscope-lab');
   if(microscope && microscope.parentElement===main && microscope!==main.lastElementChild)main.appendChild(microscope);
+  // Single native disclosure owns all microscope content; do not clone the live canvas or controls.
+  if(microscope && !microscope.querySelector(':scope > #tf-microscope-disclosure')){
+    const disclosure=document.createElement('details');
+    disclosure.id='tf-microscope-disclosure';
+    const summary=document.createElement('summary');
+    summary.textContent='🔬 Living ecosystem microscope';
+    const body=document.createElement('div');
+    body.className='tf-microscope-disclosure-body';
+    while(microscope.firstChild)body.appendChild(microscope.firstChild);
+    disclosure.append(summary,body);
+    microscope.appendChild(disclosure);
+    disclosure.open=false;
+    disclosure.addEventListener('toggle',()=>{
+      if(disclosure.open)requestAnimationFrame(()=>window.dispatchEvent(new Event('resize')));
+    });
+  }
+
   // Confidence is the final scientific reference panel, after the microscope.
   const confidence=document.getElementById('evidence-layer');
   if(confidence && confidence.parentElement!==main)main.appendChild(confidence);
