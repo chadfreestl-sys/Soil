@@ -21,10 +21,12 @@ css.textContent=`@media(max-width:700px){
 .tf-microscope-disclosure-body{min-width:0!important;padding:12px 3px 3px!important}
 
 .tf-research-drawer{grid-column:1/-1!important;display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0 0 10px!important;padding:8px!important;border:1px solid #cad9ca!important;border-radius:16px!important;background:#f8faf5!important;box-shadow:0 3px 12px #173c2510!important}
-.tf-research-drawer>summary{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;cursor:pointer!important;list-style:none!important;padding:13px 12px!important;margin:0!important;background:#eaf3e9!important;border-radius:11px!important;font-size:16px!important;font-weight:800!important;line-height:1.3!important;color:#194532!important}
+.tf-research-drawer>summary{display:grid!important;grid-template-columns:28px minmax(0,1fr) 28px!important;align-items:center!important;gap:8px!important;cursor:pointer!important;list-style:none!important;padding:13px 12px!important;margin:0!important;background:#eaf3e9!important;border-radius:11px!important;font-size:16px!important;font-weight:800!important;line-height:1.3!important;color:#194532!important}
 .tf-research-drawer>summary::-webkit-details-marker{display:none}
-.tf-research-drawer>summary:after{content:'▸';font-size:16px;flex:none}
+.tf-research-drawer>summary:after{content:'▸';font-size:16px;grid-column:3;justify-self:center}
 .tf-research-drawer[open]>summary:after{content:'▾'}
+.tf-research-drawer>summary .tf-drawer-icon{grid-column:1;justify-self:center}
+.tf-research-drawer>summary .tf-drawer-label{grid-column:2;text-align:center;min-width:0}
 .tf-research-body{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:9px!important;padding-top:10px!important;min-width:0!important}
 .tf-research-body>*{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0!important;grid-column:1/-1!important}
 .tf-research-body .card,.tf-research-body details{border-radius:12px!important}
@@ -63,7 +65,13 @@ function organize(){
    let drawer=document.getElementById('tf-research-'+group.id);
    if(!drawer){
      drawer=document.createElement('details');drawer.className='tf-research-drawer';drawer.id='tf-research-'+group.id;
-     const summary=document.createElement('summary');summary.textContent=group.title;
+     const summary=document.createElement('summary');
+     const icon=document.createElement('span');icon.className='tf-drawer-icon';icon.setAttribute('aria-hidden','true');
+     const label=document.createElement('span');label.className='tf-drawer-label';
+     const match=group.title.match(/^(\S+)\s+(.+)$/);
+     icon.textContent=match?match[1]:'';
+     label.textContent=match?match[2]:group.title;
+     summary.append(icon,label);
      const body=document.createElement('div');body.className='tf-research-body';
      drawer.append(summary,body);host.appendChild(drawer);
    }
@@ -142,7 +150,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.0.98</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.00</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
