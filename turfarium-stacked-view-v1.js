@@ -85,19 +85,24 @@ css.textContent=`
 
   /* Guided experiment hierarchy: visual grouping only; no moving controls or altering events. */
   #tf-mobile-treatments{padding:13px!important;border:1px solid #b9d6c2!important;border-left:4px solid #23865d!important;border-radius:17px!important;background:linear-gradient(145deg,#f5fbf4,#e9f5ec)!important;box-shadow:0 6px 19px rgba(18,76,46,.08)!important;gap:9px!important}
-  #tf-mobile-treatments::before{content:'02  ·  TAKE ACTION  /  TREAT YOUR LAWNS';display:block!important;font-size:12px!important;font-weight:900!important;letter-spacing:.075em!important;line-height:1.5!important;color:#16623e!important;padding:2px 5px 5px!important}
+  #tf-mobile-treatments::before{content:'TAKE ACTION  /  TREAT YOUR LAWNS';display:block!important;font-size:12px!important;font-weight:900!important;letter-spacing:.075em!important;line-height:1.5!important;color:#16623e!important;padding:2px 5px 5px!important}
   #tf-mobile-treatments .tf-mobile-treatment{background:#fff!important;border:1px solid #c3d7c5!important;box-shadow:0 2px 7px rgba(25,70,44,.05)!important}
   #tf-mobile-treatments .tf-mobile-treatment>summary{min-height:47px!important;display:list-item!important}
   .simulation-grid.tf-primary-workspace>#lawn-a-panel{border-top:4px solid #468a92!important}
   .simulation-grid.tf-primary-workspace>#lawn-b-panel{border-top:4px solid #468a92!important}
-  .simulation-grid.tf-primary-workspace>#lawn-a-panel::before{content:'03  ·  MEASURE  /  LAWN PERFORMANCE';display:block!important;font-size:12px!important;font-weight:900!important;letter-spacing:.075em!important;color:#276a74!important;margin:0 0 8px!important;padding:2px 5px!important}
+  .simulation-grid.tf-primary-workspace>#lawn-a-panel::before{content:'MEASURE  /  LAWN PERFORMANCE';display:block!important;font-size:12px!important;font-weight:900!important;letter-spacing:.075em!important;color:#276a74!important;margin:0 0 8px!important;padding:2px 5px!important}
   #tf-mobile-what-changed{border-left:4px solid #468a92!important;background:#f0f8f6!important}
-  #tf-mobile-what-changed::before{content:'04  ·  UNDERSTAND  /  WHAT CHANGED';display:block!important;font-size:11px!important;font-weight:900!important;letter-spacing:.075em!important;color:#276a74!important;padding:7px 9px 2px!important}
+  #tf-mobile-what-changed::before{content:'UNDERSTAND  /  WHAT CHANGED';display:block!important;font-size:11px!important;font-weight:900!important;letter-spacing:.075em!important;color:#276a74!important;padding:7px 9px 2px!important}
   #scenario-memory{border-left:4px solid #c39850!important;background:#faf8f1!important}
-  #scenario-memory::before{content:'05  ·  SAVE YOUR EXPERIMENT';display:block!important;font-size:11px!important;font-weight:900!important;letter-spacing:.075em!important;color:#7b5a29!important;padding:4px 7px 8px!important}
+  #scenario-memory::before{content:'SAVE YOUR EXPERIMENT';display:block!important;font-size:11px!important;font-weight:900!important;letter-spacing:.075em!important;color:#7b5a29!important;padding:4px 7px 8px!important}
   #diagnostic-lens{border-left:4px solid #879b91!important}
   #diagnostic-lens::before{content:'ADVANCED  /  DIAGNOSTICS';display:block!important;font-size:11px!important;font-weight:900!important;letter-spacing:.075em!important;color:#526d61!important;padding:4px 7px 8px!important}
   #tf-mobile-treatments .tf-mobile-treatment:focus-within,#tf-mobile-what-changed:focus-within,#scenario-memory:focus-within{outline:2px solid #2e8a60!important;outline-offset:2px!important}
+  /* Hide only genuinely empty mobile placeholder cards; never hide controls or populated cards. */
+  main > .card:empty,main > section.card:empty,main > article.card:empty,
+  .simulation-grid > .card:empty,.simulation-grid > section.card:empty,
+  main > .card:not(:has(*)):not(:has(textarea,input,button)),
+  .simulation-grid > .card:not(:has(*)):not(:has(textarea,input,button)){display:none!important}
   #tf-live-change-card-v5{display:none!important}
 }
 @media(min-width:701px){#tf-stacked-lawns,#tf-mobile-intro{display:none!important}}
