@@ -39,11 +39,16 @@ function getShared(){
   return panel;
 }
 function topAnchor(){
-  // On phones the comparison imagery is the header visual. Keep setup immediately below it.
   if(window.matchMedia('(max-width:700px)').matches){
-    return document.getElementById('tf-stacked-lawns')||document.querySelector('.mode-shell')||document.querySelector('header');
+    return document.getElementById('tf-stacked-lawns')||document.querySelector('main>header')||document.querySelector('header');
   }
   return document.querySelector('.mode-shell')||document.querySelector('header');
+}
+function findProfile(){
+  const selector=document.getElementById('viewMode');
+  if(!selector)return null;
+  // Profile controls are sometimes wrapped in a generated details drawer.
+  return selector.closest('#tf-profile-mobile-card,#tf-setup-soil-profile,section.card,.card,details')||null;
 }
 function place(){
   const scenario=document.getElementById('scenario-onboarding');
@@ -52,23 +57,20 @@ function place(){
   if(!scenario||!shared||!anchor||scenario===shared)return false;
   let stack=document.getElementById('tf-top-start-stack');
   if(!stack){
-    stack=document.createElement('div');
+    stack=document.createElement('section');
     stack.id='tf-top-start-stack';
     stack.className='tf-top-start-stack';
-    anchor.insertAdjacentElement('afterend',stack);
-  }else if(stack.previousElementSibling!==anchor){
-    anchor.insertAdjacentElement('afterend',stack);
+    stack.setAttribute('aria-label','Simulation setup');
   }
-  if(scenario.parentElement!==stack||stack.firstElementChild!==scenario)stack.prepend(scenario);
-  if(shared.parentElement!==stack||scenario.nextElementSibling!==shared)scenario.insertAdjacentElement('afterend',shared);
-  // Keep the existing live soil-profile selector (and its event listeners) intact.
-  // Only relocate the enclosing card on mobile; no controls are cloned.
+  // Insert once, then move only if a different layout module actually displaced it.
+  if(stack.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',stack);
+  if(scenario.parentElement!==stack)stack.appendChild(scenario);
+  if(shared.parentElement!==stack)stack.appendChild(shared);
   if(window.matchMedia('(max-width:700px)').matches){
-    const selector=document.getElementById('viewMode');
-    const profile=selector?.closest('section.card,.card');
-    if(profile&&profile!==scenario&&profile!==shared&&profile.parentElement!==stack){
-      profile.id=profile.id||'tf-setup-soil-profile';
-      shared.insertAdjacentElement('afterend',profile);
+    const profile=findProfile();
+    if(profile&&profile!==scenario&&profile!==shared&&!profile.contains(stack)){
+      if(!profile.id)profile.id='tf-setup-soil-profile';
+      if(profile.parentElement!==stack)stack.appendChild(profile);
     }
   }
   for(const el of [scenario,shared]){
@@ -81,7 +83,7 @@ function place(){
     el.style.setProperty('width','100%','important');
     el.style.setProperty('max-width','none','important');
   }
-  return stack.firstElementChild===scenario&&scenario.nextElementSibling===shared;
+  return true;
 }
 const style=document.createElement('style');
 style.id='tf-shared-start-layout-style-v3';
@@ -139,6 +141,13 @@ let queued=false;
 const run=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;place();});};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
 window.addEventListener('load',run,{once:true});
-const mo=new MutationObserver(run);mo.observe(document.documentElement,{childList:true,subtree:true});
+// Watch only relevant structural additions, avoiding a full-document mutation feedback loop.
+const mo=new MutationObserver(records=>{
+  if(records.some(record=>[...record.addedNodes].some(node=>node.nodeType===1&&(
+    node.matches?.('#tf-stacked-lawns,#scenario-onboarding,#shared-starting-conditions,#tf-top-start-stack')||
+    node.querySelector?.('#tf-stacked-lawns,#scenario-onboarding,#shared-starting-conditions')
+  ))))run();
+});
+mo.observe(document.body||document.documentElement,{childList:true,subtree:true});
 [50,150,300,600,1000,1800,3000,5000,8000,12000].forEach(ms=>setTimeout(run,ms));
 })();
