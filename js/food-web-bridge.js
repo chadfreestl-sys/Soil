@@ -41,7 +41,11 @@ function render(key){
  if(Array.isArray(canonical.soilWorms))state.earthworms=canonical.soilWorms.reduce((a,b)=>a+b,0)/canonical.soilWorms.length;
  const host=document.getElementById('lawn-'+key.toLowerCase()+'-panel');if(!host)return;
  let box=host.querySelector('.tf-food-web');
- if(!box){box=document.createElement('details');box.className='tf-food-web';box.innerHTML='<summary>Food-web detail · linked to main soil model</summary><div class="tf-food-grid"></div><small>Bacteria, fungi, protozoa and earthworm activity use the main simulator values. Other guilds remain exploratory relative indices, not measured organism counts.</small>';host.appendChild(box)}
+ // Keep this dynamically created detail INSIDE the lawn accordion body. Otherwise it remains visible when the lawn is collapsed.
+ const collapseBody=host.querySelector(':scope > .tf-collapse-body');
+ const detailParent=collapseBody||host;
+ if(!box){box=document.createElement('details');box.className='tf-food-web';box.innerHTML='<summary>Food-web detail · linked to main soil model</summary><div class="tf-food-grid"></div><small>Bacteria, fungi, protozoa and earthworm activity use the main simulator values. Other guilds remain exploratory relative indices, not measured organism counts.</small>';detailParent.appendChild(box)}
+ else if(box.parentElement!==detailParent)detailParent.appendChild(box);
  const labels={bacteria:'Bacteria',fungi:'Fungi',protozoa:'Protozoa',nematodesBacterial:'Bacterial-feeding nematodes',nematodesFungal:'Fungal-feeding nematodes',nematodesPlant:'Plant-feeding nematodes',nematodesPredator:'Predatory nematodes',earthworms:'Earthworm activity (main model)',microarthropods:'Microarthropods'};
  box.querySelector('.tf-food-grid').replaceChildren(...Object.entries(labels).map(([k,label])=>{
   const el=document.createElement('div');el.className='tf-food-item';
