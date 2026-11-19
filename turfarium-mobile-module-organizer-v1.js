@@ -38,12 +38,14 @@ const groups=[
  {id:'experiments',title:'🧪 Experiment tools',terms:['Custom product formulation studio','Worm Tea Brewing Lab','Soil lab & nutrient cycling','Experiment activity']}
 ];
 function findCard(term){
- const candidates=[...document.querySelectorAll('section.card,article.card,details')];
  const query=term.toLowerCase();
- return candidates.find(el=>{
-   if(el.closest('#tf-research-organizer,#tf-stacked-lawns,#tf-mowing-dialog'))return false;
-   const title=el.querySelector(':scope > h2,:scope > h3,:scope > summary,:scope > .head h2,:scope > .head h3,:scope > .tf-collapse-toggle .tf-collapse-title');
-   return title&&title.textContent.trim().toLowerCase().includes(query);
+ // layout-tools wraps original headings inside .tf-collapse-body and inserts
+ // a new direct toggle. Match the *outer card*, never move its inner details.
+ const cards=[...document.querySelectorAll('section.card,article.card')];
+ return cards.find(card=>{
+   if(card.closest('#tf-research-organizer,#tf-stacked-lawns,#tf-mowing-dialog'))return false;
+   const headings=card.querySelectorAll(':scope > h2,:scope > h3,:scope > .head h2,:scope > .head h3,:scope > .tf-collapse-toggle .tf-collapse-title,:scope > .tf-collapse-body > .head h2,:scope > .tf-collapse-body > h2,:scope > .tf-collapse-body > .head h3');
+   return [...headings].some(heading=>heading.textContent.trim().toLowerCase().includes(query));
  });
 }
 function organize(){
@@ -140,11 +142,13 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.0.97</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.0.98</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
  }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+// One late pass after layout-tools has wrapped headings. No repeating timers.
+window.addEventListener('load',()=>requestAnimationFrame(organize),{once:true});
 })();
