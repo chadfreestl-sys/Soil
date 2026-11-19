@@ -220,16 +220,18 @@ function organize(){
  }
  const recordsDrawer=document.getElementById('tf-research-records');
  if(recordsDrawer)recordsDrawer.hidden=!records?.children.length;
- // Brew observation log first, living ecosystem microscope immediately below it.
- // Reposition original DOM nodes without rebuilding their interactive contents.
- const brewLog=findCard('Brew Microscope Observation Log');
- if(microscope && brewLog && microscope!==brewLog && !microscope.contains(brewLog)){
-   if(brewLog.parentElement!==microscope.parentElement || brewLog.nextElementSibling!==microscope){
-     microscope.parentElement.insertBefore(brewLog,microscope);
-   }
- }
- // Apply the discovery-card presentation after layout-tools has wrapped the cards.
+ // Decorate before selecting the first photographic discovery panel.
  decorateDiscoveryCards();
+ // Brew microscope leads the scientific image-card section on mobile.
+ // Move the original card, retaining all inputs, handlers and observation data.
+ const brewLog=findCard('Brew Microscope Observation Log');
+ const firstImageCard=[...main.querySelectorAll('section.tf-discovery-card,article.tf-discovery-card')]
+   .find(card=>card!==brewLog && !card.closest('#tf-research-organizer,#tf-stacked-lawns'));
+ if(brewLog && firstImageCard && !brewLog.contains(firstImageCard) &&
+    (brewLog.parentElement!==firstImageCard.parentElement ||
+     brewLog.nextElementSibling!==firstImageCard)){
+   firstImageCard.parentElement.insertBefore(brewLog,firstImageCard);
+ }
  // The build stamp is a true footer, not a separator in the scientific modules.
  const footer=document.getElementById('tf-build-footer');
  if(footer && footer.parentElement===main && footer!==main.lastElementChild)main.appendChild(footer);
@@ -243,7 +245,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.08</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.09</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
