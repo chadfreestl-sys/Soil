@@ -220,12 +220,12 @@ function organize(){
  }
  const recordsDrawer=document.getElementById('tf-research-records');
  if(recordsDrawer)recordsDrawer.hidden=!records?.children.length;
- // Place the existing microscope immediately above Brew Microscope Observation Log.
- // Only move if necessary; do not recreate its canvas or reset disclosure state.
+ // Brew observation log first, living ecosystem microscope immediately below it.
+ // Reposition original DOM nodes without rebuilding their interactive contents.
  const brewLog=findCard('Brew Microscope Observation Log');
  if(microscope && brewLog && microscope!==brewLog && !microscope.contains(brewLog)){
-   if(microscope.parentElement!==brewLog.parentElement || microscope.nextElementSibling!==brewLog){
-     brewLog.parentElement.insertBefore(microscope,brewLog);
+   if(brewLog.parentElement!==microscope.parentElement || brewLog.nextElementSibling!==microscope){
+     microscope.parentElement.insertBefore(brewLog,microscope);
    }
  }
  // Apply the discovery-card presentation after layout-tools has wrapped the cards.
@@ -243,7 +243,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.07</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.08</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
