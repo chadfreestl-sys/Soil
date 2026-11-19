@@ -66,6 +66,27 @@ css.textContent=`@media(max-width:700px){
 .tf-research-body>.tf-discovery-card{margin:0!important}
 @media(max-width:380px){.tf-discovery-card>.tf-collapse-toggle{grid-template-columns:62px minmax(0,1fr) 18px!important;gap:8px!important}.tf-discovery-card>.tf-collapse-toggle::before{width:62px!important;height:62px!important}}
 
+/* Unified scientific accordion typography. CSS title case is presentation-only:
+   do not rewrite labels that may be read by scripts or assistive technology. */
+main section.card > .tf-collapse-toggle .tf-collapse-title,
+main article.card > .tf-collapse-toggle .tf-collapse-title,
+main section.card > details > summary,
+main article.card > details > summary,
+#tf-root-physics-disclosure > summary,
+#tf-microscope-disclosure > summary,
+#tf-research-organizer .tf-research-drawer > summary .tf-drawer-label {
+  font-size:16px!important;
+  line-height:1.35!important;
+  font-weight:750!important;
+  text-transform:capitalize!important;
+  letter-spacing:0!important;
+  white-space:normal!important;
+  text-overflow:clip!important;
+}
+.tf-discovery-card > .tf-collapse-toggle > .tf-collapse-title {font-size:16px!important;line-height:1.35!important}
+.tf-discovery-card .tf-discovery-caption {font-size:12px!important;line-height:1.4!important;font-weight:500!important;text-transform:none!important}
+#tf-research-organizer .tf-research-drawer > summary .tf-drawer-label {font-size:16px!important}
+
 }`;
 document.head.appendChild(css);
 const groups=[
@@ -245,7 +266,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.09</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.10</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
