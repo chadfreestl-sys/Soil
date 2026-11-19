@@ -55,6 +55,17 @@ css.textContent=`@media(max-width:700px){
 .tf-research-body .tf-collapse-toggle,.tf-research-body summary{min-height:52px!important;font-size:15px!important;font-weight:750!important;white-space:normal!important;text-overflow:clip!important}
 #tf-science-card-grid{display:contents!important}
 
+/* Discovery cards: existing science modules, not duplicate controls. */
+.tf-discovery-card{--tf-art:url('assets/turfarium/BASE01/BASE01.webp');--tf-accent:#0a735c}
+.tf-discovery-card>.tf-collapse-toggle{display:grid!important;grid-template-columns:76px minmax(0,1fr) 22px!important;align-items:center!important;gap:12px!important;min-height:100px!important;padding:10px!important;background:linear-gradient(115deg,#fffdf6,#e9f3eb)!important;border:1px solid #c7dcd0!important;border-left:4px solid var(--tf-accent)!important;border-radius:15px!important;text-align:left!important;white-space:normal!important}
+.tf-discovery-card>.tf-collapse-toggle::before{content:''!important;display:block!important;grid-column:1!important;grid-row:1!important;width:76px!important;height:76px!important;border-radius:11px!important;background-image:var(--tf-art)!important;background-position:center!important;background-size:cover!important;background-color:#d9e8db!important;box-shadow:inset 0 0 0 1px #ffffff88!important}
+.tf-discovery-card>.tf-collapse-toggle>.tf-collapse-title{grid-column:2!important;grid-row:1!important;font-size:15px!important;line-height:1.32!important;min-width:0!important;white-space:normal!important;overflow-wrap:normal!important;text-overflow:clip!important}
+.tf-discovery-card>.tf-collapse-toggle>.tf-collapse-chevron{grid-column:3!important;grid-row:1!important;justify-self:center!important}
+.tf-discovery-card .tf-discovery-caption{display:block!important;margin-top:5px!important;color:#507267!important;font-size:12px!important;font-weight:500!important;line-height:1.35!important}
+.tf-discovery-card{box-shadow:0 4px 16px #163f2a0c!important;border-radius:18px!important}
+.tf-research-body>.tf-discovery-card{margin:0!important}
+@media(max-width:380px){.tf-discovery-card>.tf-collapse-toggle{grid-template-columns:62px minmax(0,1fr) 18px!important;gap:8px!important}.tf-discovery-card>.tf-collapse-toggle::before{width:62px!important;height:62px!important}}
+
 }`;
 document.head.appendChild(css);
 const groups=[
@@ -77,6 +88,38 @@ function findCard(term){
    if(card && !card.closest('#tf-research-organizer,#tf-stacked-lawns,#tf-mowing-dialog'))return card;
  }
  return null;
+}
+const discoverySpecs=[
+ ['Root-zone physics','BASE37','Water movement, aeration & compaction','#327f91'],
+ ['Turf Species Response','BASE18','Explore tall fescue vigor & recovery','#3b8a58'],
+ ['Earthworm Ecology','BASE01','Follow earthworms through living soil','#9b6b38'],
+ ['Linked soil food web','BASE72','Explore the organisms beneath turf','#6a7898'],
+ ['Seaweed Response','BASE62','Discover plant and root responses','#52876c'],
+ ['Five-year divergence','BASE80','Compare long-term lawn outcomes','#9b7540'],
+ ['Living ecosystem microscope','BASE72','Explore life at microscopic scale','#467c92'],
+ ['Brew Microscope Observation','BASE63','Record and compare brew observations','#477b89'],
+ ['Worm Tea Brewing Lab','BASE01','Explore biological brewing practices','#8b6d45'],
+ ['Soil lab & nutrient cycling','BASE37','Follow nutrients through soil','#4b8570'],
+ ['Custom product formulation','BASE62','Explore treatment combinations','#98754e']
+];
+function decorateDiscoveryCards(){
+ for(const card of document.querySelectorAll('section.card,article.card')){
+   const toggle=card.querySelector(':scope > .tf-collapse-toggle');
+   const title=toggle?.querySelector('.tf-collapse-title');
+   if(!title)continue;
+   const name=title.firstChild?.textContent?.trim()||title.textContent.trim();
+   const spec=discoverySpecs.find(([term])=>name.toLowerCase().includes(term.toLowerCase()));
+   if(!spec)continue;
+   const [,imageName,caption,accent]=spec;
+   card.classList.add('tf-discovery-card');
+   card.style.setProperty('--tf-art',`url("assets/turfarium/${imageName}/${imageName}.webp")`);
+   card.style.setProperty('--tf-accent',accent);
+   if(!title.querySelector('.tf-discovery-caption')){
+     const sub=document.createElement('small');
+     sub.className='tf-discovery-caption';sub.textContent=caption;
+     sub.setAttribute('aria-hidden','true');title.appendChild(sub);
+   }
+ }
 }
 function organize(){
  if(!matchMedia('(max-width:700px)').matches)return;
@@ -198,7 +241,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.05</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.06</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
