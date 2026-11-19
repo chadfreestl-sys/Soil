@@ -74,6 +74,14 @@ css.textContent=`
   #tf-mobile-what-changed>summary{display:list-item!important;padding:13px!important;cursor:pointer!important;color:#183e2c!important;font-size:16px!important;font-weight:900!important;line-height:1.3!important}
   #tf-mobile-what-changed .tf-mobile-change-content{padding:0 12px 12px!important;color:#183e2c!important}
   #tf-mobile-what-changed:not([open]) .tf-mobile-change-content{display:none!important}
+  /* Consistent finish for the lower mobile dashboard without moving live controls. */
+  #tf-mobile-what-changed{box-shadow:0 4px 14px rgba(23,61,42,.07)!important;border-radius:15px!important;background:#f8fbf5!important;padding:7px!important}
+  #tf-mobile-what-changed>summary{background:#e6f1e5!important;border-radius:10px!important;padding:14px 15px!important}
+  #tf-mobile-what-changed>summary::marker{color:#226b49}
+  #scenario-memory,#diagnostic-lens,#tf-history-card-a,#tf-history-card-b{border-radius:15px!important;box-shadow:0 4px 14px rgba(23,61,42,.06)!important}
+  #scenario-memory.tf-panel-collapsed,#diagnostic-lens.tf-panel-collapsed,#tf-history-card-a.tf-panel-collapsed,#tf-history-card-b.tf-panel-collapsed{padding:8px!important}
+  #scenario-memory .tf-collapse-toggle,#diagnostic-lens .tf-collapse-toggle,#tf-history-card-a .tf-collapse-toggle,#tf-history-card-b .tf-collapse-toggle{min-height:52px!important;border-radius:11px!important;font-weight:850!important}
+  #tf-stacked-lawns ~ :empty:not(script):not(style){min-height:0!important}
   #tf-live-change-card-v5{display:none!important}
 }
 @media(min-width:701px){#tf-stacked-lawns,#tf-mobile-intro{display:none!important}}
