@@ -1545,4 +1545,23 @@ const sourceWatch=setInterval(()=>{const source=document.getElementById('changeR
 setTimeout(()=>clearInterval(sourceWatch),15000);
 })();
 </script><script defer src="js/v25-treatment-response-indicator.js?v=25.3"></script><script defer src="js/v25-scientific-reference-mapping.js?v=25.1"></script>
-</body></html>
+<script id="tf-lawn-stat-drawers-initially-closed">
+/* Close only the Lawn A/B statistics drawers once; never reset a user's toggle. */
+(function(){
+ 'use strict';
+ function closeInitial(){
+  if(!window.matchMedia('(max-width:700px)').matches)return;
+  document.querySelectorAll('details').forEach(function(drawer){
+   if(drawer.dataset.tfLawnStatsInitialized)return;
+   const summary=drawer.querySelector(':scope > summary');
+   if(!summary)return;
+   const label=summary.textContent.replace(/\\s+/g,' ').trim();
+   if(!/^Lawn [AB]$/i.test(label))return;
+   drawer.dataset.tfLawnStatsInitialized='1';
+   drawer.open=false;
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',closeInitial,{once:true});else closeInitial();
+ [250,750,1500,3000].forEach(ms=>setTimeout(closeInitial,ms));
+})();
+</script></body></html>
