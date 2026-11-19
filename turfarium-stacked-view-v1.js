@@ -81,7 +81,6 @@ css.textContent=`
   #scenario-memory,#diagnostic-lens,#tf-history-card-a,#tf-history-card-b{border-radius:15px!important;box-shadow:0 4px 14px rgba(23,61,42,.06)!important}
   #scenario-memory.tf-panel-collapsed,#diagnostic-lens.tf-panel-collapsed,#tf-history-card-a.tf-panel-collapsed,#tf-history-card-b.tf-panel-collapsed{padding:8px!important}
   #scenario-memory .tf-collapse-toggle,#diagnostic-lens .tf-collapse-toggle,#tf-history-card-a .tf-collapse-toggle,#tf-history-card-b .tf-collapse-toggle{min-height:52px!important;border-radius:11px!important;font-weight:850!important}
-  #tf-stacked-lawns ~ :empty:not(script):not(style){min-height:0!important}
 
   /* Guided experiment hierarchy: visual grouping only; no moving controls or altering events. */
   #tf-mobile-treatments{padding:13px!important;border:1px solid #b9d6c2!important;border-left:4px solid #23865d!important;border-radius:17px!important;background:linear-gradient(145deg,#f5fbf4,#e9f5ec)!important;box-shadow:0 6px 19px rgba(18,76,46,.08)!important;gap:9px!important}
@@ -98,11 +97,7 @@ css.textContent=`
   #diagnostic-lens{border-left:4px solid #879b91!important}
   #diagnostic-lens::before{content:'ADVANCED  /  DIAGNOSTICS';display:block!important;font-size:11px!important;font-weight:900!important;letter-spacing:.075em!important;color:#526d61!important;padding:4px 7px 8px!important}
   #tf-mobile-treatments .tf-mobile-treatment:focus-within,#tf-mobile-what-changed:focus-within,#scenario-memory:focus-within{outline:2px solid #2e8a60!important;outline-offset:2px!important}
-  /* Hide only genuinely empty mobile placeholder cards; never hide controls or populated cards. */
-  main > .card:empty,main > section.card:empty,main > article.card:empty,
-  .simulation-grid > .card:empty,.simulation-grid > section.card:empty,
-  main > .card:not(:has(*)):not(:has(textarea,input,button)),
-  .simulation-grid > .card:not(:has(*)):not(:has(textarea,input,button)){display:none!important}
+  /* No global empty-card suppression: preserve live module hosts and controls. */
   #tf-live-change-card-v5{display:none!important}
 }
 @media(min-width:701px){#tf-stacked-lawns,#tf-mobile-intro{display:none!important}}

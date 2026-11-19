@@ -2,7 +2,6 @@
 (()=>{'use strict';
 const css=document.createElement('style');
 css.textContent=`@media(max-width:700px){
-.tf-orphan-blank-mobile-tile{display:none!important}
 #tf-root-physics-disclosure>summary{list-style:none!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;min-height:52px!important;padding:13px 15px!important;border:1px solid #d4dfd3!important;border-radius:12px!important;background:#f4f3e9!important;color:#194532!important;font-weight:850!important;cursor:pointer!important}
 #tf-root-physics-disclosure>summary::-webkit-details-marker{display:none}
 #tf-root-physics-disclosure>summary::after{content:'▸';flex:none}
@@ -57,7 +56,7 @@ function organize(){
  // Put advanced research navigation at the very bottom of the mobile page.
  // Never insert before a moving source card; that can trigger scroll jumps.
  const main=document.querySelector('main')||document.body;
- if(host.parentElement!==main||host!==main.lastElementChild)main.appendChild(host);
+ if(host.parentElement!==main)main.appendChild(host);
  for(const group of collected){
    let drawer=document.getElementById('tf-research-'+group.id);
    if(!drawer){
@@ -89,22 +88,7 @@ function organize(){
     physics.appendChild(disclosure);
     disclosure.open=false;
   }
-  // Remove only the visually blank, non-interactive 40–95px tile beneath Diagnostics.
-  // The old selector missed it because it had a wrapper or an ID.
-  const diagnostic=document.getElementById('diagnostic-lens');
-  if(diagnostic){
-    const bottom=diagnostic.getBoundingClientRect().bottom;
-    for(const el of document.querySelectorAll('main *')){
-      if(el===diagnostic||diagnostic.contains(el)||el.closest('#tf-research-organizer,#microscope-lab,#evidence-layer'))continue;
-      const r=el.getBoundingClientRect();
-      if(r.width<40||r.width>95||r.height<40||r.height>95||r.top<bottom-8||r.top>bottom+230||r.left>110)continue;
-      if(el.textContent.trim()||el.matches('button,a,input,select,textarea,summary,details,[role="button"],[tabindex]')||el.querySelector('button,a,input,select,textarea,summary,details,[role="button"],[tabindex],canvas,svg,img,video'))continue;
-      // Only hide the outermost matching blank tile, never a populated parent.
-      if(el.parentElement?.classList.contains('tf-orphan-blank-mobile-tile'))continue;
-      el.classList.add('tf-orphan-blank-mobile-tile');
-    }
-  }
-  // Scientific microscope belongs after the research drawers, at the end of the page.
+  // Preserve the live microscope node and its event handlers.
   // Move its existing node only when necessary; retain all controls and listeners.
   const microscope=document.getElementById('microscope-lab');
   // Keep microscope in place until its final position is resolved below.
@@ -125,7 +109,7 @@ function organize(){
     });
   }
 
-  // Keep confidence above the microscope; the microscope is the final page panel.
+  // Preserve the confidence module in the main document.
   const confidence=document.getElementById('evidence-layer');
   if(confidence && confidence.parentElement!==main)main.appendChild(confidence);
   // Only the research grouping belongs at the bottom; simulation controls stay in place.
@@ -147,6 +131,20 @@ function organize(){
    }
  }
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',organize,{once:true});else organize();
-[700,1800,3500].forEach(ms=>setTimeout(organize,ms));
+// Mount once. Re-running layout timers moved live nodes while Android users interacted.
+function boot(){
+ organize();
+ const main=document.querySelector('main')||document.body;
+ let footer=document.getElementById('tf-build-footer');
+ if(!footer){
+   footer=document.createElement('footer');
+   footer.id='tf-build-footer';
+   footer.setAttribute('aria-label','Turfarium application version');
+   footer.innerHTML='<strong>TURFARIUM · v25.0.95</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
+   footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
+   main.appendChild(footer);
+ }
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
