@@ -210,6 +210,10 @@ function ensureTreatments(view,afterCard){
    const label=document.createElement('strong');label.textContent='Apply a treatment to Lawn '+key;body.appendChild(label);
    drawer.append(summary,body);
   }
+  if(!drawer.dataset.tfDefaultClosed){
+    drawer.open=false;
+    drawer.dataset.tfDefaultClosed='1';
+  }
   const body=drawer.querySelector('.tf-mobile-treatment-body');
   // Mount original controls once. Repeated DOM moves cancel Android's native
   // material picker and can interrupt the original treatment handlers.
