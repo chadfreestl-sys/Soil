@@ -17,6 +17,8 @@ for(let n=1;n<=88;n++){
  assert(e.path?.startsWith('assets/turfarium/'+id+'/'));
  assert(['webp','png','jpeg'].includes(e.format));
  assert(fs.existsSync(path.join(root,e.path)),'missing asset '+e.path);
+ assert(e.verifiedSubject===true&&typeof e.topic==='string'&&e.topic.trim().length>8,'unverified subject '+id);
+ assert.equal(fs.statSync(path.join(root,e.path)).size,e.bytes,'manifest size mismatch '+id);
 }
 const engine=fs.readFileSync(path.join(root,'turfarium-visual-state-v3-2.js'),'utf8');
 const lab=fs.readFileSync(path.join(root,'lab.html'),'utf8');
@@ -35,5 +37,6 @@ for(const season of seasons)for(let i=0;i<states.length;i++){
 }
 const unverified=entries.filter(e=>!e.verifiedSubject).map(e=>e.id);
 console.log('PASS: 88 BASE mappings, 32 seasonal image files, WebP signatures, and lab visual-engine inclusion.');
-console.log('AUDIT: '+unverified.length+' BASE subjects remain unverified in manifest; image-to-condition visual accuracy not certified.');
+assert.deepEqual(unverified,[],'all 88 BASE image subjects must be verified');
+console.log('PASS: all 88 BASE image subjects are verified; image-to-condition visual accuracy is not certified.');
 console.log('AUDIT: BASE manifest is not consumed by the active seasonal image engine; seasonal engine uses 32 state photographs.');
