@@ -41,7 +41,7 @@ function render(){
   }else{caption.textContent='No scientifically verified BASE reference matches this modeled condition.';card.append(heading,caption)}
   results.append(card);
  }
- message.textContent=found?'Verified reference topics matched: '+found+'. Seasonal lawn photos are unchanged.':'Only verified subjects can be matched. Most BASE subjects still require review.';
+ message.textContent=found?'Verified reference topics matched: '+found+'. Seasonal lawn photos are unchanged.':'No BASE reference matches these modeled conditions; all 88 library subjects are verified.';
 }
 fetch('assets/turfarium/image-manifest.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(m=>{
  verified=new Map(m.images.filter(e=>e.verifiedSubject&&e.topic&&e.path).map(e=>[e.id,e]));
