@@ -1,0 +1,32 @@
+name: 400 material application matrix
+on:
+  push:
+    paths:
+      - '.github/workflows/material-application-400.yml'
+      - 'tests/material-application-400.test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  run-400:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run 400 material applications
+        run: node tests/material-application-400.test.cjs
+      - name: Save results even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: material-application-400-results
+          path: audit/material-application-400-results.json
+      - name: Commit test report
+        if: always()
+        run: |
+          if [ -f audit/material-application-400-results.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add audit/material-application-400-results.json
+            git commit -m "Test: record 400 material application outcomes" || exit 0
+            git push
+          fi
