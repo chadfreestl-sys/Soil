@@ -151,6 +151,9 @@ function decorateDiscoveryCards(){
    const canonicalTitle=spec[0]==='Turf Species Response'?'Turf Species Response':
      spec[0]==='Seaweed Response'?'Seaweed Response Lab':null;
    if(canonicalTitle){
+     // Grass-icon initializer previously replaced emoji with decorative spans.
+     // Remove those generated spans before canonicalizing the label.
+     title.querySelectorAll('.tf-grass-icon').forEach(icon=>icon.remove());
      for(const child of [...title.childNodes]){
        if(child.nodeType===Node.TEXT_NODE)child.remove();
        else if(child.nodeType===Node.ELEMENT_NODE && !child.classList.contains('tf-discovery-caption'))child.remove();
@@ -291,7 +294,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.17</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.18</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
