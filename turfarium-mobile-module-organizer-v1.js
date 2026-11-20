@@ -134,9 +134,16 @@ function decorateDiscoveryCards(){
    const [,imageName,caption,accent]=spec;
    // Discovery thumbnails already provide visual identity; remove redundant
    // leading emoji from the visible label without replacing the button or its handlers.
-   const labelNode=title.firstChild;
-   if(labelNode?.nodeType===Node.TEXT_NODE){
-     labelNode.textContent=labelNode.textContent.replace(/^[^\p{L}\p{N}]+/u,'');
+   // Titles may contain text nodes separated by spans; clean every title text
+   // node (not captions) so emoji remnants cannot survive the first-child check.
+   const walker=document.createTreeWalker(title,NodeFilter.SHOW_TEXT);
+   const labelNodes=[];
+   while(walker.nextNode()){
+     const node=walker.currentNode;
+     if(!node.parentElement?.closest('.tf-discovery-caption'))labelNodes.push(node);
+   }
+   for(const node of labelNodes){
+     node.textContent=node.textContent.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]\uFE0F?/gu,'').replace(/^[\\s\u200D]+/u,'');
    }
    card.classList.add('tf-discovery-card');
    card.style.setProperty('--tf-art',`url("assets/turfarium/${imageName}/${imageName}.webp")`);
@@ -272,7 +279,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.15</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.16</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
