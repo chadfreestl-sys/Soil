@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "source": "GitHub repository tree",
-  "note": "Visual subjects reviewed from uploaded BASE contact sheets. Verification true only for assets byte-identical to current main and with matching visible subject. This does not certify biological causation, field calibration, or simulation mapping. BASE01,18,23,37 differ from current main; BASE63 sprinkler topic conflicts with visible image.",
+  "note": "Subject descriptions visually audited from uploaded contact sheets. Verified subjects are supported by matched assets or owner confirmation. BASE01, BASE18, BASE23, BASE37 require direct visual review of their current GitHub versions. Image sizes reflect current GitHub main. Verification does not establish scientific causation or simulation mapping.",
   "images": [
     {
       "id": "BASE01",
       "path": "assets/turfarium/BASE01/BASE01.webp",
       "format": "webp",
-      "bytes": 726218,
+      "bytes": 570422,
       "topic": "Patchy spring turf with broadleaf weeds and exposed clay-rich root zone",
       "verifiedSubject": false,
-      "subjectVerification": "pending review: uploaded asset differs from current main"
+      "subjectVerification": "pending direct visual review of current GitHub asset; uploaded ZIP contains a different version"
     },
     {
       "id": "BASE02",
@@ -160,10 +160,10 @@
       "id": "BASE18",
       "path": "assets/turfarium/BASE18/BASE18.webp",
       "format": "webp",
-      "bytes": 673816,
+      "bytes": 876698,
       "topic": "Frosted turf in early winter with exposed root profile",
       "verifiedSubject": false,
-      "subjectVerification": "pending review: uploaded asset differs from current main"
+      "subjectVerification": "pending direct visual review of current GitHub asset; uploaded ZIP contains a different version"
     },
     {
       "id": "BASE19",
@@ -205,10 +205,10 @@
       "id": "BASE23",
       "path": "assets/turfarium/BASE23/BASE23.webp",
       "format": "webp",
-      "bytes": 686904,
+      "bytes": 897238,
       "topic": "Spring turf with mixed weeds and fine roots",
       "verifiedSubject": false,
-      "subjectVerification": "pending review: uploaded asset differs from current main"
+      "subjectVerification": "pending direct visual review of current GitHub asset; uploaded ZIP contains a different version"
     },
     {
       "id": "BASE24",
@@ -331,10 +331,10 @@
       "id": "BASE37",
       "path": "assets/turfarium/BASE37/BASE37.webp",
       "format": "webp",
-      "bytes": 627560,
+      "bytes": 803478,
       "topic": "Late-day green turf with exposed roots",
       "verifiedSubject": false,
-      "subjectVerification": "pending review: uploaded asset differs from current main"
+      "subjectVerification": "pending direct visual review of current GitHub asset; uploaded ZIP contains a different version"
     },
     {
       "id": "BASE38",
@@ -566,9 +566,9 @@
       "path": "assets/turfarium/BASE63/BASE63.webp",
       "format": "webp",
       "bytes": 880832,
-      "topic": "Green turf with large earthworms in root-zone soil",
-      "verifiedSubject": false,
-      "subjectVerification": "pending review: existing subject label conflicts with visible content"
+      "topic": "oscillating sprinkler irrigation",
+      "verifiedSubject": true,
+      "subjectVerification": "approved subject confirmed by project owner; GitHub asset matches uploaded archive"
     },
     {
       "id": "BASE64",
