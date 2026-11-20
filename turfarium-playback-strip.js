@@ -68,24 +68,18 @@
     strip.innerHTML='<div class="tf-strip-row"><span class="tf-strip-label">⏱ Progression</span><div class="tf-strip-time"></div><div class="tf-strip-replay"></div><div class="tf-strip-changes"></div><p class="tf-strip-visit"></p></div>';}
   if(strip.parentElement!==grid||strip.nextElementSibling!==a)grid.insertBefore(strip,a);
   const b=document.getElementById('lawn-b-panel');
+  // The scenario-memory card is the sole Save & Compare accordion.
+  // The old tf-save-drawer duplicated the strip and fought layout-tools.js,
+  // which already owns positioning of the live scenario-memory card.
   const memory=document.getElementById('scenario-memory');
-  if(memory&&b){
-    let drawer=document.getElementById('tf-save-drawer');
-    if(!drawer){
-      drawer=document.createElement('details');
-      drawer.id='tf-save-drawer';
-      drawer.className='tf-save-drawer';
-      const summary=document.createElement('summary');
-      summary.textContent='Save state · Load · Compare';
-      drawer.appendChild(summary);
-      drawer.open=false;
-    }
-    if(drawer.parentElement!==grid||drawer.previousElementSibling!==b)b.insertAdjacentElement('afterend',drawer);
-    if(memory.parentElement!==drawer)drawer.appendChild(memory);
+  const obsoleteDrawer=document.getElementById('tf-save-drawer');
+  if(obsoleteDrawer){
+    if(memory && obsoleteDrawer.contains(memory))
+      obsoleteDrawer.insertAdjacentElement('beforebegin',memory);
+    obsoleteDrawer.remove();
   }
-  // Keep treatment history BELOW the paired lawn photographs and save drawer.
-  // The existing history cards retain their own click handlers and content.
-  let historyAnchor=document.getElementById('tf-save-drawer')||b;
+  // Keep history below the original Save & Compare card.
+  let historyAnchor=memory||b;
   for(const key of ['a','b']){
     const history=document.getElementById('tf-history-card-'+key);
     if(!history||!historyAnchor)continue;
