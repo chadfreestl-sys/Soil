@@ -1,7 +1,7 @@
 /* Turfarium scenario laboratory: separate research trajectories, never overwrites live lawn state. */
 (()=>{'use strict';
 function init(){const api=window.TurfariumFiveYearScenarios;if(!api||document.getElementById('tf-scenario-lab'))return;
- const anchor=document.querySelector('#lawn-b-panel');if(!anchor)return;
+ const anchor=document.getElementById('tf-divergence-panel');if(!anchor)return;
  const section=document.createElement('section');section.id='tf-scenario-lab';section.style.cssText='margin:22px 0;padding:18px;background:#f1f6ee;border:1px solid #b7cbb3;border-radius:14px;color:#193b2b;overflow:hidden';
  const details=document.createElement('details');details.id='tf-scenario-lab-details';const summary=document.createElement('summary');summary.textContent='Five-year progression stress test';summary.style.cssText='cursor:pointer;font-weight:800;font-size:1rem;padding:5px 0;list-style:disclosure-closed';details.append(summary);const content=document.createElement('div');content.style.cssText='margin-top:12px;overflow-x:auto;max-width:100%';details.append(content);section.append(details);
  const desc=document.createElement('p');desc.textContent='Research sandbox only — shared March baseline and estimated seasonal conditions. Does not change Lawn A or B treatments, photos, or saved history. Indices are hypothetical, not field predictions.';content.append(desc);
