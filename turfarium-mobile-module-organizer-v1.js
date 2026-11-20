@@ -143,7 +143,7 @@ function decorateDiscoveryCards(){
      if(!node.parentElement?.closest('.tf-discovery-caption'))labelNodes.push(node);
    }
    for(const node of labelNodes){
-     node.textContent=node.textContent.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]\uFE0F?/gu,'').replace(/^[\\s\u200D]+/u,'');
+     node.textContent=node.textContent.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]\uFE0F?/gu,'').replace(/^[\s\u200D]+/u,'');
    }
    card.classList.add('tf-discovery-card');
    card.style.setProperty('--tf-art',`url("assets/turfarium/${imageName}/${imageName}.webp")`);
