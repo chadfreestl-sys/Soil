@@ -160,6 +160,9 @@ function decorateDiscoveryCards(){
      }
      title.insertBefore(document.createTextNode(canonicalTitle),title.firstChild);
    }
+   // Remove any old SVG grass-icon spans that survived earlier passes.
+   // This applies to every photographic card, not just two special titles.
+   title.querySelectorAll('.tf-grass-icon,.tf-growth').forEach(el=>el.remove());
    card.classList.add('tf-discovery-card');
    card.style.setProperty('--tf-art',`url("assets/turfarium/${imageName}/${imageName}.webp")`);
    card.style.setProperty('--tf-accent',accent);
@@ -294,7 +297,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.18</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.19</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
