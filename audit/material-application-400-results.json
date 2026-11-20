@@ -1,0 +1,191 @@
+{
+  "cases": 400,
+  "passed": 400,
+  "failed": 0,
+  "uniqueMaterials": 25,
+  "checks": [
+    "live apply function",
+    "treatment record",
+    "independent A/B",
+    "finite state",
+    "response direction"
+  ],
+  "failures": [],
+  "examples": [
+    {
+      "material": "compost",
+      "lawn": "A",
+      "field": "labileC",
+      "before": 20,
+      "after": 26
+    },
+    {
+      "material": "aerate",
+      "lawn": "B",
+      "field": "bulk",
+      "before": 1.35,
+      "after": 1.3150000000000002
+    },
+    {
+      "material": "irrigate",
+      "lawn": "A",
+      "field": "moist",
+      "before": 30,
+      "after": 44
+    },
+    {
+      "material": "biochar",
+      "lawn": "B",
+      "field": "cec",
+      "before": 12,
+      "after": 12.15
+    },
+    {
+      "material": "mineralN",
+      "lawn": "A",
+      "field": "nh4",
+      "before": 5,
+      "after": 13
+    },
+    {
+      "material": "highN",
+      "lawn": "B",
+      "field": "nh4",
+      "before": 5,
+      "after": 35
+    },
+    {
+      "material": "clippings",
+      "lawn": "A",
+      "field": "labileC",
+      "before": 20,
+      "after": 22
+    },
+    {
+      "material": "dethatch",
+      "lawn": "B",
+      "field": "thatch",
+      "before": 1.2,
+      "after": 0.85
+    },
+    {
+      "material": "lime",
+      "lawn": "A",
+      "field": "ph",
+      "before": 5.8,
+      "after": 5.88
+    },
+    {
+      "material": "sulfur",
+      "lawn": "B",
+      "field": "ph",
+      "before": 5.8,
+      "after": 5.74
+    },
+    {
+      "material": "seaweed102",
+      "lawn": "A",
+      "field": "k",
+      "before": 100,
+      "after": 101.3
+    },
+    {
+      "material": "seaweed0014",
+      "lawn": "B",
+      "field": "k",
+      "before": 100,
+      "after": 109.1
+    },
+    {
+      "material": "kelpmeal",
+      "lawn": "A",
+      "field": "labileC",
+      "before": 20,
+      "after": 23
+    },
+    {
+      "material": "humic",
+      "lawn": "B",
+      "field": "cec",
+      "before": 12,
+      "after": 12.08
+    },
+    {
+      "material": "molasses",
+      "lawn": "A",
+      "field": "labileC",
+      "before": 20,
+      "after": 29
+    },
+    {
+      "material": "fish",
+      "lawn": "B",
+      "field": "organicN",
+      "before": 200,
+      "after": 225
+    },
+    {
+      "material": "alfalfa",
+      "lawn": "A",
+      "field": "organicN",
+      "before": 200,
+      "after": 232
+    },
+    {
+      "material": "wormcast",
+      "lawn": "B",
+      "field": "organicN",
+      "before": 200,
+      "after": 215
+    },
+    {
+      "material": "microbeinoc",
+      "lawn": "A",
+      "field": "microbialC",
+      "before": 30,
+      "after": 31.5
+    },
+    {
+      "material": "slowN",
+      "lawn": "B",
+      "field": "nh4",
+      "before": 5,
+      "after": 8
+    },
+    {
+      "material": "urea",
+      "lawn": "A",
+      "field": "nh4",
+      "before": 5,
+      "after": 18
+    },
+    {
+      "material": "ammsulf",
+      "lawn": "B",
+      "field": "nh4",
+      "before": 5,
+      "after": 15
+    },
+    {
+      "material": "potassium",
+      "lawn": "A",
+      "field": "k",
+      "before": 100,
+      "after": 122
+    },
+    {
+      "material": "phosphate",
+      "lawn": "B",
+      "field": "p",
+      "before": 25,
+      "after": 34
+    },
+    {
+      "material": "wetting",
+      "lawn": "A",
+      "field": "moist",
+      "before": 30,
+      "after": 34
+    }
+  ]
+}
