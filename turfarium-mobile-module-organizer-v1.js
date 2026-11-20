@@ -136,7 +136,7 @@ function decorateDiscoveryCards(){
    // leading emoji from the visible label without replacing the button or its handlers.
    const labelNode=title.firstChild;
    if(labelNode?.nodeType===Node.TEXT_NODE){
-     labelNode.textContent=labelNode.textContent.replace(/^[^\\p{L}\\p{N}]+/u,'');
+     labelNode.textContent=labelNode.textContent.replace(/^[^\p{L}\p{N}]+/u,'');
    }
    card.classList.add('tf-discovery-card');
    card.style.setProperty('--tf-art',`url("assets/turfarium/${imageName}/${imageName}.webp")`);
