@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "source": "GitHub repository tree",
-  "note": "Subject descriptions visually audited from uploaded contact sheets. Verified subjects are supported by matched assets or owner confirmation. BASE01, BASE18, BASE23, BASE37 require direct visual review of their current GitHub versions. Image sizes reflect current GitHub main. Verification does not establish scientific causation or simulation mapping.",
+  "note": "Subject descriptions reviewed from contact sheets. BASE01, BASE18, BASE23, BASE37 current GitHub images confirmed by project owner against GitHub-generated contact sheet; BASE63 sprinkler subject confirmed by owner. Verified subject flags indicate visual subject approval, not proof of scientific causation or simulator mapping.",
   "images": [
     {
       "id": "BASE01",
@@ -9,8 +9,8 @@
       "format": "webp",
       "bytes": 570422,
       "topic": "Patchy spring turf with broadleaf weeds and exposed clay-rich root zone",
-      "verifiedSubject": false,
-      "subjectVerification": "pending direct visual review of current GitHub asset; uploaded ZIP contains a different version"
+      "verifiedSubject": true,
+      "subjectVerification": "Current GitHub asset visually confirmed by project owner using generated current-base-four contact sheet; approved canonical version retained"
     },
     {
       "id": "BASE02",
@@ -162,8 +162,8 @@
       "format": "webp",
       "bytes": 876698,
       "topic": "Frosted turf in early winter with exposed root profile",
-      "verifiedSubject": false,
-      "subjectVerification": "pending direct visual review of current GitHub asset; uploaded ZIP contains a different version"
+      "verifiedSubject": true,
+      "subjectVerification": "Current GitHub asset visually confirmed by project owner using generated current-base-four contact sheet; approved canonical version retained"
     },
     {
       "id": "BASE19",
@@ -207,8 +207,8 @@
       "format": "webp",
       "bytes": 897238,
       "topic": "Spring turf with mixed weeds and fine roots",
-      "verifiedSubject": false,
-      "subjectVerification": "pending direct visual review of current GitHub asset; uploaded ZIP contains a different version"
+      "verifiedSubject": true,
+      "subjectVerification": "Current GitHub asset visually confirmed by project owner using generated current-base-four contact sheet; approved canonical version retained"
     },
     {
       "id": "BASE24",
@@ -333,8 +333,8 @@
       "format": "webp",
       "bytes": 803478,
       "topic": "Late-day green turf with exposed roots",
-      "verifiedSubject": false,
-      "subjectVerification": "pending direct visual review of current GitHub asset; uploaded ZIP contains a different version"
+      "verifiedSubject": true,
+      "subjectVerification": "Current GitHub asset visually confirmed by project owner using generated current-base-four contact sheet; approved canonical version retained"
     },
     {
       "id": "BASE38",
