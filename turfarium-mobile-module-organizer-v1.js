@@ -145,6 +145,18 @@ function decorateDiscoveryCards(){
    for(const node of labelNodes){
      node.textContent=node.textContent.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]\uFE0F?/gu,'').replace(/^[\s\u200D]+/u,'');
    }
+   // These two labels were still inheriting decorative glyphs from generated
+   // heading markup. Normalize their visible label explicitly, preserving the
+   // original toggle button, handlers and existing caption element.
+   const canonicalTitle=spec[0]==='Turf Species Response'?'Turf Species Response':
+     spec[0]==='Seaweed Response'?'Seaweed Response Lab':null;
+   if(canonicalTitle){
+     for(const child of [...title.childNodes]){
+       if(child.nodeType===Node.TEXT_NODE)child.remove();
+       else if(child.nodeType===Node.ELEMENT_NODE && !child.classList.contains('tf-discovery-caption'))child.remove();
+     }
+     title.insertBefore(document.createTextNode(canonicalTitle),title.firstChild);
+   }
    card.classList.add('tf-discovery-card');
    card.style.setProperty('--tf-art',`url("assets/turfarium/${imageName}/${imageName}.webp")`);
    card.style.setProperty('--tf-accent',accent);
@@ -279,7 +291,7 @@ function boot(){
    footer=document.createElement('footer');
    footer.id='tf-build-footer';
    footer.setAttribute('aria-label','Turfarium application version');
-   footer.innerHTML='<strong>TURFARIUM · v25.1.16</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
+   footer.innerHTML='<strong>TURFARIUM · v25.1.17</strong><span>Tall Fescue &amp; Living Soil Simulator</span><small>© 2026 Turfarium</small>';
    footer.style.cssText='box-sizing:border-box;width:100%;max-width:100%;margin:28px auto 12px;padding:18px 12px;text-align:center;color:#526d61;font:12px/1.65 system-ui,sans-serif;opacity:.88';
    footer.querySelectorAll('strong,span,small').forEach(el=>el.style.cssText='display:block');
    main.appendChild(footer);
