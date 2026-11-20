@@ -67,7 +67,7 @@ function arrange(){
   right.appendChild(seaweed);
 
   setDefault(physics,true);
-  if(species){renamePanel(species,'🌱 Turf Species Response');setDefault(species,false);}
+  if(species){renamePanel(species,'Turf Species Response');setDefault(species,false);}
   setDefault(earth,false);
   setDefault(food,false);
   setDefault(seaweed,false);
