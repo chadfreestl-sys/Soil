@@ -2,11 +2,28 @@
 (()=>{'use strict';
 function init(){const api=window.TurfariumFiveYearScenarios;if(!api||document.getElementById('tf-scenario-lab'))return;
  const anchor=document.getElementById('tf-divergence-panel');if(!anchor)return;
- const section=document.createElement('section');section.id='tf-scenario-lab';section.style.cssText='margin:22px 0;padding:18px;background:#f1f6ee;border:1px solid #b7cbb3;border-radius:14px;color:#193b2b;overflow:hidden';
+ const section=document.createElement('section');section.id='tf-scenario-lab';section.style.cssText='margin:12px 0;padding:18px;width:100%;max-width:100%;min-width:0;box-sizing:border-box;grid-column:1/-1;background:#f1f6ee;border:1px solid #b7cbb3;border-radius:14px;color:#193b2b;overflow:hidden';
  const details=document.createElement('details');details.id='tf-scenario-lab-details';const summary=document.createElement('summary');summary.textContent='Five-year progression stress test';summary.style.cssText='cursor:pointer;font-weight:800;font-size:1rem;padding:5px 0;list-style:disclosure-closed';details.append(summary);const content=document.createElement('div');content.style.cssText='margin-top:12px;overflow-x:auto;max-width:100%';details.append(content);section.append(details);
  const desc=document.createElement('p');desc.textContent='Research sandbox only — shared March baseline and estimated seasonal conditions. Does not change Lawn A or B treatments, photos, or saved history. Indices are hypothetical, not field predictions.';content.append(desc);
  const table=document.createElement('table');table.style.cssText='border-collapse:collapse;width:100%;min-width:480px;font-size:.82rem';const head=document.createElement('thead');const tr=document.createElement('tr');['Day','Conventional canopy','Biological canopy','Stressed canopy','Conventional roots','Biological roots','Stressed roots'].forEach(x=>{const th=document.createElement('th');th.textContent=x;th.style.cssText='padding:8px 5px;text-align:left;border-bottom:2px solid #94b19c';tr.append(th)});head.append(tr);table.append(head);
  const body=document.createElement('tbody'),data=api.compare();data.checkpoints.forEach((day,i)=>{const row=document.createElement('tr');const a=data.conventional[i],b=data.biological[i],c=data.stressed[i];[day,a.canopy,b.canopy,c.canopy,a.roots,b.roots,c.roots].forEach((v,j)=>{const cell=document.createElement('td');cell.textContent=j?String(Math.round(v)):String(v);cell.style.cssText='padding:7px 5px;border-bottom:1px solid #d2e1d1';row.append(cell)});body.append(row)});table.append(body);content.append(table);anchor.insertAdjacentElement('afterend',section);
+ // Other layout modules move the divergence card after initial mounting.
+ // Keep the stress test immediately after the live divergence card, without cloning it.
+ const place=()=>{
+   const divergence=document.getElementById('tf-divergence-panel');
+   if(!divergence?.parentElement||!section.isConnected)return;
+   if(section.parentElement!==divergence.parentElement||divergence.nextElementSibling!==section)
+     divergence.insertAdjacentElement('afterend',section);
+ };
+ let scheduled=false;
+ const observer=new MutationObserver(()=>{
+   if(scheduled)return;
+   scheduled=true;
+   requestAnimationFrame(()=>{scheduled=false;place();});
+ });
+ observer.observe(document.querySelector('main')||document.body,{childList:true,subtree:true});
+ window.addEventListener('load',place,{once:true});
+ place();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
