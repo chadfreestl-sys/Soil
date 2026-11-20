@@ -1,0 +1,42 @@
+[
+  {
+    "id": "BASE01",
+    "path": "assets/turfarium/BASE01/BASE01.webp",
+    "size": 570422,
+    "dimensions": [
+      1536,
+      659
+    ],
+    "sha256": "212c01d7894b5d6fb07a3a5757a45c8f052cfa6469d45cf96a806fc288f1dc68"
+  },
+  {
+    "id": "BASE18",
+    "path": "assets/turfarium/BASE18/BASE18.webp",
+    "size": 876698,
+    "dimensions": [
+      1914,
+      822
+    ],
+    "sha256": "d76064e242c5634831f94656ae613ddcdafd43b91c79a4673aba4dedee9f1680"
+  },
+  {
+    "id": "BASE23",
+    "path": "assets/turfarium/BASE23/BASE23.webp",
+    "size": 897238,
+    "dimensions": [
+      1915,
+      821
+    ],
+    "sha256": "6f3a58331f16e57324bd2fa997b1a4bcc17a5161a67781b0c4295267d5ccc8d3"
+  },
+  {
+    "id": "BASE37",
+    "path": "assets/turfarium/BASE37/BASE37.webp",
+    "size": 803478,
+    "dimensions": [
+      1831,
+      859
+    ],
+    "sha256": "7dd2b8254287ff5151c1406e25e5435e34a6715ed622339c972d0e511794faac"
+  }
+]
