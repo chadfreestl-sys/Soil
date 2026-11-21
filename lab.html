@@ -1662,4 +1662,29 @@ setTimeout(()=>clearInterval(sourceWatch),15000);
   object-position: center !important;
 }
 </style>
+
+<style id="tf-v25-photo-stage-unified">
+/* The mobile stacked layout reparents .photo-stage outside #lawn-a/b-panel.
+   Target the stage itself, not its original parent, to preserve the full sky and soil. */
+.simulation-grid.tf-primary-workspace .photo-stage[data-tf-lawn-key="A"],
+.simulation-grid.tf-primary-workspace .photo-stage[data-tf-lawn-key="B"],
+.photo-stage[data-tf-lawn-key="A"],.photo-stage[data-tf-lawn-key="B"],
+#lawn-a-panel .photo-stage,#lawn-b-panel .photo-stage{
+  aspect-ratio:21 / 9!important;
+}
+.simulation-grid.tf-primary-workspace .photo-stage[data-tf-lawn-key="A"] img.soil-photo,
+.simulation-grid.tf-primary-workspace .photo-stage[data-tf-lawn-key="B"] img.soil-photo,
+.photo-stage[data-tf-lawn-key="A"] img.soil-photo,
+.photo-stage[data-tf-lawn-key="B"] img.soil-photo,
+.photo-stage[data-tf-lawn-key="A"] img.tf-state-photo,
+.photo-stage[data-tf-lawn-key="B"] img.tf-state-photo,
+#lawn-a-panel .photo-stage img.tf-state-photo,
+#lawn-b-panel .photo-stage img.tf-state-photo{
+  object-fit:contain!important;object-position:center!important;
+}
+.photo-stage[data-tf-lawn-key="A"] .tf-photo-motion [class^="tf-"],
+.photo-stage[data-tf-lawn-key="B"] .tf-photo-motion [class^="tf-"]{
+  background-size:contain!important;
+}
+</style>
 </body></html>
