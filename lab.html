@@ -823,10 +823,19 @@ function rateSpec(key){
  if(unit==='flozgal')liquidPerK=value*spray;
  return {value,area,spray,unit,lbPerK,liquidPerK};
 }
-function doseInfo(key){const t=$('treat'+key).value,r=rateSpec(key),grade=customProfiles[t]?[customProfiles[t].n,customProfiles[t].p,customProfiles[t].k]:productGrades[t],mass=customProfiles[t]&&customProfiles[t].form==='liquid'&&r.liquidPerK!==null?r.liquidPerK/128*customProfiles[t].density:r.lbPerK;
- let msg=mass!==null?`${(mass*r.area/1000).toFixed(3)} lb total product`:`${(r.liquidPerK*r.area/1000).toFixed(2)} fl oz total liquid product`;
- if(grade&&mass!==null){msg+=` · <strong>${(mass*grade[0]/100).toFixed(3)} lb N, ${(mass*grade[1]/100).toFixed(3)} lb P₂O₅, ${(mass*grade[2]/100).toFixed(3)} lb K₂O per 1,000 ft²</strong>`;}
- else if(grade){msg+=' · Nutrient mass unavailable without product density (lb/gal).';}
+function doseInfo(key){
+ const t=$('treat'+key).value,r=rateSpec(key);
+ const profile=customProfiles[t],grade=profile?[profile.n,profile.p,profile.k]:productGrades[t];
+ const mass=profile&&profile.form==='liquid'&&r.liquidPerK!==null
+  ?r.liquidPerK/128*profile.density:r.lbPerK;
+ const hasMass=Number.isFinite(mass)&&mass>=0;
+ const hasLiquid=Number.isFinite(r.liquidPerK)&&r.liquidPerK>=0;
+ let msg=hasMass?`${(mass*r.area/1000).toFixed(3)} lb total product`
+  :hasLiquid?`${(r.liquidPerK*r.area/1000).toFixed(2)} fl oz total liquid product`
+  :'Choose a compatible rate unit for this product.';
+ if(grade&&hasMass){
+  msg+=` · <strong>${(mass*grade[0]/100).toFixed(3)} lb N, ${(mass*grade[1]/100).toFixed(3)} lb P₂O₅, ${(mass*grade[2]/100).toFixed(3)} lb K₂O per 1,000 ft²</strong>`;
+ }else if(grade){msg+=' · Nutrient mass unavailable without a compatible dry rate or verified liquid density.';}
  else msg+=' · No verified guaranteed analysis for this generic product.';
  $('rateInfo'+key).innerHTML=msg+'<br><small>Experimental dose input, not a label recommendation. Follow the actual product label.</small>';
 }
