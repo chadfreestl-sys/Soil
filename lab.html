@@ -1687,4 +1687,25 @@ setTimeout(()=>clearInterval(sourceWatch),15000);
   background-size:contain!important;
 }
 </style>
+
+<script id="tf-photo-native-aspect-v25">
+/* Seasonal images are not uniformly 21:9. Match each loaded photograph's
+   intrinsic dimensions, including when the mobile layout reparents its stage. */
+(function(){'use strict';
+  function fit(img){
+    if(!img.matches('img.soil-photo') || !img.naturalWidth || !img.naturalHeight)return;
+    const stage=img.closest('.photo-stage');if(!stage)return;
+    stage.style.setProperty('aspect-ratio',img.naturalWidth+' / '+img.naturalHeight,'important');
+    img.style.setProperty('object-fit','contain','important');
+    img.style.setProperty('object-position','center','important');
+    stage.querySelectorAll('img.tf-state-photo').forEach(overlay=>{
+      overlay.style.setProperty('object-fit','contain','important');
+      overlay.style.setProperty('object-position','center','important');
+    });
+  }
+  document.addEventListener('load',event=>{if(event.target instanceof HTMLImageElement)fit(event.target)},true);
+  function scan(){document.querySelectorAll('.photo-stage img.soil-photo').forEach(fit)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',scan,{once:true});else scan();
+})();
+</script>
 </body></html>
