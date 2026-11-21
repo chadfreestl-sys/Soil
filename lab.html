@@ -1708,4 +1708,22 @@ setTimeout(()=>clearInterval(sourceWatch),15000);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',scan,{once:true});else scan();
 })();
 </script>
+
+<style id="tf-v25-mobile-side-by-side-comparison">
+/* Keep both live lawn photographs visible together on narrow phones.
+   Original photo nodes stay mounted so state, replay and treatments work. */
+@media(max-width:700px){
+  #tf-stacked-lawns{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:start!important;column-gap:7px!important;row-gap:8px!important}
+  #tf-stacked-lawns>#tf-mobile-lawn-a,#tf-stacked-lawns>#tf-mobile-lawn-b{grid-column:auto!important;min-width:0!important;width:100%!important;max-width:100%!important;align-self:start!important;order:0!important;padding:5px!important;height:auto!important}
+  #tf-stacked-lawns>#tf-mobile-lawn-a{grid-column:1!important}
+  #tf-stacked-lawns>#tf-mobile-lawn-b{grid-column:2!important}
+  #tf-stacked-lawns>#tf-mobile-progression{grid-column:1/-1!important;order:1!important}
+  #tf-stacked-lawns>:not(#tf-mobile-lawn-a):not(#tf-mobile-lawn-b):not(#tf-mobile-progression){grid-column:1/-1!important;order:2!important}
+  #tf-stacked-lawns .tf-lawn-visual>.tf-lawn-title{display:flex!important;flex-wrap:wrap!important;gap:2px 5px!important;font-size:12px!important;line-height:1.2!important;padding:2px!important;min-height:32px!important}
+  #tf-stacked-lawns .tf-lawn-visual>.tf-lawn-title span{font-size:12px!important}
+  #tf-stacked-lawns .tf-lawn-visual>.photo-stage{width:100%!important;min-width:0!important;margin:0!important}
+  #tf-stacked-lawns .tf-lawn-visual>.tf-photo-stat-strip{font-size:11px!important;line-height:1.2!important;margin:4px 1px 0!important}
+  #tf-stacked-lawns .tf-lawn-visual .tf-photo-stat-strip .tf-season-on-photo{font-size:11px!important}
+}
+</style>
 </body></html>
