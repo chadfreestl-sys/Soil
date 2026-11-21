@@ -254,6 +254,42 @@ async function refresh(key){
  if(previousState&&elapsed<previousState.day)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
  const signature=season+'|'+index; // Same signature across lawns is valid when their modeled visual categories match.
+ // Within a category, interpolate toward the next condition photograph.
+ // This preserves the existing eight-state asset library while allowing two
+ // independently modeled lawns to show different canopy development.
+ // No treatment-label bonus: the blend depends solely on live canopy score.
+ const nextIndex=Math.min(index+1,STATES.length-1);
+ const lower=STATES[index].min;
+ const upper=nextIndex===index?100:STATES[nextIndex].min;
+ const fraction=nextIndex===index?0:clamp((n-lower)/Math.max(1,upper-lower),0,1);
+ let blend=stage.querySelector('img.tf-photo-interpolation');
+ if(!blend){
+  blend=document.createElement('img');
+  blend.className='tf-photo-interpolation';
+  blend.alt='';
+  blend.setAttribute('aria-hidden','true');
+  stage.appendChild(blend);
+ }
+ const blendRequest=(Number(stage.dataset.tfBlendRequest)||0)+1;
+ stage.dataset.tfBlendRequest=String(blendRequest);
+ blend.style.opacity='0';
+ blend.dataset.tfBlendFraction=fraction.toFixed(3);
+ blend.dataset.tfBlendTarget=STATES[nextIndex].id;
+ if(nextIndex!==index&&fraction>.02){
+  imageFor(nextIndex,season).then(asset=>{
+   if(Number(stage.dataset.tfBlendRequest)!==blendRequest)return;
+   if(!asset.src)return;
+   const nextPhoto=new Image();
+   nextPhoto.onload=()=>{
+    if(Number(stage.dataset.tfBlendRequest)!==blendRequest)return;
+    blend.src=asset.src;
+    blend.style.opacity=(fraction*.65).toFixed(3);
+   };
+   nextPhoto.src=asset.src;
+   if(nextPhoto.complete&&nextPhoto.naturalWidth>0)nextPhoto.onload();
+  });
+ }
+
  // Continuous, model-linked visual progression even when the photo stays in the
  // same categorical image band. Small increments should be subtle, not dramatic.
  // Canopy appearance follows modeled turf vigor and stress; root status informs
@@ -473,6 +509,7 @@ css.textContent='.photo-stage{position:relative}'+
  '.tf-visual-indicator{margin:7px 2px 3px;font-size:.72rem;font-weight:800;line-height:1.35;color:#234f37}'+
  '.tf-visual-indicator[data-tf-image-unavailable="1"]{color:#a1382d}'+
  '@media(prefers-reduced-motion:reduce){.photo-stage>img.tf-state-photo{transition:none!important}}';
+css.textContent+=' .photo-stage>img.tf-photo-interpolation{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;pointer-events:none;opacity:0;transition:opacity 1.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-canopy-response{position:absolute;inset:0;z-index:4;pointer-events:none;transition:background 2.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-canopy-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 18%,transparent 43%);transition:backdrop-filter 2.5s ease-out}';
 css.textContent+=' .photo-stage>.tf-soil-moisture-optics{position:absolute;inset:0;z-index:3;pointer-events:none;mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 38%,#000 61%,#000 100%);transition:background 2.5s ease-out}';
@@ -481,7 +518,7 @@ css.textContent+=' .photo-stage>.tf-season-on-photo,.photo-stage>.tf-visual-comp
 css.textContent+=' .photo-stage .tf-season-on-photo{position:absolute;bottom:9px;left:9px;z-index:30;pointer-events:none;padding:5px 9px;border-radius:8px;background:rgba(19,54,40,.88);color:white;font:700 12px/1.25 system-ui,sans-serif;box-shadow:0 2px 6px #0005} .photo-stage .tf-season-on-photo[data-season="winter"]{background:rgba(43,71,92,.91)} .photo-stage .tf-season-on-photo[data-season="fall"]{background:rgba(107,68,26,.91)} .photo-stage .tf-season-on-photo[data-season="summer"]{background:rgba(37,89,34,.91)}';
 if(!document.getElementById(css.id))document.head.appendChild(css);
 window.TurfariumVisualState={
- version:'3.11',states:STATES,score,refresh,refreshAll:boot,
+ version:'3.12',states:STATES,score,refresh,refreshAll:boot,
  diagnose:(key)=>{const snapshot=snapshotFor(key);const raw=scoreFrom(snapshot);const day=Number(snapshot.day??dayFor(key))||0;const month=monthFor(key,snapshot);const offset=month>=2&&month<=4?Math.round(16*Math.max(0,1-day/90)):0;const adjusted=clamp(raw-offset,0,100);const index=stateForScore(adjusted);return {key,day,season:SEASONS[month],rawScore:raw,adjustedScore:adjusted,unhysterizedState:STATES[index].id,expectedAsset:imageUrl(index,SEASONS[month]),snapshot,rendered:window.TurfariumVisualState.getStatus(key)};},
  compare:()=>({A:window.TurfariumVisualState.diagnose('A'),B:window.TurfariumVisualState.diagnose('B')}),
  showReplayFrame:(frames)=>{for(const key of ['A','B']){if(!frames?.[key])continue;replaySnapshots.set(key,frames[key]);const stage=elements(key).stage;if(stage){stage.dataset.tfPhotoSignature='';stage.dataset.tfPhotoReady='0';}lastState.delete(key);refresh(key);}},
