@@ -155,7 +155,7 @@ function ensureStage(stage,photo){
   overlay.className='tf-state-photo';
   overlay.setAttribute('alt','');overlay.setAttribute('aria-hidden','true');
   Object.assign(overlay.style,{position:'absolute',inset:'0',width:'100%',height:'100%',
-   objectFit:'cover',objectPosition:'center',zIndex:'2',opacity:'0',
+   objectFit:'contain',objectPosition:'center',zIndex:'2',opacity:'0',
    transition:'opacity 2.4s ease-in-out',pointerEvents:'none'});
   photo.insertAdjacentElement('afterend',overlay);
  }
