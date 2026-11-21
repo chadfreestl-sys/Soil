@@ -847,7 +847,14 @@ function applyDose(s,t,name,key){
  // (~46,000 lb/1000 ft²). Use a conservative 30 lb/1000 ft² reference
  // for the existing illustrative amendment effect; this is a modeling
  // safeguard, NOT a validated dose-response or application recommendation.
- const nominalDose=(r.lbPerK===null?r.liquidPerK/16:r.lbPerK);
+ // A generic liquid product has no verified density: do not infer pounds from fluid ounces.
+ // The user must choose a mass-based rate for a generic material; custom liquid
+ // formulations with verified density use applyCustom() above.
+ if(r.lbPerK===null){
+  $('feedback'+key).textContent='Generic materials require a dry mass rate (lb or oz per 1,000 ft²). For liquid products, create a custom formulation with verified density.';
+  return false;
+ }
+ const nominalDose=r.lbPerK;
  const factor=Math.min(5,Math.max(0,
    (t==='compost'||t==='wormcast')?nominalDose/30:nominalDose));
  if(factor<=0)return false;
