@@ -32,12 +32,14 @@ const outcome=await page.evaluate(({materials})=>{
     if(days.includes(d)){
      const treated=window.TurfariumVisualSnapshot(lawn),untreated=window.TurfariumVisualSnapshot(lawn==='A'?'B':'A');
      if(!finite(treated)||!finite(untreated))throw Error('non-finite model output day '+d);
+     if(!Number.isFinite(active.no3)||!Number.isFinite(active.nh4)||active.no3<0||active.nh4<0||!Number.isFinite(active.nStatus)||active.nStatus<0||active.nStatus>1)throw Error('nitrogen pool/status invalid day '+d);
+     if(!Number.isFinite(control.no3)||!Number.isFinite(control.nh4)||control.no3<0||control.nh4<0)throw Error('control nitrogen pool invalid day '+d);
      for(const s of [treated,untreated]){
       for(const k of ['vigor','biology','worms','moisture','oxygen','structure','rootMass','canopyCover','tillerDensity','leafArea'])if(Number(s[k])<0||Number(s[k])>100)throw Error('out-of-range '+k+' day '+d);
      }
      const visualT=score(treated),visualC=score(untreated);
      if(visualT<0||visualT>100||visualC<0||visualC>100)throw Error('visual score out of range');
-     points.push({day:d,vigorDelta:+(treated.vigor-untreated.vigor).toFixed(3),canopyDelta:+(treated.canopyCover-untreated.canopyCover).toFixed(3),rootDelta:+(treated.rootMass-untreated.rootMass).toFixed(3),biologyDelta:+(treated.biology-untreated.biology).toFixed(3),visualScoreDelta:visualT-visualC,treatedScore:visualT,controlScore:visualC});
+     points.push({day:d,vigorDelta:+(treated.vigor-untreated.vigor).toFixed(3),canopyDelta:+(treated.canopyCover-untreated.canopyCover).toFixed(3),rootDelta:+(treated.rootMass-untreated.rootMass).toFixed(3),biologyDelta:+(treated.biology-untreated.biology).toFixed(3),visualScoreDelta:visualT-visualC,treatedScore:visualT,controlScore:visualC,treatedNStatus:+active.nStatus.toFixed(4),controlNStatus:+control.nStatus.toFixed(4),treatedMineralN:+(active.no3+active.nh4).toFixed(4),controlMineralN:+(control.no3+control.nh4).toFixed(4),treatedPH:+active.ph.toFixed(3),treatedP:+active.p.toFixed(3),treatedK:+active.k.toFixed(3)});
     }
    }
    records.push({case:i+1,material:type,variation,lawn,points});
@@ -48,5 +50,5 @@ const outcome=await page.evaluate(({materials})=>{
 await browser.close();
 fs.mkdirSync('audit',{recursive:true});fs.writeFileSync('audit/material-longitudinal-400-results.json',JSON.stringify({...outcome,browserErrors:errors.slice(0,20)},null,2)+'\n');
 console.log(JSON.stringify({cases:outcome.cases,passed:outcome.passed,failed:outcome.failed,failures:outcome.failures.slice(0,10),browserErrors:errors.slice(0,5)}));
-if(outcome.failed||errors.some(e=>/ReferenceError|SyntaxError/.test(e)))process.exitCode=1;
+if(outcome.failed||errors.length)process.exitCode=1;
 })().catch(e=>{console.error(e);process.exitCode=1});

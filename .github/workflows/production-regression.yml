@@ -1,0 +1,55 @@
+name: Turfarium production regression gate
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lab.html'
+      - 'js/**'
+      - 'turfarium-visual-state-v3-2.js'
+      - 'tests/**'
+      - '.github/workflows/production-regression.yml'
+  pull_request:
+    paths:
+      - 'lab.html'
+      - 'js/**'
+      - 'turfarium-visual-state-v3-2.js'
+      - 'tests/**'
+      - '.github/workflows/production-regression.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  node-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run Node contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          for test in tests/*.test.cjs; do
+            echo "::group::$test"
+            node "$test"
+            echo "::endgroup::"
+          done
+  longitudinal-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Run 400 live longitudinal scenarios
+        run: node tests/material-longitudinal-400.cjs
+      - name: Upload diagnostic report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-longitudinal-report
+          path: audit/material-longitudinal-400-results.json
