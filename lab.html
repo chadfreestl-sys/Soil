@@ -851,13 +851,13 @@ function applyDose(s,t,name,key){
  // The user must choose a mass-based rate for a generic material; custom liquid
  // formulations with verified density use applyCustom() above.
  if(r.lbPerK===null){
-  $('feedback'+key).textContent='Generic materials require a dry mass rate (lb or oz per 1,000 ft²). For liquid products, create a custom formulation with verified density.';
+  $('feedback'+key).textContent='Not applied: this generic material needs a dry mass rate (lb, oz, or oz/gal). Change Rate unit, or use a custom liquid formulation with verified density.';
   return false;
  }
  const nominalDose=r.lbPerK;
  const factor=Math.min(5,Math.max(0,
    (t==='compost'||t==='wormcast')?nominalDose/30:nominalDose));
- if(factor<=0)return false;
+ if(factor<=0){$('feedback'+key).textContent='Not applied: the effective application rate must be greater than zero.';return false;}
  const before={...s,effects:s.effects.slice()};const ok=apply(s,t,name);if(!ok)return false;
  // Scale numeric state changes relative to a single reference application. Biological dynamics remain illustrative.
  for(const k of Object.keys(before)){if(typeof before[k]==='number'&&typeof s[k]==='number')s[k]=before[k]+(s[k]-before[k])*factor}
@@ -1217,7 +1217,7 @@ function applyWithFeedback(key){const s=key==='A'?A:B,t=$('treat'+key).value,btn
  applicationControls(key);
  if(t!=='none'&&pendingApplications[key].some(x=>x.day===day&&x.type===t)){const box=$('feedback'+key);if(box){box.classList.remove('success');box.textContent='Duplicate blocked: '+(treatments[t]||t)+' was already applied to Lawn '+key+' on Day '+day+'. Undo the previous application first.';}return;}
  const transaction={day,type:t,product:treatments[t]||t,site:cloneApplicationState(s),records:cloneApplicationState(treatmentRecords[key]),log:cloneApplicationState(log)};
- const ok=applyDose(s,t,'Lawn '+key,key);if(!ok){if(box){box.textContent=box.textContent==='Enter a rate greater than zero.'?box.textContent:'No treatment selected. No material added.';box.classList.remove('success')}return}
+ const ok=applyDose(s,t,'Lawn '+key,key);if(!ok){if(box){box.textContent=box.textContent&&box.textContent!=='Ready to apply a treatment.'?box.textContent:'Treatment not applied. Check the selected material, rate and units.';box.classList.remove('success')}return}
  pendingApplications[key].push(transaction);updateApplicationControls(key);
  btn.classList.remove('confirmed');void btn.offsetWidth;btn.classList.add('confirmed');btn.textContent='✓ Applied!';
  if(box){box.classList.add('success');box.textContent=`✓ Day ${day}: ${treatments[t]} applied to Lawn ${key}. Recorded below. Advance time to observe the modeled response.`;}
