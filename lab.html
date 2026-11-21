@@ -1647,4 +1647,19 @@ const sourceWatch=setInterval(()=>{const source=document.getElementById('changeR
 setTimeout(()=>clearInterval(sourceWatch),15000);
 })();
 </script><script defer src="js/v25-treatment-response-indicator.js?v=25.3"></script><script defer src="js/v25-scientific-reference-mapping.js?v=25.1"></script>
+
+<style id="tf-v25-photo-full-frame">
+/* Release-only: show complete 21:9 source photographs on both lawns. */
+#lawn-a-panel .photo-stage,
+#lawn-b-panel .photo-stage {
+  aspect-ratio: 21 / 9 !important;
+}
+#lawn-a-panel .photo-stage img.soil-photo,
+#lawn-b-panel .photo-stage img.soil-photo {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+</style>
 </body></html>
