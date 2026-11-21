@@ -1,1 +1,2 @@
 const assert=require('node:assert/strict'),fs=require('node:fs');const s=fs.readFileSync('lab.html','utf8');assert(!s.includes("box.textContent==='Enter a rate greater than zero.'?box.textContent:'No treatment selected. No material added.'"));assert(s.includes('Not applied: choose a supported rate unit.'));assert(s.includes('Treatment not applied. Check the selected material, rate and units.'));assert(s.includes('Duplicate blocked:'));console.log('PASS treatment failure messages preserved');
+// Regression recheck requested 2026-11-21.
