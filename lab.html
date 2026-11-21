@@ -847,16 +847,19 @@ function applyDose(s,t,name,key){
  // (~46,000 lb/1000 ft²). Use a conservative 30 lb/1000 ft² reference
  // for the existing illustrative amendment effect; this is a modeling
  // safeguard, NOT a validated dose-response or application recommendation.
- // A generic liquid product has no verified density: do not infer pounds from fluid ounces.
- // The user must choose a mass-based rate for a generic material; custom liquid
- // formulations with verified density use applyCustom() above.
- if(r.lbPerK===null){
-  $('feedback'+key).textContent='Not applied: this generic material needs a dry mass rate (lb, oz, or oz/gal). Change Rate unit, or use a custom liquid formulation with verified density.';
+ // Generic liquid materials are modeled by an illustrative volume-based response,
+ // NEVER by an invented liquid density or fertilizer nutrient mass.
+ // The UI defaults several materials to fl oz/gal: those must remain applicable.
+ const isLiquid=r.lbPerK===null;
+ if(isLiquid&&!Number.isFinite(r.liquidPerK)){
+  $('feedback'+key).textContent='Not applied: choose a supported rate unit.';
   return false;
  }
- const nominalDose=r.lbPerK;
+ const nominalDose=isLiquid?r.liquidPerK:r.lbPerK;
+ // Reference dose for generic liquids is 8 fl oz/1000 ft²; dry amendments
+ // retain the existing reference mass. This is not a field rate recommendation.
  const factor=Math.min(5,Math.max(0,
-   (t==='compost'||t==='wormcast')?nominalDose/30:nominalDose));
+   isLiquid?nominalDose/8:(t==='compost'||t==='wormcast')?nominalDose/30:nominalDose));
  if(factor<=0){$('feedback'+key).textContent='Not applied: the effective application rate must be greater than zero.';return false;}
  const before={...s,effects:s.effects.slice()};const ok=apply(s,t,name);if(!ok)return false;
  // Scale numeric state changes relative to a single reference application. Biological dynamics remain illustrative.
@@ -872,11 +875,14 @@ function applyDose(s,t,name,key){
  s.k=cl(before.k+mgPerKg(r.lbPerK*grade[2]/100*.8301),0,1000);
  }
  const rec=treatmentRecords[key][0];if(rec){rec.rate=`${r.value} ${r.unit}`;rec.area=r.area;rec.mass=r.lbPerK;}
- log[0]=`Day ${day} · ${name}: ${treatments[t]} at ${r.value} ${r.unit}, area ${r.area} ft² (experimental).`;
+ log[0]=`Day ${day} · ${name}: ${treatments[t]} at ${r.value} ${r.unit}, area ${r.area} ft² (experimental${isLiquid?'; generic liquid volume proxy, no assumed density':''}).`;
  render();return true;
 }
 function apply(s,t,name){if(!Object.prototype.hasOwnProperty.call(treatments,t)){console.warn('[Turfarium] Unknown treatment:',t);return false;}if(t==='none'){log.unshift(`Day ${day} · ${name}: no treatment.`);render();return false}
 s.effects.push({type:t,power:1});
+// Grade-based fertilizers receive their actual nominal N/P/K indices in applyDose().
+ // The reference application still records a valid treatment and effects entry.
+if(['fert24012','fert1608','fert10010','sop'].includes(t)){s.ec=cl(s.ec+.025,0,20)}
 if(t==='compost'){s.labileC=cl(s.labileC+6,0,100);s.om=cl(s.om+.10,0,15);s.organicN+=40;s.k+=3;s.p+=.4}
 if(t==='seaweed'){s.seaweedSignal=cl(s.seaweedSignal+.18,0,12);s.seaweedRootResponse=cl((s.seaweedRootResponse||0)+.08,0,12)}
 if(t==='tea'){s.microbialC=cl(s.microbialC+.8,0,100);s.labileC=cl(s.labileC+.35,0,100)}
