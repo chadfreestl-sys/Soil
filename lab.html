@@ -875,9 +875,19 @@ function applyDose(s,t,name,key){
  log[0]=`Day ${day} · ${name}: ${treatments[t]} at ${r.value} ${r.unit}, area ${r.area} ft² (experimental).`;
  render();return true;
 }
-function apply(s,t,name){if(t==='none'){log.unshift(`Day ${day} · ${name}: no treatment.`);render();return false}
+function apply(s,t,name){if(!Object.prototype.hasOwnProperty.call(treatments,t)){console.warn('[Turfarium] Unknown treatment:',t);return false;}if(t==='none'){log.unshift(`Day ${day} · ${name}: no treatment.`);render();return false}
 s.effects.push({type:t,power:1});
 if(t==='compost'){s.labileC=cl(s.labileC+6,0,100);s.om=cl(s.om+.10,0,15);s.organicN+=40;s.k+=3;s.p+=.4}
+if(t==='seaweed'){s.seaweedSignal=cl(s.seaweedSignal+.18,0,12);s.seaweedRootResponse=cl((s.seaweedRootResponse||0)+.08,0,12)}
+if(t==='tea'){s.microbialC=cl(s.microbialC+.8,0,100);s.labileC=cl(s.labileC+.35,0,100)}
+if(t==='iron'){if(s.ph>7.1)s.leafArea=cl(s.leafArea+.12,0,100);s.ec=cl(s.ec+.01,0,20)}
+if(t==='gypsum'){s.ec=cl(s.ec+.015,0,20)}
+if(t==='humicgolf'){s.labileC=cl(s.labileC+.7,0,100);s.cec=cl(s.cec+.04,1,60)}
+if(t==='golfwet'){s.moist=cl(s.moist+2,0,100);s.waterInput=cl(s.waterInput+.25,0,10)}
+if(t==='organicslow'||t==='biosolid'){s.organicN+=18;s.labileC=cl(s.labileC+1.5,0,100)}
+if(t==='crf'){s.organicN+=5;s.ec=cl(s.ec+.025,0,20)}
+if(t==='foliarN'){s.nh4=cl(s.nh4+.8,0,200)}
+
 if(t==='aerate'){s.bulk=cl(s.bulk-.035,.7,2.1);s.oxygenReserve=cl(s.oxygenReserve+5)}
 if(t==='irrigate'){s.moist=cl(s.moist+14);s.waterInput=cl(s.waterInput+2,0,10)}
 if(t==='biochar'){s.om=cl(s.om+.05,0,15);s.cec=cl(s.cec+.15,1,60)}
