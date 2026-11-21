@@ -11,3 +11,5 @@ assert(growth(20,120,8)<growth(20,120,6.3),'alkaline soil should limit growth');
 assert.equal(growth(20,120,6.3),growth(100,500,6.3),'sufficient nutrients should not create luxury growth');
 assert(Math.abs(growth(20,120,6.3)-.72)<1e-12,'sufficient soil should preserve baseline growth');
 console.log('PASS nutrient limitation: deficient P/K and off-range pH limit growth; sufficient soil remains unchanged');
+
+// Post-merge production regression verification.
