@@ -78,10 +78,10 @@ function scoreFrom(s){
   // structure and avoid assigning treatment-specific bonuses.
   const moisture=s.moisture==null?NaN:Number(s.moisture);
   const dryPenalty=Number.isFinite(moisture)
-   ?clamp((38-moisture)*.70,0,16):0;
+   ?clamp((43-moisture)*1.15,0,24):0;
   const heat=s.soilTempF==null?NaN:Number(s.soilTempF);
-  const heatPenalty=Number.isFinite(heat)&&moisture<38
-   ?clamp((heat-85)*.12,0,3):0;
+  const heatPenalty=Number.isFinite(heat)&&Number.isFinite(moisture)&&moisture<43
+   ?clamp((heat-82)*.20,0,5):0;
   return Math.round(clamp(cover*.52+tillers*.24+leaves*.12+color*.12-dryPenalty-heatPenalty,0,100));
  }
  const raw=Number(s.vigor)*.33+Number(s.biology)*.12+Number(s.worms)*.06+
@@ -283,7 +283,7 @@ async function refresh(key){
    nextPhoto.onload=()=>{
     if(Number(stage.dataset.tfBlendRequest)!==blendRequest)return;
     blend.src=asset.src;
-    blend.style.opacity=(fraction*.65).toFixed(3);
+    blend.style.opacity=(fraction*.88).toFixed(3);
    };
    nextPhoto.src=asset.src;
    if(nextPhoto.complete&&nextPhoto.naturalWidth>0)nextPhoto.onload();
