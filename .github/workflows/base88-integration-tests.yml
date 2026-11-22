@@ -1,0 +1,41 @@
+name: Turfarium BASE88 integration tests
+on:
+  push:
+    paths:
+      - 'turfarium-visual-state-v3-2.js'
+      - 'tests/image-mapping-contract.test.cjs'
+      - '.github/workflows/base88-integration-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax validation
+        run: node --check turfarium-visual-state-v3-2.js
+      - name: Image inventory contract
+        run: node tests/image-mapping-contract.test.cjs
+      - name: BASE88 metadata and event guardrails
+        run: |
+          node - <<'JS'
+          const fs=require('fs'),assert=require('assert');
+          const s=fs.readFileSync('turfarium-visual-state-v3-2.js','utf8');
+          const m=s.match(/const BASE88=(\[.*?\]);/s);
+          assert(m,'BASE88 selector metadata missing');
+          const records=JSON.parse(m[1]);
+          assert.equal(records.length,88);
+          assert.equal(new Set(records.map(x=>x.n)).size,88);
+          for(const r of records){
+            const id='BASE'+String(r.n).padStart(2,'0');
+            assert(fs.existsSync('assets/turfarium/'+id+'/'+id+'.'+r.ext));
+          }
+          for(const n of [6,7,9,10,51,63,70,75]){
+            assert.notEqual(records[n-1].event,'none','unguarded event image '+n);
+          }
+          console.log('PASS: 88 unique assets and event gating metadata');
+          JS
