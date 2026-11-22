@@ -78,7 +78,7 @@ function scoreFrom(s){
   // structure and avoid assigning treatment-specific bonuses.
   const moisture=s.moisture==null?NaN:Number(s.moisture);
   const dryPenalty=Number.isFinite(moisture)
-   ?clamp((43-moisture)*1.15,0,24):0;
+   ?clamp((48-moisture)*1.30,0,30):0;
   const heat=s.soilTempF==null?NaN:Number(s.soilTempF);
   const heatPenalty=Number.isFinite(heat)&&Number.isFinite(moisture)&&moisture<43
    ?clamp((heat-82)*.20,0,5):0;
@@ -312,7 +312,7 @@ async function refresh(key){
  const tillers=clamp(Number(snapshot.tillerDensity)||0,0,100);
  const leafArea=clamp(Number(snapshot.leafArea)||0,0,100);
  const canopyHealth=clamp(canopy*.58+cover*.22+tillers*.12+leafArea*.08,0,100);
- const moistureStress=clamp((35-(Number(snapshot.moisture)||35))/35,0,1);
+ const moistureStress=clamp((50-Number(snapshot.moisture??50))/35,0,1);
  const saturation=clamp((.57+canopyHealth*.0082-stressPenalty*.12-moistureStress*.12)*seasonalWarmth*dormancyFactor,.32,1.34);
  const brightness=clamp((.78+canopyHealth*.0038-stressPenalty*.06-moistureStress*.06)*(season==='winter'?.92:1),.70,1.16);
  const contrast=clamp(.97+canopyHealth*.001, .95,1.09);
@@ -334,7 +334,8 @@ async function refresh(key){
  const canopyTintStrength=clamp(.025+canopySignal*.19+moistureSignal*.045-stressPenalty*.08,0,.25);
  // Absolute physiological state only: the neighboring lawn cannot alter this lawn's appearance.
  const visibleTint=clamp(canopyTintStrength,0,.20);
- canopyLayer.style.background='linear-gradient(to bottom,rgba(37,108,37,'+visibleTint.toFixed(3)+') 0%,rgba(48,118,43,'+(visibleTint*.67).toFixed(3)+') 24%,transparent 43%)';
+ const droughtAmber=clamp(moistureStress*.34,0,.34);
+ canopyLayer.style.background='linear-gradient(to bottom,rgba(160,125,54,'+droughtAmber.toFixed(3)+') 0%,rgba(166,132,68,'+(droughtAmber*.82).toFixed(3)+') 27%,transparent 43%),linear-gradient(to bottom,rgba(37,108,37,'+(visibleTint*(1-moistureStress*.75)).toFixed(3)+') 0%,rgba(48,118,43,'+(visibleTint*.67*(1-moistureStress*.75)).toFixed(3)+') 24%,transparent 43%)';
  canopyLayer.dataset.tfRelativeVigor='not-used';
  canopyLayer.dataset.tfCanopyResponse=canopyHealth.toFixed(1);
  // Keep the base scientific photograph intact while showing continuous,
@@ -348,8 +349,8 @@ async function refresh(key){
   stage.appendChild(canopyOptics);
  }
  const greenSignal=clamp((canopyHealth-35)/65,0,1);
- const opticsSaturation=clamp(.70+greenSignal*.80-moistureStress*.15-stressPenalty*.14,.56,1.55);
- const opticsBrightness=clamp(.86+greenSignal*.23-moistureStress*.10,.72,1.13);
+ const opticsSaturation=clamp(.70+greenSignal*.80-moistureStress*.48-stressPenalty*.14,.40,1.55);
+ const opticsBrightness=clamp(.86+greenSignal*.23-moistureStress*.18,.67,1.13);
  canopyOptics.style.backdropFilter='saturate('+opticsSaturation.toFixed(3)+') brightness('+opticsBrightness.toFixed(3)+')';
  canopyOptics.style.webkitBackdropFilter=canopyOptics.style.backdropFilter;
  canopyOptics.dataset.tfCanopyIndex=canopyHealth.toFixed(1);
