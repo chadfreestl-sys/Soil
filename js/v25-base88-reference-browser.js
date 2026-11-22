@@ -2,7 +2,7 @@
    claiming that untagged images represent the current modeled condition. */
 (()=>{'use strict';
 const count=88;
-const url=n=>{const id='BASE'+n;return 'assets/turfarium/'+id+'/'+id+'.webp'};
+const url=n=>{const id='BASE'+String(n).padStart(2,'0');return 'assets/turfarium/'+id+'/'+id+'.webp'};
 const css=document.createElement('style');css.textContent=`
 .tf-base-open{display:block;margin:5px 0 8px;padding:7px 10px;border:1px solid #a7c5ae;border-radius:8px;background:#f5fbf5;color:#214b35;font:600 12px system-ui;cursor:pointer}
 .tf-base-dialog{border:0;border-radius:14px;padding:12px;width:min(94vw,820px);max-height:90vh;background:#f5faf4;color:#183f2b;box-shadow:0 15px 55px #0007}
