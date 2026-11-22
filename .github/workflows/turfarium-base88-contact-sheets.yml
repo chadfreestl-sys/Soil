@@ -29,8 +29,8 @@ jobs:
               for slot in range(8):
                   n=batch*8+slot+1
                   ident=f'BASE{n:02d}'
-                  path=Path(f'assets/turfarium/{ident}/{ident}.webp')
-                  if not path.exists(): raise FileNotFoundError(path)
+                  path=next((candidate for ext in ('webp','jpg','jpeg','png') if (candidate:=Path(f'assets/turfarium/{ident}/{ident}.{ext}')).is_file()),None)
+                  if path is None: raise FileNotFoundError(f'No image found for {ident}')
                   with Image.open(path) as src:
                       src.load()
                       dims=src.size
