@@ -603,6 +603,9 @@ window.TurfariumVisualSnapshot=function(key){
  if(!site)return null;
  const e=env(site);
  return {day,month:monthIndex(day),vigor:e.vigor,biology:e.good,worms:e.worms,moisture:site.moist,soilTempF:site.temp,waterInput:site.waterInput,
+   // Visual-event evidence comes from the actual application log, never inferred from vigor.
+   irrigationActive:!!treatmentRecords?.[key]?.some(r=>r.type==='irrigate'&&day-r.day>=0&&day-r.day<=1),
+   recentCoreAeration:!!treatmentRecords?.[key]?.some(r=>r.type==='aerate'&&day-r.day>=0&&day-r.day<=7),
    disease:e.bad,oxygen:e.oxygen,structure:site.structure,compaction:site.comp,
    saltStress:site.salts,soilPH:site.ph,soilP:site.p,soilNH4:site.nh4,soilEC:site.ec,soilLabileC:site.labileC,soilGood:site.good.slice(),soilWorms:site.worms.slice(),rootMass:site.rootMass,leafArea:site.leafArea,carbReserve:site.carbReserve,tillerDensity:site.tillerDensity,canopyCover:site.canopyCover,canopyHeight:site.canopyHeight,lateralSpread:site.lateralSpread,mowHeight:site.mowHeight,mowEvents:site.mowEvents,lastClippingFraction:site.lastClippingFraction};
 };
