@@ -154,24 +154,43 @@ function verifiedBase(score,season,snapshot){
   return true;
  });
  if(!eligible.length)return null;
- const desiredWeeds=Number(s.weedPressure??s.weeds);
+ const desiredWeeds=s.weedPressure==null&&s.weeds==null?NaN:Number(s.weedPressure??s.weeds);
+ const cover=s.canopyCover==null?NaN:Number(s.canopyCover);
+ const tillers=s.tillerDensity==null?NaN:Number(s.tillerDensity);
  const day=Number.isFinite(Number(s.day))?Number(s.day):0;
- eligible.sort((a,b)=>{
-  const rank=x=>{
-   let cost=x.vigor===band?0:x.vigor==='mid'||band==='mid'?18:38;
-   if(Number.isFinite(desiredWeeds))cost+=Math.abs((x.weed?65:12)-desiredWeeds)*.25;
-   if(Number.isFinite(root))cost+=(x.root?Math.max(0,40-root):Math.max(0,root-65))*.12;
-   if(x.event!=='none')cost-=25;
-   return cost;
-  };
-  // Keep the strongest condition match, but rotate near-equivalent references
-   // deterministically as simulated time advances (not on every render).
-   const ra=rank(a),rb=rank(b);
-   if(Math.abs(ra-rb)>8)return ra-rb;
-   const phase=Math.floor(Math.max(0,day)/14);
-   return ((a.n*37+phase*19)%97)-((b.n*37+phase*19)%97)||a.n-b.n;
+ // Continuous plant-condition matching separates lawns even within the same
+ // broad vigor band. A/B never receives a synthetic "make different" bonus.
+ const condition=Number.isFinite(cover)&&Number.isFinite(tillers)
+  ?Math.max(0,Math.min(100,score*.45+cover*.38+tillers*.17)):score;
+ const target=condition<43?'low':condition<73?'mid':'high';
+ const targetVigor=target==='low'?27:target==='mid'?58:86;
+ const phase=Math.floor(Math.max(0,day)/21);
+ const scored=eligible.map(x=>{
+  const imageVigor=x.vigor==='low'?27:x.vigor==='mid'?58:86;
+  let cost=Math.abs(imageVigor-condition)*.7;
+  // Category mismatch remains expensive: a severely thin lawn must not
+  // suddenly display a pristine dense canopy to create visual variety.
+  if(x.vigor!==target)cost+=13;
+  if(Number.isFinite(desiredWeeds))cost+=Math.abs((x.weed?65:12)-desiredWeeds)*.24;
+  if(Number.isFinite(root))cost+=(x.root?Math.max(0,42-root):Math.max(0,root-65))*.16;
+  if(x.event!=='none')cost-=20;
+  return {x,cost};
+ }).sort((a,b)=>a.cost-b.cost||a.x.n-b.x.n);
+ // Choose only among credible near-matches, with independent but stable
+ // variation driven by measured lawn condition and simulated day.
+ const best=scored[0].cost;
+ const peers=scored.filter(v=>v.cost<=best+5);
+ const conditionSeed=Math.floor(condition/6)+
+  (Number.isFinite(cover)?Math.floor(cover/8)*3:0)+
+  (Number.isFinite(desiredWeeds)?Math.floor(desiredWeeds/12)*5:0)+
+  (Number.isFinite(root)?Math.floor(root/12)*7:0);
+ peers.sort((a,b)=>{
+  const ha=(a.x.n*37+phase*19+conditionSeed*13)%101;
+  const hb=(b.x.n*37+phase*19+conditionSeed*13)%101;
+  return ha-hb||a.x.n-b.x.n;
  });
- const pick=eligible[0],id='BASE'+String(pick.n).padStart(2,'0');
+ const selected=peers[0].x;
+ const pick=selected,id='BASE'+String(pick.n).padStart(2,'0');
  return 'assets/turfarium/'+id+'/'+id+'.'+pick.ext;
 }
 async function imageFor(index,season){
