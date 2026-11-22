@@ -16,7 +16,7 @@ css.textContent=`
   .simulation-grid.tf-primary-workspace>#lawn-a-panel,.simulation-grid.tf-primary-workspace>#lawn-b-panel,
   .simulation-grid.tf-primary-workspace>#tf-playback-strip,.simulation-grid.tf-primary-workspace>#timeline-workflow{display:none!important}
 
-  #tf-stacked-lawns{overflow-anchor:none!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;max-width:100%!important;min-width:0!important;grid-column:1/-1!important;margin:0 0 12px!important;gap:8px!important}
+  #tf-stacked-lawns{overflow-anchor:none!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;max-width:100%!important;min-width:0!important;grid-column:1/-1!important;margin:0 0 12px!important;gap:5px!important}
   #tf-stacked-lawns>*{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
   #tf-stacked-lawns .tf-lawn-visual{min-height:0!important;height:auto!important;overflow-anchor:none!important;display:block!important;margin:0!important;padding:8px!important;border:1px solid #c5d8c7!important;border-radius:13px!important;background:#f4f8f2!important}
   /* Day-zero cards must shrink to their actual contents, not retain legacy
@@ -331,13 +331,13 @@ function mount(){
  if(!view.isConnected){if(header)header.insertAdjacentElement('afterend',view);else grid.insertBefore(view,grid.firstElementChild);}
  ensureCompactIntro(view);
  const cardA=ensureLawnCard(view,'A',stageA);
- const progression=ensureProgression(view,cardA);
  const cardB=ensureLawnCard(view,'B',stageB);
- if(cardB.previousElementSibling!==progression.station)progression.station.insertAdjacentElement('afterend',cardB);
+ // Keep both full-width photographs adjacent; shared controls follow Lawn B.
+ const progression=ensureProgression(view,cardB);
  const dock=ensureTreatments(view,cardB);
  const changes=ensureWhatChanged(view,dock);
  // Never reappend already-mounted drawers: DOM moves dismiss native Android select menus.
- const ordered=[cardA,progression.station,cardB,dock];
+ const ordered=[cardA,cardB,progression.station,dock];
  for(let i=0;i<ordered.length;i++){
   const node=ordered[i];
   if(node.parentElement!==view||node.previousElementSibling!==(i?ordered[i-1]:null)){
