@@ -1,0 +1,59 @@
+name: Turfarium BASE88 full visual audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/turfarium-base88-contact-sheets.yml'
+permissions:
+  contents: write
+jobs:
+  contact-sheets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Generate eleven numbered contact sheets and manifest
+        run: |
+          python -m pip install --quiet Pillow
+          python - <<'PY'
+          from PIL import Image, ImageOps, ImageDraw
+          from pathlib import Path
+          import json, hashlib
+          out=Path('audit/base88')
+          out.mkdir(parents=True,exist_ok=True)
+          records=[]
+          for batch in range(11):
+              sheet=Image.new('RGB',(1600,1160),'#f1f4ee')
+              draw=ImageDraw.Draw(sheet)
+              for slot in range(8):
+                  n=batch*8+slot+1
+                  ident=f'BASE{n:02d}'
+                  path=Path(f'assets/turfarium/{ident}/{ident}.webp')
+                  if not path.exists(): raise FileNotFoundError(path)
+                  with Image.open(path) as src:
+                      src.load()
+                      dims=src.size
+                      thumb=ImageOps.contain(src.convert('RGB'),(780,245))
+                  x=(slot%2)*800
+                  y=(slot//2)*290
+                  sheet.paste(thumb,(x+(800-thumb.width)//2,y+35+(245-thumb.height)//2))
+                  draw.text((x+12,y+10),f'{ident}  {dims[0]}x{dims[1]}',fill='#162c1b')
+                  records.append({'id':ident,'path':str(path),'dimensions':dims,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'classification_status':'needs_visual_review'})
+              sheet.save(out/f'BASE{batch*8+1:02d}-{batch*8+8:02d}.jpg',quality=88)
+          (out/'manifest.json').write_text(json.dumps(records,indent=2)+'\n')
+          assert len(records)==88
+          print('Generated 11 sheets and verified 88 image files.')
+          PY
+      - name: Upload contact sheets
+        uses: actions/upload-artifact@v4
+        with:
+          name: turfarium-base88-audit
+          path: audit/base88/
+      - name: Publish contact sheets in repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audit/base88/
+          git commit -m "Audit: publish BASE01-88 contact sheets and file manifest" || exit 0
+          git push
