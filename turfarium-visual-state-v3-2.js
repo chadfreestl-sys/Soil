@@ -82,7 +82,10 @@ function scoreFrom(s){
   const heat=s.soilTempF==null?NaN:Number(s.soilTempF);
   const heatPenalty=Number.isFinite(heat)&&Number.isFinite(moisture)&&moisture<43
    ?clamp((heat-82)*.20,0,5):0;
-  return Math.round(clamp(cover*.52+tillers*.24+leaves*.12+color*.12-dryPenalty-heatPenalty,0,100));
+  // Give independently modeled turf health meaningful influence alongside
+  // actual canopy cover, tillering and leaf area. A vigor difference should
+  // be legible without fabricating treatment-specific photographic bonuses.
+  return Math.round(clamp(cover*.36+tillers*.18+leaves*.10+color*.36-dryPenalty-heatPenalty,0,100));
  }
  const raw=Number(s.vigor)*.33+Number(s.biology)*.12+Number(s.worms)*.06+
  (100-Number(s.disease))*.10+Number(s.oxygen)*.10+Number(s.structure)*.10+
@@ -99,7 +102,7 @@ function stateWithHysteresis(key,target,n){
  if(!old)return target;
  const previous=old.index;
  if(previous===target)return target;
- const margin=2;
+ const margin=1;
  // Only delay a transition across its immediately adjacent boundary.
  // A large drought/recovery jump must never be trapped in an obsolete band.
  if(target>previous&&n<STATES[previous+1].min+margin)return previous;
@@ -283,7 +286,7 @@ async function refresh(key){
    nextPhoto.onload=()=>{
     if(Number(stage.dataset.tfBlendRequest)!==blendRequest)return;
     blend.src=asset.src;
-    blend.style.opacity=(fraction*.88).toFixed(3);
+    blend.style.opacity=(fraction*.92).toFixed(3);
    };
    nextPhoto.src=asset.src;
    if(nextPhoto.complete&&nextPhoto.naturalWidth>0)nextPhoto.onload();
