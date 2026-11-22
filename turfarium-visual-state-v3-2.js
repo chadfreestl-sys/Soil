@@ -293,7 +293,8 @@ async function refresh(key){
  const previousState=lastState.get(key);
  if(previousState&&elapsed<previousState.day)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
- const signature=season+'|'+index+'|'+(verifiedBase(n,season,snapshot)||'seasonal'); // Same signature across lawns is valid when their modeled visual categories match.
+ const curatedCandidate=verifiedBase(n,season,snapshot);
+ const signature=season+'|'+index+'|'+(curatedCandidate||'seasonal'); // Same signature across lawns is valid when their modeled visual categories match.
  // Within a category, interpolate toward the next condition photograph.
  // This preserves the existing eight-state asset library while allowing two
  // independently modeled lawns to show different canopy development.
@@ -315,7 +316,9 @@ async function refresh(key){
  blend.style.opacity='0';
  blend.dataset.tfBlendFraction=fraction.toFixed(3);
  blend.dataset.tfBlendTarget=STATES[nextIndex].id;
- if(nextIndex!==index&&fraction>.02){
+ // Do not overlay a seasonal photo on top of a curated BASE cross-section:
+ // that blends different root layouts and makes progression harder to interpret.
+ if(!curatedCandidate&&nextIndex!==index&&fraction>.02){
   imageFor(nextIndex,season).then(asset=>{
    if(Number(stage.dataset.tfBlendRequest)!==blendRequest)return;
    if(!asset.src)return;
@@ -470,8 +473,7 @@ async function refresh(key){
  lastState.set(key,{index,signature,day:elapsed});
  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · loading…');
  let asset=await imageFor(index,season);
- const curated=verifiedBase(n,season,snapshot);
- if(curated&&await canLoad(curated))asset={src:curated,kind:'verified-base'};
+ if(curatedCandidate&&await canLoad(curatedCandidate))asset={src:curatedCandidate,kind:'verified-base'};
  if(pending.get(key)!==request)return;
  // A later clock update may have changed the season during asset resolution.
  if((stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'))?.dataset.season!==season){
