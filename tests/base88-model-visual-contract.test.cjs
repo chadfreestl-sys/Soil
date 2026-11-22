@@ -13,6 +13,24 @@ const a0=ctx.pick(55,'spring',equalState,'A'),b0=ctx.pick(55,'spring',equalState
 assert.notEqual(a0,b0,'equal modeled starting states should have distinct equivalent illustrations');
 const pick=(score,season,s,key='A')=>ctx.pick(score,season,s||{},key);
 const number=url=>Number(url?.match(/BASE(\d\d)/)?.[1]);
+
+// Treatment-response imaging: application labels alone must not fabricate growth.
+// A real plant response may change the photograph; season and events remain gated.
+const baseline={day:30,canopyCover:48,tillerDensity:45,rootMass:38,weedPressure:35,moisture:55,oxygen:65};
+const labelOnly={...baseline,treatment:'highN',fertilizerApplied:true};
+assert.equal(pick(50,'spring',baseline,'A'),pick(50,'spring',labelOnly,'A'),
+ 'fertilizer label alone must not change the image');
+const recovered={...baseline,day:90,canopyCover:83,tillerDensity:78,rootMass:75,weedPressure:8};
+const stressed={...baseline,day:90,canopyCover:18,tillerDensity:22,rootMass:18,weedPressure:75};
+const recoveredImage=pick(86,'spring',recovered,'A');
+const stressedImage=pick(22,'spring',stressed,'A');
+assert.notEqual(recoveredImage,stressedImage,'meaningful plant-condition separation must change imagery');
+for(const d of [0,7,14,30,60,90]){
+ const state={...baseline,day:d};
+ assert.equal(pick(50,'spring',state,'A'),pick(50,'spring',state,'A'),
+  'same modeled state must render deterministically at day '+d);
+}
+
 const forbidden=new Set([6,7,9,10,51,63,70,75]);
 for(const season of ['spring','summer','fall','winter'])for(const score of [5,25,50,75,95]){
  const id=number(pick(score,season,{moisture:50,oxygen:60,rootMass:40}));
