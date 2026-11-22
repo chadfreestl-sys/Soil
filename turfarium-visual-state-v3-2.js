@@ -124,6 +124,18 @@ function canLoad(url){
  loaded.set(url,entry);
  return entry.promise;
 }
+// Expanded BASE library: 88 authored educational cross-sections. The collection
+// has no condition metadata, so these are used only as deterministic supplemental
+// visual variety, not as evidence of a specific treatment response.
+const BASE_COUNT=88;
+function baseIllustration(index,day){
+ const band=Math.max(0,Math.min(7,index));
+ // Stable across both lawns for the same modeled condition and time window.
+ const slot=Math.max(0,Math.floor(Math.max(0,day)/30));
+ const number=1+((band*11+slot%11)%BASE_COUNT);
+ const id='BASE'+String(number);
+ return 'assets/turfarium/'+id+'/'+id+'.webp';
+}
 async function imageFor(index,season){
  const local=imageUrl(index,season);
  if(await canLoad(local))return {src:local,kind:'seasonal'};
@@ -253,7 +265,7 @@ async function refresh(key){
  const previousState=lastState.get(key);
  if(previousState&&elapsed<previousState.day)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
- const signature=season+'|'+index; // Same signature across lawns is valid when their modeled visual categories match.
+ const signature=season+'|'+index+'|'+Math.floor(elapsed/30); // Same signature across lawns is valid when their modeled visual categories match.
  // Within a category, interpolate toward the next condition photograph.
  // This preserves the existing eight-state asset library while allowing two
  // independently modeled lawns to show different canopy development.
@@ -429,7 +441,19 @@ async function refresh(key){
  stage.dataset.tfPhotoSignature=signature;stage.dataset.tfPhotoReady='0';
  lastState.set(key,{index,signature,day:elapsed});
  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · loading…');
- const asset=await imageFor(index,season);
+ // Prefer the season-specific condition photograph. When both lawns would
+ // otherwise show the same image despite a meaningful modeled vigor gap,
+ // use a supplemental BASE illustration for the lower-vigor lawn. The BASE
+ // library is illustrative and is not condition-tagged or a field prediction.
+ let asset=await imageFor(index,season);
+ if(key==='B'){
+  const other=snapshotFor('A');
+  const gap=Number(other?.vigor)-Number(snapshot.vigor);
+  if(Number.isFinite(gap)&&gap>=4){
+   const candidate=baseIllustration(index,elapsed);
+   if(await canLoad(candidate))asset={src:candidate,kind:'base-illustration'};
+  }
+ }
  if(pending.get(key)!==request)return;
  // A later clock update may have changed the season during asset resolution.
  if((stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'))?.dataset.season!==season){
