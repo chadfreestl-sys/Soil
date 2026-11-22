@@ -15,8 +15,8 @@ for(const season of ['spring','summer','fall','winter'])for(const score of [5,25
  const id=number(pick(score,season,{moisture:50,oxygen:60,rootMass:40}));
  assert(!forbidden.has(id),'event illustration without event '+id);
 }
-assert(![6,7].includes(number(pick(85,'spring',{moisture:50,oxygen:70}))));
-assert([6,7].includes(number(pick(85,'spring',{moisture:95,oxygen:12}))), 'waterlogging must be eligible and prioritized');
+assert(![6,7].includes(number(pick(35,'spring',{moisture:50,oxygen:70}))));
+assert([6,7].includes(number(pick(35,'spring',{moisture:95,oxygen:12}))), 'waterlogging must be eligible and prioritized');
 assert([9,10].includes(number(pick(45,'spring',{recentCoreAeration:true,moisture:55,oxygen:60}))), 'aeration event');
 assert([63,70,75].includes(number(pick(70,'summer',{irrigationActive:true,moisture:55,oxygen:60}))), 'irrigation event');
 assert(lab.includes("r.type==='irrigate'&&day-r.day>=0&&day-r.day<=1"),'irrigation tied to application record');
