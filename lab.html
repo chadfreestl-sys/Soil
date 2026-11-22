@@ -1710,4 +1710,28 @@ setTimeout(()=>clearInterval(sourceWatch),15000);
 </script>
 
 
+
+<style id="tf-mobile-compact-vigor-v25">
+/* Compact the post-advance metric cards without changing their modeled values. */
+@media(max-width:700px){
+  #tf-stacked-lawns .tf-lawn-visual>[data-tf-response],
+  #tf-mobile-lawn-a>[data-tf-response],#tf-mobile-lawn-b>[data-tf-response]{
+    display:flex!important;flex-wrap:wrap!important;align-items:baseline!important;
+    gap:2px 9px!important;margin:5px 2px 3px!important;padding:6px 9px!important;
+    border-radius:9px!important;font-size:12px!important;line-height:1.3!important;
+  }
+  #tf-stacked-lawns .tf-lawn-visual>[data-tf-response]>strong,
+  #tf-mobile-lawn-a>[data-tf-response]>strong,#tf-mobile-lawn-b>[data-tf-response]>strong{
+    font-size:13px!important;line-height:1.25!important;
+  }
+  #tf-stacked-lawns .tf-lawn-visual>[data-tf-response]>div,
+  #tf-mobile-lawn-a>[data-tf-response]>div,#tf-mobile-lawn-b>[data-tf-response]>div{
+    font-size:12px!important;line-height:1.25!important;
+  }
+  #tf-stacked-lawns .tf-lawn-visual>[data-tf-response]>small,
+  #tf-mobile-lawn-a>[data-tf-response]>small,#tf-mobile-lawn-b>[data-tf-response]>small{
+    display:none!important;
+  }
+}
+</style>
 </body></html>
