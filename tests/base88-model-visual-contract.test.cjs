@@ -2,13 +2,16 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const engine=fs.readFileSync('turfarium-visual-state-v3-2.js','utf8');
 const lab=fs.readFileSync('lab.html','utf8');
-const match=engine.match(/const BASE88=(\[.*?\]);\nfunction verifiedBase\(score,season,snapshot\)\{[\s\S]*?\n\}\nasync function imageFor/);
+const match=engine.match(/const BASE88=(\[.*?\]);\nfunction verifiedBase\(score,season,snapshot,key\)\{[\s\S]*?\n\}\nasync function imageFor/);
 assert(match,'selector block');
 const js=match[0].replace(/\nasync function imageFor$/,'');
 const ctx={Number,Math,String};vm.createContext(ctx);
 vm.runInContext(js+'\nthis.pick=verifiedBase;this.entries=BASE88;',ctx);
 assert.equal(ctx.entries.length,88);
-const pick=(score,season,s)=>ctx.pick(score,season,s||{});
+const equalState={day:0,canopyCover:54,tillerDensity:48,rootMass:40,weedPressure:35,moisture:50,oxygen:60};
+const a0=ctx.pick(55,'spring',equalState,'A'),b0=ctx.pick(55,'spring',equalState,'B');
+assert.notEqual(a0,b0,'equal modeled starting states should have distinct equivalent illustrations');
+const pick=(score,season,s,key='A')=>ctx.pick(score,season,s||{},key);
 const number=url=>Number(url?.match(/BASE(\d\d)/)?.[1]);
 const forbidden=new Set([6,7,9,10,51,63,70,75]);
 for(const season of ['spring','summer','fall','winter'])for(const score of [5,25,50,75,95]){
