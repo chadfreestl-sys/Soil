@@ -127,6 +127,31 @@ function canLoad(url){
  loaded.set(url,entry);
  return entry.promise;
 }
+// Manually inspected BASE cross-sections. Untagged images are excluded until
+// visually reviewed; seasonal photographs remain the authoritative fallback.
+const VERIFIED_BASE=[
+ {n:1,season:'spring',lo:45,hi:64,rootLo:0,rootHi:100},
+ {n:2,season:'spring',lo:38,hi:54,rootLo:0,rootHi:100},
+ {n:3,season:'spring',lo:24,hi:43,rootLo:0,rootHi:100},
+ {n:4,season:'spring',lo:10,hi:35,rootLo:0,rootHi:100},
+ {n:12,season:'spring',lo:29,hi:49,rootLo:0,rootHi:100},
+ {n:24,season:'summer',lo:75,hi:100,rootLo:20,rootHi:100},
+ {n:36,season:'fall',lo:60,hi:90,rootLo:20,rootHi:100},
+ {n:48,season:'winter',lo:35,hi:85,rootLo:15,rootHi:100},
+ {n:60,season:'spring',lo:72,hi:100,rootLo:20,rootHi:100},
+ {n:72,season:'summer',lo:56,hi:79,rootLo:20,rootHi:100},
+ {n:80,season:'summer',lo:25,hi:57,rootLo:15,rootHi:100},
+ {n:88,season:'summer',lo:80,hi:100,rootLo:20,rootHi:100}
+];
+function verifiedBase(score,season,snapshot){
+ const root=Number(snapshot?.rootMass);
+ const options=VERIFIED_BASE.filter(x=>x.season===season&&score>=x.lo&&score<=x.hi&&(!Number.isFinite(root)||(root>=x.rootLo&&root<=x.rootHi)));
+ if(!options.length)return null;
+ // Choose the closest visual-condition reference, deterministically.
+ options.sort((a,b)=>Math.abs(score-(a.lo+a.hi)/2)-Math.abs(score-(b.lo+b.hi)/2)||a.n-b.n);
+ const id='BASE'+String(options[0].n).padStart(2,'0');
+ return 'assets/turfarium/'+id+'/'+id+'.webp';
+}
 async function imageFor(index,season){
  const local=imageUrl(index,season);
  if(await canLoad(local))return {src:local,kind:'seasonal'};
@@ -256,7 +281,7 @@ async function refresh(key){
  const previousState=lastState.get(key);
  if(previousState&&elapsed<previousState.day)lastState.delete(key);
  const index=stateWithHysteresis(key,stateForScore(n),n);
- const signature=season+'|'+index; // Same signature across lawns is valid when their modeled visual categories match.
+ const signature=season+'|'+index+'|'+(verifiedBase(n,season,snapshot)||'seasonal'); // Same signature across lawns is valid when their modeled visual categories match.
  // Within a category, interpolate toward the next condition photograph.
  // This preserves the existing eight-state asset library while allowing two
  // independently modeled lawns to show different canopy development.
@@ -432,7 +457,9 @@ async function refresh(key){
  stage.dataset.tfPhotoSignature=signature;stage.dataset.tfPhotoReady='0';
  lastState.set(key,{index,signature,day:elapsed});
  indicatorText(indicator,'Photo stage: '+labels[index]+' · '+season[0].toUpperCase()+season.slice(1)+' · loading…');
- const asset=await imageFor(index,season);
+ let asset=await imageFor(index,season);
+ const curated=verifiedBase(n,season,snapshot);
+ if(curated&&await canLoad(curated))asset={src:curated,kind:'verified-base'};
  if(pending.get(key)!==request)return;
  // A later clock update may have changed the season during asset resolution.
  if((stage.parentElement?.querySelector('.tf-photo-stat-strip .tf-season-on-photo')||stage.querySelector('.tf-season-on-photo'))?.dataset.season!==season){
