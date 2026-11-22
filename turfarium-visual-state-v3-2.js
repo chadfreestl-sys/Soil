@@ -127,30 +127,42 @@ function canLoad(url){
  loaded.set(url,entry);
  return entry.promise;
 }
-// Manually inspected BASE cross-sections. Untagged images are excluded until
-// visually reviewed; seasonal photographs remain the authoritative fallback.
-const VERIFIED_BASE=[
- {n:1,season:'spring',lo:45,hi:64,rootLo:0,rootHi:100},
- {n:2,season:'spring',lo:38,hi:54,rootLo:0,rootHi:100},
- {n:3,season:'spring',lo:24,hi:43,rootLo:0,rootHi:100},
- {n:4,season:'spring',lo:10,hi:35,rootLo:0,rootHi:100},
- {n:12,season:'spring',lo:29,hi:49,rootLo:0,rootHi:100},
- {n:24,season:'summer',lo:75,hi:100,rootLo:20,rootHi:100},
- {n:36,season:'fall',lo:60,hi:90,rootLo:20,rootHi:100},
- {n:48,season:'winter',lo:35,hi:85,rootLo:15,rootHi:100},
- {n:60,season:'spring',lo:72,hi:100,rootLo:20,rootHi:100},
- {n:72,season:'summer',lo:56,hi:79,rootLo:20,rootHi:100},
- {n:80,season:'summer',lo:25,hi:57,rootLo:15,rootHi:100},
- {n:88,season:'summer',lo:80,hi:100,rootLo:20,rootHi:100}
-];
+// Reviewed BASE01–88 subject metadata; event-specific illustrations require event evidence.
+const BASE88=[{"n":1,"season":"spring","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":2,"season":"spring","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":3,"season":"spring","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":4,"season":"spring","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":5,"season":"spring","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":6,"season":"spring","event":"waterlogged","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":7,"season":"spring","event":"waterlogged","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":8,"season":"spring","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":9,"season":"spring","event":"aeration","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":10,"season":"spring","event":"aeration","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":11,"season":"spring","event":"none","vigor":"high","weed":1,"root":0,"ext":"webp"},{"n":12,"season":"spring","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":13,"season":"fall","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":14,"season":"any","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":15,"season":"fall","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":16,"season":"fall","event":"none","vigor":"mid","weed":0,"root":1,"ext":"webp"},{"n":17,"season":"fall","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":18,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":19,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":20,"season":"winter","event":"snow","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":21,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":22,"season":"winter","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":23,"season":"spring","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":24,"season":"spring","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":25,"season":"spring","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":26,"season":"spring","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":27,"season":"spring","event":"none","vigor":"high","weed":1,"root":0,"ext":"webp"},{"n":28,"season":"spring","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":29,"season":"spring","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":30,"season":"spring","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":31,"season":"any","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":32,"season":"fall","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":33,"season":"fall","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":34,"season":"any","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":35,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":36,"season":"any","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":37,"season":"any","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":38,"season":"any","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":39,"season":"any","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":40,"season":"any","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":41,"season":"any","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":42,"season":"fall","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":43,"season":"fall","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":44,"season":"fall","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":45,"season":"fall","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":46,"season":"fall","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":47,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":48,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":49,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":50,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":51,"season":"any","event":"storm","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":52,"season":"fall","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":53,"season":"fall","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":54,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":55,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":56,"season":"winter","event":"snow","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":57,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":58,"season":"winter","event":"snow","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":59,"season":"spring","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":60,"season":"spring","event":"none","vigor":"mid","weed":1,"root":0,"ext":"webp"},{"n":61,"season":"summer","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":62,"season":"summer","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":63,"season":"summer","event":"irrigation","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":64,"season":"summer","event":"none","vigor":"mid","weed":0,"root":0,"ext":"jpg"},{"n":65,"season":"summer","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":66,"season":"summer","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":67,"season":"summer","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":68,"season":"summer","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":69,"season":"summer","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":70,"season":"summer","event":"irrigation","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":71,"season":"summer","event":"none","vigor":"mid","weed":1,"root":1,"ext":"webp"},{"n":72,"season":"summer","event":"none","vigor":"mid","weed":0,"root":0,"ext":"webp"},{"n":73,"season":"summer","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":74,"season":"summer","event":"none","vigor":"low","weed":0,"root":1,"ext":"webp"},{"n":75,"season":"summer","event":"irrigation","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":76,"season":"summer","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":77,"season":"summer","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":78,"season":"summer","event":"none","vigor":"mid","weed":0,"root":1,"ext":"webp"},{"n":79,"season":"summer","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":80,"season":"summer","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":81,"season":"summer","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":82,"season":"summer","event":"none","vigor":"low","weed":0,"root":0,"ext":"webp"},{"n":83,"season":"summer","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":84,"season":"summer","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":85,"season":"summer","event":"none","vigor":"high","weed":0,"root":1,"ext":"webp"},{"n":86,"season":"summer","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":87,"season":"summer","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"},{"n":88,"season":"summer","event":"none","vigor":"high","weed":0,"root":0,"ext":"webp"}];
 function verifiedBase(score,season,snapshot){
- const root=Number(snapshot?.rootMass);
- const options=VERIFIED_BASE.filter(x=>x.season===season&&score>=x.lo&&score<=x.hi&&(!Number.isFinite(root)||(root>=x.rootLo&&root<=x.rootHi)));
- if(!options.length)return null;
- // Choose the closest visual-condition reference, deterministically.
- options.sort((a,b)=>Math.abs(score-(a.lo+a.hi)/2)-Math.abs(score-(b.lo+b.hi)/2)||a.n-b.n);
- const id='BASE'+String(options[0].n).padStart(2,'0');
- return 'assets/turfarium/'+id+'/'+id+'.webp';
+ const s=snapshot||{};
+ const moisture=Number(s.moisture),oxygen=Number(s.oxygen),root=Number(s.rootMass);
+ const snow=Number(s.snowDepth??s.snowCover??0)>0;
+ const irrigation=s.irrigating===true||s.irrigationActive===true;
+ const storm=s.stormActive===true;
+ const aeration=s.aerationActive===true||s.recentCoreAeration===true;
+ const wet=Number.isFinite(moisture)&&moisture>=88&&Number.isFinite(oxygen)&&oxygen<35;
+ const band=score<43?'low':score<73?'mid':'high';
+ const eligible=BASE88.filter(x=>{
+  if(x.season!=='any'&&x.season!==season)return false;
+  if(x.event==='snow'&&!snow)return false;
+  if(x.event==='irrigation'&&!irrigation)return false;
+  if(x.event==='storm'&&!storm)return false;
+  if(x.event==='aeration'&&!aeration)return false;
+  if(x.event==='waterlogged'&&!wet)return false;
+  if(x.event==='none'&&snow)return false;
+  if(x.event==='none'&&irrigation)return false;
+  return true;
+ });
+ if(!eligible.length)return null;
+ const desiredWeeds=Number(s.weedPressure??s.weeds);
+ eligible.sort((a,b)=>{
+  const rank=x=>{
+   let cost=x.vigor===band?0:x.vigor==='mid'||band==='mid'?18:38;
+   if(Number.isFinite(desiredWeeds))cost+=Math.abs((x.weed?65:12)-desiredWeeds)*.25;
+   if(Number.isFinite(root))cost+=(x.root?Math.max(0,40-root):Math.max(0,root-65))*.12;
+   if(x.event!=='none')cost-=25;
+   return cost;
+  };
+  return rank(a)-rank(b)||a.n-b.n;
+ });
+ const pick=eligible[0],id='BASE'+String(pick.n).padStart(2,'0');
+ return 'assets/turfarium/'+id+'/'+id+'.'+pick.ext;
 }
 async function imageFor(index,season){
  const local=imageUrl(index,season);
