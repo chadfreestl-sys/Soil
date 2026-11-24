@@ -803,6 +803,24 @@
       "topic": "Snow-free severely stressed winter tall fescue, sparse canopy and variable roots",
       "verifiedSubject": true,
       "subjectVerification": "Approved by project owner in conversation; Git blob SHA matches approved BASE89.png"
+    },
+    {
+      "id": "BASE90",
+      "path": "assets/turfarium/BASE90/BASE90.png",
+      "format": "png",
+      "bytes": 3604330,
+      "topic": "Snow-free moderately stressed winter tall fescue",
+      "verifiedSubject": true,
+      "subjectVerification": "Artwork approved by project owner in conversation; uploaded Git blob verified"
+    },
+    {
+      "id": "BASE91",
+      "path": "assets/turfarium/BASE91/BASE91.png",
+      "format": "png",
+      "bytes": 3742030,
+      "topic": "Healthy snow-free winter tall fescue",
+      "verifiedSubject": true,
+      "subjectVerification": "Artwork approved by project owner in conversation; uploaded Git blob verified"
     }
   ]
 }
