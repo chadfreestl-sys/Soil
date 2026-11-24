@@ -2,11 +2,11 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const engine=fs.readFileSync('turfarium-visual-state-v3-2.js','utf8');
 const lab=fs.readFileSync('lab.html','utf8');
-const match=engine.match(/const BASE89=(\[.*?\]);\nfunction verifiedBase\(score,season,snapshot,key\)\{[\s\S]*?\n\}\nasync function imageFor/);
+const match=engine.match(/const BASE88=(\[.*?\]);\nfunction verifiedBase\(score,season,snapshot,key\)\{[\s\S]*?\n\}\nasync function imageFor/);
 assert(match,'selector block');
 const js=match[0].replace(/\nasync function imageFor$/,'');
 const ctx={Number,Math,String};vm.createContext(ctx);
-vm.runInContext(js+'\nthis.pick=verifiedBase;this.entries=BASE89;',ctx);
+vm.runInContext(js+'\nthis.pick=verifiedBase;this.entries=BASE88;',ctx);
 assert.equal(ctx.entries.length,89);
 assert.equal(numberWinter(),89,'winter low-vigor asset registered');
 function numberWinter(){const entry=ctx.entries.find(x=>x.n===89);return entry?.season==='winter'&&entry?.vigor==='low'&&entry?.event==='none'?entry.n:0;}
