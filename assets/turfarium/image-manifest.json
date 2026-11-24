@@ -794,6 +794,15 @@
       "topic": "Summer turf with green canopy and visible earthworms",
       "verifiedSubject": true,
       "subjectVerification": "visual contact-sheet review; uploaded asset Git blob matches current main"
+    },
+    {
+      "id": "BASE89",
+      "path": "assets/turfarium/BASE89/BASE89.png",
+      "format": "png",
+      "bytes": 3562148,
+      "topic": "Snow-free severely stressed winter tall fescue, sparse canopy and variable roots",
+      "verifiedSubject": true,
+      "subjectVerification": "Approved by project owner in conversation; Git blob SHA matches approved BASE89.png"
     }
   ]
 }
