@@ -830,6 +830,15 @@
       "topic": "Early spring recovery following winter stress",
       "verifiedSubject": true,
       "subjectVerification": "Approved by project owner; uploaded Git blob SHA matches approved BASE92.png"
+    },
+    {
+      "id": "BASE93",
+      "path": "assets/turfarium/BASE93/BASE93.png",
+      "format": "png",
+      "bytes": 3239360,
+      "topic": "Early spring low vigor, illustrative nitrogen deficiency",
+      "verifiedSubject": true,
+      "subjectVerification": "Owner approved; local Git blob SHA matches uploaded file"
     }
   ]
 }
