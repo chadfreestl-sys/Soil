@@ -848,6 +848,15 @@
       "topic": "Healthy spring turf with active root development",
       "verifiedSubject": true,
       "subjectVerification": "Owner approved; local Git blob SHA matches uploaded file"
+    },
+    {
+      "id": "BASE95",
+      "path": "assets/turfarium/BASE95/BASE95.png",
+      "format": "png",
+      "bytes": 3294450,
+      "topic": "Summer heat stress with adequate soil moisture",
+      "verifiedSubject": true,
+      "subjectVerification": "Owner approved; local Git blob SHA matches uploaded file"
     }
   ]
 }
