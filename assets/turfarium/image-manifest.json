@@ -821,6 +821,15 @@
       "topic": "Healthy snow-free winter tall fescue",
       "verifiedSubject": true,
       "subjectVerification": "Artwork approved by project owner in conversation; uploaded Git blob verified"
+    },
+    {
+      "id": "BASE92",
+      "path": "assets/turfarium/BASE92/BASE92.png",
+      "format": "png",
+      "bytes": 3378408,
+      "topic": "Early spring recovery following winter stress",
+      "verifiedSubject": true,
+      "subjectVerification": "Approved by project owner; uploaded Git blob SHA matches approved BASE92.png"
     }
   ]
 }
