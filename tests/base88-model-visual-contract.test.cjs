@@ -7,7 +7,7 @@ assert(match,'selector block');
 const js=match[0].replace(/\nasync function imageFor$/,'');
 const ctx={Number,Math,String};vm.createContext(ctx);
 vm.runInContext(js+'\nthis.pick=verifiedBase;this.entries=BASE88;',ctx);
-assert.equal(ctx.entries.length,93);
+assert.equal(ctx.entries.length,94);
 assert.equal(numberWinter(),89,'winter low-vigor asset registered');
 for(const [n,vigor] of [[90,'mid'],[91,'high']]){const e=ctx.entries.find(x=>x.n===n);assert(e&&e.season==='winter'&&e.event==='none'&&e.vigor===vigor,'winter asset '+n);}
 const spring92=ctx.entries.find(x=>x.n===92);assert(spring92&&spring92.season==='spring'&&spring92.vigor==='mid'&&spring92.event==='none');
@@ -49,4 +49,5 @@ assert(lab.includes("r.type==='irrigate'&&day-r.day>=0&&day-r.day<=1"),'irrigati
 assert(lab.includes("r.type==='aerate'&&day-r.day>=0&&day-r.day<=7"),'aeration tied to application record');
 assert(lab.includes('soilGood:site.good.slice()'),'canonical microbial guilds available');
 assert(lab.includes('soilWorms:site.worms.slice()'),'canonical earthworms available');
-console.log('PASS: BASE93 seasonal, event, treatment history and canonical microbial bridge contracts');
+const spring94=ctx.entries.find(x=>x.n===94);assert(spring94&&spring94.season==='spring'&&spring94.vigor==='high'&&spring94.event==='none'&&spring94.root===1);
+console.log('PASS: BASE94 seasonal, event, treatment history and canonical microbial bridge contracts');
