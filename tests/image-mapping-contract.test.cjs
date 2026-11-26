@@ -5,12 +5,12 @@ const path=require('node:path');
 const root=path.resolve(__dirname,'..');
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'assets/turfarium/image-manifest.json'),'utf8'));
 const entries=manifest.images;
-assert.equal(entries.length,95,'BASE image count');
+assert.equal(entries.length,96,'BASE image count');
 const ids=new Set(entries.map(e=>e.id));
 const paths=new Set(entries.map(e=>e.path));
-assert.equal(ids.size,95,'unique BASE ids');
-assert.equal(paths.size,95,'unique BASE paths');
-for(let n=1;n<=95;n++){
+assert.equal(ids.size,96,'unique BASE ids');
+assert.equal(paths.size,96,'unique BASE paths');
+for(let n=1;n<=96;n++){
  const id='BASE'+String(n).padStart(2,'0');
  const e=entries.find(x=>x.id===id);
  assert(e,'missing '+id);
@@ -36,7 +36,7 @@ for(const season of seasons)for(let i=0;i<states.length;i++){
  count++;
 }
 const unverified=entries.filter(e=>!e.verifiedSubject).map(e=>e.id);
-console.log('PASS: 95 BASE mappings, 32 seasonal image files, WebP signatures, and lab visual-engine inclusion.');
-assert.deepEqual(unverified,[],'all 95 BASE image subjects must be verified');
-console.log('PASS: all 95 BASE image subjects are verified; image-to-condition visual accuracy is not certified.');
+console.log('PASS: 96 BASE mappings, 32 seasonal image files, WebP signatures, and lab visual-engine inclusion.');
+assert.deepEqual(unverified,[],'all 96 BASE image subjects must be verified');
+console.log('PASS: all 96 BASE image subjects are verified; image-to-condition visual accuracy is not certified.');
 console.log('AUDIT: BASE manifest is not consumed by the active seasonal image engine; seasonal engine uses 32 state photographs.');

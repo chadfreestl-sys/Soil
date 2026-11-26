@@ -857,6 +857,15 @@
       "topic": "Summer heat stress with adequate soil moisture",
       "verifiedSubject": true,
       "subjectVerification": "Owner approved; local Git blob SHA matches uploaded file"
+    },
+    {
+      "id": "BASE96",
+      "path": "assets/turfarium/BASE96/BASE96.png",
+      "format": "png",
+      "bytes": 3384606,
+      "topic": "Early fall recovery following summer stress",
+      "verifiedSubject": true,
+      "subjectVerification": "Owner approved; local Git blob SHA matches uploaded file"
     }
   ]
 }
