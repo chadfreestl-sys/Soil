@@ -839,6 +839,15 @@
       "topic": "Early spring low vigor, illustrative nitrogen deficiency",
       "verifiedSubject": true,
       "subjectVerification": "Owner approved; local Git blob SHA matches uploaded file"
+    },
+    {
+      "id": "BASE94",
+      "path": "assets/turfarium/BASE94/BASE94.png",
+      "format": "png",
+      "bytes": 3407591,
+      "topic": "Healthy spring turf with active root development",
+      "verifiedSubject": true,
+      "subjectVerification": "Owner approved; local Git blob SHA matches uploaded file"
     }
   ]
 }
