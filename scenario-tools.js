@@ -69,6 +69,7 @@
     if(!data||!data.A||!data.B)return;
     for(const [id,v] of Object.entries(data.inputs||{}))setValue(id,v);
     A=clone(data.A);B=clone(data.B);day=Number(data.day)||0;treatmentRecords=clone(data.treatmentRecords||{A:[],B:[]});history=clone(data.history||[]);log=clone(data.log||[]);
+    if(typeof clearPendingApplications==='function')clearPendingApplications();
     render();
     // Saved scenario replaces the live state: dependent replay views must discard prior runs.
     window.dispatchEvent(new CustomEvent('turfarium:scenario-restored',{detail:{day}}));
