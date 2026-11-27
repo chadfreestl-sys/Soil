@@ -45,12 +45,13 @@ dl{display:grid;grid-template-columns:1fr auto;gap:.2rem .5rem;margin:.5rem 0}dd
 <label for="material">Treatment for Lawn B
 <select id="material">
 <option value="alfalfa">Alfalfa meal</option>
-<option value="mineralN">Moderate mineral nitrogen</option>
+<option value="mineralN">Mineral nitrogen · low-N soil</option>
 </select>
 </label>
 <button id="advance">See Day 30</button>
 <button id="reset" hidden>Try again</button>
 </div>
+<p id="baseline"></p>
 <p id="status" role="status">Day 0 of 90</p>
 </section>
 <article id="lawnB"><h2>Lawn B</h2><p id="bTreatment">Untreated at Day 0</p><div class="photo"><img alt=""><canvas width="640" height="400" aria-hidden="true"></canvas></div><dl></dl></article>
@@ -64,8 +65,8 @@ dl{display:grid;grid-template-columns:1fr auto;gap:.2rem .5rem;margin:.5rem 0}dd
 <p>This demo shows checkpoints from fixed simulator runs. Markers represent relative modeled activity.</p>
 </main>
 <script>
-const runs = {"none":[[{"k":"A","day":0,"image":"BASE12","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":21,"roots":25},{"k":"B","day":0,"image":"BASE04","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":21,"roots":25}],[{"k":"A","day":30,"image":"BASE05","guilds":[28.6,28.1,14.1,15.6],"counts":[3,3,2,2],"above":0,"vigor":68.64,"oxygen":78.04,"carbon":21.07,"roots":24.83},{"k":"B","day":30,"image":"BASE38","guilds":[28.6,28.1,14.1,15.6],"counts":[3,3,2,2],"above":0,"vigor":68.64,"oxygen":78.04,"carbon":21.07,"roots":24.83}],[{"k":"A","day":90,"image":"BASE78","guilds":[42,42.9,21.3,21.6],"counts":[5,5,3,3],"above":0,"vigor":76.84,"oxygen":80.82,"carbon":21.04,"roots":25.74},{"k":"B","day":90,"image":"BASE40","guilds":[42,42.9,21.3,21.6],"counts":[5,5,3,3],"above":0,"vigor":76.84,"oxygen":80.82,"carbon":21.04,"roots":25.74}]],"alfalfa":[[{"k":"A","day":0,"image":"BASE12","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":21,"roots":25},{"k":"B","day":0,"image":"BASE04","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":26,"roots":25}],[{"k":"A","day":30,"image":"BASE05","guilds":[28.6,28.1,14.1,13.8],"counts":[3,3,2,2],"above":0,"vigor":68.64,"oxygen":78.04,"carbon":21.07,"roots":24.83},{"k":"B","day":30,"image":"BASE38","guilds":[31.8,31.9,14.5,13.8],"counts":[4,4,2,2],"above":0,"vigor":69.12,"oxygen":78.04,"carbon":26.06,"roots":24.83}],[{"k":"A","day":90,"image":"BASE78","guilds":[42,42.9,21.3,21.8],"counts":[5,5,3,3],"above":0,"vigor":76.84,"oxygen":80.82,"carbon":21.04,"roots":25.74},{"k":"B","day":90,"image":"BASE40","guilds":[47.4,49.2,22.9,22],"counts":[6,6,3,3],"above":0,"vigor":77.83,"oxygen":80.82,"carbon":25.97,"roots":25.74}]],"mineralN":[[{"k":"A","day":0,"image":"BASE12","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":21,"roots":25},{"k":"B","day":0,"image":"BASE04","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":21,"roots":25}],[{"k":"A","day":30,"image":"BASE05","guilds":[28.6,28.1,14.1,15.6],"counts":[3,3,2,2],"above":0,"vigor":68.64,"oxygen":78.04,"carbon":21.07,"roots":24.83},{"k":"B","day":30,"image":"BASE38","guilds":[28.6,28.1,14.1,15.6],"counts":[3,3,2,2],"above":0,"vigor":68.64,"oxygen":78.04,"carbon":21.07,"roots":24.83}],[{"k":"A","day":90,"image":"BASE78","guilds":[42,42.9,21.3,21.6],"counts":[5,5,3,3],"above":0,"vigor":76.84,"oxygen":80.82,"carbon":21.04,"roots":25.74},{"k":"B","day":90,"image":"BASE40","guilds":[42,42.9,21.3,21.6],"counts":[5,5,3,3],"above":0,"vigor":76.84,"oxygen":80.82,"carbon":21.04,"roots":25.74}]]};
-const photos = {"BASE12": "assets/turfarium/BASE12/BASE12.webp", "BASE04": "assets/turfarium/BASE04/BASE04.webp", "BASE05": "assets/turfarium/BASE05/BASE05.webp", "BASE38": "assets/turfarium/BASE38/BASE38.webp", "BASE78": "assets/turfarium/BASE78/BASE78.webp", "BASE40": "assets/turfarium/BASE40/BASE40.webp"};
+const runs = {"none":[[{"k":"A","day":0,"image":"BASE12","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":21,"roots":25},{"k":"B","day":0,"image":"BASE04","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":21,"roots":25}],[{"k":"A","day":30,"image":"BASE05","guilds":[28.6,28.1,14.1,15.6],"counts":[3,3,2,2],"above":0,"vigor":68.64,"oxygen":78.04,"carbon":21.07,"roots":24.83},{"k":"B","day":30,"image":"BASE38","guilds":[28.6,28.1,14.1,15.6],"counts":[3,3,2,2],"above":0,"vigor":68.64,"oxygen":78.04,"carbon":21.07,"roots":24.83}],[{"k":"A","day":90,"image":"BASE78","guilds":[42,42.9,21.3,21.6],"counts":[5,5,3,3],"above":0,"vigor":76.84,"oxygen":80.82,"carbon":21.04,"roots":25.74},{"k":"B","day":90,"image":"BASE40","guilds":[42,42.9,21.3,21.6],"counts":[5,5,3,3],"above":0,"vigor":76.84,"oxygen":80.82,"carbon":21.04,"roots":25.74}]],"alfalfa":[[{"k":"A","day":0,"image":"BASE12","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":21,"roots":25},{"k":"B","day":0,"image":"BASE04","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15,"oxygen":38,"carbon":26,"roots":25}],[{"k":"A","day":30,"image":"BASE05","guilds":[28.6,28.1,14.1,13.8],"counts":[3,3,2,2],"above":0,"vigor":68.64,"oxygen":78.04,"carbon":21.07,"roots":24.83},{"k":"B","day":30,"image":"BASE38","guilds":[31.8,31.9,14.5,13.8],"counts":[4,4,2,2],"above":0,"vigor":69.12,"oxygen":78.04,"carbon":26.06,"roots":24.83}],[{"k":"A","day":90,"image":"BASE78","guilds":[42,42.9,21.3,21.8],"counts":[5,5,3,3],"above":0,"vigor":76.84,"oxygen":80.82,"carbon":21.04,"roots":25.74},{"k":"B","day":90,"image":"BASE40","guilds":[47.4,49.2,22.9,22],"counts":[6,6,3,3],"above":0,"vigor":77.83,"oxygen":80.82,"carbon":25.97,"roots":25.74}]],"mineralN":[[{"k":"A","day":0,"image":"BASE12","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15},{"k":"B","day":0,"image":"BASE04","guilds":[18,16,13,13.3],"counts":[2,2,2,2],"above":0,"vigor":58.15}],[{"k":"A","day":30,"image":"BASE93","guilds":[28.6,28.1,14.1,16.6],"counts":[3,3,2,2],"above":0,"vigor":59.92},{"k":"B","day":30,"image":"BASE38","guilds":[28.6,28.1,14.1,16.7],"counts":[3,3,2,2],"above":0,"vigor":68.64}],[{"k":"A","day":90,"image":"BASE78","guilds":[42,42.9,21.3,21.8],"counts":[5,5,3,3],"above":0,"vigor":64.05},{"k":"B","day":90,"image":"BASE38","guilds":[42,42.9,21.3,22],"counts":[5,5,3,3],"above":0,"vigor":67.1}]]};
+const photos = {"BASE12": "assets/turfarium/BASE12/BASE12.webp", "BASE04": "assets/turfarium/BASE04/BASE04.webp", "BASE05": "assets/turfarium/BASE05/BASE05.webp", "BASE38": "assets/turfarium/BASE38/BASE38.webp", "BASE78": "assets/turfarium/BASE78/BASE78.webp", "BASE40": "assets/turfarium/BASE40/BASE40.webp", "BASE93": "assets/turfarium/BASE93/BASE93.png"};
 const material = document.getElementById('material');
 const advance = document.getElementById('advance');
 const reset = document.getElementById('reset');
@@ -93,7 +94,7 @@ function draw(canvas, counts) {
 }
 function render() {
     const frames = runs[material.value];
-    const [a,b] = checkpoint ? frames[checkpoint] : runs.none[0];
+    const [a,b] = checkpoint ? frames[checkpoint] : frames[0];
     for (const lawn of [a,b]) {
         const card = document.getElementById('lawn'+lawn.k);
         const img = card.querySelector('img');
@@ -103,12 +104,16 @@ function render() {
         const names=['Turf vigor','Bacteria','Fungi','Protozoa','Nematodes'];
         card.querySelector('dl').replaceChildren(...[lawn.vigor,...lawn.guilds].flatMap((value,i)=>{
             const term=document.createElement('dt'), desc=document.createElement('dd');
-            term.textContent=names[i]; desc.textContent=value.toFixed(1);
+            term.textContent=names[i]; desc.textContent=value.toFixed(i===0?2:1);
             return [term,desc];
         }));
     }
     document.getElementById('bTreatment').textContent=checkpoint ? material.selectedOptions[0].text : 'Untreated at Day 0';
-    document.getElementById('status').textContent='Day '+a.day+' of 90';
+    document.getElementById('baseline').textContent=material.value==='mineralN'
+        ? 'Both lawns start low in mineral nitrogen.' : 'Both lawns start with the standard soil baseline.';
+    const vigorDelta=b.vigor-a.vigor;
+    const vigorText=vigorDelta===0 ? 'Turf vigor is equal.' : 'Lawn B vigor is '+Math.abs(vigorDelta).toFixed(2)+' points '+(vigorDelta>0?'higher.':'lower.');
+    document.getElementById('status').textContent='Day '+a.day+' of 90 · '+vigorText;
     document.getElementById('result').hidden=checkpoint!==2;
     document.getElementById('difference').textContent='Compared with Lawn A, Lawn B’s bacterial index changed by '+(b.guilds[0]-a.guilds[0]).toFixed(1)+' points and its fungal index changed by '+(b.guilds[1]-a.guilds[1]).toFixed(1)+' points.';
     advance.hidden=checkpoint===2;
@@ -116,6 +121,7 @@ function render() {
     reset.hidden=checkpoint===0;
     material.disabled=checkpoint>0;
 }
+material.addEventListener('change',render);
 advance.addEventListener('click',()=>{if(checkpoint<2){checkpoint++;render();if(checkpoint===2)reset.focus();}});
 reset.addEventListener('click',()=>{checkpoint=0;render();material.focus();});
 render();
