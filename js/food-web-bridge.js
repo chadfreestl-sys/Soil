@@ -53,6 +53,7 @@ function render(key){
   el.querySelector('span').textContent=label;el.querySelector('b').textContent=String(val);
   el.querySelector('i').style.width=val+'%';return el;
  }));
+ window.dispatchEvent(new CustomEvent('turfarium:food-web-updated',{detail:{key}}));
 }
 function boot(){
  if(!window.TurfariumFoodWeb)return;
