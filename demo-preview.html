@@ -20,8 +20,10 @@ button:disabled{background:#e6ece3;color:#5e6d61;cursor:default}
 button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #164fde;outline-offset:3px}
 .buy{display:inline-block;text-decoration:none}
 [hidden]{display:none!important}
-.lawns{display:grid;grid-template-columns:minmax(0,1fr) minmax(13rem,16rem) minmax(0,1fr);gap:1rem;align-items:start}
-.lawns .controls{margin:0;min-width:0}.controls select{width:100%;max-width:100%}
+.lawns{display:grid;grid-template-columns:minmax(0,1fr) minmax(13rem,16rem) minmax(0,1fr);gap:.5rem;align-items:start}
+.lawns .controls{margin:0;min-width:0;padding:.65rem}.lawns .controls p{margin:.3rem 0 0;font-size:.9rem}.controls select{width:100%;max-width:100%}
+.lawns article{padding:.45rem}.lawns article h2,.lawns article p{margin-bottom:.25rem}.lawns .photo{margin:0}
+.readings{background:#fff;border:1px solid #bdcdbd;border-radius:.75rem;margin:1rem 0;padding:.75rem}.readings summary{cursor:pointer;font-weight:650}.reading-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.reading-grid h3{margin-top:.45rem}
 article{background:#fff;border:1px solid #bdcdbd;padding:.75rem;border-radius:.75rem;min-width:0}
 .photo{position:relative;aspect-ratio:1.6;overflow:hidden;border-radius:.5rem;margin-bottom:.5rem;background:#32241c}
 .photo img,.photo canvas{position:absolute;width:100%;height:100%;inset:0}
@@ -29,7 +31,7 @@ article{background:#fff;border:1px solid #bdcdbd;padding:.75rem;border-radius:.7
 dl{display:grid;grid-template-columns:1fr auto;gap:.2rem .5rem;margin:.5rem 0}dd{margin:0;font-variant-numeric:tabular-nums}
 .legend{font-size:.9rem;margin:1rem 0}
 .legend span{white-space:nowrap}
-@media(max-width:760px){.lawns{grid-template-columns:1fr}.actions label{width:100%}.actions select{width:100%}}
+@media(max-width:760px){.lawns{grid-template-columns:1fr}.actions label{flex:1 1 9rem;min-width:0}.actions{gap:.35rem}.actions select{width:100%}}
 </style>
 </head>
 <body><main>
@@ -39,7 +41,7 @@ dl{display:grid;grid-template-columns:1fr auto;gap:.2rem .5rem;margin:.5rem 0}dd
 <span>● Bacteria</span><span>╱ Fungi</span><span>○ Protozoa</span><span>∿ Nematodes (exploratory)</span>
 </div>
 <section class="lawns" aria-label="Compare lawns">
-<article id="lawnA"><h2>Lawn A</h2><p>Untreated</p><div class="photo"><img alt=""><canvas width="640" height="400" aria-hidden="true"></canvas></div><dl></dl></article>
+<article id="lawnA"><h2>Lawn A</h2><p>Untreated</p><div class="photo"><img alt=""><canvas width="640" height="400" aria-hidden="true"></canvas></div></article>
 <section class="controls" aria-label="Experiment controls">
 <div class="actions">
 <label for="material">Treatment for Lawn B
@@ -54,8 +56,11 @@ dl{display:grid;grid-template-columns:1fr auto;gap:.2rem .5rem;margin:.5rem 0}dd
 <p id="baseline"></p>
 <p id="status" role="status">Day 0 of 90</p>
 </section>
-<article id="lawnB"><h2>Lawn B</h2><p id="bTreatment">Untreated at Day 0</p><div class="photo"><img alt=""><canvas width="640" height="400" aria-hidden="true"></canvas></div><dl></dl></article>
+<article id="lawnB"><h2>Lawn B</h2><p id="bTreatment">Untreated at Day 0</p><div class="photo"><img alt=""><canvas width="640" height="400" aria-hidden="true"></canvas></div></article>
 </section>
+<details class="readings"><summary>Compare lawn readings</summary>
+<div class="reading-grid"><div><h3>Lawn A</h3><dl id="readingsA"></dl></div><div><h3>Lawn B</h3><dl id="readingsB"></dl></div></div>
+</details>
 <section class="summary" id="result" hidden>
 <h2>Day 90 results</h2>
 <p id="difference"></p>
@@ -102,7 +107,7 @@ function render() {
         img.alt = 'Illustrative turf and soil cross-section at Day '+lawn.day;
         draw(card.querySelector('canvas'),lawn.counts);
         const names=['Turf vigor','Bacteria','Fungi','Protozoa','Nematodes'];
-        card.querySelector('dl').replaceChildren(...[lawn.vigor,...lawn.guilds].flatMap((value,i)=>{
+        document.getElementById('readings'+lawn.k).replaceChildren(...[lawn.vigor,...lawn.guilds].flatMap((value,i)=>{
             const term=document.createElement('dt'), desc=document.createElement('dd');
             term.textContent=names[i]; desc.textContent=value.toFixed(i===0?2:1);
             return [term,desc];
