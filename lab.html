@@ -4,6 +4,11 @@
   'use strict';
   const PRODUCT_ID = 'nbZeGyhqUTkSIakHBTfUgg==';
   const STORAGE_KEY = 'turfarium.gumroadLicense.v1';
+  const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '']);
+  if (LOCAL_HOSTS.has(location.hostname)) {
+    document.documentElement.style.visibility = 'visible';
+    return;
+  }
   let key = '';
   try { key = localStorage.getItem(STORAGE_KEY) || ''; } catch (_) {}
   const deny = reason => {
