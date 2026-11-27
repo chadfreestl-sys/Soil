@@ -1055,7 +1055,8 @@ function profile(id,s,seed){
      g.fillStyle=`rgba(24,137,216,${cl(s.moist/140,.07,.53)})`;g.fillRect(0,rootZoneTop,w,h-rootZoneTop);
      for(let i=0;i<50;i++){let xx=(i*167+seed*13)%w, yy=rootZoneTop+((i*113+day*3)%(h-rootZoneTop));g.fillStyle='rgba(145,222,255,.48)';g.beginPath();g.ellipse(xx,yy,2.5,5,0,0,Math.PI*2);g.fill()}
    }else if(mode==='biology'){
-     drawBiologyMarkers(g,w,rootZoneTop,h,s,id.slice(-1));
+     // Photos have variable canopy heights. Use the lower soil band across display crops.
+     drawBiologyMarkers(g,w,h*.70,h,s,id.slice(-1));
    }else if(mode==='roots'){
      g.fillStyle='rgba(3,9,15,.28)';g.fillRect(0,rootZoneTop,w,h-rootZoneTop);
      let depth=cl(s.rootDepth/28,.1,1)*(h-rootZoneTop-22);
