@@ -142,6 +142,12 @@ function verifiedBase(score,season,snapshot,key){
  const band=score<43?'low':score<73?'mid':'high';
  const eligible=BASE88.filter(x=>{
   if(x.season!=='any'&&x.season!==season)return false;
+  // Illustrative model-index thresholds, not field diagnostic cutoffs.
+  const heat=Number(s.soilTempF), nitrogen=Number(s.nStatus);
+  if([76,80,81].includes(x.n)&&!(s.moisture!=null&&moisture<38))return false;
+  if(x.n===79&&!(s.soilTempF!=null&&heat>=82))return false;
+  if(x.n===93&&!(s.nStatus!=null&&nitrogen<.55))return false;
+  if(x.n===95&&!(s.soilTempF!=null&&heat>=82&&s.moisture!=null&&moisture>=43&&moisture<88))return false;
   if(x.event==='snow'&&!snow)return false;
   if(x.event==='frost'&&!frost)return false;
   if(x.event==='rain'&&!rain)return false;

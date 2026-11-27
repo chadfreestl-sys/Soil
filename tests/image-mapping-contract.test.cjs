@@ -39,4 +39,4 @@ const unverified=entries.filter(e=>!e.verifiedSubject).map(e=>e.id);
 console.log('PASS: 96 BASE mappings, 32 seasonal image files, WebP signatures, and lab visual-engine inclusion.');
 assert.deepEqual(unverified,[],'all 96 BASE image subjects must be verified');
 console.log('PASS: all 96 BASE image subjects are verified; image-to-condition visual accuracy is not certified.');
-console.log('AUDIT: BASE manifest is not consumed by the active seasonal image engine; seasonal engine uses 32 state photographs.');
+console.log('AUDIT: curated BASE selector uses its own metadata; 32 seasonal photographs provide fallback assets.');

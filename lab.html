@@ -607,7 +607,7 @@ window.TurfariumVisualSnapshot=function(key){
    irrigationActive:!!treatmentRecords?.[key]?.some(r=>r.type==='irrigate'&&day-r.day>=0&&day-r.day<=1),
    recentCoreAeration:!!treatmentRecords?.[key]?.some(r=>r.type==='aerate'&&day-r.day>=0&&day-r.day<=7),
    disease:e.bad,oxygen:e.oxygen,structure:site.structure,compaction:site.comp,
-   saltStress:site.salts,soilPH:site.ph,soilP:site.p,soilNH4:site.nh4,soilEC:site.ec,soilLabileC:site.labileC,soilGood:site.good.slice(),soilWorms:site.worms.slice(),rootMass:site.rootMass,leafArea:site.leafArea,carbReserve:site.carbReserve,tillerDensity:site.tillerDensity,canopyCover:site.canopyCover,canopyHeight:site.canopyHeight,lateralSpread:site.lateralSpread,mowHeight:site.mowHeight,mowEvents:site.mowEvents,lastClippingFraction:site.lastClippingFraction};
+   saltStress:site.salts,soilPH:site.ph,soilP:site.p,soilNH4:site.nh4,nStatus:site.nStatus,soilEC:site.ec,soilLabileC:site.labileC,soilGood:site.good.slice(),soilWorms:site.worms.slice(),rootMass:site.rootMass,leafArea:site.leafArea,carbReserve:site.carbReserve,tillerDensity:site.tillerDensity,canopyCover:site.canopyCover,canopyHeight:site.canopyHeight,lateralSpread:site.lateralSpread,mowHeight:site.mowHeight,mowEvents:site.mowEvents,lastClippingFraction:site.lastClippingFraction};
 };
 // Pure, testable nitrogen uptake balance. All quantities share the model's
 // conceptual mineral-N index; they are not laboratory mass units.
