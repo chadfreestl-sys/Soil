@@ -29,20 +29,26 @@ window.addEventListener('turfarium:scenario-restored',()=>{
  viewing=false;
  window.TurfariumVisualState?.endReplay?.();
  frames.length=0;
+ window.TurfariumRecordedFrames=[];
  // A saved scenario carries live A/B state, not its original visual replay frames.
  // Do not show photographs from the previously active experiment as its history.
  if(typeof window.TurfariumVisualSnapshot==='function'){
   try{
    const A=window.TurfariumVisualSnapshot('A'),B=window.TurfariumVisualSnapshot('B');
-   if(A&&B)record({day:Number(A.day)||0,A,B});
+   if(A&&B){
+    const frame={day:Number(A.day)||0,A,B};
+    window.TurfariumRecordedFrames.push(frame);
+    record(frame);
+   }
   }catch(error){console.warn('[Turfarium replay] Restored frame unavailable',error);}
  }
  update();
 });
 function captureInitial(){
+ if(frames.length)return;
  const buffered=window.TurfariumRecordedFrames;
  if(Array.isArray(buffered)&&buffered.length){for(const frame of buffered)record(frame);return;}
- if(frames.length||typeof window.TurfariumVisualSnapshot!=='function')return;
+ if(typeof window.TurfariumVisualSnapshot!=='function')return;
  try{const A=window.TurfariumVisualSnapshot('A'),B=window.TurfariumVisualSnapshot('B');if(A&&B)record({day:Number(A.day)||0,A,B});}catch(e){console.warn('[Turfarium replay] Initial frame unavailable',e);}}
 
 let box,play,range,label,note,exit;
