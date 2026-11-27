@@ -1,4 +1,50 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="en"><head><style id="turfarium-buyer-gate">html{visibility:hidden}</style>
+<script id="turfarium-buyer-gate-script">
+(() => {
+  'use strict';
+  const PRODUCT_ID = 'nbZeGyhqUTkSIakHBTfUgg==';
+  const STORAGE_KEY = 'turfarium.gumroadLicense.v1';
+  const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '']);
+  if (LOCAL_HOSTS.has(location.hostname)) {
+    document.documentElement.style.visibility = 'visible';
+    return;
+  }
+  let key = '';
+  try { key = localStorage.getItem(STORAGE_KEY) || ''; } catch (_) {}
+  const deny = reason => {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+    const suffix = reason ? '?reason=' + encodeURIComponent(reason) : '';
+    location.replace('open-turfarium.html' + suffix);
+  };
+  if (!key) {
+    deny('license_required');
+    return;
+  }
+  const body = new URLSearchParams({
+    product_id: PRODUCT_ID,
+    license_key: key,
+    increment_uses_count: 'false'
+  });
+  fetch('https://api.gumroad.com/v2/licenses/verify', {
+    method: 'POST',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body
+  }).then(response => response.json().then(data => ({ok:response.ok,data})))
+    .then(({ok,data}) => {
+      const p = data && data.purchase;
+      const active = Boolean(
+        ok && data.success === true && p &&
+        p.product_id === PRODUCT_ID &&
+        !p.refunded && !p.disputed && !p.chargebacked &&
+        !p.subscription_ended_at && !p.subscription_failed_at
+      );
+      if (!active) return deny('invalid_license');
+      document.documentElement.style.visibility = 'visible';
+    })
+    .catch(() => deny('verification_unavailable'));
+})();
+</script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Turfarium | Interactive Turf Ecosystem Simulator</title><style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#101b18;color:#ecf4eb}*{box-sizing:border-box}
 body{margin:0;background:radial-gradient(ellipse at 50% -10%,#254435,#101b18 65%)}main{max-width:1320px;margin:auto;padding:18px}
