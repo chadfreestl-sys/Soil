@@ -1,6 +1,13 @@
-name: Turfarium BASE88 integration tests
+name: Turfarium BASE96 integration tests
 on:
   push:
+    paths:
+      - 'turfarium-visual-state-v3-2.js'
+      - 'tests/image-mapping-contract.test.cjs'
+      - '.github/workflows/base88-integration-tests.yml'
+      - 'lab.html'
+      - 'tests/base88-model-visual-contract.test.cjs'
+  pull_request:
     paths:
       - 'turfarium-visual-state-v3-2.js'
       - 'tests/image-mapping-contract.test.cjs'
@@ -24,7 +31,7 @@ jobs:
         run: node tests/image-mapping-contract.test.cjs
       - name: Model-to-image contract
         run: node tests/base88-model-visual-contract.test.cjs
-      - name: BASE88 metadata and event guardrails
+      - name: BASE96 metadata and event guardrails
         run: |
           node - <<'JS'
           const fs=require('fs'),assert=require('assert');
@@ -32,8 +39,8 @@ jobs:
           const m=s.match(/const BASE88=(\[.*?\]);/s);
           assert(m,'BASE88 selector metadata missing');
           const records=JSON.parse(m[1]);
-          assert.equal(records.length,88);
-          assert.equal(new Set(records.map(x=>x.n)).size,88);
+          assert.equal(records.length,96);
+          assert.equal(new Set(records.map(x=>x.n)).size,96);
           for(const r of records){
             const id='BASE'+String(r.n).padStart(2,'0');
             assert(fs.existsSync('assets/turfarium/'+id+'/'+id+'.'+r.ext));
@@ -41,5 +48,5 @@ jobs:
           for(const n of [6,7,9,10,51,63,70,75]){
             assert.notEqual(records[n-1].event,'none','unguarded event image '+n);
           }
-          console.log('PASS: 88 unique assets and event gating metadata');
+          console.log('PASS: 96 unique assets and event gating metadata');
           JS
