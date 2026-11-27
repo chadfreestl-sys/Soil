@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#173e2d">
+  <title>Open Turfarium</title>
+  <style>
+    *{box-sizing:border-box}
+    :root{font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;color:#14251b;background:#173e2d}
+    body{margin:0;min-height:100vh;display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 15% 0,#55775e,transparent 40%),linear-gradient(155deg,#173e2d,#315b43 68%,#58725c)}
+    main{width:min(100%,520px);background:#fffdf7;border:1px solid #d8e1d5;border-radius:24px;padding:clamp(22px,6vw,38px);box-shadow:0 24px 70px #071a0f66}
+    .mark{width:68px;height:68px;border-radius:18px;display:block;margin-bottom:18px}
+    h1{margin:0 0 8px;color:#073b23;font-size:clamp(2rem,9vw,3.2rem);line-height:1;letter-spacing:-.05em}
+    p{margin:0 0 18px;color:#304036}
+    label{display:block;font-weight:800;color:#163d29;margin-bottom:7px}
+    input{width:100%;min-height:50px;border:1px solid #78917f;border-radius:11px;padding:11px 13px;font:inherit;font-size:16px;color:#14251b;background:white}
+    input:focus{outline:3px solid #79aa8a;outline-offset:2px}
+    button,a.button{width:100%;min-height:50px;border:0;border-radius:11px;padding:12px 16px;font:inherit;font-weight:850;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;margin-top:12px}
+    button,a.button.primary{background:#16613e;color:white}
+    button:hover,a.button.primary:hover{background:#0d4d30}
+    button:disabled{opacity:.65;cursor:wait}
+    a.button.secondary{background:#e8efe6;color:#19412b}
+    #status{min-height:24px;margin:12px 0 0;font-weight:700}
+    #status.error{color:#a22121}
+    #status.success{color:#176039}
+    .fine{font-size:.82rem;color:#526157;margin-top:18px}
+    [hidden]{display:none!important}
+  </style>
+</head>
+<body>
+<main>
+  <img class="mark" src="turfarium-mark.svg" alt="">
+  <h1>Open Turfarium</h1>
+  <p>Enter the Gumroad license key that came with your purchase. You only need to enter it once on this browser.</p>
+
+  <form id="licenseForm" novalidate>
+    <label for="licenseKey">Gumroad license key</label>
+    <input id="licenseKey" name="licenseKey" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX" required>
+    <button id="verifyButton" type="submit">Verify and open Turfarium</button>
+  </form>
+
+  <section id="returning" hidden>
+    <p id="returningText">This browser already has verified buyer access.</p>
+    <a class="button primary" href="lab.html">Open full simulator</a>
+    <button id="differentKey" type="button">Use a different license key</button>
+  </section>
+
+  <p id="status" role="status" aria-live="polite"></p>
+  <a class="button secondary" href="https://turfarium.gumroad.com/l/full">Buy Turfarium · $5.99</a>
+  <p class="fine">Your key is saved only in this browser and checked with Gumroad when the simulator opens.</p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const PRODUCT_ID = 'nbZeGyhqUTkSIakHBTfUgg==';
+  const STORAGE_KEY = 'turfarium.gumroadLicense.v1';
+  const form = document.getElementById('licenseForm');
+  const input = document.getElementById('licenseKey');
+  const button = document.getElementById('verifyButton');
+  const status = document.getElementById('status');
+  const returning = document.getElementById('returning');
+
+  function savedKey() {
+    try { return localStorage.getItem(STORAGE_KEY) || ''; } catch (_) { return ''; }
+  }
+  function saveKey(key) {
+    localStorage.setItem(STORAGE_KEY, key);
+  }
+  function clearKey() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+  }
+  function purchaseIsActive(data) {
+    const p = data && data.purchase;
+    return Boolean(
+      data && data.success === true && p &&
+      p.product_id === PRODUCT_ID &&
+      !p.refunded && !p.disputed && !p.chargebacked &&
+      !p.subscription_ended_at && !p.subscription_failed_at
+    );
+  }
+  async function verify(key) {
+    const body = new URLSearchParams({
+      product_id: PRODUCT_ID,
+      license_key: key,
+      increment_uses_count: 'false'
+    });
+    const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
+      method: 'POST',
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body
+    });
+    const data = await response.json().catch(() => null);
+    return response.ok && purchaseIsActive(data);
+  }
+  function showForm(message) {
+    returning.hidden = true;
+    form.hidden = false;
+    status.className = message ? 'error' : '';
+    status.textContent = message || '';
+    input.focus();
+  }
+  function showReturning() {
+    form.hidden = true;
+    returning.hidden = false;
+    status.textContent = '';
+  }
+
+  if (new URLSearchParams(location.search).get('reset') === '1') clearKey();
+  if (savedKey()) showReturning();
+
+  document.getElementById('differentKey').addEventListener('click', () => {
+    clearKey();
+    input.value = '';
+    showForm('');
+  });
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const key = input.value.trim();
+    if (!key) return showForm('Enter the license key shown in your Gumroad purchase.');
+    button.disabled = true;
+    status.className = '';
+    status.textContent = 'Checking your key with Gumroad…';
+    try {
+      if (!await verify(key)) {
+        clearKey();
+        status.className = 'error';
+        status.textContent = 'That key is not valid for Turfarium. Check the key and try again.';
+        return;
+      }
+      saveKey(key);
+      status.className = 'success';
+      status.textContent = 'Buyer access verified. Opening Turfarium…';
+      location.replace('lab.html');
+    } catch (_) {
+      status.className = 'error';
+      status.textContent = 'Gumroad could not be reached. Check your connection and try again.';
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
